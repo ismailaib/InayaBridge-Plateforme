@@ -6,7 +6,6 @@ import { Switch } from "@/components/Switch"
 import { Tooltip } from "@/components/Tooltip"
 import { ArrowAnimated } from "@/components/ui/ArrowAnimated"
 import { Faqs } from "@/components/ui/Faqs"
-import Testimonial from "@/components/ui/Testimonial"
 import { cx } from "@/lib/utils"
 import {
   RiCheckLine,

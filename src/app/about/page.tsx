@@ -1,7 +1,6 @@
 import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
 import Benefits from "@/components/ui/Benefits"
-import TeamGallery from "@/components/ui/TeamGallery"
 import { cx } from "@/lib/utils"
 import Balancer from "react-wrap-balancer"
 
