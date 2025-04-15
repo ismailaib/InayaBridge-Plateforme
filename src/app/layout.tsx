@@ -1,10 +1,9 @@
-import Footer from "@/components/ui/Footer"
-import { Navigation } from "@/components/ui/Navbar"
 import type { Metadata } from "next"
 import { ThemeProvider } from "next-themes"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { siteConfig } from "./siteConfig"
+import { LayoutWrapper } from "./(landing)/LayoutWrapper"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -58,9 +57,7 @@ export default function RootLayout({
           defaultTheme="system"
           disableTransitionOnChange
         >
-          <Navigation />
-          {children}
-          <Footer />
+          <LayoutWrapper>{children}</LayoutWrapper>
         </ThemeProvider>
       </body>
     </html>

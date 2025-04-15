@@ -54,3 +54,13 @@ a {
 *:hover > .anchor-link {
   @apply visible;
 }
+
+.Sidebar_parent {
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.Sidebar_parent::-webkit-scrollbar {
+  width: 0px; /* Chrome, Safari */
+  background: transparent;
+}
