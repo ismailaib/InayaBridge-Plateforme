@@ -30,48 +30,40 @@ import {
 import { cx, focusRing } from "@/lib/utils"
 import { RiArrowDownSFill } from "@remixicon/react"
 import * as React from "react"
-// import { Logo } from "../../../../public/log"
+import Image from "next/image"
 import { UserProfile } from "./UserProfile"
 
 const navigation = [
   {
     name: "Accueil",
     icon: LayoutDashboard,
-    children: [
-      { name: "Prochains rendez-vous", href: "#" },
-      { name: "Alertes importantes", href: "#" },
-      { name: "Derniers messages", href: "#" },
-      { name: "Statistiques express", href: "#" },
-      { name: "Activité du jour", href: "#" },
-    ],
+    root: 'dashboard',
   },
   {
     name: "Messagerie",
     icon: MessagesSquare,
-    children: [
-      { name: "Messages patients", href: "#" },
-      { name: "Messages équipe médicale", href: "#" },
-      { name: "Envoyer un message", href: "#" },
-      { name: "Fichiers échangés", href: "#" },
-    ],
+    root: 'chat',
   },
 ] as const
 
 const navigation2 = [
-  
   {
     name: "Rendez-vous",
     icon: CalendarDays,
+    root: 'rendez-vous',
+    active: false,
     children: [
       { name: "Tous les rendez-vous", href: "#" },
       { name: "Créer un rendez-vous", href: "#" },
-      { name: "Salle d’attente", href: "#" },
+      { name: "Salle d'attente", href: "#" },
       { name: "Historique des consultations", href: "#" },
     ],
   },
   {
     name: "Mes Patients",
     icon: UserCircle,
+    root: 'mes-patients',
+    active: false,
     children: [
       { name: "Rechercher un patient", href: "#" },
       { name: "Dossier patient", href: "#" },
@@ -82,6 +74,8 @@ const navigation2 = [
   {
     name: "Consultations Vidéo",
     icon: Video,
+    root: 'consultations-video',
+    active: false,
     children: [
       { name: "Lancer une consultation", href: "#" },
       { name: "Historique des appels", href: "#" },
@@ -92,6 +86,8 @@ const navigation2 = [
   {
     name: "Doc. Médicaux",
     icon: FolderSearch,
+    root: 'doc-medicaux',
+    active: false,
     children: [
       { name: "Reçus des patients", href: "#" },
       { name: "Envoyés aux patients", href: "#" },
@@ -102,6 +98,8 @@ const navigation2 = [
   {
     name: "Statistiques",
     icon: BarChart3,
+    root: 'statistiques',
+    active: false,
     children: [
       { name: "Consultations par période", href: "#" },
       { name: "Profil des patients vus", href: "#" },
@@ -112,6 +110,8 @@ const navigation2 = [
   {
     name: "Paramètres",
     icon: Settings,
+    root: 'parametres',
+    active: false,
     children: [
       { name: "Mes informations", href: "#" },
       { name: "Disponibilité / calendrier", href: "#" },
@@ -123,6 +123,8 @@ const navigation2 = [
   {
     name: "Gestion Cabinet",
     icon: Building2,
+    root: 'gestion-cabinet',
+    active: false,
     children: [
       { name: "Liste des employés", href: "#" },
       { name: "Matériel médical", href: "#" },
@@ -148,15 +150,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props} className="bg-gray-50 dark:bg-gray-900/25">
       <SidebarHeader className="px-3 py-4">
         <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded-md bg-white p-1.5 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
-            {/* <Logo className="size-6 text-blue-500 dark:text-blue-500" /> */}
+          <span className="flex size-9 items-center justify-center rounded-md bg-[#00b38f] p-1.5 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
+            <Image src="/images/icon-logo.png" alt="INAYABRIDGE ICON" width={24} height={24} />
           </span>
           <div>
             <span className="block text-sm font-semibold text-gray-900 dark:text-gray-50">
-              Innovex Systems
+              InnayaBridge
             </span>
             <span className="block text-xs text-gray-900 dark:text-gray-50">
-              Premium Starter Plan
+              Plan Essentiel
             </span>
           </div>
         </div>
@@ -176,14 +178,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenu className="space-y-1">
               {navigation.map((item) => (
                 <SidebarMenuItem key={item.name}>
-                  <SidebarLink
-                    href="#"
-                    // isActive={item.active}
+                    <SidebarLink
+                    href={`/${item.root}`}
+                    isActive={window.location.pathname === `/${item.root}`}
                     icon={item.icon}
                     // notifications={item.notifications}
-                  >
+                    >
                     {item.name}
-                  </SidebarLink>
+                    </SidebarLink>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>

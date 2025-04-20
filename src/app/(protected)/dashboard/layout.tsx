@@ -46,8 +46,8 @@ export default async function RootLayout({
   const defaultOpen = cookieStore.get("sidebar:state")?.value === "true"
 
   return (
-    <html lang="en" className="h-full" suppressHydrationWarning>
-      <body
+    <div>
+      <div
         className={`bg-white-50 h-full antialiased dark:bg-gray-950`}
       >
         <ThemeProvider
@@ -67,7 +67,7 @@ export default async function RootLayout({
             </div>
           </SidebarProvider>
         </ThemeProvider>
-      </body>
-    </html>
+      </div>
+    </div>
   )
 }

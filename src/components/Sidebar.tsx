@@ -293,7 +293,7 @@ const SidebarLink = React.forwardRef<
       className={cx(
         "flex items-center justify-between rounded-md p-2 text-base transition hover:bg-gray-200/50 sm:text-sm hover:dark:bg-gray-900",
         "text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
-        "data-[active=true]:text-blue-600 data-[active=true]:dark:text-blue-500",
+        "data-[active=true]:text-[#00b38f] data-[active=true]:dark:text-[#00b38f]",
         focusRing,
       )}
       {...props}
@@ -303,7 +303,7 @@ const SidebarLink = React.forwardRef<
         {children}
       </span>
       {notifications && (
-        <span className="inline-flex size-5 items-center justify-center rounded bg-blue-100 text-sm font-medium text-blue-600 sm:text-xs dark:bg-blue-500/10 dark:text-blue-500">
+        <span className="inline-flex size-5 items-center justify-center rounded bg-blue-100 text-sm font-medium text-[#00b38f] sm:text-xs dark:bg-blue-500/10 dark:text-[#00b38f]">
           {notifications}
         </span>
       )}
