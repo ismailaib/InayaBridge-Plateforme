@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation"
 import { Navigation } from "@/components/ui/Navbar"
 import Footer from "@/components/ui/Footer"
 
-const noLayoutRoutes = ["/signup", "/login", "/dashboard"] // Add more here
+const noLayoutRoutes = ["/signup", "/login", "/dashboard", "/chat"] // Add more here
 
 export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname()

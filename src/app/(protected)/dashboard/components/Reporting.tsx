@@ -1,80 +1,29 @@
-// 'use client';
+"use client"
 
 import { AreaChart } from "@/components/AreaChart"
 import { Card } from "@/components/Card"
 import { CategoryBar } from "@/components/CategoryBar"
-
-// used custom gray in installChartUtils.ts for <CategoryBar />
-
-// lightGray: {
-//   bg: 'bg-gray-300 dark:bg-gray-700',
-//   stroke: 'stroke-gray-300 dark:stroke-gray-700',
-//   fill: 'fill-gray-300 dark:fill-gray-700',
-//   text: 'text-gray-300 dark:text-gray-700',
-// },
+import { Tooltip } from "@/components/Tooltip"
+import { Info } from "lucide-react"
 
 const data = [
-  {
-    date: "19-09-2025",
-    "Rendez-vous": 0,
-    "diagnostics": 0,
-  },
-  {
-    date: "20-09-2025",
-    "Rendez-vous": 16,
-    "diagnostics": 5,
-  },
-  {
-    date: "21-09-2025",
-    "Rendez-vous": 24,
-    "diagnostics": 8,
-  },
-  {
-    date: "22-09-2025",
-    "Rendez-vous": 28,
-    "diagnostics": 10,
-  },
-  {
-    date: "23-09-2025",
-    "Rendez-vous": 31,
-    "diagnostics": 12,
-  },
-  {
-    date: "24-09-2025",
-    "Rendez-vous": 32,
-    "diagnostics": 13,
-  },
-  {
-    date: "25-09-2025",
-    "Rendez-vous": 35,
-    "diagnostics": 15,
-  },
-  {
-    date: "26-09-2025",
-    "Rendez-vous": 65,
-    "diagnostics": 24,
-  },
-  {
-    date: "27-09-2025",
-    "Rendez-vous": 58,
-    "diagnostics": 22,
-  },
-  {
-    date: "28-09-2025",
-    "Rendez-vous": 60,
-    "diagnostics": 24,
-  },
-  {
-    date: "29-09-2025",
-    "Rendez-vous": 65,
-    "diagnostics": 25,
-  },
+  { date: "19-09-2025", "Rendez-vous": 0, diagnostics: 0 },
+  { date: "20-09-2025", "Rendez-vous": 16, diagnostics: 5 },
+  { date: "21-09-2025", "Rendez-vous": 24, diagnostics: 8 },
+  { date: "22-09-2025", "Rendez-vous": 28, diagnostics: 10 },
+  { date: "23-09-2025", "Rendez-vous": 31, diagnostics: 12 },
+  { date: "24-09-2025", "Rendez-vous": 32, diagnostics: 13 },
+  { date: "25-09-2025", "Rendez-vous": 35, diagnostics: 15 },
+  { date: "26-09-2025", "Rendez-vous": 65, diagnostics: 24 },
+  { date: "27-09-2025", "Rendez-vous": 58, diagnostics: 22 },
+  { date: "28-09-2025", "Rendez-vous": 60, diagnostics: 24 },
+  { date: "29-09-2025", "Rendez-vous": 65, diagnostics: 25 },
 ]
 
 export default function Example() {
   return (
     <>
-      <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-50 mt-6">
+      <h1 className="mt-6 text-xl font-semibold text-gray-900 dark:text-gray-50">
         Statistiques de performance
       </h1>
       <p className="mt-1 text-sm/6 text-gray-500 dark:text-gray-500">
@@ -88,6 +37,12 @@ export default function Example() {
             <h1 className="text-sm font-medium text-gray-900 dark:text-gray-50">
               Respect des rendez-vous
             </h1>
+            <Tooltip
+              content="Taux de présence des patients à leurs rendez-vous prévus durant le mois."
+              showArrow={false}
+            >
+              <Info width={18} className="text-gray-500 dark:text-gray-400" />
+            </Tooltip>
           </div>
           <div className="p-4">
             <p className="text-3xl font-semibold text-gray-900 dark:text-gray-50">
@@ -96,12 +51,12 @@ export default function Example() {
             <p className="text-sm/6 text-gray-500 dark:text-gray-500">
               Taux de présence des patients ce mois
             </p>
-            <CategoryBar
-              values={[92.4, 7.6]}
-              colors={["emerald", "amber"]}
-              showLabels={false}
-              className="mt-6"
-            />
+              <CategoryBar
+                values={[92.4, 7.6]}
+                colors={["emerald", "amber"]}
+                showLabels={false}
+                className="mt-6"
+              />
             <ul className="mt-6 space-y-3 text-sm text-gray-600 dark:text-gray-400">
               <li className="flex justify-between">
                 <span>Rendez-vous honorés</span>
@@ -125,6 +80,12 @@ export default function Example() {
             <h1 className="text-sm font-medium text-gray-900 dark:text-gray-50">
               Temps moyen de consultation
             </h1>
+            <Tooltip
+              content="Durée moyenne observée des consultations sur les 30 derniers jours."
+              showArrow={false}
+            >
+              <Info width={18} className="text-gray-500 dark:text-gray-400" />
+            </Tooltip>
           </div>
           <div className="p-4">
             <p className="text-3xl font-semibold text-gray-900 dark:text-gray-50">
@@ -133,12 +94,12 @@ export default function Example() {
             <p className="text-sm/6 text-gray-500 dark:text-gray-500">
               Moyenne sur les 30 derniers jours
             </p>
-            <CategoryBar
-              values={[85.2, 14.8]}
-              colors={["blue", "gray"]}
-              showLabels={false}
-              className="mt-6"
-            />
+              <CategoryBar
+                values={[85.2, 14.8]}
+                colors={["blue", "gray"]}
+                showLabels={false}
+                className="mt-6"
+              />
             <ul className="mt-6 space-y-3 text-sm text-gray-600 dark:text-gray-400">
               <li className="flex justify-between">
                 <span>Consultations {"<"} 20 min</span>
@@ -163,6 +124,12 @@ export default function Example() {
           <h1 className="text-sm font-medium text-gray-900 dark:text-gray-50">
             Évolution des consultations
           </h1>
+          <Tooltip
+            content="Suivi quotidien du nombre de rendez-vous pris et de diagnostics réalisés."
+            showArrow={false}
+          >
+            <Info width={18} className="text-gray-500 dark:text-gray-400" />
+          </Tooltip>
         </div>
         <div className="p-4">
           <AreaChart

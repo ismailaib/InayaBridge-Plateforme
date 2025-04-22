@@ -1,6 +1,5 @@
 "use client"
 
-import { RiStethoscopeLine } from "@remixicon/react"
 import StepSharedFields from "../components/StepSharedFields"
 import StepDoctorSpecialisation from "../components/StepDoctorSpecialisation"
 import { motion, AnimatePresence } from "framer-motion"

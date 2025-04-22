@@ -4,7 +4,7 @@ import { Breadcrumbs } from "@/components/ui/navigation/Breadcrumbs"
 import type { Metadata } from "next"
 import { ThemeProvider } from "next-themes"
 import { cookies } from "next/headers"
-import { siteConfig } from "../../siteConfig"
+import { siteConfig } from "../siteConfig"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://yoururl.com"),
@@ -47,9 +47,7 @@ export default async function RootLayout({
 
   return (
     <div>
-      <div
-        className={`bg-white-50 h-full antialiased dark:bg-gray-950`}
-      >
+      <div className={`bg-white-50 h-full antialiased dark:bg-gray-950`}>
         <ThemeProvider
           defaultTheme="system"
           disableTransitionOnChange

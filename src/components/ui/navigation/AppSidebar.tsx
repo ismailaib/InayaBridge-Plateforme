@@ -1,6 +1,9 @@
 "use client"
-import { Divider } from "@/components/Divider"
-import { Input } from "@/components/Input"
+
+import * as React from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { RiArrowDownSFill } from "@remixicon/react"
 import {
   Sidebar,
   SidebarContent,
@@ -14,43 +17,34 @@ import {
   SidebarMenuSub,
   SidebarSubLink,
 } from "@/components/Sidebar"
-
-import {
-  CalendarDays,
-  BarChart3,
-  Video,
-  UserCircle,
-  FolderSearch,
-  Settings,
-  MessagesSquare,
-  Building2,
-  LayoutDashboard,
-} from "lucide-react";
-
-import { cx, focusRing } from "@/lib/utils"
-import { RiArrowDownSFill } from "@remixicon/react"
-import * as React from "react"
-import Image from "next/image"
+import { Divider } from "@/components/Divider"
+import { Input } from "@/components/Input"
 import { UserProfile } from "./UserProfile"
+import {
+  LayoutDashboard,
+  MessagesSquare,
+  CalendarDays,
+  UserCircle,
+  Video,
+  FolderSearch,
+  BarChart3,
+  Settings,
+  Building2,
+} from "lucide-react"
+import { cx, focusRing } from "@/lib/utils"
+
+import Image from "next/image"
 
 const navigation = [
-  {
-    name: "Accueil",
-    icon: LayoutDashboard,
-    root: 'dashboard',
-  },
-  {
-    name: "Messagerie",
-    icon: MessagesSquare,
-    root: 'chat',
-  },
+  { name: "Accueil", icon: LayoutDashboard, root: "dashboard" },
+  { name: "Messagerie", icon: MessagesSquare, root: "chat" },
 ] as const
 
 const navigation2 = [
   {
     name: "Rendez-vous",
     icon: CalendarDays,
-    root: 'rendez-vous',
+    root: "rendez-vous",
     active: false,
     children: [
       { name: "Tous les rendez-vous", href: "#" },
@@ -62,7 +56,7 @@ const navigation2 = [
   {
     name: "Mes Patients",
     icon: UserCircle,
-    root: 'mes-patients',
+    root: "mes-patients",
     active: false,
     children: [
       { name: "Rechercher un patient", href: "#" },
@@ -74,7 +68,7 @@ const navigation2 = [
   {
     name: "Consultations Vidéo",
     icon: Video,
-    root: 'consultations-video',
+    root: "consultations-video",
     active: false,
     children: [
       { name: "Lancer une consultation", href: "#" },
@@ -86,7 +80,7 @@ const navigation2 = [
   {
     name: "Doc. Médicaux",
     icon: FolderSearch,
-    root: 'doc-medicaux',
+    root: "doc-medicaux",
     active: false,
     children: [
       { name: "Reçus des patients", href: "#" },
@@ -98,7 +92,7 @@ const navigation2 = [
   {
     name: "Statistiques",
     icon: BarChart3,
-    root: 'statistiques',
+    root: "statistiques",
     active: false,
     children: [
       { name: "Consultations par période", href: "#" },
@@ -110,7 +104,7 @@ const navigation2 = [
   {
     name: "Paramètres",
     icon: Settings,
-    root: 'parametres',
+    root: "parametres",
     active: false,
     children: [
       { name: "Mes informations", href: "#" },
@@ -123,7 +117,7 @@ const navigation2 = [
   {
     name: "Gestion Cabinet",
     icon: Building2,
-    root: 'gestion-cabinet',
+    root: "gestion-cabinet",
     active: false,
     children: [
       { name: "Liste des employés", href: "#" },
@@ -134,24 +128,28 @@ const navigation2 = [
   },
 ] as const
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname()
   const [openMenus, setOpenMenus] = React.useState<string[]>([
     navigation2[0].name,
     navigation2[1].name,
   ])
-  const toggleMenu = (name: string) => {
-    setOpenMenus((prev: string[]) =>
-      prev.includes(name)
-        ? prev.filter((item: string) => item !== name)
-        : [...prev, name],
+  const toggleMenu = (name: string) =>
+    setOpenMenus((prev) =>
+      prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name]
     )
-  }
+
   return (
     <Sidebar {...props} className="bg-gray-50 dark:bg-gray-900/25">
       <SidebarHeader className="px-3 py-4">
         <div className="flex items-center gap-3">
           <span className="flex size-9 items-center justify-center rounded-md bg-[#00b38f] p-1.5 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
-            <Image src="/images/icon-logo.png" alt="INAYABRIDGE ICON" width={24} height={24} />
+            <Image
+              src="/images/icon-logo.png"
+              alt="INAYABRIDGE ICON"
+              width={24}
+              height={24}
+            />
           </span>
           <div>
             <span className="block text-sm font-semibold text-gray-900 dark:text-gray-50">
@@ -163,90 +161,84 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </div>
         </div>
       </SidebarHeader>
-      <SidebarContent className="Sidebar_parent">
+      <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <Input
-              type="search"
-              placeholder="Search items..."
-              className="[&>input]:sm:py-1.5"
-            />
+            <Input type="search" placeholder="Search items…" className="[&>input]:sm:py-1.5" />
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup className="pt-0">
+
+        <Divider className="my-0" />
+
+        <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {navigation.map((item) => (
-                <SidebarMenuItem key={item.name}>
+                <SidebarMenuItem key={item.root}>
+                  <Link href={`/${item.root}`}>
                     <SidebarLink
-                    href={`/${item.root}`}
-                    isActive={window.location.pathname === `/${item.root}`}
-                    icon={item.icon}
-                    // notifications={item.notifications}
+                      icon={item.icon}
+                      isActive={pathname === `/${item.root}`}
                     >
-                    {item.name}
+                      {item.name}
                     </SidebarLink>
+                  </Link>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <div className="px-3">
-          <Divider className="my-0 py-0" />
-        </div>
+
+        <Divider className="my-0" />
+
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-4">
-              {navigation2.map((item) => (
-                <SidebarMenuItem key={item.name}>
-                  {/* @CHRIS/SEV: discussion whether to componentize (-> state mgmt) */}
-                  <button
-                    onClick={() => toggleMenu(item.name)}
-                    className={cx(
-                      "flex w-full items-center justify-between gap-x-2.5 rounded-md p-2 text-base text-gray-900 transition hover:bg-gray-200/50 sm:text-sm dark:text-gray-400 hover:dark:bg-gray-900 hover:dark:text-gray-50",
-                      focusRing,
-                    )}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <item.icon
-                        className="size-[18px] shrink-0"
-                        aria-hidden="true"
-                      />
-                      {item.name}
-                    </div>
-                    <RiArrowDownSFill
+            <SidebarMenu className="space-y-1">
+              {navigation2.map((item) => {
+                const isOpen = openMenus.includes(item.name)
+                return (
+                  <SidebarMenuItem key={item.name}>
+                    <button
+                      onClick={() => toggleMenu(item.name)}
                       className={cx(
-                        openMenus.includes(item.name)
-                          ? "rotate-0"
-                          : "-rotate-90",
-                        "size-5 shrink-0 transform text-gray-400 transition-transform duration-150 ease-in-out dark:text-gray-600",
+                        "flex w-full items-center justify-between p-2 rounded-md text-base text-gray-900 hover:bg-gray-200/50 dark:text-gray-400 dark:hover:bg-gray-900",
+                        focusRing
                       )}
-                      aria-hidden="true"
-                    />
-                  </button>
-                  {item.children && openMenus.includes(item.name) && (
-                    <SidebarMenuSub>
-                      <div className="absolute inset-y-0 left-4 w-px bg-gray-300 dark:bg-gray-800" />
-                      {item.children.map((child) => (
-                        <SidebarMenuItem key={child.name}>
-                          <SidebarSubLink
-                            href={child.href}
-                            // isActive={child.active}
-                          >
-                            {child.name}
-                          </SidebarSubLink>
-                        </SidebarMenuItem>
-                      ))}
-                    </SidebarMenuSub>
-                  )}
-                </SidebarMenuItem>
-              ))}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <item.icon className="size-[18px]" aria-hidden />
+                        {item.name}
+                      </div>
+                      <RiArrowDownSFill
+                        className={cx(
+                          isOpen ? "rotate-0" : "-rotate-90",
+                          "size-5 transform transition-transform"
+                        )}
+                      />
+                    </button>
+
+                    {isOpen && (
+                      <SidebarMenuSub>
+                        <div className="absolute inset-y-0 left-4 w-px bg-gray-300 dark:bg-gray-800" />
+                        {item.children.map((child) => (
+                          <SidebarMenuItem key={child.name}>
+                            <SidebarSubLink href={child.href}>
+                              {child.name}
+                            </SidebarSubLink>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenuSub>
+                    )}
+                  </SidebarMenuItem>
+                )
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
       <SidebarFooter>
-        <div className="border-t border-gray-200 dark:border-gray-800" />
+        <Divider className="my-0" />
         <UserProfile />
       </SidebarFooter>
     </Sidebar>

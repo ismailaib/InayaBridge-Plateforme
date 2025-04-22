@@ -9,7 +9,6 @@ import {
 import { Input } from "@/components/Input"
 import Link from "next/link"
 import { Button } from "@/components/Button"
-import { useRouter } from "next/navigation"
 
 const ALL_SPECIALISATIONS = [
   "Médecin généraliste",
@@ -32,7 +31,6 @@ const StepDoctorSpecialisation = ({
   accountType: string
   onSuccess?: () => void
 }) => {
-  const router = useRouter()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()

@@ -70,8 +70,8 @@ function getVariantStyles(tabVariant: TabsListVariant) {
         // border hover
         "hover:border-gray-300 dark:hover:border-gray-400",
         // selected
-        "data-[state=active]:border-blue-500 data-[state=active]:text-blue-500",
-        "dark:data-[state=active]:border-blue-500 dark:data-[state=active]:text-blue-500",
+        "data-[state=active]:border-gray-500 data-[state=active]:text-gray-500",
+        "dark:data-[state=active]:border-gray-500 dark:data-[state=active]:text-gray-500",
         // disabled
         "data-disabled:pointer-events-none",
         "data-disabled:text-gray-300 dark:data-disabled:text-gray-700",

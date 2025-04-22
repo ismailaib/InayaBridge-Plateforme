@@ -9,11 +9,12 @@ import {
   SelectValue,
 } from "@/components/Select"
 import React from "react"
-import Banner from "./components/Banner"
+// import Banner from "./components/Banner"
 import Kpis from "./components/Kpis"
 import SalleAttente from "./components/SalleAttente"
 import Statistics from "./components/Statistics"
 import Reporting from "./components/Reporting"
+import { DashboardModal } from "./components/DashboardModal"
 
 export default function Dashboard() {
   const monthSelect = [
@@ -58,7 +59,10 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <div className="mt-4 flex flex-col gap-2 sm:mt-0 sm:flex-row sm:items-center">
+          <div className="mt-4 flex flex-col gap-2 sm:mt-0 sm:flex-row sm:items-end">
+            <div>
+              <DashboardModal />
+            </div>
             <div className="w-[150px]">
               <Select>
                 <SelectTrigger id="size" className="mt-2">
@@ -92,8 +96,8 @@ export default function Dashboard() {
       </header>
 
       <Divider />
-      <Banner />
-      <Divider />
+      {/* <Banner />
+      <Divider /> */}
 
       <main>
         <Kpis />
