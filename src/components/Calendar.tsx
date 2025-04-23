@@ -131,8 +131,8 @@ const Calendar = ({
         day_today: "font-semibold",
         day_selected: cx(
           "rounded-sm",
-          "aria-selected:bg-[#00B38F] aria-selected:text-white",
-          "dark:aria-selected:bg-[#00B38F] dark:aria-selected:text-white",
+          "aria-selected:bg-blue-500 aria-selected:text-white",
+          "dark:aria-selected:bg-blue-500 dark:aria-selected:text-white",
         ),
         day_disabled:
           "text-gray-300! dark:text-gray-700! line-through disabled:hover:bg-transparent",

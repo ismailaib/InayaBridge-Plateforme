@@ -44,13 +44,13 @@ const navigation2 = [
   {
     name: "Rendez-vous",
     icon: CalendarDays,
-    root: "rendez-vous",
+    root: "/appointment",
     active: false,
     children: [
-      { name: "Tous les rendez-vous", href: "#" },
-      { name: "Créer un rendez-vous", href: "#" },
-      { name: "Salle d'attente", href: "#" },
-      { name: "Historique des consultations", href: "#" },
+      { name: "Tous les rendez-vous", root: "/appointment" },
+      { name: "Créer un rendez-vous", root: "/appointment/create" },
+      { name: "Salle d'attente", root: "/appointment/waitingroom" },
+      { name: "Historique des consultations", root: "/consultations/history" },
     ],
   },
   {
@@ -59,10 +59,10 @@ const navigation2 = [
     root: "mes-patients",
     active: false,
     children: [
-      { name: "Rechercher un patient", href: "#" },
-      { name: "Dossier patient", href: "#" },
-      { name: "Ajouter un patient", href: "#" },
-      { name: "Alertes médicales", href: "#" },
+      { name: "Rechercher un patient", root: "#" },
+      { name: "Dossier patient", root: "#" },
+      { name: "Ajouter un patient", root: "#" },
+      { name: "Alertes médicales", root: "#" },
     ],
   },
   {
@@ -71,10 +71,10 @@ const navigation2 = [
     root: "consultations-video",
     active: false,
     children: [
-      { name: "Lancer une consultation", href: "#" },
-      { name: "Historique des appels", href: "#" },
-      { name: "Paramètres caméra & micro", href: "#" },
-      { name: "Feedback visio", href: "#" },
+      { name: "Lancer une consultation", root: "#" },
+      { name: "Historique des appels", root: "#" },
+      { name: "Paramètres caméra & micro", root: "#" },
+      { name: "Feedback visio", root: "#" },
     ],
   },
   {
@@ -83,10 +83,10 @@ const navigation2 = [
     root: "doc-medicaux",
     active: false,
     children: [
-      { name: "Reçus des patients", href: "#" },
-      { name: "Envoyés aux patients", href: "#" },
-      { name: "Ordonnances", href: "#" },
-      { name: "Créer une ordonnance", href: "#" },
+      { name: "Reçus des patients", root: "#" },
+      { name: "Envoyés aux patients", root: "#" },
+      { name: "Ordonnances", root: "#" },
+      { name: "Créer une ordonnance", root: "#" },
     ],
   },
   {
@@ -95,10 +95,10 @@ const navigation2 = [
     root: "statistiques",
     active: false,
     children: [
-      { name: "Consultations par période", href: "#" },
-      { name: "Profil des patients vus", href: "#" },
-      { name: "Satisfaction / feedback", href: "#" },
-      { name: "Rendement / revenus", href: "#" },
+      { name: "Consultations par période", root: "#" },
+      { name: "Profil des patients vus", root: "#" },
+      { name: "Satisfaction / feedback", root: "#" },
+      { name: "Rendement / revenus", root: "#" },
     ],
   },
   {
@@ -107,11 +107,11 @@ const navigation2 = [
     root: "parametres",
     active: false,
     children: [
-      { name: "Mes informations", href: "#" },
-      { name: "Disponibilité / calendrier", href: "#" },
-      { name: "Mot de passe / sécurité", href: "#" },
-      { name: "Pièces justificatives", href: "#" },
-      { name: "Préférences", href: "#" },
+      { name: "Mes informations", root: "#" },
+      { name: "Disponibilité / calendrier", root: "#" },
+      { name: "Mot de passe / sécurité", root: "#" },
+      { name: "Pièces justificatives", root: "#" },
+      { name: "Préférences", root: "#" },
     ],
   },
   {
@@ -120,23 +120,24 @@ const navigation2 = [
     root: "gestion-cabinet",
     active: false,
     children: [
-      { name: "Liste des employés", href: "#" },
-      { name: "Matériel médical", href: "#" },
-      { name: "Gestion des stocks", href: "#" },
-      { name: "Salle de consultation", href: "#" },
+      { name: "Liste des employés", root: "#" },
+      { name: "Matériel médical", root: "#" },
+      { name: "Gestion des stocks", root: "#" },
+      { name: "Salle de consultation", root: "#" },
     ],
   },
 ] as const
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
+  console.log("pathname", pathname)
   const [openMenus, setOpenMenus] = React.useState<string[]>([
     navigation2[0].name,
     navigation2[1].name,
   ])
   const toggleMenu = (name: string) =>
     setOpenMenus((prev) =>
-      prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name]
+      prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name],
     )
 
   return (
@@ -164,7 +165,11 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <Input type="search" placeholder="Search items…" className="[&>input]:sm:py-1.5" />
+            <Input
+              type="search"
+              placeholder="Search items…"
+              className="[&>input]:sm:py-1.5"
+            />
           </SidebarGroupContent>
         </SidebarGroup>
 
@@ -201,33 +206,33 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
                     <button
                       onClick={() => toggleMenu(item.name)}
                       className={cx(
-                        "flex w-full items-center justify-between p-2 rounded-md text-base text-gray-900 hover:bg-gray-200/50 dark:text-gray-400 dark:hover:bg-gray-900",
-                        focusRing
+                        "flex w-full items-center justify-between rounded-md p-2 text-base text-gray-900 hover:bg-gray-200/50 dark:text-gray-400 dark:hover:bg-gray-900",
+                        focusRing,
                       )}
                     >
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-2.5 text-sm">
                         <item.icon className="size-[18px]" aria-hidden />
                         {item.name}
                       </div>
                       <RiArrowDownSFill
                         className={cx(
                           isOpen ? "rotate-0" : "-rotate-90",
-                          "size-5 transform transition-transform"
+                          "size-5 transform transition-transform",
                         )}
                       />
                     </button>
 
                     {isOpen && (
-                      <SidebarMenuSub>
-                        <div className="absolute inset-y-0 left-4 w-px bg-gray-300 dark:bg-gray-800" />
+                        <SidebarMenuSub>
+                        <div className={`absolute inset-y-0 left-4 w-px`} />
                         {item.children.map((child) => (
                           <SidebarMenuItem key={child.name}>
-                            <SidebarSubLink href={child.href}>
-                              {child.name}
-                            </SidebarSubLink>
+                          <SidebarSubLink>
+                            <Link href={`${child.root}`} className={`${pathname === `${child.root}` ? 'text-[#00b38f] dark:text-gray-100' : ''}`}>{child.name}</Link>
+                          </SidebarSubLink>
                           </SidebarMenuItem>
                         ))}
-                      </SidebarMenuSub>
+                        </SidebarMenuSub>
                     )}
                   </SidebarMenuItem>
                 )
