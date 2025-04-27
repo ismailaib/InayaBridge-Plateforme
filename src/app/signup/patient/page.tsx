@@ -10,7 +10,7 @@ import { Label } from "@/components/Label"
 import React from "react"
 
 export default function PatientWelcomePage() {
-  const [value, setValue] = React.useState<Date | undefined>(undefined)
+  // const [value, setValue] = React.useState<Date | undefined>(undefined)
 
   return (
     <div className="grid min-h-screen w-full grid-cols-1 overflow-hidden lg:grid-cols-2">

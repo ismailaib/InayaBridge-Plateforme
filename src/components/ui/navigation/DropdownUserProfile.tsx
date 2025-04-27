@@ -16,6 +16,7 @@ import {
 } from "@/components/DropdownMenu"
 import { ArrowUpRight, Monitor, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
+import Link from "next/link"
 import * as React from "react"
 
 export type DropdownUserProfileProps = {
@@ -100,7 +101,7 @@ export function DropdownUserProfile({
               />
             </DropdownMenuItem>
             <DropdownMenuItem>
-              Join Slack community
+              Join the community
               <ArrowUpRight
                 className="mb-1 ml-1 size-3 shrink-0 text-gray-500"
                 aria-hidden="true"
@@ -110,9 +111,9 @@ export function DropdownUserProfile({
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <a href="#" className="w-full">
+              <Link href="/" className="w-full">
                 Sign out
-              </a>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>

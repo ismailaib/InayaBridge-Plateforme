@@ -1,5 +1,4 @@
 import React from "react"
-import CardsView from "./components/CardsView"
 import CalendarView from "./components/CalendarView"
 import { Button } from "@/components/Button"
 import { Plus } from "lucide-react"

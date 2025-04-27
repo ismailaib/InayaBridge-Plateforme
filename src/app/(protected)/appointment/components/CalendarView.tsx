@@ -38,8 +38,6 @@ import {
   MapPin,
   User,
   Phone,
-  X,
-  Plus,
   LayoutGrid,
   Calendar as CalendarViewIcon,
   List,
@@ -97,7 +95,6 @@ const generateAppointments = () => {
       const patientType =
         patientTypes[Math.floor(Math.random() * patientTypes.length)]
 
-      // Moroccan names for sample data
       const firstNames = [
         "Mohamed",
         "Fatima",
@@ -436,7 +433,7 @@ const WeekView = ({
               </div>
 
               {/* Day columns */}
-              {days.map((day, dayIndex) => (
+              {days.map((day) => (
                 <div
                   key={day.toString()}
                   className={cx(

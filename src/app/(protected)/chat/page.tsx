@@ -13,7 +13,6 @@ import {
   Search, 
   X, 
   Plus, 
-  Settings,
   Image, 
   File, 
   UserPlus,

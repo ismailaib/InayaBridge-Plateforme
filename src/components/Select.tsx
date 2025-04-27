@@ -202,28 +202,26 @@ const SelectItem = React.forwardRef<
     <SelectPrimitives.Item
       ref={forwardedRef}
       className={cx(
-        // base
-        "grid cursor-pointer grid-cols-[1fr_20px] gap-x-2 rounded-sm px-3 py-2 outline-hidden transition-colors data-[state=checked]:font-semibold sm:text-sm",
-        // text color
-        "text-gray-900 dark:text-gray-50",
-        // disabled
-        "data-disabled:pointer-events-none data-disabled:text-gray-400 data-disabled:hover:bg-none dark:data-disabled:text-gray-600",
-        // focus
-        "focus-visible:bg-gray-100 dark:focus-visible:bg-gray-900",
-        // hover
-        "hover:bg-gray-100 dark:hover:bg-gray-900",
-        className,
+      // base
+      "grid cursor-pointer grid-cols-[1fr_20px] gap-x-2 rounded-sm px-3 py-2 outline-hidden transition-colors data-[state=checked]:font-semibold sm:text-sm",
+      // text color
+      "text-gray-900 dark:text-gray-50",
+      // disabled
+      "data-disabled:pointer-events-none data-disabled:text-gray-400 data-disabled:hover:bg-none dark:data-disabled:text-gray-600",
+      // hover
+      "hover:bg-gray-100 dark:hover:bg-gray-900",
+      className,
       )}
       {...props}
     >
       <SelectPrimitives.ItemText className="flex-1 truncate">
-        {children}
+      {children}
       </SelectPrimitives.ItemText>
       <SelectPrimitives.ItemIndicator>
-        <RiCheckLine
-          className="size-5 shrink-0 text-gray-800 dark:text-gray-200"
-          aria-hidden="true"
-        />
+      <RiCheckLine
+        className="size-5 shrink-0 text-gray-800 dark:text-gray-200"
+        aria-hidden="true"
+      />
       </SelectPrimitives.ItemIndicator>
     </SelectPrimitives.Item>
   )

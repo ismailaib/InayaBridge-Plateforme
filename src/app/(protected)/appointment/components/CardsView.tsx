@@ -3,9 +3,7 @@
 import { useState } from "react"
 import { DragDropContext, DropResult } from "react-beautiful-dnd"
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/Tabs"
-import { CirclePlay, ClockFading, SquareActivity } from "lucide-react"
-import { PatientCard } from "./PatientCard"
+import { ClockFading, SquareActivity } from "lucide-react"
 import { Section } from "./Section"
 
 interface Patient {
@@ -134,16 +132,9 @@ export default function CardsView() {
 
   return (
     <div className="mt-6">
-      <Tabs>
-        <TabsList className="flex w-full justify-end bg-transparent">
-          <TabsTrigger value="cabinet" className="flex flex-row gap-2">
-            <CirclePlay width={18} />
-            Démarrer ma session
-          </TabsTrigger>
-        </TabsList>
         <div className="rounded-b-md bg-white dark:bg-gray-950">
           <DragDropContext onDragEnd={onDragEnd}>
-            <TabsContent value="cabinet" className="p-6">
+            <div className="p-6">
               <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
                 <Section
                   title="En consultation"
@@ -160,11 +151,9 @@ export default function CardsView() {
                   status={"Salle d'attente"}
                 />
               </div>
-            </TabsContent>
+            </div>
           </DragDropContext>
         </div>
-      </Tabs>
-
       
     </div>
   )

@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { RiArrowDownSFill } from "@remixicon/react"
 import {
@@ -179,15 +178,14 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {navigation.map((item) => (
-                <SidebarMenuItem key={item.root}>
-                  <Link href={`/${item.root}`}>
+                <SidebarMenuItem key={item.root} >
                     <SidebarLink
                       icon={item.icon}
+                      href={`/${item.root}`}
                       isActive={pathname === `/${item.root}`}
                     >
                       {item.name}
                     </SidebarLink>
-                  </Link>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -223,16 +221,23 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
                     </button>
 
                     {isOpen && (
-                        <SidebarMenuSub>
+                      <SidebarMenuSub>
                         <div className={`absolute inset-y-0 left-4 w-px`} />
                         {item.children.map((child) => (
                           <SidebarMenuItem key={child.name}>
-                          <SidebarSubLink>
-                            <Link href={`${child.root}`} className={`${pathname === `${child.root}` ? 'text-[#00b38f] dark:text-gray-100' : ''}`}>{child.name}</Link>
-                          </SidebarSubLink>
+                              <SidebarSubLink
+                              href={child.root}
+                                className={
+                                  pathname === child.root
+                                    ? "text-[#00b38f] dark:text-gray-100"
+                                    : ""
+                                }
+                              >
+                                {child.name}
+                              </SidebarSubLink>
                           </SidebarMenuItem>
                         ))}
-                        </SidebarMenuSub>
+                      </SidebarMenuSub>
                     )}
                   </SidebarMenuItem>
                 )

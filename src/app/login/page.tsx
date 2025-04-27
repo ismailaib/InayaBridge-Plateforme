@@ -85,11 +85,8 @@ export default function LoginPage() {
             </div>
 
             <p className="mt-4 flex justify-center gap-1 text-xs text-gray-500 dark:text-gray-500">
-              En vous connectant, vous acceptez nos{" "}
-              <Conditions />{" "}
-              et notre{" "}
-              <Politique />
-              .
+              En vous connectant, vous acceptez nos <Conditions /> et notre{" "}
+              <Politique />.
             </p>
           </form>
 
@@ -100,14 +97,14 @@ export default function LoginPage() {
                 Créer un compte
               </Button>
             </Link>
-
-            <Button
-              variant="primary"
-              className="w-full"
-              loadingText="Connexion..."
-            >
-              Se connecter
-            </Button>
+            <Link href="/dashboard" className="w-full">
+              <Button
+                variant="primary"
+                className="w-full"
+              >
+                Se connecter
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

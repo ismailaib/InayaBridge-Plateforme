@@ -5,7 +5,6 @@ import * as PopoverPrimitives from "@radix-ui/react-popover"
 import {
   RiArrowLeftSLine,
   RiArrowRightSLine,
-  RiCake2Fill,
   RiCalendar2Fill,
 } from "@remixicon/react"
 import {
@@ -265,7 +264,7 @@ const CalendarPrimitive = React.memo(
               divProps,
               isButton,
               isHidden,
-            } = useDayRender(date, displayMonth, buttonRef)
+            } = useDayRender(date, displayMonth, buttonRef as React.RefObject<HTMLButtonElement>)
 
             const { selected, today, disabled, range_middle } = activeModifiers
 

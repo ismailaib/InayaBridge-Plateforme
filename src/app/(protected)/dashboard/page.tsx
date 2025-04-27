@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/Select"
 import React from "react"
-// import Banner from "./components/Banner"
+import Banner from "./components/Banner"
 import Kpis from "./components/Kpis"
 import SalleAttente from "./components/SalleAttente"
 import Statistics from "./components/Statistics"
@@ -96,8 +96,8 @@ export default function Dashboard() {
       </header>
 
       <Divider />
-      {/* <Banner />
-      <Divider /> */}
+      <Banner />
+      <Divider />
 
       <main>
         <Kpis />

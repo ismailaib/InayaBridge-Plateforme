@@ -9,6 +9,7 @@ import React, { useState } from "react"
 import confetti from "canvas-confetti"
 import { Conditions } from "@/app/Conditions"
 import { Politique } from "@/app/Politique"
+import { useRouter } from "next/navigation";
 
 const StepSharedFields = ({
   accountType,
@@ -19,11 +20,13 @@ const StepSharedFields = ({
   additionalFields: any
   onSuccess?: () => void
 }) => {
-  //   const router = useRouter()
+  const router = useRouter();
+
   const [loading, setLoading] = useState(false)
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    router.push("/dashboard");
     confetti({
       particleCount: 120,
       spread: 80,
@@ -118,8 +121,9 @@ const StepSharedFields = ({
         {additionalFields && <div className="pt-4">{additionalFields}</div>}
 
         <p className="mt-4 flex justify-center gap-1 text-xs text-gray-500 dark:text-gray-500">
-          En vous connectant, vous acceptez nos <Conditions /> et notre{" "}
-          <Politique />.
+          En vous connectant, vous acceptez nos{" "}
+          {typeof window !== "undefined" && <Conditions />} et notre{" "}
+          {typeof window !== "undefined" && <Politique />}.
         </p>
       </form>
 
@@ -130,16 +134,17 @@ const StepSharedFields = ({
             Retour
           </Button>
         </Link>
-
-        <Button
-          variant="primary"
-          className="w-full"
-          onClick={handleSubmit}
-          isLoading={loading}
-          loadingText="Création en cours..."
-        >
-          Créer mon espace de travail
-        </Button>
+        <Link href="/dashboard" className="w-full">
+          <Button
+            variant="primary"
+            className="w-full"
+            onClick={handleSubmit}
+            isLoading={loading}
+            loadingText="Création en cours..."
+          >
+            Créer mon espace de travail
+          </Button>
+        </Link>
       </div>
     </div>
   )

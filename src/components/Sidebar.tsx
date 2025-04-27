@@ -13,6 +13,7 @@ import { RiCloseLine } from "@remixicon/react"
 import { PanelLeft } from "lucide-react"
 import * as React from "react"
 import { Button } from "./Button"
+import Link from "next/link"
 
 // This component is based on shadcn's sidebar component
 
@@ -286,8 +287,9 @@ const SidebarLink = React.forwardRef<
 >(({ children, isActive, icon, notifications, className, ...props }, ref) => {
   const Icon = icon
   return (
-    <a
+    <Link
       ref={ref}
+      href={props.href ?? "/"}
       aria-current={isActive ? "page" : undefined}
       data-active={isActive}
       className={cx(
@@ -307,7 +309,7 @@ const SidebarLink = React.forwardRef<
           {notifications}
         </span>
       )}
-    </a>
+    </Link>
   )
 })
 SidebarLink.displayName = "SidebarLink"
@@ -367,8 +369,9 @@ const SidebarSubLink = React.forwardRef<
   }
 >(({ isActive, children, className, ...props }, ref) => {
   return (
-    <a
+    <Link
       ref={ref}
+      href={props.href ?? "/"} // Ensure href is provided with a default value
       aria-current={isActive ? "page" : undefined}
       data-active={isActive}
       className={cx(
@@ -386,7 +389,7 @@ const SidebarSubLink = React.forwardRef<
         />
       )}
       {children}
-    </a>
+    </Link>
   )
 })
 SidebarSubLink.displayName = "SidebarSubLink"
