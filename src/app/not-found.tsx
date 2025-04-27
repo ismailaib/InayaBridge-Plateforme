@@ -14,14 +14,14 @@ export default function NotFound() {
         404
       </p>
       <h1 className="mt-4 text-2xl font-semibold text-gray-900 dark:text-gray-50">
-        Page not found
+        Page introuvable
       </h1>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Sorry, we couldn’t find the page you’re looking for.
+        Désolé, nous n&apos;avons pas trouvé la page que vous recherchez.
       </p>
       <Button asChild className="group mt-8" variant="light">
         <Link href={siteConfig.baseLinks.home}>
-          Go to the home page
+          Retourner à la page d&apos;accueil
           <ArrowAnimated
             className="stroke-gray-900 dark:stroke-gray-50"
             aria-hidden="true"

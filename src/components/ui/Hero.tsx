@@ -27,7 +27,7 @@ export default function Hero() {
         style={{ animationDuration: "1100ms" }}
       >
         <Button className="h-10 font-semibold">
-          <Link href="#">Découvrir la plateforme</Link>
+          <Link href="/signup">Découvrir la plateforme</Link>
         </Button>
         <Button
           asChild

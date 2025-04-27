@@ -271,7 +271,7 @@ export default function Pricing() {
                       : plan.price}
                   </span>
                   <div className="text-xs text-gray-600 dark:text-gray-400">
-                    per user <br /> per month
+                    par utilisateur <br /> par mois
                   </div>
                 </div>
                 <div className="mt-6 flex flex-col justify-between">
@@ -374,7 +374,7 @@ export default function Pricing() {
                         billingFrequency === "monthly"
                           ? plan.price.monthly
                           : plan.price.annually
-                      } / per user`
+                      } / par utilisateur`
                     : plan.price}
                 </p>
               </div>
@@ -439,10 +439,10 @@ export default function Pricing() {
                     className="border-b border-gray-100 bg-white pb-8 dark:border-gray-800 dark:bg-gray-950"
                   >
                     <div className="font-semibold leading-7 text-gray-900 dark:text-gray-50">
-                      Compare prices
+                      Comparer les prix
                     </div>
                     <div className="text-sm font-normal text-gray-600 dark:text-gray-400">
-                      Price per month (billed yearly)
+                      Prix par mois
                     </div>
                   </th>
                   {plans.map((plan) => (
@@ -467,7 +467,7 @@ export default function Pricing() {
                               billingFrequency === "monthly"
                                 ? plan.price.monthly
                                 : plan.price.annually
-                            } / per user`
+                            } / par utilisateur`
                           : plan.price}
                       </div>
                     </th>

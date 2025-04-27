@@ -1,3 +1,5 @@
+// Tremor cx [v0.0.0]
+
 import clsx, { type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -5,18 +7,18 @@ export function cx(...args: ClassValue[]) {
   return twMerge(clsx(...args))
 }
 
-// Tremor Raw focusInput [v0.0.1]
+// Tremor focusInput [v0.0.1]
 
 export const focusInput = [
   // base
   "focus:ring-2",
   // ring color
-  "focus:ring-[#99e6d6] focus:dark:ring-[#007e68]/30",
+  "focus:ring-[#00b38f] focus:dark:ring-[#00b38f]/30",
   // border color
-  "focus:border-[#00b38f] focus:dark:border-[#007e68]",
+  "focus:border-[#00b38f] focus:dark:border-[#00b38f]",
 ]
 
-// Tremor Raw focusRing [v0.0.1]
+// Tremor focusRing [v0.0.1]
 
 export const focusRing = [
   // base
@@ -25,7 +27,7 @@ export const focusRing = [
   "outline-[#00b38f] dark:outline-[#00b38f]",
 ]
 
-// Tremor Raw hasErrorInput [v0.0.1]
+// Tremor hasErrorInput [v0.0.1]
 
 export const hasErrorInput = [
   // base

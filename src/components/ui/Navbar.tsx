@@ -65,11 +65,16 @@ export function Navigation() {
               </Link>
             </div>
           </nav>
-          <Button className="hidden h-10 font-semibold md:flex">
-            Se connecter
-          </Button>
+          <Link href="/login">
+            <Button className="hidden h-10 font-semibold md:flex">
+              Se connecter
+            </Button>
+          </Link>
+
           <div className="flex gap-x-2 md:hidden">
-            <Button>Se connecter</Button>
+            <Link href="/login">
+              <Button>Se connecter</Button>
+            </Link>
             <Button
               onClick={() => setOpen(!open)}
               variant="light"
