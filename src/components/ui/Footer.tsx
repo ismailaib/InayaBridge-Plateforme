@@ -38,8 +38,7 @@ export default function Footer() {
           <div className="space-y-8">
             <DatabaseLogo className="w-32 sm:w-40" />
             <p className="text-sm leading-6 text-gray-600 dark:text-gray-400">
-              We didn’t just throw together a PFC Project —we created a platform identity that walks, talks, and <i>slaps</i> .
-            </p>
+              Une plateforme gratuite de consultations médicales à distance, pensée pour briser les barrières géographiques et rendre les soins accessibles à chacun.            </p>
             <div className="flex space-x-6">
               <ThemeSwitch />
             </div>
