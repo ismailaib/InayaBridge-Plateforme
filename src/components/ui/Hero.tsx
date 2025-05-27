@@ -15,45 +15,47 @@ export default function Hero() {
       {/* Background gradient circles for visual flair */}
       <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-emerald-50 blur-3xl opacity-70 dark:bg-emerald-900/20" />
       <div className="absolute top-1/2 right-1/4 h-64 w-64 rounded-full bg-teal-50 blur-3xl opacity-60 dark:bg-teal-900/20" />
-      
+
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
           {/* Text content */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="max-w-xl"
           >
             {/* Small badge */}
-            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1.5 mb-6 text-sm font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100/70 px-4 py-1.5 mb-6 text-sm font-semibold text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200 shadow-sm">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
               </span>
-              Nouveau: Consultations disponibles 24/7
+              <span>
+                Découvrez notre agent qui accompagne les médecins au quotidien.
+              </span>
             </div>
-            
+
             <h1
               id="hero-title"
               className="text-5xl sm:text-5xl md:text-6xl font-bold tracking-tight text-transparent bg-gradient-to-r from-emerald-600 via-emerald-800 to-teal-600 bg-clip-text leading-tight"
             >
               La santé accessible. <br /> Pour tous, partout.
             </h1>
-            
+
             <p className="mt-6 text-lg text-gray-700 dark:text-gray-300">
               Une plateforme gratuite de consultations médicales à distance, pensée
               pour briser les barrières géographiques et rendre les soins
               accessibles à chacun.
             </p>
-            
+
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
               <Button asChild className="h-12 px-6 font-medium text-base bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow-lg shadow-emerald-500/20 transition-all duration-300 dark:shadow-emerald-900/30">
                 <Link href="/signup">
                   Découvrir la plateforme
                 </Link>
               </Button>
-              
+
               <Button
                 asChild
                 variant="light"
@@ -73,7 +75,7 @@ export default function Hero() {
                 </Link>
               </Button>
             </div>
-            
+
             {/* Social proof or stats */}
             <div className="mt-12 grid grid-cols-3 gap-4 border-t border-gray-200 pt-6 dark:border-gray-800">
               <div>
@@ -90,48 +92,54 @@ export default function Hero() {
               </div>
             </div>
           </motion.div>
-          
+
           {/* Image with floating elements */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"
           >
-            <div className="relative rounded-2xl shadow-2xl shadow-emerald-500/10 border border-gray-200 dark:border-gray-800">
+            <div className="relative select-none pointer-events-none">
               <Image
-                src="/images/home.png"
+                src="/images/home2.png"
                 height={650}
                 width={650}
                 alt="Plateforme de téléconsultation"
-                className="relative z-10"
+                className="relative z-10 select-none pointer-events-none"
+                priority
+                quality={100}
+                draggable={false}
               />
-              
+
+              {/* Blurry gradient at the bottom of the image */}
+              <div className="absolute z-20 left-0 right-0 bottom-0 h-32 bg-gradient-to-t from-white via-white/50 dark:from-gray-950 dark:via-gray-950/40 to-transparent pointer-events-none transition-all duration-700 ease-in-out" />
+
               {/* Floating UI elements */}
-              <motion.div 
+              <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.6 }}
-                className="absolute -left-12 top-12 z-20 rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800"
+                className="absolute -left-12 top-12 z-20 rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800 animate-float select-none pointer-events-none"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 ">
                   <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center dark:bg-green-900/30">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">Consultation confirmée</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Dr. Martin, 14:30</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-100 ">Consultation confirmée</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">À l&apos;instant</p>
                   </div>
                 </div>
               </motion.div>
-              
-              <motion.div 
+
+              <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.8, duration: 0.6 }}
-                className="absolute -right-12 bottom-24 z-20 rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800"
+                className="absolute -right-12 bottom-24 z-20 rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800 animate-float select-none pointer-events-none"
               >
                 <div className="flex items-center gap-2">
                   <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center dark:bg-emerald-900/30">
@@ -141,7 +149,7 @@ export default function Hero() {
                   </div>
                   <div>
                     <p className="font-medium text-gray-900 dark:text-gray-100">Rapide & Efficace</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Moins de 5 min d&apos;attente</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Moins de 1 min d&apos;attente</p>
                   </div>
                 </div>
               </motion.div>
@@ -149,7 +157,7 @@ export default function Hero() {
           </motion.div>
         </div>
       </div>
-      
+
       {/* Bottom gradient */}
       <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white via-white to-transparent dark:from-gray-950 dark:via-gray-950" />
     </section>

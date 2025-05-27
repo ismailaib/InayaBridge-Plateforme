@@ -29,6 +29,7 @@ import {
   BarChart3,
   Settings,
   Building2,
+  Bot,
 } from "lucide-react"
 import { cx, focusRing } from "@/lib/utils"
 
@@ -37,6 +38,7 @@ import Image from "next/image"
 const navigation = [
   { name: "Accueil", icon: LayoutDashboard, root: "dashboard" },
   { name: "Messagerie", icon: MessagesSquare, root: "chat" },
+  { name: "Mon Agent", icon: Bot, root: "ai" },
 ] as const
 
 const navigation2 = [
@@ -49,19 +51,17 @@ const navigation2 = [
       { name: "Tous les rendez-vous", root: "/appointment" },
       { name: "Créer un rendez-vous", root: "/appointment/create" },
       { name: "Salle d'attente", root: "/appointment/waitingroom" },
-      { name: "Historique des consultations", root: "/consultations/history" },
+      { name: "Historique des consultations", root: "/appointment/history" },
     ],
   },
   {
     name: "Mes Patients",
     icon: UserCircle,
-    root: "mes-patients",
+    root: "/mes-patients",
     active: false,
     children: [
-      { name: "Rechercher un patient", root: "#" },
-      { name: "Dossier patient", root: "#" },
-      { name: "Ajouter un patient", root: "#" },
-      { name: "Alertes médicales", root: "#" },
+      { name: "Gestion des patients", root: "/mes-patients/search" },
+      { name: "Dossier patient", root: "/mes-patients/root" },
     ],
   },
   {
@@ -132,7 +132,6 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   console.log("pathname", pathname)
   const [openMenus, setOpenMenus] = React.useState<string[]>([
     navigation2[0].name,
-    navigation2[1].name,
   ])
   const toggleMenu = (name: string) =>
     setOpenMenus((prev) =>

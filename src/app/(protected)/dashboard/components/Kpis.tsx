@@ -32,32 +32,14 @@ const kpiData = [
   ],
   [
     {
-      title: "Durée moyenne des consultations",
-      value: "18 min",
-      tooltip: "Durée moyenne d'une consultation avec un patient.",
-    },
-    {
       title: "Nouveaux patients (mois)",
       value: "42",
       tooltip: "Nombre de nouveaux patients enregistrés ce mois-ci.",
     },
-    {
-      title: "Taux de rétention patient",
-      value: "91.2%",
-      tooltip: "Pourcentage de patients ayant effectué plusieurs visites.",
-    },
-  ],
-  [
-    {
+        {
       title: "Consultations vidéo effectuées",
       value: "16",
       tooltip: "Nombre total de consultations effectuées via vidéoconférence.",
-    },
-    {
-      title: "Taux de non-présentation",
-      value: "7.4%",
-      tooltip:
-        "Pourcentage de patients qui ne se sont pas présentés à leur rendez-vous.",
     },
     {
       title: "Satisfaction patient (CSAT)",
@@ -70,7 +52,7 @@ const kpiData = [
 export default function DoctorKPIBlock() {
   return (
     <div className="mt-4 grid grid-cols-1 gap-5 lg:grid-cols-8">
-      <Card className="h-full lg:col-span-5">
+      <Card className="h-full lg:col-span-4">
         <div className="flex items-center justify-between">
           <p className="font-semibold text-gray-900 dark:text-gray-50">
             Statistiques de la semaine
@@ -84,7 +66,7 @@ export default function DoctorKPIBlock() {
             </span>
           </Tooltip>
         </div>
-        <dl className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <dl className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2">
           {kpiData.map((column, i) => (
             <div key={i} className="flex flex-col space-y-6">
               {column.map((kpi, index) => (
@@ -112,7 +94,7 @@ export default function DoctorKPIBlock() {
         </dl>
       </Card>
 
-      <Card className="h-full lg:col-span-3">
+      <Card className="h-full lg:col-span-4">
         <div className="flex items-center justify-between">
           <p className="font-semibold text-gray-900 dark:text-gray-50">
             Alertes principales

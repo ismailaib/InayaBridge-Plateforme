@@ -370,7 +370,7 @@ export default function CardsView() {
   return (
     <div className="mt-6">
       <div className="rounded-b-md bg-white dark:bg-gray-950">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-2">
           <Section
             id="consultation"
             title="En consultation"
@@ -382,12 +382,6 @@ export default function CardsView() {
             title="Salle d'attente"
             icon={ClockFading}
             items={data.salleAttente}
-          />
-          <Section
-            id="visioconference"
-            title="Téléconsultation"
-            icon={Users}
-            items={data.visioconference}
           />
         </div>
       </div>

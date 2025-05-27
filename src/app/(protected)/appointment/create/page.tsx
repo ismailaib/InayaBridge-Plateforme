@@ -19,6 +19,7 @@ import {
   RadioCardItem,
 } from "@/components/RadioCardGroup"
 import { Search } from "lucide-react"
+import { Switch } from "@/components/Switch"
 
 interface Patient {
   id: string
@@ -44,6 +45,8 @@ export default function RendezVousForm() {
   const [value, setValue] = React.useState<Date | undefined>(undefined)
   const [selectOpen, setSelectOpen] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const [checked, setChecked] = React.useState(false)
+  const [isUrgent, setUrgent] = React.useState(false)
 
   // Filter patients when search query changes
   useEffect(() => {
@@ -102,7 +105,7 @@ export default function RendezVousForm() {
       <form className="mt-8 space-y-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-6">
           {/* Patient selector with search */}
-          <div className="col-span-3 sm:col-span-3">
+          <div className="col-span-3 sm:col-span-2">
             <Label htmlFor="patient" className="font-medium">
               Patient<span className="text-red-500">*</span>
             </Label>
@@ -166,7 +169,7 @@ export default function RendezVousForm() {
           </div>
 
           {/* Date */}
-          <div className="col-span-full sm:col-span-3">
+          <div className="col-span-full sm:col-span-2">
             <Label htmlFor="date" className="font-medium">
               Date<span className="text-red-500">*</span>
             </Label>
@@ -177,6 +180,20 @@ export default function RendezVousForm() {
               onChange={(value) => {
                 setValue(value)
               }}
+            />
+          </div>
+
+          <div className="col-span-full sm:col-span-2">
+            <Label htmlFor="date" className="font-medium">
+              Cout<span className="text-red-500">*</span>
+            </Label>
+             <Input
+              type="number"
+              id="cost"
+              name="cost"
+              min={0}
+              placeholder="Ex. 250 DH"
+              className="mt-2"
             />
           </div>
 
@@ -219,7 +236,9 @@ export default function RendezVousForm() {
                     <RadioCardIndicator className="mt-1" />
                     <div>
                       <span className="sm:text-sm">Cabinet principal</span>
-                      <p className="mt-1 text-xs text-gray-500">description</p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        Situé au centre-ville, équipé pour tous les examens médicaux courants.
+                      </p>
                     </div>
                   </div>
                 </RadioCardItem>
@@ -228,7 +247,9 @@ export default function RendezVousForm() {
                     <RadioCardIndicator className="mt-1" />
                     <div>
                       <span className="sm:text-sm">À domicile</span>
-                      <p className="mt-1 text-xs text-gray-500">description</p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        Consultation réalisée au domicile du patient, idéale pour les personnes à mobilité réduite ou nécessitant un suivi à la maison.
+                      </p>
                     </div>
                   </div>
                 </RadioCardItem>
@@ -237,7 +258,9 @@ export default function RendezVousForm() {
                     <RadioCardIndicator className="mt-1" />
                     <div>
                       <span className="sm:text-sm">Télécommunication</span>
-                      <p className="mt-1 text-xs text-gray-500">description</p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        Rendez-vous à distance par appel vidéo ou téléphonique, pratique pour les consultations rapides ou le suivi sans déplacement.
+                      </p>
                     </div>
                   </div>
                 </RadioCardItem>
@@ -246,6 +269,25 @@ export default function RendezVousForm() {
           </div>
         </div>
 
+        <Divider />
+
+        {(value &&
+          value.toDateString() === new Date().toDateString() &&
+          (
+            <>
+              <div className="flex items-center gap-3">
+                <Switch id="a" checked={checked} onCheckedChange={setChecked} />
+                <Label htmlFor="a">Ajouter à la salle d&apos;attente</Label>
+              </div>
+              <Divider />
+            </>
+
+          ))}
+
+        <div className="flex items-center gap-3">
+          <Switch id="a" checked={isUrgent} onCheckedChange={setUrgent} />
+          <Label htmlFor="a">Marquer Comme Urgente</Label>
+        </div>
         <Divider />
 
         {/* Actions */}
