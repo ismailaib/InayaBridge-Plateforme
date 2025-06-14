@@ -19,8 +19,7 @@ import {
     TableRoot,
     TableRow,
 } from '@/components/Table';
-import { Pencil, Trash2, UserRoundMinus, UserRoundPen } from 'lucide-react';
-import { Button } from '@/components/Button';
+
 import Edit from './Edit';
 import Delete from './Delete';
 
@@ -132,8 +131,7 @@ const patientsColumns = [
     {
         header: 'Action',
         accessorKey: 'action',
-        cell: ({ row }: { row: import('@tanstack/react-table').Row<any> }) => {
-            const patient = row.original;
+        cell: () => {
             return (
                 <div className="flex items-center gap-3">
                     <Edit />

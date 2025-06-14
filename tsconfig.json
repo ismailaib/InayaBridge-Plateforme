@@ -36,7 +36,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/app/(protected)/ai/components/Avatar.jsx", "src/app/(protected)/ai/components/Environement.jsx", "src/app/(protected)/ai/components/Experience.jsx", "src/app/(protected)/ai/components/UI.jsx"  ],
   "exclude": [
     "node_modules"
   ]

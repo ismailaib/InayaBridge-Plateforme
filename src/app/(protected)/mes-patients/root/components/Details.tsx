@@ -38,10 +38,6 @@ const InfoItem: React.FC<InfoItemProps> = ({ icon: Icon, label, value, valueColo
     </div>
 )
 
-interface BadgeProps {
-    children: React.ReactNode;
-    variant?: "default" | "success" | "warning" | "danger";
-}
 
 interface SectionHeaderProps {
     icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;

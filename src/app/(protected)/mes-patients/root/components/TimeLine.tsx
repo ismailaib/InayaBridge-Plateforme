@@ -2,7 +2,6 @@
 
 import {
   RiCheckLine,
-  RiNotification2Line,
   RiCalendarLine,
   RiMoneyDollarCircleLine,
   RiUserReceivedLine,

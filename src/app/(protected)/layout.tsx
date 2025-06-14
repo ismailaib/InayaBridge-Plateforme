@@ -1,23 +1,23 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/Sidebar"
+import { SidebarProvider } from "@/components/Sidebar"
 import { AppSidebar } from "@/components/ui/navigation/AppSidebar"
-import { Breadcrumbs } from "@/components/ui/navigation/Breadcrumbs"
-import type { Metadata } from "next"
 import { ThemeProvider } from "next-themes"
 import { cookies } from "next/headers"
 import { siteConfig } from "../siteConfig"
+import Header from "@/components/ui/navigation/Header"
+import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://yoururl.com"),
+  metadataBase: new URL("https://inaya-bridge.vercel.app/"),
   title: siteConfig.name,
   description: siteConfig.description,
   keywords: ["Dashboard", "Data Visualization", "Software"],
   authors: [
     {
-      name: "yourname",
-      url: "",
+      name: "ismail Ait bouhmad",
+      url: "https://ismailaitbouhmad.netlify.app/",
     },
   ],
-  creator: "yourname",
+  creator: "ismail Ait bouhmad",
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -46,6 +46,21 @@ export default async function RootLayout({
   const defaultOpen = cookieStore.get("sidebar:state")?.value === "true"
 
   return (
+    <RootLayoutClient defaultOpen={defaultOpen}>
+      {children}
+    </RootLayoutClient>
+  )
+}
+
+function RootLayoutClient({
+  children,
+  defaultOpen,
+}: {
+  children: React.ReactNode
+  defaultOpen: boolean
+}) {
+
+  return (
     <div>
       <div className={`bg-white-50 h-full antialiased dark:bg-gray-950`}>
         <ThemeProvider
@@ -56,11 +71,7 @@ export default async function RootLayout({
           <SidebarProvider defaultOpen={defaultOpen}>
             <AppSidebar />
             <div className="w-full">
-              <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-gray-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-950">
-                <SidebarTrigger className="-ml-1" />
-                <div className="mr-2 h-4 w-px bg-gray-200 dark:bg-gray-800" />
-                <Breadcrumbs />
-              </header>
+              <Header />
               <main>{children}</main>
             </div>
           </SidebarProvider>

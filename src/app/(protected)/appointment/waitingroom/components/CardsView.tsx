@@ -17,7 +17,7 @@ import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder"
 import { getReorderDestinationIndex } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index"
 
 // Icons
-import { ClockFading, SquareActivity, Users } from "lucide-react"
+import { ClockFading, SquareActivity } from "lucide-react"
 
 /* ---------- Types & Initial data ---------- */
 interface Patient {

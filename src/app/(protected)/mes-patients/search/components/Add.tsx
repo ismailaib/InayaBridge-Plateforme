@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { RiCloseLine } from '@remixicon/react';
-import { CircleUserRound, UserRoundPlus } from 'lucide-react';
+import { UserRoundPlus } from 'lucide-react';
 
 import { Button } from '@/components/Button';
 import {

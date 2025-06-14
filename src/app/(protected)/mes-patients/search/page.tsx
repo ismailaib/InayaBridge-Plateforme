@@ -8,11 +8,11 @@ const page = () => {
       <div className="mb-4 flex items-center justify-between">
         <div className="mb-4 flex flex-col items-start justify-between">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-            Historique Des Consultations
+            Géstion des patients
           </h3>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Içi vous pouvez consulter tous vos rendez-vous and génerer un rapport
-          </p>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            Ici vous pouvez consulter tous vos patients et générer un rapport
+            </p>
         </div>
         <Add />
       </div>

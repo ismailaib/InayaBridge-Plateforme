@@ -1,74 +1,34 @@
-import {
-  CameraControls,
-  Environment,
-  Text,
-} from "@react-three/drei";
-import { Suspense, useEffect, useRef, useState } from "react";
-import { useChat } from "../hooks/useChat";
-import { Avatar } from "./Avatar";
-import Environement from "./Environement";
-
+import { CameraControls, Environment, Text } from "@react-three/drei"
+import { Suspense, useEffect, useRef, useState } from "react"
+import { Avatar } from "./Avatar"
+import Environement from "./Environement"
+import { Leva } from "leva"
+import { UI } from "./UI"
 
 const Dots = (props) => {
-  const { loading } = useChat();
-  const [loadingText, setLoadingText] = useState("");
-  useEffect(() => {
-    if (loading) {
-      const interval = setInterval(() => {
-        setLoadingText((loadingText) => {
-          if (loadingText.length > 2) {
-            return ".";
-          }
-          return loadingText + ".";
-        });
-      }, 800);
-      return () => clearInterval(interval);
-    } else {
-      setLoadingText("");
-    }
-  }, [loading]);
-  if (!loading) return null;
-  return (
-    <group {...props}>
-      <Text fontSize={0.14} anchorX={"left"} anchorY={"bottom"}>
-        {loadingText}
-        <meshBasicMaterial attach="material" color="black" />
-      </Text>
-    </group>
-  );
-};
+  const [loadingText, setLoadingText] = useState("")
+  return <group {...props}></group>
+}
 
 const OfficeEnvironment = () => {
-
   return (
     <group>
-      <Environement position={[0, 0, -2]} rotation={[0, 0, 0]}/>
+      <Environement position={[0, 0, -2]} rotation={[0, 0, 0]} />
     </group>
-  );
-};
+  )
+}
 
 export const Experience = () => {
-  const cameraControls = useRef();
-  const { cameraZoomed } = useChat();
-  const avatarRef = useRef();
+  const cameraControls = useRef()
+  const avatarRef = useRef()
 
   useEffect(() => {
-    cameraControls.current.setLookAt(1, 3, 2, 0, 4, 0);
-  }, []);
+    if (!cameraControls.current) return
 
-  useEffect(() => {
-    if (cameraZoomed) {
-      cameraControls.current.setLookAt(-0.40, 2, 1.5, -0.40, 1.5, 0, true);
-    } else {
-      cameraControls.current.setLookAt(-0.40, 2.2, 5, -0.40, 1.0, 0, true);
-    }
-  }, [cameraZoomed]);
+    cameraControls.current.setLookAt(0.05, 4.2, 2, -0.1, 4.1, 1, true, 5)
 
-  useEffect(() => {
-    if (avatarRef.current) {
-      cameraControls.current.setLookAt(avatarRef.current.position.x - 0.40, avatarRef.current.position.y, avatarRef.current.position.z);
-    }
-  }, [avatarRef.current]);
+    return () => clearTimeout(timeout)
+  }, [cameraControls])
 
   return (
     <>
@@ -76,18 +36,26 @@ export const Experience = () => {
         ref={cameraControls}
         dampingFactor={0.5}
         minPolarAngle={Math.PI / 4}
-        maxPolarAngle={(2 * Math.PI) / 4} 
+        maxPolarAngle={(2 * Math.PI) / 4}
         minDistance={1}
         maxDistance={2}
         dollySpeed={0.5}
         panSpeed={0.5}
+        mouseButtons={{
+          left: 1,
+          middle: 0,
+          right: 0,
+        }}
       />
-      <Environment preset="city" />
-      <OfficeEnvironment />
+      <Environment files="/pine_picnic_1k.hdr" />
       <Suspense>
-        <Dots position-y={1.85} position-x={0.00} />
+        <Dots position-y={1.85} position-x={0.0} />
       </Suspense>
-      <Avatar ref={avatarRef} position={[0, 0, 0]}/>
+      <>
+        <Avatar ref={avatarRef} position={[0, 2.5, 1]} />
+      </>
+      
+      <Leva hidden />
     </>
-  );
-};
+  )
+}

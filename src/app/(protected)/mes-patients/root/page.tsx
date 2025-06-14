@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import TimeLine from './components/TimeLine'
-import { Label } from '@/components/Label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/Select'
 import { Search } from 'lucide-react'
 import { Input } from '@/components/Input'

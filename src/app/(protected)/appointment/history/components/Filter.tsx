@@ -1,6 +1,4 @@
 import {
-    RiAppleFill,
-    RiGoogleFill,
     RiMapPinLine,
     RiMastercardLine,
     RiPhoneLine,
