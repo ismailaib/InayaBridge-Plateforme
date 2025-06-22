@@ -3,17 +3,22 @@
 import StepSharedFields from "../components/StepSharedFields"
 import StepDoctorSpecialisation from "../components/StepDoctorSpecialisation"
 import { motion, AnimatePresence } from "framer-motion"
-import { useState } from "react"
+import { SetStateAction, useState } from "react"
 import Image from "next/image"
 import logo from "../../icon-logo.png"
+import { DatePickerBirthDateExample } from "@/components/DateBirth"
+import { Label } from "@/components/Label"
+import React from "react"
 
 export default function DoctorWelcomePage() {
   const [step, setStep] = useState<"shared" | "specialisation">("shared")
+  const [speciality, setSpeciality] = useState<string | null>(null)
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(undefined)
 
   return (
     <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2 w-full overflow-hidden">
       {/* Left form section */}
-      <div className="flex flex-col items-center justify-center px-4 sm:px-6 lg:px-12">
+      <div className="flex flex-col items-center justify-center px-4 sm:px-6 lg:px-12 overflow-y-auto">
         <div className="w-full max-w-xl space-y-6 text-start">
           {/* Logo / Badge */}
           <motion.div
@@ -58,8 +63,11 @@ export default function DoctorWelcomePage() {
                   className="absolute inset-0"
                 >
                   <StepDoctorSpecialisation
-                    accountType="doctor"
                     onSuccess={() => setStep("specialisation")}
+                    onContinue={(spec: SetStateAction<string | null>) => {
+                      setSpeciality(spec)
+                      setStep("shared")
+                    }}
                   />
                 </motion.div>
               ) : (
@@ -71,7 +79,24 @@ export default function DoctorWelcomePage() {
                   transition={{ duration: 0.3 }}
                   className="absolute inset-0"
                 >
-                  <StepSharedFields accountType="doctor" additionalFields={""} />
+                  <StepSharedFields accountType="doctor" speciality={speciality || ""} additionalFields={
+
+                    <>
+                      <div>
+                        <Label htmlFor="dob" className="font-medium">Date de naissance</Label>
+                        <div className="mt-2">
+                          <DatePickerBirthDateExample value={selectedDate} onChange={setSelectedDate} />
+                          <input
+                            type="hidden"
+                            name="dateOfBirth"
+                            value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
+                            tabIndex={-1}
+                            aria-hidden="true"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  } />
                 </motion.div>
               )}
             </AnimatePresence>

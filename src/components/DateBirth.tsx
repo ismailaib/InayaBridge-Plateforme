@@ -654,11 +654,16 @@ const DatePicker = React.memo(({ ...props }: SingleDatePickerProps) => {
 
 DatePicker.displayName = "DatePicker"
 
-export const DatePickerBirthDateExample = () => {
-  const [date, setDate] = React.useState<Date | undefined>(undefined)
+export const DatePickerBirthDateExample = ({
+  value,
+  onChange,
+}: {
+  value?: Date
+  onChange?: (date: Date | undefined) => void
+}) => {
   return (
     <div className="flex w-full flex-col items-center">
-      <DatePicker toDate={new Date()} value={date} onChange={setDate} />
+      <DatePicker toDate={new Date()} value={value} onChange={onChange} />
     </div>
   )
 }

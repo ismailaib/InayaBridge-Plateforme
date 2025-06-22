@@ -27,7 +27,6 @@ export const Experience = () => {
 
     cameraControls.current.setLookAt(0.05, 4.2, 2, -0.1, 4.1, 1, true, 5)
 
-    return () => clearTimeout(timeout)
   }, [cameraControls])
 
   return (

@@ -30,18 +30,26 @@ import {
   Settings,
   Building2,
   Bot,
+  Heart,
+  FileText,
 } from "lucide-react"
 import { cx, focusRing } from "@/lib/utils"
 
 import Image from "next/image"
 
-const navigation = [
+const doctornavigation = [
   { name: "Accueil", icon: LayoutDashboard, root: "dashboard" },
   { name: "Messagerie", icon: MessagesSquare, root: "chat" },
   { name: "Mon Agent", icon: Bot, root: "ai" },
 ] as const
 
-const navigation2 = [
+const patientnavigation = [
+  { name: "Accueil", icon: LayoutDashboard, root: "dashboard" },
+  { name: "Messagerie", icon: MessagesSquare, root: "chat" },
+  { name: "Mon Suivi", icon: Heart, root: "suivi" },
+] as const
+
+const doctornavigation2 = [
   {
     name: "Rendez-vous",
     icon: CalendarDays,
@@ -70,7 +78,7 @@ const navigation2 = [
     root: "consultations-video",
     active: false,
     children: [
-      { name: "Lancer une consultation", root: "#" },
+      { name: "Lancer une consultation", root: "/visioconference/321" },
       { name: "Historique des appels", root: "#" },
       { name: "Paramètres caméra & micro", root: "#" },
       { name: "Feedback visio", root: "#" },
@@ -127,16 +135,90 @@ const navigation2 = [
   },
 ] as const
 
+const patientnavigation2 = [
+  {
+    name: "Mes Rendez-vous",
+    icon: CalendarDays,
+    root: "/patient/appointment",
+    active: false,
+    children: [
+      { name: "Prendre un rendez-vous", root: "/patient/appointment/book" },
+      { name: "Mes rendez-vous", root: "/patient/appointment/list" },
+      { name: "Historique", root: "/patient/appointment/history" },
+    ],
+  },
+  {
+    name: "Mon Dossier Médical",
+    icon: FileText,
+    root: "/patient/dossier",
+    active: false,
+    children: [
+      { name: "Mes informations", root: "/patient/dossier/info" },
+      { name: "Mes ordonnances", root: "/patient/dossier/prescriptions" },
+      { name: "Mes résultats", root: "/patient/dossier/results" },
+      { name: "Mes documents", root: "/patient/dossier/documents" },
+    ],
+  },
+  {
+    name: "Téléconsultations",
+    icon: Video,
+    root: "/patient/teleconsultation",
+    active: false,
+    children: [
+      { name: "Rejoindre une consultation", root: "/patient/teleconsultation/join" },
+      { name: "Historique des appels", root: "/patient/teleconsultation/history" },
+      { name: "Test audio/vidéo", root: "/patient/teleconsultation/test" },
+    ],
+  },
+  {
+    name: "Paramètres",
+    icon: Settings,
+    root: "/patient/settings",
+    active: false,
+    children: [
+      { name: "Mes informations", root: "/patient/settings/profile" },
+      { name: "Préférences", root: "/patient/settings/preferences" },
+      { name: "Sécurité", root: "/patient/settings/security" },
+      { name: "Notifications", root: "/patient/settings/notifications" },
+    ],
+  },
+] as const
+
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
-  console.log("pathname", pathname)
+  
+  // Check if user is a patient based on URL
+  const isPatient = pathname.startsWith('/patient/')
+  
+  // Select navigation based on user type
+  const primaryNavigation = isPatient ? patientnavigation : doctornavigation
+  const secondaryNavigation = isPatient ? patientnavigation2 : doctornavigation2
+  
   const [openMenus, setOpenMenus] = React.useState<string[]>([
-    navigation2[0].name,
+    secondaryNavigation[0].name,
   ])
+  
   const toggleMenu = (name: string) =>
     setOpenMenus((prev) =>
       prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name],
     )
+
+  // Helper function to generate href based on user type
+  const generateHref = (root: string) => {
+    if (isPatient) {
+      // For patient routes, ensure we maintain the /patient prefix
+      if (root.startsWith('/patient/')) {
+        return root
+      }
+      return `/patient/${root}`
+    } else {
+      // For doctor routes, use the root as is
+      if (root.startsWith('/')) {
+        return root
+      }
+      return `/${root}`
+    }
+  }
 
   return (
     <Sidebar {...props} className="bg-gray-50 dark:bg-gray-900/25">
@@ -155,7 +237,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
               InnayaBridge
             </span>
             <span className="block text-xs text-gray-900 dark:text-gray-50">
-              Plan Essentiel
+              {isPatient ? "Espace Patient" : "Plan Essentiel"}
             </span>
           </div>
         </div>
@@ -176,15 +258,15 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
-              {navigation.map((item) => (
-                <SidebarMenuItem key={item.root} >
-                    <SidebarLink
-                      icon={item.icon}
-                      href={`/${item.root}`}
-                      isActive={pathname === `/${item.root}`}
-                    >
-                      {item.name}
-                    </SidebarLink>
+              {primaryNavigation.map((item) => (
+                <SidebarMenuItem key={item.root}>
+                  <SidebarLink
+                    icon={item.icon}
+                    href={generateHref(item.root)}
+                    isActive={pathname === generateHref(item.root)}
+                  >
+                    {item.name}
+                  </SidebarLink>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -196,7 +278,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
-              {navigation2.map((item) => {
+              {secondaryNavigation.map((item) => {
                 const isOpen = openMenus.includes(item.name)
                 return (
                   <SidebarMenuItem key={item.name}>
@@ -224,16 +306,16 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
                         <div className={`absolute inset-y-0 left-4 w-px`} />
                         {item.children.map((child) => (
                           <SidebarMenuItem key={child.name}>
-                              <SidebarSubLink
+                            <SidebarSubLink
                               href={child.root}
-                                className={
-                                  pathname === child.root
-                                    ? "text-[#00b38f] dark:text-gray-100"
-                                    : ""
-                                }
-                              >
-                                {child.name}
-                              </SidebarSubLink>
+                              className={
+                                pathname === child.root
+                                  ? "text-[#00b38f] dark:text-gray-100"
+                                  : ""
+                              }
+                            >
+                              {child.name}
+                            </SidebarSubLink>
                           </SidebarMenuItem>
                         ))}
                       </SidebarMenuSub>

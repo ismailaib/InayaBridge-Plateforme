@@ -1,4 +1,6 @@
-import React from 'react';
+"use client"
+
+import React, { useEffect, useState } from 'react';
 import { RiArrowLeftSLine, RiArrowRightSLine } from '@remixicon/react';
 import {
     flexRender,
@@ -22,129 +24,7 @@ import {
 
 import Edit from './Edit';
 import Delete from './Delete';
-
-// This example requires @tanstack/react-table
-
-const patients = [
-    {
-        fullName: 'Youssef El Amrani',
-        gender: 'Homme',
-        dob: '1990-03-15',
-        cin: 'AB123456',
-        phone: '+212 612-345678',
-        email: 'youssef.elamrani@example.com',
-        lastVisit: '2025-05-20',
-        status: 'Actif',
-    },
-    {
-        fullName: 'Fatima Zahra',
-        gender: 'Femme',
-        dob: '1985-07-22',
-        cin: 'CD789012',
-        phone: '+212 655-987654',
-        email: 'fatima.zahra@example.com',
-        lastVisit: '2025-05-18',
-        status: 'Actif',
-    },
-    {
-        fullName: 'Hassan Yassine',
-        gender: 'Homme',
-        dob: '1978-11-05',
-        cin: 'EF345678',
-        phone: '+212 661-123456',
-        email: 'hassan.yassine@example.com',
-        lastVisit: '2025-04-29',
-        status: 'Inactif',
-    },
-    {
-        fullName: 'Nadia Kabbaj',
-        gender: 'Femme',
-        dob: '1995-01-30',
-        cin: 'GH901234',
-        phone: '+212 677-543210',
-        email: 'nadia.kabbaj@example.com',
-        lastVisit: '2025-05-10',
-        status: 'Actif',
-    },
-    {
-        fullName: 'Mohamed Idrissi',
-        gender: 'Homme',
-        dob: '1982-09-18',
-        cin: 'IJ567890',
-        phone: '+212 699-112233',
-        email: 'mohamed.idrissi@example.com',
-        lastVisit: '2025-03-22',
-        status: 'Inactif',
-    },
-];
-
-const patientsColumns = [
-    {
-        header: 'Nom complet',
-        accessorKey: 'fullName',
-        meta: {
-            align: 'text-left',
-        },
-    },
-    {
-        header: 'Sexe',
-        accessorKey: 'gender',
-        meta: {
-            align: 'text-left',
-        },
-    },
-    {
-        header: 'Date de naissance',
-        accessorKey: 'dob',
-        meta: {
-            align: 'text-left',
-        },
-    },
-    {
-        header: 'CIN',
-        accessorKey: 'cin',
-        meta: {
-            align: 'text-left',
-        },
-    },
-    {
-        header: 'Téléphone',
-        accessorKey: 'phone',
-        meta: {
-            align: 'text-right',
-        },
-    },
-    {
-        header: 'Email',
-        accessorKey: 'email',
-        meta: {
-            align: 'text-left',
-        },
-    },
-    {
-        header: 'Dernière visite',
-        accessorKey: 'lastVisit',
-        meta: {
-            align: 'text-right',
-        },
-    },
-    {
-        header: 'Action',
-        accessorKey: 'action',
-        cell: () => {
-            return (
-                <div className="flex items-center gap-3">
-                    <Edit />
-                    <Delete />
-                </div>
-            );
-        },
-        meta: {
-            align: 'text-left',
-        },
-    },
-
-];
+import { getDoctorPatients, Patient } from '../../api/patients';
 
 declare module '@tanstack/react-table' {
     interface ColumnMeta<TData extends RowData, TValue> {
@@ -228,22 +108,107 @@ const MobileButton = ({
     );
 };
 
-export default function Example() {
+export default function Example({ refreshKey }: { refreshKey: number }) {
     const pageSize = 8;
 
-    const data = React.useMemo(
-        // multiply dummy data to better demonstrate pagination over several pages
-        () => [
-            ...patients,
-            ...patients,
-            ...patients,
-            ...patients,
-            ...patients,
-            ...patients,
-            ...patients,
-        ],
-        [],
-    );
+    const [patients, setPatients] = useState<Patient[]>([])
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        setLoading(true);
+        getDoctorPatients()
+            .then((res) => { setPatients(res.data); console.log(res.data); })
+            .catch((err) => {
+                console.error("Failed to fetch patients", err);
+            })
+            .finally(() => setLoading(false));
+    }, [refreshKey]);
+
+    const patientsColumns = [
+        {
+            header: 'Nom',
+            accessorKey: 'first_name',
+            meta: {
+                align: 'text-left',
+            },
+        },
+        {
+            header: 'Prénom',
+            accessorKey: 'last_name',
+            meta: {
+                align: 'text-left',
+            },
+        },
+        {
+            header: 'Genre',
+            accessorKey: 'gender',
+            meta: {
+                align: 'text-left',
+            },
+        },
+        {
+            header: 'Date de naissance',
+            accessorKey: 'date_of_birth',
+            cell: ({ getValue }: { getValue: () => string }) => {
+                const value = getValue();
+                if (!value) return '';
+                const date = new Date(value);
+                return date.toLocaleDateString('fr-FR');
+            },
+            meta: {
+                align: 'text-left',
+            },
+        },
+        {
+            header: 'CIN',
+            accessorKey: 'cin',
+            meta: {
+                align: 'text-left',
+            },
+        },
+        {
+            header: 'Téléphone',
+            accessorKey: 'phone_number',
+            meta: {
+                align: 'text-right',
+            },
+        },
+        {
+            header: 'Email',
+            accessorKey: 'email',
+            meta: {
+                align: 'text-left',
+            },
+        },
+        {
+            header: 'Action',
+            accessorKey: 'action',
+            cell: ({ row }: { row: any }) => {
+                return (
+                    <div className="flex items-center gap-3">
+                        <Edit patient={row.original} onSuccess={() => {
+                            getDoctorPatients()
+                                .then((res) => setPatients(res.data))
+                                .catch((err) => console.error("Failed to fetch patients", err));
+                        }} />
+                        <Delete patientId={row.original.id} onSuccess={() => {
+                            getDoctorPatients()
+                                .then((res) => setPatients(res.data))
+                                .catch((err) => console.error("Failed to fetch patients", err));
+                        }}/>
+                    </div>
+                );
+            },
+            meta: {
+                align: 'text-left',
+            },
+        },
+
+    ];
+
+    const data = React.useMemo(() => patients, [patients]);
+
+
     const table = useReactTable({
         data: data,
         columns: patientsColumns,
@@ -259,6 +224,16 @@ export default function Example() {
 
     const paginationCount = table.getPageCount();
     const actualPage = table.getState().pagination.pageIndex + 1;
+
+
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        )
+    }
 
     return (
         <>
@@ -283,18 +258,26 @@ export default function Example() {
                         ))}
                     </TableHead>
                     <TableBody>
-                        {table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell
-                                        key={cell.id}
-                                        className={cx(cell.column.columnDef.meta?.align)}
-                                    >
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
+                        {table.getRowModel().rows.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={patientsColumns.length} className="text-center py-8 text-gray-500">
+                                    Aucun patient trouvé.
+                                </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell
+                                            key={cell.id}
+                                            className={cx(cell.column.columnDef.meta?.align)}
+                                        >
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </TableRoot>

@@ -1,6 +1,6 @@
 "use client"
 
-import { SetStateAction, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import {
   format,
   startOfWeek,
@@ -18,8 +18,6 @@ import {
   addMonths,
   subMonths,
   isToday,
-  getHours,
-  getMinutes,
 } from "date-fns"
 import { fr } from "date-fns/locale"
 import { cx } from "@/lib/utils"
@@ -41,115 +39,9 @@ import {
   LayoutGrid,
   Calendar as CalendarViewIcon,
   List,
+  Calendar1,
 } from "lucide-react"
-
-// Generate sample appointment data
-const generateAppointments = () => {
-  const today = new Date()
-  const appointments = []
-
-  // Create appointments for the current month and next month
-  for (let i = -15; i < 45; i++) {
-    const day = addDays(today, i)
-
-    // Skip some days randomly to make the calendar look more realistic
-    if (Math.random() > 0.4) continue
-
-    // Generate 1-5 appointments per day
-    const appointmentsCount = Math.floor(Math.random() * 5) + 1
-
-    for (let j = 0; j < appointmentsCount; j++) {
-      // Generate a time between 9:00 and 17:00
-      const hour = Math.floor(Math.random() * 8) + 9
-      const minute = Math.random() > 0.5 ? 0 : 30
-
-      const startTime = new Date(day)
-      startTime.setHours(hour, minute, 0, 0)
-
-      const endTime = new Date(startTime)
-      endTime.setMinutes(endTime.getMinutes() + 30)
-
-      // Patient types and colors
-      const patientTypes = [
-        {
-          type: "Consultation",
-          color:
-            "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-        },
-        {
-          type: "Suivi",
-          color:
-            "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-        },
-        {
-          type: "Urgence",
-          color: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-        },
-        {
-          type: "Téléconsultation",
-          color:
-            "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
-        },
-      ]
-
-      const patientType =
-        patientTypes[Math.floor(Math.random() * patientTypes.length)]
-
-      const firstNames = [
-        "Mohamed",
-        "Fatima",
-        "Ahmed",
-        "Khadija",
-        "Youssef",
-        "Aisha",
-        "Omar",
-        "Zineb",
-        "Hamza",
-        "Samira",
-      ]
-      const lastNames = [
-        "El Mansouri",
-        "Benali",
-        "Alaoui",
-        "Tazi",
-        "Amrani",
-        "Idrissi",
-        "Chraibi",
-        "Berrada",
-        "Bennani",
-        "Fassi",
-      ]
-
-      const firstName =
-        firstNames[Math.floor(Math.random() * firstNames.length)]
-      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)]
-
-      appointments.push({
-        id: `appointment-${i}-${j}`,
-        patient: `${firstName} ${lastName}`,
-        phoneNumber: `+212 ${Math.floor(Math.random() * 9) + 1}${Math.floor(
-          Math.random() * 10000000,
-        )
-          .toString()
-          .padStart(7, "0")}`,
-        type: patientType.type,
-        typeColor: patientType.color,
-        date: startTime,
-        startTime: format(startTime, "HH:mm"),
-        endTime: format(endTime, "HH:mm"),
-        location:
-          Math.random() > 0.3 ? "Cabinet principal" : "Clinique Al Shifa",
-        notes:
-          Math.random() > 0.7 ? "Patient avec dossier médical complexe" : "",
-        confirmed: Math.random() > 0.2,
-      })
-    }
-  }
-
-  return appointments
-}
-
-const appointments = generateAppointments()
+import { getAppointments } from "../api/appointment"
 
 const CalendarHeader = ({
   currentDate,
@@ -269,6 +161,7 @@ const MonthView = ({
     location: string
     notes: string
     confirmed: boolean
+    date_of_birth: string
   }[]
   onSelectAppointment: (appointment: any) => void
 }) => {
@@ -312,9 +205,9 @@ const MonthView = ({
                 className={cx(
                   "h-32 min-h-[8rem] overflow-y-auto border-b p-1 sm:p-2",
                   !isSameMonth(day, currentDate) &&
-                    "bg-gray-50 text-gray-400 dark:bg-gray-900 dark:text-gray-600",
+                  "bg-gray-50 text-gray-400 dark:bg-gray-900 dark:text-gray-600",
                   isSameDay(day, new Date()) &&
-                    "bg-blue-50 dark:bg-blue-900/20",
+                  "bg-blue-50 dark:bg-blue-900/20",
                 )}
               >
                 <div className="mb-1 text-right">
@@ -323,10 +216,10 @@ const MonthView = ({
                       "inline-flex h-6 w-6 items-center justify-center rounded-full text-sm",
                       isToday(day) && "bg-blue-600 text-white dark:bg-blue-500",
                       !isToday(day) &&
-                        isSameMonth(day, currentDate) &&
-                        "text-gray-900 dark:text-gray-100",
+                      isSameMonth(day, currentDate) &&
+                      "text-gray-900 dark:text-gray-100",
                       !isSameMonth(day, currentDate) &&
-                        "text-gray-400 dark:text-gray-600",
+                      "text-gray-400 dark:text-gray-600",
                     )}
                   >
                     {format(day, "d")}
@@ -338,11 +231,16 @@ const MonthView = ({
                       key={appointment.id}
                       onClick={() => onSelectAppointment(appointment)}
                       className={cx(
-                        "w-full truncate rounded px-1 py-0.5 text-left text-xs",
+                        "w-full flex items-center gap-2 rounded-lg bg-blue-50/60 px-2 py-1 text-left shadow-sm hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/60",
                         appointment.typeColor,
                       )}
                     >
-                      {appointment.startTime} - {appointment.patient}
+                      <span className="flex-shrink-0 rounded bg-blue-600 px-2 py-0.5 text-xs font-semibold text-white dark:bg-blue-500">
+                        {appointment.startTime}
+                      </span>
+                      <span className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
+                        {appointment.patient}
+                      </span>
                     </button>
                   ))}
                   {dayAppointments.length > 3 && (
@@ -385,7 +283,7 @@ const WeekView = ({
   const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 })
   const days = eachDayOfInterval({ start: weekStart, end: weekEnd })
 
-  // Business hours (9:00 - 18:00)
+  // Business hours (09:00 - 18:00)
   const hours = Array.from({ length: 10 }, (_, i) => i + 9)
 
   // Filter appointments for the visible week
@@ -394,12 +292,20 @@ const WeekView = ({
     return appointmentDate >= weekStart && appointmentDate <= weekEnd
   })
 
+  // Helper function to parse time and get hour/minutes
+  const parseTime = (timeString: string) => {
+    const [hours, minutes] = timeString.split(':').map(Number)
+    return { hours, minutes }
+  }
+
   return (
     <div className="overflow-x-auto">
       <div className="min-w-[800px] rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
         {/* Header with days */}
         <div className="grid grid-cols-8 border-b border-gray-200 dark:border-gray-800">
-          <div className="border-r border-gray-200 py-2 pl-4 dark:border-gray-800" />
+          <div className="border-r border-gray-200 py-2 pl-4 dark:border-gray-800">
+            <div className="text-xs text-gray-500 dark:text-gray-400">Time</div>
+          </div>
           {days.map((day) => (
             <div
               key={day.toString()}
@@ -426,45 +332,50 @@ const WeekView = ({
         {/* Time grid */}
         <div className="relative">
           {hours.map((hour) => (
-            <div key={hour} className="grid grid-cols-8">
+            <div key={hour} className="grid grid-cols-8" style={{ minHeight: '64px' }}>
               {/* Hour label */}
               <div className="border-r border-gray-200 py-4 pr-2 text-right text-xs text-gray-500 dark:border-gray-800 dark:text-gray-400">
-                {hour}:00
+                {hour.toString().padStart(2, '0')}:00
               </div>
 
               {/* Day columns */}
               {days.map((day) => (
                 <div
-                  key={day.toString()}
+                  key={`${day.toString()}-${hour}`}
                   className={cx(
-                    "relative border-b border-r border-gray-200 py-4 dark:border-gray-800",
+                    "relative border-b border-r border-gray-200 dark:border-gray-800",
                     isToday(day) && "bg-blue-50 dark:bg-blue-900/10",
                   )}
+                  style={{ minHeight: '64px' }}
                 >
                   {visibleAppointments
                     .filter((appointment) => {
                       const appointmentDate = new Date(appointment.date)
+                      const startTime = parseTime(appointment.startTime)
                       return (
                         isSameDay(appointmentDate, day) &&
-                        getHours(appointmentDate) === hour
+                        startTime.hours === hour
                       )
                     })
-                    .map((appointment) => (
-                      <button
-                        key={appointment.id}
-                        onClick={() => onSelectAppointment(appointment)}
-                        className={cx(
-                          "absolute left-0 mx-1 w-[calc(100%-0.5rem)] rounded p-1 text-left text-xs shadow-sm",
-                          appointment.typeColor,
-                        )}
-                        style={{
-                          top: `${(getMinutes(new Date(appointment.date)) / 60) * 100}%`,
-                          height: "25px",
-                        }}
-                      >
-                        {appointment.startTime} - {appointment.patient}
-                      </button>
-                    ))}
+                    .map((appointment) => {
+                      return (
+                        <button
+                          key={appointment.id}
+                          onClick={() => onSelectAppointment(appointment)}
+                          className={cx(
+                            "w-full flex items-center gap-2 rounded-lg bg-blue-50/60 px-2 py-1 text-left shadow-sm hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/60",
+                            appointment.typeColor,
+                          )}
+                        >
+                          <span className="flex-shrink-0 rounded bg-blue-600 px-2 py-0.5 text-xs font-semibold text-white dark:bg-blue-500">
+                            {appointment.startTime}
+                          </span>
+                          <span className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
+                            {appointment.patient}
+                          </span>
+                        </button>
+                      )
+                    })}
                 </div>
               ))}
             </div>
@@ -501,14 +412,39 @@ const DayView = ({
   const halfHours: string[] = []
 
   hours.forEach((hour) => {
-    halfHours.push(`${hour}:00`)
-    halfHours.push(`${hour}:30`)
+    halfHours.push(`${hour.toString().padStart(2, '0')}:00`)
+    halfHours.push(`${hour.toString().padStart(2, '0')}:30`)
   })
 
   // Filter appointments for the selected day
   const dayAppointments = appointments.filter((appointment) =>
     isSameDay(new Date(appointment.date), currentDate),
   )
+
+  // Helper function to parse time and get hour/minutes
+  const parseTime = (timeString: { split: (arg0: string) => { (): any; new(): any; map: { (arg0: NumberConstructor): [any, any]; new(): any } } }) => {
+    const [hours, minutes] = timeString.split(':').map(Number)
+    return { hours, minutes }
+  }
+
+  // Helper function to check if appointment starts at a specific time slot
+  const appointmentStartsAtTime = (appointment: { id?: string; patient?: string; phoneNumber?: string; type?: string; typeColor?: string; date?: Date; startTime: any; endTime?: string; location?: string; notes?: string; confirmed?: boolean }, targetHour: number, targetMinute: number) => {
+    const startTime = parseTime(appointment.startTime)
+    return startTime.hours === targetHour && startTime.minutes === targetMinute
+  }
+
+  // Helper function to check if appointment spans across a time slot
+  const appointmentSpansTime = (appointment: { id?: string; patient?: string; phoneNumber?: string; type?: string; typeColor?: string; date?: Date; startTime: any; endTime: any; location?: string; notes?: string; confirmed?: boolean }, targetHour: number, targetMinute: number) => {
+    const startTime = parseTime(appointment.startTime)
+    const endTime = parseTime(appointment.endTime)
+
+    // Convert times to minutes for easier comparison
+    const startMinutes = startTime.hours * 60 + startTime.minutes
+    const endMinutes = endTime.hours * 60 + endTime.minutes
+    const targetMinutes = targetHour * 60 + targetMinute
+
+    return targetMinutes >= startMinutes && targetMinutes < endMinutes
+  }
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
@@ -527,13 +463,19 @@ const DayView = ({
           const hour = parseInt(hourStr)
           const minute = parseInt(minuteStr)
 
-          const timeAppointments = dayAppointments.filter((appointment) => {
-            const appointmentDate = new Date(appointment.date)
-            return (
-              getHours(appointmentDate) === hour &&
-              getMinutes(appointmentDate) === minute
-            )
-          })
+          // Get appointments that start at this exact time
+          const startingAppointments = dayAppointments.filter((appointment) =>
+            appointmentStartsAtTime(appointment, hour, minute)
+          )
+
+          // Get appointments that span across this time slot (for ongoing appointments display)
+          const spanningAppointments = dayAppointments.filter((appointment) =>
+            appointmentSpansTime(appointment, hour, minute) &&
+            !appointmentStartsAtTime(appointment, hour, minute)
+          )
+
+          // Combine both types of appointments
+          const timeAppointments = [...startingAppointments, ...spanningAppointments]
 
           return (
             <div
@@ -549,25 +491,25 @@ const DayView = ({
               <div className="p-2">
                 {timeAppointments.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
-                    {timeAppointments.map((appointment) => (
-                      <button
-                        key={appointment.id}
-                        onClick={() => onSelectAppointment(appointment)}
-                        className={cx(
-                          "flex w-full max-w-xs items-center space-x-2 rounded p-2 text-left text-sm shadow-sm sm:w-auto",
-                          appointment.typeColor,
-                        )}
-                      >
-                        <div>
-                          <div className="font-medium">
+                    {timeAppointments.map((appointment) => {
+                      return (
+                        <button
+                          key={appointment.id}
+                          onClick={() => onSelectAppointment(appointment)}
+                          className={cx(
+                            "w-full flex items-center gap-2 rounded-lg bg-blue-50/60 px-2 py-1 text-left shadow-sm hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/60",
+                            appointment.typeColor,
+                          )}
+                        >
+                          <span className="flex-shrink-0 rounded bg-blue-600 px-2 py-0.5 text-xs font-semibold text-white dark:bg-blue-500">
+                            {appointment.startTime}
+                          </span>
+                          <span className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
                             {appointment.patient}
-                          </div>
-                          <div className="text-xs">
-                            {appointment.startTime} - {appointment.endTime}
-                          </div>
-                        </div>
-                      </button>
-                    ))}
+                          </span>
+                        </button>
+                      )
+                    })}
                   </div>
                 ) : (
                   <div className="h-6"></div>
@@ -715,6 +657,7 @@ const AppointmentDetails = ({
   onClose,
 }: {
   appointment: {
+    date_of_birth: string
     id: string
     patient: string
     phoneNumber: string
@@ -747,7 +690,25 @@ const AppointmentDetails = ({
                   appointment.typeColor,
                 )}
               >
-                {appointment.type}
+                {appointment.type === "local" && (
+                  <span className="ml-2 inline-block rounded bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                    Cabinet principale
+                  </span>
+                )}
+
+                {appointment.type === "in-person" && (
+                  <span className="ml-2 inline-block rounded bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
+                    À domicile
+                  </span>
+                )}
+
+                {appointment.type === "video" && (
+                  <span className="ml-2 inline-block rounded bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800 dark:bg-red-900 dark:text-red-200">
+                    Visio Conférence
+                  </span>
+                )}
+
+
               </div>
               <div
                 className={cx(
@@ -796,13 +757,15 @@ const AppointmentDetails = ({
           </div>
 
           <div className="flex items-start space-x-3 rounded-md bg-gray-50 p-3 dark:bg-gray-900">
-            <MapPin className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            <Calendar1 className="h-5 w-5 text-gray-500 dark:text-gray-400" />
             <div>
               <h4 className="font-medium text-gray-900 dark:text-gray-50">
-                Lieu
+                Date de Naissance
               </h4>
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                {appointment.location}
+                {appointment.date_of_birth
+                  ? format(new Date(appointment.date_of_birth), "dd/MM/yyyy")
+                  : "--"}
               </p>
             </div>
           </div>
@@ -835,6 +798,47 @@ export default function DoctorCalendar() {
   const [view, setView] = useState("month")
   const [selectedAppointment, setSelectedAppointment] = useState(null)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getAppointments();
+        const data = response.data;
+
+        // Optionally map or clean data
+        const cleanedData = data.map((item: any, index: number) => ({
+          id: item.id || `appointment-${index}`,
+          patient: item.patient.first_name || "--",
+          phoneNumber: item.patient_phone_number || "--",
+          type: item.consultationType || "--",
+          date: item.date || "--",
+          startTime: item.startTime || "--",
+          endTime: item.endTime || "--",
+          location: item.location || "--",
+          date_of_birth: item.patient.date_of_birth || "--",
+          notes: item.motif || "--",
+          confirmed: item.status === "confirmed",
+          consultationType: item.consultationType || "--",
+          motif: item.motif || "--",
+          timeSpentInWaitingRoom: item.timeSpentInWaitingRoom || {
+            enterTime: "--",
+            endTime: "--",
+          },
+          timeOfExitFromConsultation: item.timeOfExitFromConsultation || "--",
+        }));
+
+        setAppointments(cleanedData);
+      } catch (error) {
+        console.error("Erreur lors du chargement des rendez-vous", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handlePrevious = () => {
     if (view === "month") {
@@ -871,6 +875,14 @@ export default function DoctorCalendar() {
 
   const handleCloseDialog = () => {
     setDialogOpen(false)
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    )
   }
 
   return (
@@ -922,3 +934,5 @@ export default function DoctorCalendar() {
     </div>
   )
 }
+
+

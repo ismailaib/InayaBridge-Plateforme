@@ -39,7 +39,7 @@ interface Plan {
 const plans: Plan[] = [
   {
     name: "Essentiel",
-    price: "0€",
+    price: "0 Dh",
     description:
       "Accédez à toutes les fonctionnalités de base. Gratuit pour toujours.",
     capacity: ["Consultations illimitées", "Messagerie", "Dossiers patients"],
@@ -55,7 +55,7 @@ const plans: Plan[] = [
   },
   {
     name: "Plus",
-    price: { monthly: "14€", annually: "129€" },
+    price: { monthly: "1400 Dh", annually: "1290 Dh" },
     description:
       "Des outils avancés pour optimiser votre pratique dès la version 2.",
     capacity: ["Statistiques patients", "Export PDF", "Support prioritaire"],
@@ -71,7 +71,7 @@ const plans: Plan[] = [
   },
   {
     name: "Pro",
-    price: { monthly: "29€", annually: "249€" },
+    price: { monthly: "290 Dh", annually: "2490 Dh" },
     description:
       "Pour les professionnels ou cliniques qui veulent tout centraliser.",
     capacity: ["Multi-profils", "Support premium", "Accès API (v2.1)"],

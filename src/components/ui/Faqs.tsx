@@ -43,18 +43,17 @@ export function Faqs() {
             id="faq-title"
             className="inline-block scroll-my-24 bg-gradient-to-br from-gray-900 to-gray-800 bg-clip-text py-2 pr-2 text-2xl font-bold tracking-tighter text-transparent lg:text-3xl dark:from-gray-50 dark:to-gray-300"
           >
-            Frequently Asked Questions
+            Questions Fréquemment Posées
           </h2>
           <p className="mt-4 text-base leading-7 text-gray-600 dark:text-gray-400">
-            Can&rsquo;t find the answer you&rsquo;re looking for? Don&rsquo;t
-            hesitate to get in touch with our{" "}
+            Vous ne trouvez pas la réponse à votre question&nbsp;? N&rsquo;hésitez pas à contacter notre{" "}
             <a
               href="#"
               className="font-medium text-[#009e7f] hover:text-[#66d9c2] dark:text-[#33ccad]"
             >
-              customer support
-            </a>{" "}
-            team.
+              service client
+            </a>
+            .
           </p>
         </div>
         <div className="col-span-full mt-6 lg:col-span-7 lg:mt-0">

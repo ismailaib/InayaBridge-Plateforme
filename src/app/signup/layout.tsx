@@ -1,4 +1,5 @@
 import ThemeSwitch from "@/components/ThemeSwitch"
+import { AuthProvider } from "@/lib/auth-context"
 
 
 export default function SignupLayout({
@@ -13,7 +14,9 @@ export default function SignupLayout({
           <ThemeSwitch />
         </div>
       </div>
-      {children}
+      <AuthProvider>
+        {children}
+      </AuthProvider>
     </div>
   )
 }

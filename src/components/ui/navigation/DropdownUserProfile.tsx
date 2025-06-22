@@ -16,8 +16,8 @@ import {
 } from "@/components/DropdownMenu"
 import { ArrowUpRight, Monitor, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
-import Link from "next/link"
 import * as React from "react"
+import { useAuth } from "@/lib/auth-context"
 
 export type DropdownUserProfileProps = {
   children: React.ReactNode
@@ -30,6 +30,7 @@ export function DropdownUserProfile({
 }: DropdownUserProfileProps) {
   const [mounted, setMounted] = React.useState(false)
   const { theme, setTheme } = useTheme()
+  const { logout } = useAuth()
   React.useEffect(() => {
     setMounted(true)
   }, [])
@@ -37,6 +38,8 @@ export function DropdownUserProfile({
   if (!mounted) {
     return null
   }
+
+
   return (
     <>
       <DropdownMenu>
@@ -111,10 +114,16 @@ export function DropdownUserProfile({
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href="/" className="w-full">
-                Sign out
-              </Link>
+              <button
+                onClick={() => {
+                  logout()
+                }}
+                className="w-full text-left"
+              >
+                Se déconnecter
+              </button>
             </DropdownMenuItem>
+
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>

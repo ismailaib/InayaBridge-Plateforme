@@ -43,7 +43,7 @@ export default function Page() {
   }, []);
 
   const LoadingScreen = ({ progress }: { progress: number }) => (
-    <div className="absolute inset-0 bg-white flex items-center justify-center z-50 transition-opacity duration-500">
+    <div className="absolute inset-0 bg-white dark:bg-gray-950 flex items-center justify-center z-50 transition-opacity duration-500">
       <div className="text-center px-4">
         <div className="text-gray-500 text-lg mb-4">
           {progress < 30 && 'On cherche les chaussettes du serveur...'}
@@ -106,7 +106,7 @@ export default function Page() {
       <UI />
 
       {/* Barre fixe en bas pour taper et envoyer un message */}
-      <div className="p-4 bg-white border-t">
+      <div className="p-4 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
         <div className="flex items-center gap-2">
           <div className="flex-1">
             <Input

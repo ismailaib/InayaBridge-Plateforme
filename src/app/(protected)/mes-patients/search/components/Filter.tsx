@@ -12,7 +12,9 @@ import {
 import Table from './Table';
 import { Input } from '@/components/Input';
 
-export default function Example() {
+export default function Example({ refreshKey }: { refreshKey: number }) {
+
+
     return (
         <>
             <div className="relative">
@@ -22,7 +24,7 @@ export default function Example() {
                             <Label htmlFor="dob_filter" className="font-medium">
                                 Filtrer
                             </Label>
-                           <Input placeholder='Filtrer par Nom, Prenom, Tel ..' className="mt-2"/>
+                            <Input placeholder='Filtrer par Nom, Prenom, Tel ..' className="mt-2" />
                         </div>
 
                         <div className="w-full">
@@ -41,7 +43,7 @@ export default function Example() {
 
                         <div className="w-full">
                             <Label htmlFor="gender_filter" className="font-medium">
-                                Sexe
+                                Genre
                             </Label>
                             <Select defaultValue="all">
                                 <SelectTrigger id="gender_filter" name="gender_filter" className="mt-2 sm:w-full">
@@ -82,10 +84,7 @@ export default function Example() {
                             </Select>
                         </div>
                     </div>
-
-
-
-                    <Table />
+                    <Table refreshKey={refreshKey} />
                 </div>
 
             </div>

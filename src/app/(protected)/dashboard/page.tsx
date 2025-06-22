@@ -15,6 +15,16 @@ import SalleAttente from "./components/SalleAttente"
 import Statistics from "./components/Statistics"
 import Reporting from "./components/Reporting"
 import { DashboardModal } from "./components/DashboardModal"
+import { motion } from "framer-motion"
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.4, ease: "easeOut" },
+  }),
+}
 
 export default function Dashboard() {
   const monthSelect = [
@@ -60,12 +70,10 @@ export default function Dashboard() {
           </div>
 
           <div className="mt-4 flex flex-col gap-2 sm:mt-0 sm:flex-row sm:items-end">
-            <div>
-              <DashboardModal />
-            </div>
+            <DashboardModal />
             <div className="w-[150px]">
               <Select>
-                <SelectTrigger id="size" className="mt-2">
+                <SelectTrigger id="month" className="mt-2">
                   <SelectValue placeholder="Mois" />
                 </SelectTrigger>
                 <SelectContent>
@@ -79,7 +87,7 @@ export default function Dashboard() {
             </div>
             <div className="w-[150px]">
               <Select>
-                <SelectTrigger id="size" className="mt-2">
+                <SelectTrigger id="year" className="mt-2">
                   <SelectValue placeholder="Année" />
                 </SelectTrigger>
                 <SelectContent>
@@ -96,14 +104,29 @@ export default function Dashboard() {
       </header>
 
       <Divider />
-      <Banner />
+
+      <motion.div variants={fadeInUp} initial="hidden" animate="visible" custom={0}>
+        <Banner />
+      </motion.div>
+
       <Divider />
 
-      <main>
-        <Kpis />
-        <Statistics />
-        <Reporting />     
-        <SalleAttente />     
+      <main className="space-y-8">
+        <motion.div variants={fadeInUp} initial="hidden" animate="visible" custom={1}>
+          <Kpis />
+        </motion.div>
+
+        <motion.div variants={fadeInUp} initial="hidden" animate="visible" custom={2}>
+          <Statistics />
+        </motion.div>
+
+        <motion.div variants={fadeInUp} initial="hidden" animate="visible" custom={3}>
+          <Reporting />
+        </motion.div>
+
+        <motion.div variants={fadeInUp} initial="hidden" animate="visible" custom={4}>
+          <SalleAttente />
+        </motion.div>
       </main>
     </div>
   )

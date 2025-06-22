@@ -29,18 +29,7 @@ interface ChatState {
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
-  messages: [
-    {
-      id: crypto.randomUUID(),
-      sender: 'ai',
-      content: "Bonjour, comment puis-je vous aider aujourd'hui ?",
-      timestamp: Date.now(),
-      audio: null,
-      lipsync: null,
-      facialExpression: 'default',
-      animation: 'Idle',
-    },
-  ],
+  messages: [ ],
   isLoading: false,
 
   addMessage: ({ sender, content, audio = null, lipsync = null, facialExpression, animation }) => {
@@ -65,14 +54,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
     set({ isLoading: loading });
   },
 
-  // Quand l’utilisateur envoie un texte, on :
-  // 1) ajoute immédiatement le message user
-  // 2) fait l’appel POST vers /chat du backend (localhost:3001)
-  // 3) pour chaque objet reçu dans data.messages, on l’ajoute en tant qu’IA
   sendMessage: async (content: string) => {
     const { addMessage, setLoading } = get();
 
-    // 1) message user
     addMessage({
       sender: 'user',
       content,

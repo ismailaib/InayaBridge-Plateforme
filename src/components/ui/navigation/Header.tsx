@@ -9,7 +9,8 @@ const Header = () => {
 
     const pathname = usePathname()
     if (pathname.startsWith('/ai')) return null
-
+    if (pathname.startsWith('/visioconference')) return null
+    if (pathname.startsWith('/patient/visioconference')) return null
     return (
         <div>
             <header className=" sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-gray-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-950">

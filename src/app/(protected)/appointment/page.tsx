@@ -27,7 +27,6 @@ const page = () => {
         </div>
       </div>
       <div>
-        {/* <CardsView /> */}
         <CalendarView />
       </div>
     </div>

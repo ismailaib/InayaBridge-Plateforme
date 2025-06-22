@@ -1,97 +1,121 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect, useRef } from "react"
-import { Button } from "@/components/Button"
-import { Divider } from "@/components/Divider"
-import { Input } from "@/components/Input"
-import { Label } from "@/components/Label"
+import React, { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/Button";
+import { Divider } from "@/components/Divider";
+import { Input } from "@/components/Input";
+import { Label } from "@/components/Label";
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
   SelectValue,
-} from "@/components/Select"
-import { DatePicker } from "@/components/DatePicker"
+} from "@/components/Select";
+import { DatePicker } from "@/components/DatePicker";
 import {
   RadioCardGroup,
   RadioCardIndicator,
   RadioCardItem,
-} from "@/components/RadioCardGroup"
-import { Search } from "lucide-react"
-import { Switch } from "@/components/Switch"
-
-interface Patient {
-  id: string
-  firstName: string
-  lastName: string
-}
+} from "@/components/RadioCardGroup";
+import { Search } from "lucide-react";
+import { Switch } from "@/components/Switch";
+import { createAppointment } from "../api/appointment";
+import { getDoctorPatients, Patient } from "../../mes-patients/api/patients";
 
 export default function RendezVousForm() {
-  const [allPatients] = useState<Patient[]>([
-    { id: "1", firstName: "John", lastName: "Doe" },
-    { id: "2", firstName: "Jane", lastName: "Smith" },
-    { id: "3", firstName: "Alice", lastName: "Johnson" },
-    // Imagine 1000+ patients here
-  ])
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [_, setLoading] = useState(true);
 
-  const [searchQuery, setSearchQuery] = useState("")
-  const [filteredPatients, setFilteredPatients] = useState<Patient[]>(
-    allPatients.slice(0, 10),
-  )
-  const [selectedPatientId, setSelectedPatientId] = useState<string | null>(
-    null,
-  )
-  const [value, setValue] = React.useState<Date | undefined>(undefined)
-  const [selectOpen, setSelectOpen] = useState(false)
-  const searchInputRef = useRef<HTMLInputElement>(null)
-  const [checked, setChecked] = React.useState(false)
-  const [isUrgent, setUrgent] = React.useState(false)
+  useEffect(() => {
+    setLoading(true);
+    getDoctorPatients()
+      .then((res) => setPatients(res.data))
+      .catch((err) => console.error("Failed to fetch patients", err))
+      .finally(() => setLoading(false));
+  }, []);
 
-  // Filter patients when search query changes
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
+  const [selectedPatientId, setSelectedPatientId] = useState<number | null>(null);
+  const [value, setValue] = useState<Date | undefined>(undefined);
+  const [selectOpen, setSelectOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const [checked, setChecked] = useState(false);
+  const [isUrgent, setUrgent] = useState(false);
+  const [cost, setCost] = useState<number | undefined>();
+  const [motif, setMotif] = useState("");
+  const [note, setNote] = useState("");
+  const [locationValue, setLocationValue] = useState<string | null>(null);
+
   useEffect(() => {
     if (!searchQuery.trim()) {
-      // Show limited number of patients when no search is active
-      setFilteredPatients(allPatients.slice(0, 10))
-      return
+      setFilteredPatients(patients.slice(0, 10));
+      return;
     }
 
-    const query = searchQuery.toLowerCase()
-    const filtered = allPatients.filter(
-      (patient) =>
-        patient.firstName.toLowerCase().includes(query) ||
-        patient.lastName.toLowerCase().includes(query),
-    )
-    setFilteredPatients(filtered)
-  }, [searchQuery, allPatients])
+    const query = searchQuery.toLowerCase();
+    const filtered = patients.filter(
+      (p) =>
+        p?.first_name?.toLowerCase().includes(query) ||
+        p?.last_name?.toLowerCase().includes(query)
+    );
+    setFilteredPatients(filtered);
+  }, [searchQuery, patients]);
 
-  // Custom handler to prevent dropdown items from capturing focus
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value)
-    // Ensure search input maintains focus
-    setTimeout(() => {
-      if (searchInputRef.current) {
-        searchInputRef.current.focus()
-      }
-    }, 0)
-  }
+    setSearchQuery(e.target.value);
+    setTimeout(() => searchInputRef.current?.focus(), 0);
+  };
 
-  // Handle dropdown open to focus search input
   useEffect(() => {
     if (selectOpen) {
-      setTimeout(() => {
-        if (searchInputRef.current) {
-          searchInputRef.current.focus()
-        }
-      }, 50)
+      setTimeout(() => searchInputRef.current?.focus(), 50);
     }
-  }, [selectOpen])
+  }, [selectOpen]);
 
   const handlePatientSelect = (patientId: string) => {
-    setSelectedPatientId(patientId)
-    setSelectOpen(false)
-    setSearchQuery("") // Reset search after selection
-  }
+    setSelectedPatientId(Number(patientId));
+    setSelectOpen(false);
+    setSearchQuery("");
+  };
+
+  type ConsultationType = "local" | "in-person" | "video";
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedPatientId || !value || !motif || !locationValue || cost === undefined) {
+      alert("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
+
+    const consultationType: ConsultationType =
+      locationValue === "1"
+        ? "local"
+        : locationValue === "2"
+        ? "in-person"
+        : "video";
+
+    const payload = {
+      patientId: selectedPatientId,
+      date: value.toISOString().split("T")[0],
+      startTime: value.toTimeString().slice(0, 5),
+      status: "pending",
+      consultationType,
+      motif,
+      cost,
+      note,
+    };
+
+    try {
+      await createAppointment(payload);
+      alert("Rendez-vous créé avec succès !");
+      // Reset form if needed
+    } catch (err) {
+      console.error("Erreur lors de la création :", err);
+      alert("Erreur lors de la création du rendez-vous.");
+    }
+  };
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -102,16 +126,15 @@ export default function RendezVousForm() {
         Sélectionnez un patient existant ou ajoutez-en un nouveau.
       </p>
 
-      <form className="mt-8 space-y-6">
+      <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-6">
-          {/* Patient selector with search */}
           <div className="col-span-3 sm:col-span-2">
             <Label htmlFor="patient" className="font-medium">
               Patient<span className="text-red-500">*</span>
             </Label>
             <div className="relative mt-2">
               <Select
-                value={selectedPatientId ?? undefined}
+                value={selectedPatientId !== null ? String(selectedPatientId) : undefined}
                 onValueChange={handlePatientSelect}
                 open={selectOpen}
                 onOpenChange={setSelectOpen}
@@ -132,24 +155,21 @@ export default function RendezVousForm() {
                         autoComplete="off"
                         onClick={(e) => e.stopPropagation()}
                         onKeyDown={(e) => {
-                          // Prevent dropdown from capturing arrow keys for navigation
                           if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-                            e.stopPropagation()
+                            e.stopPropagation();
                           }
                         }}
                       />
                     </div>
                   </div>
-
                   {filteredPatients.length > 0 ? (
                     filteredPatients.map((p) => (
                       <SelectItem
                         key={p.id}
+                        value={String(p.id)}
                         className="cursor-pointer px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        onClick={() => handlePatientSelect(p.id)}
-                        value={p.id}
                       >
-                        {p.firstName} {p.lastName}
+                        {p.first_name} {p.last_name}
                       </SelectItem>
                     ))
                   ) : (
@@ -157,18 +177,11 @@ export default function RendezVousForm() {
                       Aucun patient trouvé
                     </div>
                   )}
-                  {filteredPatients.length > 0 && !searchQuery && (
-                    <div className="px-2 py-2 text-xs text-gray-500">
-                      Saisissez au moins 3 caractères pour rechercher parmi tous
-                      les patients
-                    </div>
-                  )}
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          {/* Date */}
           <div className="col-span-full sm:col-span-2">
             <Label htmlFor="date" className="font-medium">
               Date<span className="text-red-500">*</span>
@@ -177,27 +190,25 @@ export default function RendezVousForm() {
               className="mt-2"
               showTimePicker
               value={value}
-              onChange={(value) => {
-                setValue(value)
-              }}
+              onChange={(val) => setValue(val)}
             />
           </div>
 
           <div className="col-span-full sm:col-span-2">
-            <Label htmlFor="date" className="font-medium">
-              Cout<span className="text-red-500">*</span>
+            <Label htmlFor="cost" className="font-medium">
+              Coût<span className="text-red-500">*</span>
             </Label>
-             <Input
+            <Input
               type="number"
               id="cost"
               name="cost"
               min={0}
               placeholder="Ex. 250 DH"
               className="mt-2"
+              onChange={(e) => setCost(Number(e.target.value))}
             />
           </div>
 
-          {/* Motif */}
           <div className="col-span-full sm:col-span-3">
             <Label htmlFor="motif" className="font-medium">
               Motif<span className="text-red-500">*</span>
@@ -208,6 +219,7 @@ export default function RendezVousForm() {
               name="motif"
               placeholder="Ex. Bilan sanguin"
               className="mt-2"
+              onChange={(e) => setMotif(e.target.value)}
             />
           </div>
 
@@ -216,81 +228,79 @@ export default function RendezVousForm() {
               Note
             </Label>
             <Input
-              type="textarea"
+              type="text"
               id="note"
               name="note"
               placeholder="Ex. Note"
               className="mt-2"
+              onChange={(e) => setNote(e.target.value)}
             />
           </div>
 
-          {/* Lieu */}
           <div className="col-span-full sm:col-span-6">
             <Label htmlFor="lieu" className="font-medium">
               Lieu<span className="text-red-500">*</span>
             </Label>
-            <div>
-              <RadioCardGroup className="mt-2 flex flex-wrap gap-4">
-                <RadioCardItem value="1" className="min-w-48 flex-1">
-                  <div className="flex items-start gap-3">
-                    <RadioCardIndicator className="mt-1" />
-                    <div>
-                      <span className="sm:text-sm">Cabinet principal</span>
-                      <p className="mt-1 text-xs text-gray-500">
-                        Situé au centre-ville, équipé pour tous les examens médicaux courants.
-                      </p>
-                    </div>
+            <RadioCardGroup
+              className="mt-2 flex flex-wrap gap-4"
+              value={locationValue ?? undefined}
+              onValueChange={setLocationValue}
+            >
+              <RadioCardItem value="1" className="min-w-48 flex-1">
+                <div className="flex items-start gap-3">
+                  <RadioCardIndicator className="mt-1" />
+                  <div>
+                    <span className="sm:text-sm">Cabinet principal</span>
+                    <p className="mt-1 text-xs text-gray-500">
+                      Situé au centre-ville, équipé pour tous les examens médicaux courants.
+                    </p>
                   </div>
-                </RadioCardItem>
-                <RadioCardItem value="2" className="min-w-48 flex-1">
-                  <div className="flex items-start gap-3">
-                    <RadioCardIndicator className="mt-1" />
-                    <div>
-                      <span className="sm:text-sm">À domicile</span>
-                      <p className="mt-1 text-xs text-gray-500">
-                        Consultation réalisée au domicile du patient, idéale pour les personnes à mobilité réduite ou nécessitant un suivi à la maison.
-                      </p>
-                    </div>
+                </div>
+              </RadioCardItem>
+              <RadioCardItem value="2" className="min-w-48 flex-1">
+                <div className="flex items-start gap-3">
+                  <RadioCardIndicator className="mt-1" />
+                  <div>
+                    <span className="sm:text-sm">À domicile</span>
+                    <p className="mt-1 text-xs text-gray-500">
+                      Consultation réalisée au domicile du patient.
+                    </p>
                   </div>
-                </RadioCardItem>
-                <RadioCardItem value="3" className="min-w-48 flex-1">
-                  <div className="flex items-start gap-3">
-                    <RadioCardIndicator className="mt-1" />
-                    <div>
-                      <span className="sm:text-sm">Télécommunication</span>
-                      <p className="mt-1 text-xs text-gray-500">
-                        Rendez-vous à distance par appel vidéo ou téléphonique, pratique pour les consultations rapides ou le suivi sans déplacement.
-                      </p>
-                    </div>
+                </div>
+              </RadioCardItem>
+              <RadioCardItem value="3" className="min-w-48 flex-1">
+                <div className="flex items-start gap-3">
+                  <RadioCardIndicator className="mt-1" />
+                  <div>
+                    <span className="sm:text-sm">Télécommunication</span>
+                    <p className="mt-1 text-xs text-gray-500">
+                      Rendez-vous à distance par appel vidéo ou téléphonique.
+                    </p>
                   </div>
-                </RadioCardItem>
-              </RadioCardGroup>
-            </div>
+                </div>
+              </RadioCardItem>
+            </RadioCardGroup>
           </div>
         </div>
 
         <Divider />
 
-        {(value &&
-          value.toDateString() === new Date().toDateString() &&
-          (
-            <>
-              <div className="flex items-center gap-3">
-                <Switch id="a" checked={checked} onCheckedChange={setChecked} />
-                <Label htmlFor="a">Ajouter à la salle d&apos;attente</Label>
-              </div>
-              <Divider />
-            </>
-
-          ))}
+        {value && value.toDateString() === new Date().toDateString() && (
+          <>
+            <div className="flex items-center gap-3">
+              <Switch id="a" checked={checked} onCheckedChange={setChecked} />
+              <Label htmlFor="a">Ajouter à la salle d&apos;attente</Label>
+            </div>
+            <Divider />
+          </>
+        )}
 
         <div className="flex items-center gap-3">
-          <Switch id="a" checked={isUrgent} onCheckedChange={setUrgent} />
-          <Label htmlFor="a">Marquer Comme Urgente</Label>
+          <Switch id="b" checked={isUrgent} onCheckedChange={setUrgent} />
+          <Label htmlFor="b">Marquer Comme Urgente</Label>
         </div>
         <Divider />
 
-        {/* Actions */}
         <div className="flex items-center justify-end space-x-4">
           <Button variant="secondary" type="button">
             Annuler
@@ -299,5 +309,5 @@ export default function RendezVousForm() {
         </div>
       </form>
     </div>
-  )
+  );
 }

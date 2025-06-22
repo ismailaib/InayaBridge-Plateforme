@@ -1,16 +1,16 @@
 "use client"
 
-import React, { useState } from "react"
+import { useState } from "react"
 import {
   RadioCardGroup,
   RadioCardIndicator,
   RadioCardItem,
 } from "@/components/RadioCard"
 import { Input } from "@/components/Input"
-import Link from "next/link"
 import { Button } from "@/components/Button"
+import Link from "next/link"
 
-const ALL_SPECIALISATIONS = [
+const SPECIALITIES = [
   "Médecin généraliste",
   "Cardiologue",
   "Dermatologue",
@@ -23,40 +23,39 @@ const ALL_SPECIALISATIONS = [
   "Autre spécialité",
 ]
 
-
-const StepDoctorSpecialisation = ({
-  accountType,
+export default function StepDoctorSpecialisation({
+  selected,
+  onContinue,
   onSuccess,
 }: {
-  accountType: string
+  selected?: string
+  onContinue: (spec: string) => void
   onSuccess?: () => void
-}) => {
+}) {
+  const [choice, setChoice] = useState(selected ?? "Médecin généraliste")
+  const [other, setOther] = useState("")
+
+  const current = choice === "Autre spécialité" ? other : choice
+  const valid = current.trim().length > 0
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (accountType === "doctor" && onSuccess) {
-      onSuccess()
-    } else {
-      alert("test")
-    }
+    if (!valid) return
+    onContinue(current.trim())
+    onSuccess?.()        // ← déclenché juste après si présent
   }
-
-  const [selectedSpeciality, setSelectedSpeciality] = useState("")
-
-  const isOtherSelected = selectedSpeciality === "Autre spécialité"
 
   return (
     <div className="flex h-full flex-col justify-between">
-      {/* Form Section */}
-      <form className="">
-        <fieldset className="space-y-4 text-start">
-          <RadioCardGroup className="mt-4 grid-cols-2 text-sm">
-            {ALL_SPECIALISATIONS.map((label) => (
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <fieldset>
+          <RadioCardGroup className="mt-4 grid-cols-2">
+            {SPECIALITIES.map((label) => (
               <RadioCardItem
                 key={label}
                 value={label}
-                checked={selectedSpeciality === label}
-                onClick={() => setSelectedSpeciality(label)}
+                checked={choice === label}
+                onClick={() => setChoice(label)}
               >
                 <div className="flex items-center gap-3">
                   <RadioCardIndicator />
@@ -66,37 +65,41 @@ const StepDoctorSpecialisation = ({
             ))}
           </RadioCardGroup>
 
-          {isOtherSelected && (
+          {choice === "Autre spécialité" && (
             <div className="mt-6">
               <label
-                htmlFor="other-speciality"
-                className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200"
+                htmlFor="other"
+                className="mb-1 block text-sm font-medium"
               >
-                Veuillez spécifier votre spécialité
+                Spécialité
               </label>
               <Input
-                type="text"
-                id="other-speciality"
-                name="other-speciality"
-                placeholder="Ex: Médecin du ..."
+                id="other"
+                placeholder="Ex : Médecin du sport"
+                value={other}
+                onChange={(e) => setOther(e.target.value)}
               />
             </div>
           )}
         </fieldset>
+
+        <div className="mt-12 flex justify-between gap-4">
+          <Link href="/signup">
+            <Button variant="secondary" type="button">
+              Retour
+            </Button>
+          </Link>
+
+          <Button
+            variant="primary"
+            type="submit"
+            className="w-full"
+            disabled={!valid}
+          >
+            Continuer
+          </Button>
+        </div>
       </form>
-
-      {/* Action Buttons */}
-      <div className="mt-12 flex flex-row justify-between gap-4">
-        <Link href="/signup">
-          <Button variant="secondary">Retour</Button>
-        </Link>
-
-        <Button variant="primary" className="w-full" onClick={handleSubmit}>
-          Continuer
-        </Button>
-      </div>
     </div>
   )
 }
-
-export default StepDoctorSpecialisation

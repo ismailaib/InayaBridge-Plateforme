@@ -10,7 +10,7 @@ import { Label } from "@/components/Label"
 import React from "react"
 
 export default function PatientWelcomePage() {
-  // const [value, setValue] = React.useState<Date | undefined>(undefined)
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(undefined)
 
   return (
     <div className="grid min-h-screen w-full grid-cols-1 overflow-hidden lg:grid-cols-2">
@@ -76,12 +76,15 @@ export default function PatientWelcomePage() {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="dob" className="font-medium">
-                            Date de naissance
-                          </Label>
+                          <Label htmlFor="dob" className="font-medium">Date de naissance</Label>
                           <div className="mt-2">
-                            <DatePickerBirthDateExample
-   
+                            <DatePickerBirthDateExample value={selectedDate} onChange={setSelectedDate} />
+                            <input
+                              type="hidden"
+                              name="dateOfBirth"
+                              value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
+                              tabIndex={-1}
+                              aria-hidden="true"
                             />
                           </div>
                         </div>
@@ -125,10 +128,12 @@ export default function PatientWelcomePage() {
               transition={{ delay: 0.6 }}
               className="rounded-xl bg-white/10 p-1.5 ring-1 ring-white/20"
             >
-              <img
+              <Image
                 alt="Illustration"
                 src="/opengraph-image.png"
                 className="rounded-md shadow-2xl ring-1 ring-white/20"
+                width={512}
+                height={512}
               />
             </motion.div>
 
@@ -139,7 +144,7 @@ export default function PatientWelcomePage() {
               className="grid h-20 grid-cols-3 items-center gap-10"
             >
               {[1, 2, 3].map((id) => (
-                <img
+                <Image
                   key={id}
                   alt={`Logo partenaire ${id}`}
                   src={`https://blocks.tremor.so/logos/white/placeholder${id}.svg`}
