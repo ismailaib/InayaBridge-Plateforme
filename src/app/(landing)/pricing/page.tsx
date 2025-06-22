@@ -55,7 +55,7 @@ const plans: Plan[] = [
   },
   {
     name: "Plus",
-    price: { monthly: "1400 Dh", annually: "1290 Dh" },
+    price: { monthly: "140 Dh", annually: "1290 Dh" },
     description:
       "Des outils avancés pour optimiser votre pratique dès la version 2.",
     capacity: ["Statistiques patients", "Export PDF", "Support prioritaire"],
