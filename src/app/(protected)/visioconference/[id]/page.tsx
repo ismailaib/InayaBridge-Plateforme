@@ -16,7 +16,8 @@ import {
   Volume2,
   VolumeX,
   MoreVertical,
-  UserPlus
+  UserPlus,
+  Copy
 } from 'lucide-react'
 
 const peerConfig = {
@@ -208,6 +209,8 @@ export default function VideoCall() {
     }
   }
 
+  const [showCopySuccess , setShowCopySuccess ] = useState<Boolean>(false)
+
   return (
     <div className="h-screen dark:bg-gray-900 bg-white dark:text-white text-gray-800 flex flex-col">
       {/* Header */}
@@ -227,6 +230,23 @@ export default function VideoCall() {
           >
             <Settings className="w-5 h-5" />
           </button>
+            <button
+            onClick={async () => {
+              await navigator.clipboard.writeText('http://localhost:3000/patient/visioconference/321')
+              setShowCopySuccess(true)
+              setTimeout(() => setShowCopySuccess(false), 2000)
+            }}
+            className="p-2 dark:hover:bg-gray-700 hover:bg-gray-300 rounded-lg transition-colors relative"
+            title="Copier le lien"
+            >
+            {showCopySuccess ? (
+              <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            ) : (
+              <Copy className="w-5 h-5" />
+            )}
+            </button>
           <button className="p-2 dark:hover:bg-gray-700 hover:bg-gray-300 rounded-lg transition-colors">
             <MoreVertical className="w-5 h-5" />
           </button>
@@ -239,21 +259,21 @@ export default function VideoCall() {
           <div className="flex flex-wrap gap-2">
             <button 
               onClick={testMicrophone}
-              className="px-3 py-2 bg-[#00b38f]/80 hover:bg-[#00b38f] rounded-lg text-sm transition-colors flex items-center gap-2 dark:text-gray-900 text-white"
+              className="px-3 py-2 bg-[#00b38f]/80 hover:bg-[#00b38f] rounded-lg text-sm transition-colors flex items-center gap-2  text-white"
             >
               <Mic className="w-4 h-4" />
               Test Micro
             </button>
             <button 
               onClick={testCamera}
-              className="px-3 py-2 bg-[#00b38f]/80 hover:bg-[#00b38f] rounded-lg text-sm transition-colors flex items-center gap-2 dark:text-gray-900 text-white"
+              className="px-3 py-2 bg-[#00b38f]/80 hover:bg-[#00b38f] rounded-lg text-sm transition-colors flex items-center gap-2  text-white"
             >
               <Camera className="w-4 h-4" />
               Test Caméra
             </button>
             <button 
               onClick={testSpeakers}
-              className="px-3 py-2 bg-[#00b38f]/80 hover:bg-[#00b38f] rounded-lg text-sm transition-colors flex items-center gap-2 dark:text-gray-900 text-white"
+              className="px-3 py-2 bg-[#00b38f]/80 hover:bg-[#00b38f] rounded-lg text-sm transition-colors flex items-center gap-2 text-white"
             >
               <Volume2 className="w-4 h-4" />
               Test Haut-parleurs

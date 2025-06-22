@@ -23,25 +23,17 @@ import { fr } from "date-fns/locale"
 import { cx } from "@/lib/utils"
 import { Button } from "@/components/Button"
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/Dialog"
-import {
   Calendar as CalendarIcon,
   ChevronLeft,
   ChevronRight,
   Clock,
   MapPin,
-  User,
-  Phone,
   LayoutGrid,
   Calendar as CalendarViewIcon,
   List,
-  Calendar1,
 } from "lucide-react"
 import { getAppointments } from "../api/appointment"
+import { AppointmentDetails } from "./AppointmentDetails"
 
 const CalendarHeader = ({
   currentDate,
@@ -604,14 +596,23 @@ const ListView = ({
                             <p className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
                               {appointment.patient}
                             </p>
-                            <div
-                              className={cx(
-                                "ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
-                                appointment.typeColor,
-                              )}
-                            >
-                              {appointment.type}
-                            </div>
+                            {appointment.type === "local" && (
+                              <span className="ml-2 inline-block rounded bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                Cabinet principale
+                              </span>
+                            )}
+
+                            {appointment.type === "in-person" && (
+                              <span className="ml-2 inline-block rounded bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
+                                À domicile
+                              </span>
+                            )}
+
+                            {appointment.type === "video" && (
+                              <span className="ml-2 inline-block rounded bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800 dark:bg-red-900 dark:text-red-200">
+                                Visio Conférence
+                              </span>
+                            )}
                           </div>
                           <div className="mt-2 flex">
                             <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
@@ -651,147 +652,6 @@ const ListView = ({
   )
 }
 
-const AppointmentDetails = ({
-  appointment,
-  isOpen,
-  onClose,
-}: {
-  appointment: {
-    date_of_birth: string
-    id: string
-    patient: string
-    phoneNumber: string
-    type: string
-    typeColor: string
-    date: Date
-    startTime: string
-    endTime: string
-    location: string
-    notes: string
-    confirmed: boolean
-  } | null
-  isOpen: boolean
-  onClose: () => void
-}) => {
-  if (!appointment) return null
-
-  return (
-    <Dialog open={isOpen} onOpenChange={() => onClose()}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Détails du rendez-vous</DialogTitle>
-        </DialogHeader>
-        <div className="mt-4 space-y-4">
-          <div>
-            <div className="flex justify-between">
-              <div
-                className={cx(
-                  "inline-flex items-center rounded px-2 py-1 text-xs font-medium",
-                  appointment.typeColor,
-                )}
-              >
-                {appointment.type === "local" && (
-                  <span className="ml-2 inline-block rounded bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                    Cabinet principale
-                  </span>
-                )}
-
-                {appointment.type === "in-person" && (
-                  <span className="ml-2 inline-block rounded bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
-                    À domicile
-                  </span>
-                )}
-
-                {appointment.type === "video" && (
-                  <span className="ml-2 inline-block rounded bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800 dark:bg-red-900 dark:text-red-200">
-                    Visio Conférence
-                  </span>
-                )}
-
-
-              </div>
-              <div
-                className={cx(
-                  "inline-flex items-center rounded-full px-3 py-0.5 text-xs font-medium",
-                  appointment.confirmed
-                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                    : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-                )}
-              >
-                {appointment.confirmed ? "Confirmé" : "À confirmer"}
-              </div>
-            </div>
-
-            <h3 className="mt-2 text-lg font-medium text-gray-900 dark:text-gray-50">
-              {format(new Date(appointment.date), "EEEE d MMMM yyyy", {
-                locale: fr,
-              })}
-            </h3>
-          </div>
-
-          <div className="space-y-2 rounded-md bg-gray-50 p-3 dark:bg-gray-900">
-            <div className="flex items-center">
-              <User className="mr-2 h-4 w-4 text-gray-500 dark:text-gray-400" />
-              <h4 className="font-medium text-gray-900 dark:text-gray-50">
-                {appointment.patient}
-              </h4>
-            </div>
-            <div className="flex items-center">
-              <Phone className="mr-2 h-4 w-4 text-gray-500 dark:text-gray-400" />
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                {appointment.phoneNumber}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-3 rounded-md bg-gray-50 p-3 dark:bg-gray-900">
-            <Clock className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            <div>
-              <h4 className="font-medium text-gray-900 dark:text-gray-50">
-                Horaires
-              </h4>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                {appointment.startTime} - {appointment.endTime}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-3 rounded-md bg-gray-50 p-3 dark:bg-gray-900">
-            <Calendar1 className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            <div>
-              <h4 className="font-medium text-gray-900 dark:text-gray-50">
-                Date de Naissance
-              </h4>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                {appointment.date_of_birth
-                  ? format(new Date(appointment.date_of_birth), "dd/MM/yyyy")
-                  : "--"}
-              </p>
-            </div>
-          </div>
-
-          {appointment.notes && (
-            <div className="rounded-md bg-gray-50 p-3 dark:bg-gray-900">
-              <h4 className="font-medium text-gray-900 dark:text-gray-50">
-                Notes
-              </h4>
-              <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
-                {appointment.notes}
-              </p>
-            </div>
-          )}
-
-          <div className="mt-6 flex justify-end space-x-2">
-            <Button variant="secondary" onClick={onClose}>
-              Fermer
-            </Button>
-            <Button>Modifier</Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
-}
 
 export default function DoctorCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date())
@@ -873,13 +733,9 @@ export default function DoctorCalendar() {
     setDialogOpen(true)
   }
 
-  const handleCloseDialog = () => {
-    setDialogOpen(false)
-  }
-
   if (loading) {
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center h-screen">
         <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     )
@@ -929,7 +785,39 @@ export default function DoctorCalendar() {
       <AppointmentDetails
         appointment={selectedAppointment}
         isOpen={dialogOpen}
-        onClose={handleCloseDialog}
+        onClose={async () => {
+          setDialogOpen(false);
+          setLoading(true);
+          try {
+            const response = await getAppointments();
+            const data = response.data;
+            const cleanedData = data.map((item: any, index: number) => ({
+              id: item.id || `appointment-${index}`,
+              patient: item.patient.first_name || "--",
+              phoneNumber: item.patient_phone_number || "--",
+              type: item.consultationType || "--",
+              date: item.date || "--",
+              startTime: item.startTime || "--",
+              endTime: item.endTime || "",
+              location: item.location || "--",
+              date_of_birth: item.patient.date_of_birth || "--",
+              notes: item.motif || "--",
+              confirmed: item.status === "confirmed",
+              consultationType: item.consultationType || "--",
+              motif: item.motif || "--",
+              timeSpentInWaitingRoom: item.timeSpentInWaitingRoom || {
+                enterTime: "--",
+                endTime: "--",
+              },
+              timeOfExitFromConsultation: item.timeOfExitFromConsultation || "--",
+            }));
+            setAppointments(cleanedData);
+          } catch (error) {
+            console.error("Erreur lors du chargement des rendez-vous", error);
+          } finally {
+            setLoading(false);
+          }
+        }}
       />
     </div>
   )
