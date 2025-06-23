@@ -16,6 +16,8 @@ import Statistics from "./components/Statistics"
 import Reporting from "./components/Reporting"
 import { DashboardModal } from "./components/DashboardModal"
 import { motion } from "framer-motion"
+import { useUserStore } from "@/store/useAuthStore"
+
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 10 },
@@ -51,13 +53,26 @@ export default function Dashboard() {
     { label: "2020", value: "2020" },
   ]
 
+  let user = { lastName: "AIT BOUHMAD" }
+  if (typeof window !== "undefined") {
+    const storedUser = localStorage.getItem("user")
+    if (storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser)
+        if (parsed && parsed.lastName) {
+          user.lastName = parsed.lastName
+        }
+      } catch {}
+    }
+  }
+
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <header>
         <div className="sm:flex sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-              Bienvenue Dr. Ismail
+              Bienvenue Dr. {user.lastName}
             </h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               {new Date().toLocaleDateString("fr-FR", {

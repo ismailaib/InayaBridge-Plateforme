@@ -14,6 +14,7 @@ import { Conditions } from "../Conditions"
 import { Politique } from "../Politique"
 import { login as loginApi } from "@/app/login/api/auth"
 import { useAuth } from "@/lib/auth-context"
+import { useUserStore } from "@/store/useAuthStore"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -21,7 +22,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { login, token, user, loading: authLoading } = useAuth()
-
+  // Adjust the type argument below to match your store's shape if needed
+    const { setUser } = useUserStore() as { setUser: (user: any) => void }
   // Redirect if already authenticated
   useEffect(() => {
     if (!authLoading && token && user) {
@@ -41,6 +43,7 @@ export default function LoginPage() {
     try {
       const { data } = await loginApi({ email, password })
       login({ token: data.token, user: data.user })
+      setUser(data.user)
       const redirect = data.user.role === "doctor" ? "/dashboard" : "/patient/dashboard"
       router.replace(redirect)
     } catch (err) {

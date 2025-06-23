@@ -14,10 +14,11 @@ import {
   DropdownMenuSubMenuTrigger,
   DropdownMenuTrigger,
 } from "@/components/DropdownMenu"
+import { useAuth } from "@/lib/auth-context"
+import { useUserStore } from "@/store/useAuthStore"
 import { ArrowUpRight, Monitor, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import * as React from "react"
-import { useAuth } from "@/lib/auth-context"
 
 export type DropdownUserProfileProps = {
   children: React.ReactNode
@@ -31,13 +32,32 @@ export function DropdownUserProfile({
   const [mounted, setMounted] = React.useState(false)
   const { theme, setTheme } = useTheme()
   const { logout } = useAuth()
+  const { user } = useUserStore() as { user: { email: string } }
+
   React.useEffect(() => {
     setMounted(true)
+  }, [])
+
+  const [localUser, setLocalUser] = React.useState<{ email: string } | null>(null)
+
+  React.useEffect(() => {
+    setMounted(true)
+    const storedUser = localStorage.getItem("user")
+    if (storedUser) {
+      try {
+        setLocalUser(JSON.parse(storedUser))
+      } catch {
+        setLocalUser(null)
+      }
+    }
   }, [])
 
   if (!mounted) {
     return null
   }
+
+  const userEmail = localUser?.email || "ismailaitbouhmad@gmail.com"
+  
 
 
   return (
@@ -48,7 +68,7 @@ export function DropdownUserProfile({
           align={align}
           className="sm:!min-w-[calc(var(--radix-dropdown-menu-trigger-width))]"
         >
-          <DropdownMenuLabel>ismailaitbouhmad@gmail.com</DropdownMenuLabel>
+          <DropdownMenuLabel>{userEmail}</DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuSubMenu>
               <DropdownMenuSubMenuTrigger>Theme</DropdownMenuSubMenuTrigger>

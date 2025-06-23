@@ -131,7 +131,6 @@ export const AppointmentDetails = ({
       
       onAppointmentUpdated?.(updatedAppointment)
       onClose()
-      onClose()
     } catch (error) {
       console.error("Erreur lors de la mise à jour du statut:", error)
     } finally {
@@ -171,6 +170,7 @@ export const AppointmentDetails = ({
       await updateAppointment(appointment.id, payload)
       onAppointmentUpdated?.(updatedData)
       setEditingField(null)
+      onClose()
     } catch (error) {
       console.error("Erreur lors de la mise à jour:", error)
       // You might want to show error message to user
