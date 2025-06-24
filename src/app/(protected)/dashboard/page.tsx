@@ -8,15 +8,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/Select"
-import React from "react"
+import { motion } from "framer-motion"
 import Banner from "./components/Banner"
+import { DashboardModal } from "./components/DashboardModal"
 import Kpis from "./components/Kpis"
+import Reporting from "./components/Reporting"
 import SalleAttente from "./components/SalleAttente"
 import Statistics from "./components/Statistics"
-import Reporting from "./components/Reporting"
-import { DashboardModal } from "./components/DashboardModal"
-import { motion } from "framer-motion"
-import { useUserStore } from "@/store/useAuthStore"
 
 
 const fadeInUp = {
