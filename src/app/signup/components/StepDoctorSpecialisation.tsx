@@ -42,7 +42,7 @@ export default function StepDoctorSpecialisation({
     e.preventDefault()
     if (!valid) return
     onContinue(current.trim())
-    onSuccess?.()        // ← déclenché juste après si présent
+    onSuccess?.()
   }
 
   return (

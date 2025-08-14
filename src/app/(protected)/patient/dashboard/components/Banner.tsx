@@ -5,7 +5,7 @@ import { Card } from '@/components/Card';
 const data = [
   {
     step: 1,
-    title: 'Compléter les informations personnelles',
+    title: 'Compléter les informations professionnelles',
     description:
       'Ajoutez votre spécialité, votre numéro d’ordre et votre adresse professionnelle.',
     buttonText: 'Compléter le profil',

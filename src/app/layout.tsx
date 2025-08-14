@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { siteConfig } from "./siteConfig"
 import { LayoutWrapper } from "./(landing)/Layout"
+import { Toaster } from "@/components/Toaster"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -57,6 +58,10 @@ export default function RootLayout({
           defaultTheme="system"
           disableTransitionOnChange
         >
+          <div className="z-50 fixed">
+            <Toaster />
+          </div>
+          
           <LayoutWrapper>{children}</LayoutWrapper>
         </ThemeProvider>
       </body>

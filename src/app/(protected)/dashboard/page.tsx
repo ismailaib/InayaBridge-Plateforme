@@ -44,14 +44,11 @@ export default function Dashboard() {
     { label: "Décembre", value: "décembre" },
   ]
 
-  const yearSelect = [
-    { label: "2025", value: "2025" },
-    { label: "2024", value: "2024" },
-    { label: "2023", value: "2023" },
-    { label: "2022", value: "2022" },
-    { label: "2021", value: "2021" },
-    { label: "2020", value: "2020" },
-  ]
+  const currentYear = 2025
+  const yearSelect = Array.from({ length: 6 }, (_, i) => {
+    const year = (currentYear - i).toString()
+    return { label: year, value: year }
+  })
 
   let user = { lastName: "AIT BOUHMAD" }
   if (typeof window !== "undefined") {
@@ -87,8 +84,8 @@ export default function Dashboard() {
           <div className="mt-4 flex flex-col gap-2 sm:mt-0 sm:flex-row sm:items-end">
             <DashboardModal />
             <div className="w-[150px]">
-              <Select>
-                <SelectTrigger id="month" className="mt-2">
+              <Select defaultValue={monthSelect[new Date().getMonth()].value}>
+                <SelectTrigger id="month" className="mt-2" >
                   <SelectValue placeholder="Mois" />
                 </SelectTrigger>
                 <SelectContent>
@@ -101,11 +98,11 @@ export default function Dashboard() {
               </Select>
             </div>
             <div className="w-[150px]">
-              <Select>
+              <Select defaultValue={new Date().getFullYear().toString()}>
                 <SelectTrigger id="year" className="mt-2">
                   <SelectValue placeholder="Année" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent >
                   {yearSelect.map((item) => (
                     <SelectItem key={item.value} value={item.value}>
                       {item.label}

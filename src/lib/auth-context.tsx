@@ -3,14 +3,12 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
-/* -------- types -------- */
 interface User {
   id: number
   email: string
   role: "doctor" | "patient" | string
   firstName: string
   lastName: string
-  // … ajoute ce dont tu as besoin
   doctor?: { speciality: string }
 }
 
@@ -22,7 +20,6 @@ interface AuthContextProps {
   loading: boolean
 }
 
-/* -------- contexte -------- */
 const AuthContext = createContext<AuthContextProps | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -32,7 +29,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
-  /* -------- charge depuis localStorage -------- */
   useEffect(() => {
     const storedToken = localStorage.getItem("token")
     const storedUser = localStorage.getItem("user")
@@ -44,12 +40,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(false)
   }, [])
 
-  /* -------- helpers -------- */
   const login = ({ token, user }: { token: string; user: User }) => {
     localStorage.setItem("token", token)
     localStorage.setItem("user", JSON.stringify(user))
     setToken(token)
     setUser(user)
+    router.push("/dashboard")
   }
 
   const logout = () => {
@@ -60,7 +56,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push("/")
   }
 
-  /* -------- protège les routes client-side -------- */
   useEffect(() => {
     if (!loading && !token && window.location.pathname !== "/signup") {
       router.push("/login")
@@ -74,7 +69,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-/* -------- hook pratique -------- */
 export const useAuth = () => {
   const ctx = useContext(AuthContext)
   if (!ctx) throw new Error("useAuth must be used within <AuthProvider>")

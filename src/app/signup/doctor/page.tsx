@@ -45,8 +45,8 @@ export default function DoctorWelcomePage() {
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
               {step === "shared"
-                ? "Vous êtes sur le point de rejoindre notre communauté médicale."
-                : "Merci ! Maintenant, sélectionnez votre spécialité pour compléter votre profil."}
+                ? "Merci ! Maintenant, sélectionnez votre spécialité pour compléter votre profil."
+                : "Vous êtes sur le point de rejoindre notre communauté médicale."}
             </p>
           </motion.div>
 

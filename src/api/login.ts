@@ -1,12 +1,10 @@
 import api from "@/lib/api"
 
-/* ---------- Payload envoyé ---------- */
 export interface LoginPayload {
   email: string
   password: string
 }
 
-/* ---------- Profils imbriqués ---------- */
 export interface DoctorProfile {
   id: number
   userId: number
@@ -14,9 +12,9 @@ export interface DoctorProfile {
   licenseNumber: string | null
   planId: number | null
   cin: string | null
-  availability: unknown | null        // adapte le type si tu connais la forme
+  availability: unknown | null
   consultationStats: unknown | null
-  created_at: string                  // ISO date
+  created_at: string
   updated_at: string
 }
 
@@ -25,7 +23,6 @@ export interface PatientProfile {
   userId: number
   gender: "male" | "female"
   cin: string
-  // Ajoute ici d’autres attributs (allergies ? dossier médical ?)
   created_at: string
   updated_at: string
 }
@@ -41,8 +38,8 @@ export interface User {
   adress: string
   created_at: string
   updated_at: string
-  doctor?: DoctorProfile              // présent si role === "doctor"
-  patient?: PatientProfile            // présent si role === "patient"
+  doctor?: DoctorProfile
+  patient?: PatientProfile
 }
 
 /* ---------- Réponse API ---------- */
@@ -54,4 +51,4 @@ export interface LoginResponse {
 
 /* ---------- Helper ---------- */
 export const login = (payload: LoginPayload) =>
-  api.post<LoginResponse>("/login", payload)
+  api.post<LoginResponse>("/auth/login", payload)

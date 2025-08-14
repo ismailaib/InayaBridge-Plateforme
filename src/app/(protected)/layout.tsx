@@ -16,7 +16,6 @@ export default function PrivateLayout({
   return (
     <ThemeProvider attribute="class" disableTransitionOnChange>
       <AuthProvider>
-        {/* AuthGuard est client ; il gère la redirection si token absent */}
         <AuthGuard>
           <SidebarProvider defaultOpen={isSidebarOpen}>
             <AppSidebar />

@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import confetti from "canvas-confetti"
 import Link from "next/link"
 import { Button } from "@/components/Button"
@@ -9,9 +8,10 @@ import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Conditions } from "@/app/Conditions"
 import { Politique } from "@/app/Politique"
-import { registerDoctor, registerPatient } from "@/app/signup/api/auth"
+import { registerDoctor, registerDoctorProfile, registerPatient } from "@/api/register"
 import { useAuth } from "@/lib/auth-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
+import { toast } from "@/lib/useToast"
 
 export default function StepSharedFields({
   accountType,
@@ -24,9 +24,10 @@ export default function StepSharedFields({
   additionalFields?: React.ReactNode
   onSuccess?: () => void
 }) {
-  const router = useRouter()
   const { login } = useAuth()
   const [loading, setLoading] = useState(false)
+
+  console.log(speciality)
 
   /* --------------------- submit --------------------- */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -50,14 +51,22 @@ export default function StepSharedFields({
           password: fd.password as string,
           dateOfBirth: fd.dateOfBirth as string,
           speciality: speciality ?? "General",
+          status: "PENDING_VERIFICATION" as string,
         }
 
         const { data } = await registerDoctor(payload)
-        login({ token: data.token, user: data.user }) 
-        console.log(payload)
+
+        const profile = {
+          tenantId: "",
+          userId: data.user.id,
+          licenseNumber: "",
+          specialty: speciality ?? "General"
+        }
+
+        await registerDoctorProfile(profile)
+        login({ token: data.token, user: data.user })
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } })
         onSuccess?.()
-        router.replace("/dashboard")
       }
       /* ---- PATIENT ---- */
       else {
@@ -78,10 +87,15 @@ export default function StepSharedFields({
         console.log(payload)
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } })
         onSuccess?.()
-        router.replace("/patient/dashboard")
       }
     } catch (err) {
-      alert("Erreur lors de l'inscription.")
+      toast({
+        title: "Error",
+        description:
+          "Veuillez vérifier vos informations et réessayer.",
+        variant: "error",
+        duration: 3000,
+      })
     } finally {
       setLoading(false)
     }
@@ -130,7 +144,6 @@ export default function StepSharedFields({
             </div>
           </div>
 
-          {/* Contact info - 2 column grid on larger screens */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="email">Adresse e-mail</Label>
@@ -152,7 +165,7 @@ export default function StepSharedFields({
                 required
                 pattern="^(?:\+212|0)[0-9]{9}$"
                 autoComplete="tel"
-                placeholder="ex: 0612345678"
+                placeholder="ex: +21212345678"
               />
             </div>
           </div>
@@ -176,7 +189,7 @@ export default function StepSharedFields({
             {accountType === "patient" && (
               <div className="space-y-2 sm:col-span-2 md:col-span-4">
                 <Label htmlFor="gender">Genre</Label>
-                <Select value={gender} onValueChange={setGender } name="gender">
+                <Select value={gender} onValueChange={setGender} name="gender">
                   <SelectTrigger className="mx-auto h-10">
                     <SelectValue placeholder="Select" aria-label={gender} />
                   </SelectTrigger>
