@@ -15,7 +15,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/DropdownMenu"
 import { useAuth } from "@/lib/auth-context"
-import { useUserStore } from "@/store/useAuthStore"
 import { ArrowUpRight, Monitor, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import * as React from "react"
@@ -32,7 +31,6 @@ export function DropdownUserProfile({
   const [mounted, setMounted] = React.useState(false)
   const { theme, setTheme } = useTheme()
   const { logout } = useAuth()
-  const { user } = useUserStore() as { user: { email: string } }
 
   React.useEffect(() => {
     setMounted(true)
