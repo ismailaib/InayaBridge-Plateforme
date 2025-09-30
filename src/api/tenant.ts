@@ -29,3 +29,5 @@ export const workspaceCreation = (payload: workspaceCreation) =>
     tenantTypeId: payload.tenantTypeId,
     isPrivate: payload.isPrivate,
   })
+
+  export const getTenant = (id: string) => api.get(`/tenants/${id}`)

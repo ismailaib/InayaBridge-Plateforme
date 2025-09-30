@@ -9,9 +9,11 @@ const Toaster = () => {
 
   return (
     <ToastProvider swipeDirection="right">
-      {toasts.map(({ id, ...props }) => {
-        return <Toast key={id} {...props} />
-      })}
+      <div className="fixed inset-0 z-[9999] pointer-events-none">
+        {toasts.map(({ id, ...props }) => (
+          <Toast key={id} {...props} className="pointer-events-auto" />
+        ))}
+      </div>
       <ToastViewport />
     </ToastProvider>
   )

@@ -64,11 +64,8 @@ export const Conditions = () => (
         <DrawerFooter className="mt-6">
           <DrawerClose asChild>
             <Button variant="secondary" className="w-full sm:w-fit">
-              Revenir
+              Fermer
             </Button>
-          </DrawerClose>
-          <DrawerClose asChild>
-            <Button className="w-full sm:w-fit">J&apos;accepte</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

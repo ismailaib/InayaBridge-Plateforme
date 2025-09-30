@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/Button'
-import { Bell, Gift, HeartHandshake, ListChecks, Star } from 'lucide-react'
+import { Bell, HeartHandshake, ListChecks } from 'lucide-react'
 import { cx } from '@/lib/utils'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
 import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/Tabs'
-import { getnotifications } from './api/Notifications'
+import { getnotifications } from '../../../api/Notifications'
 
 const WelcomeNotificationCard = ({ notification }: { notification: any }) => {
   return (

@@ -1,16 +1,22 @@
 export const siteConfig = {
   name: "InayaBridge",
-  url: "",
+  url: "https://inayabridge.com",
   description: "La santé accessible. Pour tous, partout.",
-  baseLinks: {
-    home: "/",
-    about: "/about",
-    changelog: "/changelog",
-    pricing: "/pricing",
-    imprint: "/imprint",
-    privacy: "/privacy",
-    terms: "/terms",
-  },
-}
+} as const;
 
-export type siteConfig = typeof siteConfig
+// Use a helper for locale-aware paths (used in components, not in metadata)
+export const makeLinks = (locale?: string) => {
+  const prefix = locale ? `/${locale}` : "";
+  return {
+    home: "/",
+    about: `${prefix}/about`,
+    changelog: `${prefix}/changelog`,
+    pricing: `${prefix}/pricing`,
+    imprint: `${prefix}/imprint`,
+    privacy: `${prefix}/privacy`,
+    terms: `${prefix}/terms`,
+    login: `${prefix}/login`,
+  } as const;
+};
+
+export type SiteConfig = typeof siteConfig;

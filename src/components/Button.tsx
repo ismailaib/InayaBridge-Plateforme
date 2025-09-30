@@ -26,15 +26,6 @@ const buttonVariants = tv({
         "disabled:bg-[#009e7f6c] disabled:text-[#00b38fb6]",
         "disabled:dark:bg-[#007e6866] disabled:dark:text-[#00b38fb3]",
       ],
-      
-      
-      
-      
-      
-      
-      
-      
-      
       secondary: [
         // border
         "border-gray-300 dark:border-gray-800",

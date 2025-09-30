@@ -66,8 +66,15 @@ const ThemeSwitch = () => {
     setMounted(true)
   }, [])
 
+  // Show a placeholder with the same dimensions during SSR/hydration
   if (!mounted) {
-    return null
+    return (
+      <div className="flex gap-1">
+        <div className="size-8 rounded-lg bg-gray-100 dark:bg-gray-800 animate-pulse" />
+        <div className="size-8 rounded-lg bg-gray-100 dark:bg-gray-800 animate-pulse" />
+        <div className="size-8 rounded-lg bg-gray-100 dark:bg-gray-800 animate-pulse" />
+      </div>
+    )
   }
 
   return (

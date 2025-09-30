@@ -1,28 +1,27 @@
-import type { Metadata } from "next"
-import { ThemeProvider } from "next-themes"
-import { Inter } from "next/font/google"
-import "./globals.css"
-import { siteConfig } from "./siteConfig"
-import { LayoutWrapper } from "./(landing)/Layout"
-import { Toaster } from "@/components/Toaster"
+import type { Metadata } from "next";
+import { Inter, Tajawal } from "next/font/google";
+import "./globals.css";
+import { siteConfig } from "./siteConfig";
 
-const inter = Inter({
+export const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
-})
+});
+
+export const tajawal = Tajawal({
+  weight: ["400", "700"],
+  subsets: ["arabic"],
+  display: "swap",
+  variable: "--font-tajawal",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://InayaBridge.com"),
   title: siteConfig.name,
   description: siteConfig.description,
   keywords: ["Marketing", "Database", "Software"],
-  authors: [
-    {
-      name: "InayaBridge",
-      url: "",
-    },
-  ],
+  authors: [{ name: "InayaBridge", url: "" }],
   creator: "InayaBridge",
   openGraph: {
     type: "website",
@@ -38,33 +37,13 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     creator: "@yourname",
   },
-  icons: {
-    icon: "/favicon.ico",
-  },
-}
+  icons: { icon: "/favicon.ico" },
+};
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.className} min-h-screen scroll-auto antialiased selection:bg-green-100 selection:text-[#007e68] dark:bg-gray-950`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          disableTransitionOnChange
-        >
-          <div className="z-50 fixed">
-            <Toaster />
-          </div>
-          
-          <LayoutWrapper>{children}</LayoutWrapper>
-        </ThemeProvider>
-      </body>
-    </html>
-  )
+}: {
+  children: React.ReactNode;
+}) {
+  return children;
 }

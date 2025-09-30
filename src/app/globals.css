@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+font-family: var(--font-tajawal), "Tajawal", system-ui, sans-serif;
+}
+
+html[lang="ar"] body {
+  font-family: var(--font-tajawal), "Tajawal", system-ui, sans-serif;
+}
+
 @font-face {
   font-family: "NanumPenScript";
   font-weight: 400;

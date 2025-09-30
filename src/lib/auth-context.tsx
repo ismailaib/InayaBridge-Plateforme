@@ -45,7 +45,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("user", JSON.stringify(user))
     setToken(token)
     setUser(user)
-    router.push("/dashboard")
+
+    const locale = getLocaleFromPath()
+    if (user.role === "doctor") {
+      router.push(`/${locale}/dashboard`)
+    } else if (user.role === "patient") {
+      router.push(`/${locale}/patient/dashboard`)
+    } else {
+      router.push(`/${locale}`)
+    }
   }
 
   const logout = () => {
@@ -53,12 +61,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("user")
     setToken(null)
     setUser(null)
-    router.push("/")
+
+    const locale = getLocaleFromPath()
+    router.push(`/${locale}`)
   }
 
   useEffect(() => {
-    if (!loading && !token && window.location.pathname !== "/signup") {
-      router.push("/login")
+    if (!loading && !token) {
+      const locale = getLocaleFromPath()
+      const pathname = window.location.pathname
+
+      if (!pathname.endsWith("/signup")) {
+        router.push(`/${locale}/login`)
+      }
     }
   }, [token, loading, router])
 
@@ -67,6 +82,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {children}
     </AuthContext.Provider>
   )
+}
+
+function getLocaleFromPath(): string {
+  const parts = window.location.pathname.split("/")
+  return parts[1] || "en"
 }
 
 export const useAuth = () => {

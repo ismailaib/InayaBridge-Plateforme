@@ -1,40 +1,44 @@
+"use client"
 import React from "react"
 import { Badge } from "../Badge"
-
-const stats = [
-  {
-    name: "Temps moyen de connexion",
-    value: "< 3 sec",
-  },
-  {
-    name: "Données chiffrées côté client & serveur",
-    value: "100%",
-  },
-  {
-    name: "Utilisateurs simultanés supportés",
-    value: "+10 000",
-  },
-]
+import { useTranslations } from "@/lib/i18n/useTranslations"
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
 
 export default function Features() {
+  const t = useTranslations("features")
+  const { locale } = useTranslationsContext()
+  const isRTL = locale === "ar"
+
+  const stats = [
+    {
+      name: t("stats.connectionTime.name"),
+      value: t("stats.connectionTime.value"),
+    },
+    {
+      name: t("stats.encryptedData.name"),
+      value: t("stats.encryptedData.value"),
+    },
+    {
+      name: t("stats.concurrentUsers.name"),
+      value: t("stats.concurrentUsers.value"),
+    },
+  ]
+
   return (
     <section
       aria-labelledby="features-title"
       className="mx-auto mt-44 w-full max-w-6xl px-3"
+      dir={isRTL ? "rtl" : "ltr"}
     >
-      <Badge>Open, Fast & Secure</Badge>
+      <Badge>{t("badge")}</Badge>
       <h2
         id="features-title"
         className="mt-2 inline-block bg-gradient-to-br from-gray-900 to-gray-800 bg-clip-text py-2 text-4xl font-bold tracking-tighter text-transparent sm:text-6xl md:text-6xl dark:from-gray-50 dark:to-gray-300"
       >
-        Conçue pour la rapidité, pensée pour la santé
+        {t("title")}
       </h2>
       <p className="mt-6 max-w-3xl text-lg leading-7 text-gray-600 dark:text-gray-400">
-        La plateforme InayaBridge est construite avec une architecture moderne
-        et légère, pensée pour offrir des consultations fluides, même avec des
-        connexions limitées. Nos choix techniques garantissent des performances
-        stables, une sécurité renforcée, et une expérience utilisateur fiable —
-        pour les médecins comme pour les patients.
+        {t("description")}
       </p>
       <dl className="mt-12 grid grid-cols-1 gap-y-8 md:grid-cols-3 md:border-y md:border-gray-200 md:py-14 dark:border-gray-800">
         {stats.map((stat, index) => (
