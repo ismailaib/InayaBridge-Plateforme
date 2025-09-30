@@ -1,0 +1,19 @@
+{
+    "badge": "Designed for everyone",
+    "titleLine1": "For all,",
+    "titleLine2": "everywhere.",
+    "features": {
+      "step1": {
+        "title": "1. Create your account",
+        "description": "Sign up for free in seconds, whether you're a patient or a doctor."
+      },
+      "step2": {
+        "title": "2. Book an appointment",
+        "description": "As a patient, pick a time and explain your need; as a doctor, set your availability to make consultations easier."
+      },
+      "step3": {
+        "title": "3. Consult online",
+        "description": "Meet your doctor via video, share documents, and stay followed up."
+      }
+    }
+  }

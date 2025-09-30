@@ -73,7 +73,7 @@ const data = [
 ]
 
 export default function LogoCloud() {
-  const t = useTranslations("JoinUs");
+  const t = useTranslations("joinus");
   const { locale } = useTranslationsContext();
   const isRTL = locale === "ar";
   return (

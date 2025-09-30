@@ -1,0 +1,16 @@
+{
+  "conditions": "En vous connectant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité.",
+  "conditionsContent": {
+    "title": "Conditions générales d'utilisation",
+    "description": "Merci de lire attentivement nos conditions avant d’utiliser la plateforme.",
+    "clause1Description": "En accédant à notre plateforme, vous acceptez de respecter les présentes conditions d'utilisation. Ces conditions visent à garantir une utilisation responsable, sécurisée et conforme aux normes éthiques de notre service.",
+    "clause2Title": "Utilisation équitable",
+    "clause2Description": "Toute tentative de fraude, d'accès non autorisé ou d'usage abusif des fonctionnalités est strictement interdite et entraînera la suspension immédiate du compte.",
+    "clause3Title": "Responsabilité",
+    "clause3Description": "Les professionnels de santé sont seuls responsables des informations et des conseils qu'ils communiquent sur la plateforme.",
+    "clause4Title": "Protection des données",
+    "clause4Description": "Vos informations personnelles sont traitées conformément à notre politique de confidentialité. Aucune donnée médicale n'est partagée sans votre consentement explicite.",
+    "signature": "En continuant, vous acceptez l'ensemble des termes ci-dessus. Ces conditions peuvent être modifiées à tout moment, avec notification."
+  },
+  "close": "Fermer"
+}

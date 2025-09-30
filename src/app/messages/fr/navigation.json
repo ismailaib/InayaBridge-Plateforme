@@ -1,0 +1,12 @@
+{
+    "about": "À propos",
+    "pricing": "Tarifs",
+    "changelog": "Nouveautés",
+    "login": "Se connecter",
+    "languageLabel": "Langue",
+    "languages": {
+      "en": "English",
+      "fr": "Français",
+      "ar": "العربية"
+    }
+  }

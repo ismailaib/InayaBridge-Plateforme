@@ -8,8 +8,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/Select"
-// import YouTubeMusicPopover from "@/components/YouTubeMusicPopover"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
+import { useState, useEffect } from "react"
 import { DashboardModal } from "./components/DashboardModal"
 import Kpis from "./components/Kpis"
 import Banner from "./components/onboarding/Banner"
@@ -17,17 +17,94 @@ import Reporting from "./components/Reporting"
 import SalleAttente from "./components/SalleAttente"
 import Statistics from "./components/Statistics"
 
+// Greeting Loader Component
+function GreetingLoader() {
+  const greetings = ["Hello", "Hola", "Bonjour", "سلام"]
+  const [currentIndex, setCurrentIndex] = useState(0)
 
-// const fadeInUp = {
-//   hidden: { opacity: 0, y: 10 },
-//   visible: (i: number) => ({
-//     opacity: 1,
-//     y: 0,
-//     transition: { delay: i * 0.1, duration: 0.4, ease: "easeOut" },
-//   }),
-// }
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % greetings.length)
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [greetings.length])
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-gray-950">
+      <div className="text-center">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="text-5xl font-bold text-gray-900 dark:text-gray-50"
+          >
+            {greetings[currentIndex]}
+          </motion.div>
+        </AnimatePresence>
+        <motion.div
+          className="mt-6 flex justify-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          {greetings.map((_, index) => (
+            <div
+              key={index}
+              className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                index === currentIndex
+                  ? "bg-blue-500 w-8"
+                  : "bg-gray-300 dark:bg-gray-700"
+              }`}
+            />
+          ))}
+        </motion.div>
+      </div>
+    </div>
+  )
+}
 
 export default function Dashboard() {
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 2000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // --- Load user from localStorage ---
+  let user: {
+    lastName?: string
+    firstName?: string
+    role?: string
+    doctorProfile?: { specialty?: string }
+  } = {}
+
+  if (typeof window !== "undefined") {
+    const storedUser = localStorage.getItem("user")
+    if (storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser)
+        console.log("Parsed user from localStorage:", parsed)
+
+        user = {
+          lastName: parsed.lastName,
+          firstName: parsed.firstName,
+          role: parsed.role,
+          doctorProfile: parsed.doctorProfile,
+        }
+      } catch (err) {
+        console.error("Failed to parse user from localStorage:", err)
+      }
+    }
+  }
+
+  // --- Month & Year Selects ---
   const monthSelect = [
     { label: "Janvier", value: "janvier" },
     { label: "Février", value: "février" },
@@ -43,35 +120,32 @@ export default function Dashboard() {
     { label: "Décembre", value: "décembre" },
   ]
 
-  const currentYear = 2025
+  const currentYear = new Date().getFullYear()
   const yearSelect = Array.from({ length: 6 }, (_, i) => {
     const year = (currentYear - i).toString()
     return { label: year, value: year }
   })
 
-  let user = { lastName: "" }
-  if (typeof window !== "undefined") {
-    const storedUser = localStorage.getItem("user")
-    if (storedUser) {
-      try {
-        const parsed = JSON.parse(storedUser)
-        if (parsed && parsed.lastName) {
-          user.lastName = parsed.lastName
-        }
-      } catch { }
-    }
+  if (isLoading) {
+    return <GreetingLoader />
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
-      {/* <YouTubeMusicPopover className="fixed top-4 right-4" /> */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="p-4 sm:p-6 lg:p-8"
+    >
+      {/* Header */}
       <header>
         <div className="sm:flex sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-              Bienvenue Dr. {user.lastName}
+              Bienvenue Dr. {user.lastName} {user.firstName}
             </h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              {user.doctorProfile?.specialty ?? "Médecin"} •{" "}
               {new Date().toLocaleDateString("fr-FR", {
                 weekday: "long",
                 year: "numeric",
@@ -85,7 +159,7 @@ export default function Dashboard() {
             <DashboardModal />
             <div className="w-[150px]">
               <Select defaultValue={monthSelect[new Date().getMonth()].value}>
-                <SelectTrigger id="month" className="mt-2" >
+                <SelectTrigger id="month" className="mt-2">
                   <SelectValue placeholder="Mois" />
                 </SelectTrigger>
                 <SelectContent>
@@ -102,7 +176,7 @@ export default function Dashboard() {
                 <SelectTrigger id="year" className="mt-2">
                   <SelectValue placeholder="Année" />
                 </SelectTrigger>
-                <SelectContent >
+                <SelectContent>
                   {yearSelect.map((item) => (
                     <SelectItem key={item.value} value={item.value}>
                       {item.label}
@@ -116,12 +190,14 @@ export default function Dashboard() {
       </header>
 
       <Divider />
+
       <motion.div initial="hidden" animate="visible" custom={0}>
         <Banner />
       </motion.div>
 
       <Divider />
 
+      {/* Main Content */}
       <main className="space-y-8">
         <motion.div initial="hidden" animate="visible" custom={1}>
           <Kpis />
@@ -135,10 +211,10 @@ export default function Dashboard() {
           <Reporting />
         </motion.div>
 
-        <motion.div  initial="hidden" animate="visible" custom={4}>
+        <motion.div initial="hidden" animate="visible" custom={4}>
           <SalleAttente />
         </motion.div>
       </main>
-    </div>
+    </motion.div>
   )
 }

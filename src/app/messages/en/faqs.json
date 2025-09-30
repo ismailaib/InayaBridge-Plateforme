@@ -1,0 +1,27 @@
+{
+    "title": "Frequently Asked Questions",
+    "contact": "Can’t find the answer to your question? Feel free to reach out to our",
+    "link": "customer support",
+    "items": [
+      {
+        "q": "Is the platform free for patients?",
+        "a": "Yes, InayaBridge is and will always remain completely free for patients. No credit card, no subscription, no commitment."
+      },
+      {
+        "q": "Do doctors need to pay to use the platform?",
+        "a": "No, all features are free in the current version (V1). In future versions, advanced tools (statistics, exports, API) will be offered in paid plans."
+      },
+      {
+        "q": "How are online consultations secured?",
+        "a": "Consultations use end-to-end encryption. Your calls are neither recorded nor shared. Our priority: medical confidentiality."
+      },
+      {
+        "q": "Can the platform be accessed on mobile?",
+        "a": "Yes, InayaBridge works from any modern browser on desktop, tablet, or smartphone. No download required."
+      },
+      {
+        "q": "How can I join as a doctor?",
+        "a": "Simply create a professional account. You can start consulting as soon as your profile is validated. It’s simple, fast, and without hidden fees."
+      }
+    ]
+  }

@@ -1,4 +1,4 @@
-﻿import { useMemo } from "react"
+import { useMemo } from "react"
 import type { Messages } from "./getMessages"
 import { useTranslationsContext } from "./TranslationsProvider"
 
@@ -40,6 +40,7 @@ export function useTranslations(namespace?: string) {
   const { messages } = useTranslationsContext()
 
   return useMemo(() => {
+    // FIX: Add the dot separator when namespace is provided
     const prefix = namespace ? `${namespace}.` : ""
 
     // Translator: returns string (with interpolation)

@@ -4,7 +4,7 @@ import { useTranslations } from "@/lib/i18n/useTranslations"
 import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
 
 export const GlobalDatabase: FunctionComponent = () => {
-  const t = useTranslations("globalDatabase")
+  const t = useTranslations("globaldatabase")
   const { locale } = useTranslationsContext()
   const isRTL = locale === "ar"
 

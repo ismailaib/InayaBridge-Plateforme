@@ -1,0 +1,37 @@
+{
+    "title": "On l’a lancé. Vous pouvez l’amplifier.",
+    "items": [
+      {
+        "title": "Offrir un accès aux soins",
+        "description": "Chaque don permet à plus de patients d’accéder gratuitement à un médecin, sans frais cachés ni abonnement."
+      },
+      {
+        "title": "Soutenir un projet libre",
+        "description": "InayaBridge est 100% gratuit et développé par une équipe passionnée. Vos dons financent le développement et l'hébergement."
+      },
+      {
+        "title": "Préserver l’indépendance",
+        "description": "Pas de publicité. Pas de vente de données. Vos dons nous permettent de rester libres et centrés sur l’humain."
+      },
+      {
+        "title": "Équiper les médecins",
+        "description": "Nous aidons les médecins à suivre et accompagner leurs patients avec des outils simples et efficaces."
+      },
+      {
+        "title": "Investir dans l’avenir",
+        "description": "Chaque fonctionnalité, chaque amélioration, chaque mise à jour… est rendue possible grâce au soutien de la communauté."
+      },
+      {
+        "title": "Un impact réel et concret",
+        "description": "Votre don peut changer la vie d’une famille en zone rurale ou d’un patient isolé."
+      },
+      {
+        "title": "Transparence totale",
+        "description": "Tous les fonds sont traçables et utilisés exclusivement pour le projet. Aucune opacité."
+      },
+      {
+        "title": "Rejoindre un mouvement",
+        "description": "Ce n’est pas seulement un projet. C’est un pont vers une nouvelle façon de penser les soins de santé. Rejoignez-nous."
+      }
+    ]
+  }

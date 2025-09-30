@@ -69,9 +69,8 @@ export default function Hero() {
               <Button
                 asChild
                 variant="light"
-                className={`h-12 gap-2 rounded-lg border border-gray-200 bg-white px-6 text-base font-medium text-gray-800 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 group ${
-                  isRTL ? "flex-row-reverse" : ""
-                }`}
+                className={`h-12 gap-2 rounded-lg border border-gray-200 bg-white px-6 text-base font-medium text-gray-800 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 group ${isRTL ? "flex-row-reverse" : ""
+                  }`}
               >
                 <Link href="https://www.youtube.com/watch?v=QRZ_l7cVzzU" target="_blank">
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-50 transition-all group-hover:bg-emerald-100 dark:bg-gray-700 dark:group-hover:bg-gray-600">
@@ -120,9 +119,8 @@ export default function Hero() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.6 }}
-                className={`absolute -left-12 top-12 z-20 select-none rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800 animate-float ${
-                  isRTL ? "left-auto right-12" : ""
-                }`}
+                className={`absolute -left-12 top-12 z-20 select-none rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800 animate-float ${isRTL ? "left-auto right-12" : ""
+                  }`}
               >
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse text-right" : ""}`}>
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
@@ -147,9 +145,8 @@ export default function Hero() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.8, duration: 0.6 }}
-                className={`absolute -right-12 bottom-24 z-20 select-none rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800 animate-float ${
-                  isRTL ? "right-auto left-12" : ""
-                }`}
+                className={`absolute -right-12 bottom-24 z-20 select-none rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800 animate-float ${isRTL ? "right-auto left-12" : ""
+                  }`}
               >
                 <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse text-right" : ""}`}>
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">

@@ -1,0 +1,16 @@
+{
+  "conditions": "By logging in, you agree to our Terms of Use and our Privacy Policy.",
+  "conditionsContent": {
+    "title": "General Terms of Use",
+    "description": "Please read our terms carefully before using the platform.",
+    "clause1Description": "By accessing our platform, you agree to comply with these terms of use. These terms are intended to ensure responsible, secure, and ethical use of our service.",
+    "clause2Title": "Fair Use",
+    "clause2Description": "Any attempt at fraud, unauthorized access, or misuse of features is strictly prohibited and will result in immediate account suspension.",
+    "clause3Title": "Responsibility",
+    "clause3Description": "Healthcare professionals are solely responsible for the information and advice they provide on the platform.",
+    "clause4Title": "Data Protection",
+    "clause4Description": "Your personal information is processed in accordance with our privacy policy. No medical data is shared without your explicit consent.",
+    "signature": "By continuing, you accept all the terms above. These conditions may be updated at any time, with notification."
+  },
+  "close": "Close"
+}

@@ -21,6 +21,7 @@ import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
 
 export default function LoginPage() {
   const t = useTranslations("auth");
+  const c = useTranslations("common");
   const { locale } = useTranslationsContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -154,7 +155,7 @@ export default function LoginPage() {
             </div>
 
             <div className="mt-4 flex flex-col items-center justify-start gap-1 text-xs text-gray-500 dark:text-gray-500 sm:flex-row sm:gap-1">
-              <span>En vous connectant, vous acceptez nos&nbsp;</span>
+              <span>{c("conditions")}&nbsp;</span>
               <Conditions />
             </div>
 
@@ -188,16 +189,16 @@ export default function LoginPage() {
         <div className="flex w-full flex-1 items-center justify-center">
           <div className="max-w-md">
             <div>
-              <h2 className="font-mono text-sm text-gray-700 dark:text-gray-300">Platform update</h2>
+              <h2 className="font-mono text-sm text-gray-700 dark:text-gray-300">{t("aside.updateTitle")}</h2>
               <p className="mt-2 text-xl font-semibold text-gray-900 dark:text-gray-50">
-                Refreshed patient workspace, smart visit reminders, and richer medical records
+                {t("aside.updateDescription")}
               </p>
             </div>
 
             <div className="relative mt-6 h-64 max-w-[450px] overflow-hidden rounded-xl bg-gradient-to-br from-[#00b38f]/80 to-[#1ec9a8]/20 p-6 shadow-lg shadow-black/10">
               <div className="flex h-full flex-col justify-between text-white">
-                <p className="text-2xl font-semibold">Autumn Release</p>
-                <p className="text-lg">2024</p>
+                <p className="text-2xl font-semibold">{t("aside.releaseName")}</p>
+                <p className="text-lg">{t("aside.releaseYear")}</p>
               </div>
             </div>
 
@@ -205,7 +206,7 @@ export default function LoginPage() {
               href={`/${locale}/changelog`}
               className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-[#00b38f] hover:underline hover:underline-offset-4"
             >
-              Discover what is new
+              {t("aside.discover")}
               <RiArrowRightSLine className="size-5 shrink-0" aria-hidden="true" />
             </Link>
           </div>

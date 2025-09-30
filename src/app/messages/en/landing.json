@@ -1,0 +1,35 @@
+{
+    "hero": {
+      "badge": "Discover our assistant that supports doctors every day.",
+      "titleLine1": "Accessible healthcare.",
+      "titleLine2": "For everyone, everywhere.",
+      "description": "A free telehealth platform designed to break geographic barriers and deliver care to everyone.",
+      "primaryCta": "Explore the platform",
+      "videoCta": "Watch the demo",
+      "imageAlt": "Teleconsultation platform interface",
+      "stats": {
+        "users": {
+          "value": "100K+",
+          "label": "Users"
+        },
+        "support": {
+          "value": "24/7",
+          "label": "Support"
+        },
+        "satisfaction": {
+          "value": "98%",
+          "label": "Satisfaction"
+        }
+      },
+      "floating": {
+        "confirmed": {
+          "title": "Consultation confirmed",
+          "subtitle": "Just now"
+        },
+        "fast": {
+          "title": "Fast & efficient",
+          "subtitle": "Less than 1 min wait"
+        }
+      }
+    }
+  }

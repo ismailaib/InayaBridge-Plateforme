@@ -1,0 +1,37 @@
+{
+    "description": "Une plateforme gratuite de consultations médicales à distance, pensée pour briser les barrières géographiques et rendre les soins accessibles à chacun.",
+    "sections": {
+      "product": "Produit",
+      "resources": "Ressources",
+      "company": "Entreprise",
+      "legal": "Mentions légales"
+    },
+    "navigation": {
+      "product": {
+        "enterprise": "Entreprise",
+        "pricing": "Tarifs",
+        "changelog": "Nouveautés"
+      },
+      "resources": {
+        "faqs": "FAQs",
+        "docs": "Docs",
+        "api": "API",
+        "blog": "Blog",
+        "support": "Support"
+      },
+      "company": {
+        "about": "À propos",
+        "careers": "Carrières",
+        "contact": "Contact",
+        "status": "Statut"
+      },
+      "legal": {
+        "imprint": "Mentions",
+        "privacy": "Confidentialité",
+        "terms": "Conditions",
+        "dpa": "DPA"
+      }
+    },
+    "status": "Tous les systèmes opérationnels",
+    "copyright": "© {year} InayaBridge, Inc. Tous droits réservés."
+  }
