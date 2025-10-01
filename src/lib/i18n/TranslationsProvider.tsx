@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import type { Messages } from "./getMessages";
 import type { Locale } from "./i18n";
+import { defaultLocale } from "./i18n";
 
 type TranslationsContextValue = {
   locale: Locale;
@@ -35,7 +36,10 @@ export function useTranslationsContext() {
   const context = useContext(TranslationsContext);
 
   if (!context) {
-    throw new Error("useTranslationsContext must be used within a TranslationsProvider");
+    return {
+      locale: defaultLocale,
+      messages: {},
+    } satisfies TranslationsContextValue;
   }
 
   return context;

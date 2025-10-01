@@ -20,7 +20,7 @@ const corresponding = {
 let setupMode = true
 
 export function Avatar(props) {
-  const { nodes, materials, scene } = useGLTF("models/doctor1.glb")
+  const { nodes, materials, scene } = useGLTF("/models/doctor1.glb")
   const messages = useChatStore((state) => state.messages)
 
   const [lipsync, setLipsync] = useState()

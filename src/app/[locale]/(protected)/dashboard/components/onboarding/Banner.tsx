@@ -5,34 +5,9 @@ import InviteMembers from './Invitations/InviteMembers';
 import Workspace from './workspace/Workspace';
 import Pricing from './pricing/Pricing';
 import { onboardingStatus } from '@/api/tenant';
+import useTranslations from '@/lib/i18n/useTranslations';
 
 type StepKey = 'tenantProfile' | 'invitationsSchedule' | 'accountActivation';
-
-const stepDefinitions: Omit<Step, 'completed' | 'disabled'>[] = [
-  {
-    step: 1,
-    title: 'Configurer votre établissement',
-    description: 'Créez ou rejoignez un établissement.',
-    buttonText: null,
-    key: 'tenantProfile',
-  },
-  {
-    step: 2,
-    title: 'Inviter vos collègues',
-    description:
-      'Ajoutez d autres médecins ou collaborateurs de votre établissement',
-    buttonText: null,
-    key: 'invitationsSchedule',
-  },
-  {
-    step: 3,
-    title: 'Activer votre compte',
-    description:
-      'Une fois la configuration terminée, vous pouvez activer votre compte et accéder à votre tableau de bord.',
-    buttonText: 'Activer mon compte',
-    key: 'accountActivation',
-  },
-];
 
 type Step = {
   step: number;
@@ -45,6 +20,7 @@ type Step = {
 };
 
 export default function DoctorOnboarding() {
+  const t = useTranslations('dashboard.onboarding');
   const [steps, setSteps] = useState<Step[]>([]);
   const [_, setStatus] = useState<Record<StepKey, boolean>>({
     tenantProfile: false,
@@ -79,35 +55,35 @@ export default function DoctorOnboarding() {
 
       setStatus(statusMapping);
 
-      const processedSteps: Step[] = stepDefinitions.map((step, index) => {
-        const completed = statusMapping[step.key];
-        
-        // logic: if first step is completed, enable both second and third steps
-        let disabled = false;
-        if (index === 0) {
-          // First step is never disabled
-          disabled = false;
-        } else {
-          // Steps 2 and 3 are enabled if step 1 is completed
-          disabled = !statusMapping.tenantProfile;
-        }
-
-        let buttonText: React.ReactNode;
-        if (step.key === 'tenantProfile') {
-          buttonText = <Workspace onSuccess={() => fetchOnboardingStatus()} />;
-        } else if (step.key === 'invitationsSchedule') {
-          buttonText = <InviteMembers onSuccess={() => fetchOnboardingStatus()} />;
-        } else {
-          buttonText = <Pricing />;
-        }
-
-        return {
-          ...step,
-          buttonText,
-          completed,
-          disabled,
-        };
-      });
+      const processedSteps: Step[] = [
+        {
+          step: 1,
+          key: 'tenantProfile',
+          title: t('steps.tenantProfile.title'),
+          description: t('steps.tenantProfile.description'),
+          buttonText: <Workspace onSuccess={() => fetchOnboardingStatus()} />,
+          completed: statusMapping.tenantProfile,
+          disabled: false,
+        },
+        {
+          step: 2,
+          key: 'invitationsSchedule',
+          title: t('steps.invitationsSchedule.title'),
+          description: t('steps.invitationsSchedule.description'),
+          buttonText: <InviteMembers onSuccess={() => fetchOnboardingStatus()} />,
+          completed: statusMapping.invitationsSchedule,
+          disabled: !statusMapping.tenantProfile,
+        },
+        {
+          step: 3,
+          key: 'accountActivation',
+          title: t('steps.accountActivation.title'),
+          description: t('steps.accountActivation.description'),
+          buttonText: <Pricing />,
+          completed: statusMapping.accountActivation,
+          disabled: !statusMapping.tenantProfile,
+        },
+      ];
 
       setSteps(processedSteps);
     } catch (err) {
@@ -115,7 +91,7 @@ export default function DoctorOnboarding() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchOnboardingStatus();
@@ -144,23 +120,24 @@ export default function DoctorOnboarding() {
   return (
     <Card>
       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-        Finalisez votre inscription
+        {t('title')}
       </h3>
       <p className="mt-2 text-sm/6 text-gray-500 dark:text-gray-500">
-        Pour accéder pleinement au tableau de bord, veuillez compléter les étapes suivantes.
+        {t('description')}
       </p>
       <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
         {steps.map((item) => (
           <div
             key={item.title}
-            className={`flex flex-col justify-between border-l-2 py-1 pl-4 transition-colors ${item.completed
-              ? 'border-emerald-500'
-              : 'border-emerald-100 dark:border-[#33ccad]/20'
-              }`}
+            className={`flex flex-col justify-between border-l-2 py-1 pl-4 transition-colors ${
+              item.completed
+                ? 'border-emerald-500'
+                : 'border-emerald-100 dark:border-[#33ccad]/20'
+            }`}
           >
             <div>
               <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-semibold text-[#33ccad] dark:bg-[#33ccad]/20 dark:text-[#33ccad]">
-                {item.completed && '✓'} Étape {item.step}
+                {item.completed && '✓'} {t('step')} {item.step}
               </span>
               <h4 className="mt-4 text-sm font-medium text-gray-900 dark:text-gray-50">
                 {item.title}
@@ -170,14 +147,13 @@ export default function DoctorOnboarding() {
               </p>
             </div>
             <div
-              className={`transition-opacity ${item.disabled
-                ? 'opacity-50 pointer-events-none'
-                : 'opacity-100'
-                }`}
+              className={`transition-opacity ${
+                item.disabled ? 'opacity-50 pointer-events-none' : 'opacity-100'
+              }`}
             >
               {item.completed ? (
                 <div className="flex items-center justify-center py-2 text-emerald-600 dark:text-emerald-400 font-medium text-sm">
-                  ✓ Étape terminée
+                  {t('completedStep')}
                 </div>
               ) : (
                 item.buttonText
@@ -209,10 +185,10 @@ export default function DoctorOnboarding() {
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-green-800 dark:text-green-300">
-                Félicitations ! Toutes les étapes sont terminées.
+                {t('allDone.title')}
               </p>
               <p className="mt-1 text-sm text-green-600 dark:text-green-400">
-                Vous pouvez maintenant accéder pleinement à votre tableau de bord.
+                {t('allDone.subtitle')}
               </p>
             </div>
           </div>

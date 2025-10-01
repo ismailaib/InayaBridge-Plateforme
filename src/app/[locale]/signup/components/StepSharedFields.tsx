@@ -9,9 +9,11 @@ import { Label } from "@/components/Label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
 import { useAuth } from "@/lib/auth-context"
 import { toast } from "@/lib/useToast"
+import useTranslations from "@/lib/i18n/useTranslations"
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
 import confetti from "canvas-confetti"
 import Link from "next/link"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 
 interface ValidationErrors {
   [key: string]: string
@@ -29,64 +31,72 @@ export default function StepSharedFields({
   onSuccess?: () => void
 }) {
   const { login } = useAuth()
+  const t = useTranslations("signup.shared")
+  const { locale } = useTranslationsContext()
   const [loading, setLoading] = useState(false)
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({})
+  const [gender, setGender] = useState<string>("")
 
-  console.log(speciality)
+  const validationMessages = useMemo(
+    () => t.raw<Record<string, string>>("validation") ?? {},
+    [t]
+  )
+  const backendMessages = useMemo(
+    () => t.raw<Record<string, string>>("backendErrors") ?? {},
+    [t]
+  )
+  const apiMessages = useMemo(
+    () => t.raw<Record<string, string>>("apiErrors") ?? {},
+    [t]
+  )
+  const genderOptions = useMemo(() => {
+    const raw = t.raw<Record<string, string>>("fields.gender.options") ?? {}
+    return Object.entries(raw).map(([value, label]) => ({ value, label }))
+  }, [t])
 
   /* --------------------- Frontend Validation --------------------- */
   const validateForm = (formData: FormData): ValidationErrors => {
     const errors: ValidationErrors = {}
     const data = Object.fromEntries(formData)
 
-    // First name validation
     if (!data.firstName || (data.firstName as string).trim().length < 2) {
-      errors.firstName = "Le prénom doit contenir au moins 2 caractères"
+      errors.firstName = validationMessages.firstName ?? ""
     }
 
-    // Last name validation
     if (!data.lastName || (data.lastName as string).trim().length < 2) {
-      errors.lastName = "Le nom doit contenir au moins 2 caractères"
+      errors.lastName = validationMessages.lastName ?? ""
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!data.email || !emailRegex.test(data.email as string)) {
-      errors.email = "Veuillez entrer une adresse e-mail valide"
+      errors.email = validationMessages.email ?? ""
     }
 
-    // Phone validation (Moroccan numbers)
     const phoneRegex = /^(?:\+212|0)[0-9]{9}$/
     if (!data.phone || !phoneRegex.test(data.phone as string)) {
-      errors.phone = "Le numéro doit être un numéro marocain valide (+212XXXXXXXXX)"
+      errors.phone = validationMessages.phone ?? ""
     }
 
-    // Address validation
     if (!data.adress || (data.adress as string).trim().length < 5) {
-      errors.adress = "L'adresse doit contenir au moins 5 caractères"
+      errors.adress = validationMessages.address ?? ""
     }
 
-    // Password validation
     if (!data.password || (data.password as string).length < 8) {
-      errors.password = "Le mot de passe doit contenir au moins 8 caractères"
+      errors.password = validationMessages.password ?? ""
     }
 
-    // Password confirmation validation
     if (data.password !== data.confirmPassword) {
-      errors.confirmPassword = "Les mots de passe ne correspondent pas"
+      errors.confirmPassword = validationMessages.confirmPassword ?? ""
     }
 
-    // Patient-specific validations
     if (accountType === "patient") {
-      // Gender validation
       if (!data.gender) {
-        errors.gender = "Veuillez sélectionner votre genre"
+        errors.gender = validationMessages.gender ?? ""
       }
 
-      // CIN validation (Moroccan national ID)
       const cinRegex = /^[A-Z]{1,2}[0-9]{6}$/
       if (!data.cin || !cinRegex.test(data.cin as string)) {
-        errors.cin = "Le CIN doit être au format valide (ex: AB123456)"
+        errors.cin = validationMessages.cin ?? ""
       }
     }
 
@@ -95,40 +105,33 @@ export default function StepSharedFields({
 
   /* --------------------- Error Message Handling --------------------- */
   const getErrorMessage = (error: any): string => {
-    // Handle validation errors from backend
     if (error?.details) {
       const firstField = Object.keys(error.details)[0]
+      const translated = backendMessages[firstField]
+      if (translated) return translated
       const firstError = error.details[firstField]
-      
-      // Map backend field names to French messages
-      const fieldMessages: { [key: string]: string } = {
-        phoneNumber: "Numéro de téléphone invalide il faut commencer par +212",
-        email: "Cette adresse e-mail existe déjà",
-        cin: "Ce CIN existe déjà",
-        firstName: "Prénom invalide",
-        lastName: "Nom invalide",
-        password: "Mot de passe trop faible",
-        dateOfBirth: "Date de naissance invalide"
-      }
-
-      return fieldMessages[firstField] || firstError || "Erreur de validation"
+      if (typeof firstError === "string") return firstError
+      return apiMessages.default ?? ""
     }
 
-    // Handle specific error messages
     if (error?.message) {
-      const messageMap: { [key: string]: string } = {
-        "Email already exists": "Cette adresse e-mail est déjà utilisée",
-        "Phone number already exists": "Ce numéro de téléphone est déjà utilisé",
-        "CIN already exists": "Ce CIN est déjà enregistré",
-        "Invalid phone number": "Numéro de téléphone invalide",
-        "Validation Failed": "Veuillez vérifier vos informations"
+      const apiErrorMap: Record<string, string> = {
+        "Email already exists": "emailExists",
+        "Phone number already exists": "phoneExists",
+        "CIN already exists": "cinExists",
+        "Invalid phone number": "invalidPhone",
+        "Validation Failed": "validationFailed",
       }
 
-      return messageMap[error.message] || error.message
+      const translationKey = apiErrorMap[error.message]
+      if (translationKey && apiMessages[translationKey]) {
+        return apiMessages[translationKey]
+      }
+
+      return error.message
     }
 
-    // Default error messages
-    return "Une erreur s'est produite. Veuillez réessayer."
+    return apiMessages.default ?? ""
   }
 
   /* --------------------- submit --------------------- */
@@ -137,22 +140,20 @@ export default function StepSharedFields({
     const form = e.currentTarget
     const formData = new FormData(form)
 
-    // Clear previous validation errors
     setValidationErrors({})
 
-    // Frontend validation
     const errors = validateForm(formData)
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors)
-      
-      // Show first error in toast
-      const firstError = Object.values(errors)[0]
-      toast({
-        title: "Erreur de validation",
-        description: firstError,
-        variant: "error",
-        duration: 4000,
-      })
+      const firstError = Object.values(errors).find(Boolean)
+      if (firstError) {
+        toast({
+          title: t("toast.validationTitle"),
+          description: firstError,
+          variant: "error",
+          duration: 4000,
+        })
+      }
       return
     }
 
@@ -161,7 +162,6 @@ export default function StepSharedFields({
     try {
       setLoading(true)
 
-      /* ---- DOCTOR ---- */
       if (accountType === "doctor") {
         const payload = {
           firstName: fd.firstName as string,
@@ -181,16 +181,14 @@ export default function StepSharedFields({
           tenantId: "",
           userId: data.user.id,
           licenseNumber: "",
-          specialty: speciality ?? "General"
+          specialty: speciality ?? "General",
         }
 
         await registerDoctorProfile(profile)
         login({ token: data.token, user: data.user })
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } })
         onSuccess?.()
-      }
-      /* ---- PATIENT ---- */
-      else {
+      } else {
         const payload = {
           firstName: fd.firstName as string,
           lastName: fd.lastName as string,
@@ -205,17 +203,14 @@ export default function StepSharedFields({
 
         const { data } = await registerPatient(payload)
         login({ token: data.token, user: data.user })
-        console.log(payload)
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } })
         onSuccess?.()
       }
     } catch (err: any) {
-      console.error("Registration error:", err)
-      
       const errorMessage = getErrorMessage(err?.response?.data || err)
-      
+
       toast({
-        title: "Erreur d'inscription",
+        title: t("toast.registrationErrorTitle"),
         description: errorMessage,
         variant: "error",
         duration: 5000,
@@ -225,34 +220,27 @@ export default function StepSharedFields({
     }
   }
 
-  const [gender, setGender] = useState<string>("")
-  const genderData = [
-    {
-      value: "male",
-      label: "Homme",
-    },
-    {
-      value: "female",
-      label: "Femme",
-    },
-  ]
+  const handleExternalSubmit = () => {
+    const form = document.querySelector("form")
+    if (form) {
+      form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }))
+    }
+  }
 
   /* ----------------------- UI ----------------------- */
   return (
     <div className="grid grid-rows-[1fr_auto] h-full min-h-0">
-      {/* Scrollable form content */}
       <div className="overflow-y-auto pr-2 -mr-2">
         <form onSubmit={handleSubmit} className="grid gap-4 pb-4" noValidate>
-          {/* Identité - 2 column grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">Prénom</Label>
+              <Label htmlFor="firstName">{t("fields.firstName.label")}</Label>
               <Input
                 id="firstName"
                 name="firstName"
                 required
                 autoComplete="given-name"
-                placeholder="Entrez votre prénom"
+                placeholder={t("fields.firstName.placeholder")}
                 className={validationErrors.firstName ? "border-red-500" : ""}
               />
               {validationErrors.firstName && (
@@ -260,13 +248,13 @@ export default function StepSharedFields({
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Nom</Label>
+              <Label htmlFor="lastName">{t("fields.lastName.label")}</Label>
               <Input
                 id="lastName"
                 name="lastName"
                 required
                 autoComplete="family-name"
-                placeholder="Entrez votre nom"
+                placeholder={t("fields.lastName.placeholder")}
                 className={validationErrors.lastName ? "border-red-500" : ""}
               />
               {validationErrors.lastName && (
@@ -277,14 +265,14 @@ export default function StepSharedFields({
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Adresse e-mail</Label>
+              <Label htmlFor="email">{t("fields.email.label")}</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
                 required
                 autoComplete="email"
-                placeholder="exemple@email.com"
+                placeholder={t("fields.email.placeholder")}
                 className={validationErrors.email ? "border-red-500" : ""}
               />
               {validationErrors.email && (
@@ -292,7 +280,7 @@ export default function StepSharedFields({
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Numéro de téléphone</Label>
+              <Label htmlFor="phone">{t("fields.phone.label")}</Label>
               <Input
                 id="phone"
                 name="phone"
@@ -300,7 +288,7 @@ export default function StepSharedFields({
                 required
                 pattern="^(?:\+212|0)[0-9]{9}$"
                 autoComplete="tel"
-                placeholder="ex: +212612345678"
+                placeholder={t("fields.phone.placeholder")}
                 className={validationErrors.phone ? "border-red-500" : ""}
               />
               {validationErrors.phone && (
@@ -309,15 +297,14 @@ export default function StepSharedFields({
             </div>
           </div>
 
-          {/* Address - full width */}
           <div className="space-y-2">
-            <Label htmlFor="adress">Adresse complète</Label>
+            <Label htmlFor="adress">{t("fields.address.label")}</Label>
             <Input
               id="adress"
               name="adress"
               required
               autoComplete="street-address"
-              placeholder="Entrez votre adresse complète"
+              placeholder={t("fields.address.placeholder")}
               className={validationErrors.adress ? "border-red-500" : ""}
             />
             {validationErrors.adress && (
@@ -325,20 +312,17 @@ export default function StepSharedFields({
             )}
           </div>
 
-          {/* Date of birth and Gender/CIN - responsive grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-            {/* Patient-specific fields */}
             {accountType === "patient" && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="gender">Genre</Label>
+                  <Label htmlFor="gender">{t("fields.gender.label")}</Label>
                   <Select value={gender} onValueChange={setGender} name="gender">
                     <SelectTrigger className={`mx-auto h-10 ${validationErrors.gender ? "border-red-500" : ""}`}>
-                      <SelectValue placeholder="Sélectionnez" aria-label={gender} />
+                      <SelectValue placeholder={t("fields.gender.placeholder")} aria-label={gender} />
                     </SelectTrigger>
                     <SelectContent>
-                      {genderData.map((item) => (
+                      {genderOptions.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
                           <span className="flex items-center gap-x-2">{item.label}</span>
                         </SelectItem>
@@ -351,35 +335,34 @@ export default function StepSharedFields({
                 </div>
 
                 <div className="space-y-2 sm:col-span-2">
-                  <Label htmlFor="cin">CIN (Carte d&apos;identité nationale)</Label>
+                  <Label htmlFor="cin">{t("fields.cin.label")}</Label>
                   <Input
                     id="cin"
                     name="cin"
                     required
-                    placeholder="ex: AB123456"
+                    placeholder={t("fields.cin.placeholder")}
                     pattern="^[A-Z]{1,2}[0-9]{6}$"
                     className={validationErrors.cin ? "border-red-500" : ""}
                   />
                   {validationErrors.cin && (
                     <p className="text-xs text-red-500">{validationErrors.cin}</p>
                   )}
-                  <p className="text-xs text-gray-500">Format: 1-2 lettres suivies de 6 chiffres</p>
+                  <p className="text-xs text-gray-500">{t("fields.cin.helper")}</p>
                 </div>
               </>
             )}
           </div>
 
-          {/* Password fields - 2 column grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="password">Mot de passe</Label>
+              <Label htmlFor="password">{t("fields.password.label")}</Label>
               <Input
                 id="password"
                 name="password"
                 type="password"
                 minLength={8}
                 required
-                placeholder="Au moins 8 caractères"
+                placeholder={t("fields.password.placeholder")}
                 className={validationErrors.password ? "border-red-500" : ""}
               />
               {validationErrors.password && (
@@ -387,14 +370,14 @@ export default function StepSharedFields({
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirmer</Label>
+              <Label htmlFor="confirmPassword">{t("fields.confirmPassword.label")}</Label>
               <Input
                 id="confirmPassword"
                 name="confirmPassword"
                 type="password"
                 minLength={8}
                 required
-                placeholder="Répétez le mot de passe"
+                placeholder={t("fields.confirmPassword.placeholder")}
                 className={validationErrors.confirmPassword ? "border-red-500" : ""}
               />
               {validationErrors.confirmPassword && (
@@ -403,27 +386,23 @@ export default function StepSharedFields({
             </div>
           </div>
 
-          {/* Additional fields */}
-          {additionalFields && (
-            <div className="space-y-4">
-              {additionalFields}
-            </div>
-          )}
+          {additionalFields && <div className="space-y-4">{additionalFields}</div>}
 
-          {/* Terms and conditions */}
           <div className="pt-2">
             <p className="flex flex-wrap items-center gap-1 text-xs text-gray-500">
-              En vous inscrivant, vous acceptez nos <Conditions /> et notre <Politique />.
+              {t("terms.intro")}
+              <Conditions />
+              {t("terms.and")}
+              <Politique />.
             </p>
           </div>
         </form>
       </div>
 
-      {/* Fixed footer with actions */}
       <div className="flex justify-between gap-4 pt-4 bg-white dark:bg-gray-950">
-        <Link href="/signup">
+        <Link href={`/${locale}/signup`}>
           <Button variant="secondary" type="button">
-            Retour
+            {t("buttons.back")}
           </Button>
         </Link>
 
@@ -432,15 +411,10 @@ export default function StepSharedFields({
           type="submit"
           className="w-full"
           isLoading={loading}
-          loadingText="Création en cours..."
-          onClick={() => {
-            const form = document.querySelector('form');
-            if (form) {
-              form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-            }
-          }}
+          loadingText={t("buttons.submitLoading")}
+          onClick={handleExternalSubmit}
         >
-          Créer mon espace
+          {t("buttons.submit")}
         </Button>
       </div>
     </div>

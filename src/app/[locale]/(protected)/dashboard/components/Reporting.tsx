@@ -5,6 +5,7 @@ import { Card } from "@/components/Card"
 import { CategoryBar } from "@/components/CategoryBar"
 import { Tooltip } from "@/components/Tooltip"
 import { Info } from "lucide-react"
+import { useTranslations } from "@/lib/i18n/useTranslations"
 
 const data = [
   { date: "19-09-2025", "Rendez-vous": 0, diagnostics: 0 },
@@ -20,14 +21,16 @@ const data = [
   { date: "29-09-2025", "Rendez-vous": 65, diagnostics: 25 },
 ]
 
-export default function Example() {
+export default function DashboardStats() {
+  const t = useTranslations("dashboard.dashboardStats")
+
   return (
     <>
       <h1 className="mt-6 text-xl font-semibold text-gray-900 dark:text-gray-50">
-        Statistiques de performance
+        {t("title")}
       </h1>
       <p className="mt-1 text-sm/6 text-gray-500 dark:text-gray-500">
-        Suivi des rendez-vous, consultations et temps de prise en charge.
+        {t("subtitle")}
       </p>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -35,12 +38,9 @@ export default function Example() {
         <Card className="mt-6 overflow-hidden p-0">
           <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 p-4 dark:border-gray-900 dark:bg-gray-900">
             <h1 className="text-sm font-medium text-gray-900 dark:text-gray-50">
-              Respect des rendez-vous
+              {t("appointments.respectTitle")}
             </h1>
-            <Tooltip
-              content="Taux de présence des patients à leurs rendez-vous prévus durant le mois."
-              showArrow={false}
-            >
+            <Tooltip content={t("appointments.tooltip")} showArrow={false}>
               <Info width={18} className="text-gray-500 dark:text-gray-400" />
             </Tooltip>
           </div>
@@ -49,23 +49,23 @@ export default function Example() {
               92.4%
             </p>
             <p className="text-sm/6 text-gray-500 dark:text-gray-500">
-              Taux de présence des patients ce mois
+              {t("appointments.rate")}
             </p>
-              <CategoryBar
-                values={[92.4, 7.6]}
-                colors={["emerald", "amber"]}
-                showLabels={false}
-                className="mt-6"
-              />
+            <CategoryBar
+              values={[92.4, 7.6]}
+              colors={["emerald", "amber"]}
+              showLabels={false}
+              className="mt-6"
+            />
             <ul className="mt-6 space-y-3 text-sm text-gray-600 dark:text-gray-400">
               <li className="flex justify-between">
-                <span>Rendez-vous honorés</span>
+                <span>{t("appointments.honored")}</span>
                 <span className="font-semibold text-gray-900 dark:text-white">
                   92.4% (145)
                 </span>
               </li>
               <li className="flex justify-between">
-                <span>Rendez-vous manqués</span>
+                <span>{t("appointments.missed")}</span>
                 <span className="font-semibold text-gray-900 dark:text-white">
                   7.6% (12)
                 </span>
@@ -74,16 +74,13 @@ export default function Example() {
           </div>
         </Card>
 
-        {/* Temps de prise en charge */}
+        {/* Temps de consultation */}
         <Card className="mt-6 overflow-hidden p-0">
           <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 p-4 dark:border-gray-900 dark:bg-gray-900">
             <h1 className="text-sm font-medium text-gray-900 dark:text-gray-50">
-              Temps moyen de consultation
+              {t("consultation.timeTitle")}
             </h1>
-            <Tooltip
-              content="Durée moyenne observée des consultations sur les 30 derniers jours."
-              showArrow={false}
-            >
+            <Tooltip content={t("consultation.tooltip")} showArrow={false}>
               <Info width={18} className="text-gray-500 dark:text-gray-400" />
             </Tooltip>
           </div>
@@ -92,23 +89,23 @@ export default function Example() {
               17min 30s
             </p>
             <p className="text-sm/6 text-gray-500 dark:text-gray-500">
-              Moyenne sur les 30 derniers jours
+              {t("consultation.average")}
             </p>
-              <CategoryBar
-                values={[85.2, 14.8]}
-                colors={["blue", "gray"]}
-                showLabels={false}
-                className="mt-6"
-              />
+            <CategoryBar
+              values={[85.2, 14.8]}
+              colors={["blue", "gray"]}
+              showLabels={false}
+              className="mt-6"
+            />
             <ul className="mt-6 space-y-3 text-sm text-gray-600 dark:text-gray-400">
               <li className="flex justify-between">
-                <span>Consultations {"<"} 20 min</span>
+                <span>{t("consultation.under20")}</span>
                 <span className="font-semibold text-gray-900 dark:text-white">
                   85.2%
                 </span>
               </li>
               <li className="flex justify-between">
-                <span>Consultations {">"} 20 min</span>
+                <span>{t("consultation.over20")}</span>
                 <span className="font-semibold text-gray-900 dark:text-white">
                   14.8%
                 </span>
@@ -118,16 +115,13 @@ export default function Example() {
         </Card>
       </div>
 
-      {/* Évolution du nombre de consultations */}
+      {/* Evolution */}
       <Card className="mt-6 overflow-hidden p-0">
         <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 p-4 dark:border-gray-900 dark:bg-gray-900">
           <h1 className="text-sm font-medium text-gray-900 dark:text-gray-50">
-            Évolution des consultations
+            {t("evolution.title")}
           </h1>
-          <Tooltip
-            content="Suivi quotidien du nombre de rendez-vous pris et de diagnostics réalisés."
-            showArrow={false}
-          >
+          <Tooltip content={t("evolution.tooltip")} showArrow={false}>
             <Info width={18} className="text-gray-500 dark:text-gray-400" />
           </Tooltip>
         </div>

@@ -1,83 +1,36 @@
-import { Button } from '@/components/Button'
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/Dialog'
-import { cx } from '@/lib/utils'
-import { RiCheckboxCircleFill, RiCloseLine } from '@remixicon/react'
-import { Wallet } from 'lucide-react'
-import React, { useState } from 'react'
-
-type Plan = {
-  name: string
-  price: string | { monthly: string; annually: string }
-  description: string
-  capacity: string[]
-  features: string[]
-  isStarter: boolean
-  isRecommended: boolean
-  buttonText: string
-  buttonLink: string
-}
+import { Button } from "@/components/Button";
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/Dialog";
+import { cx } from "@/lib/utils";
+import { RiCheckboxCircleFill, RiCloseLine } from "@remixicon/react";
+import { Wallet } from "lucide-react";
+import React, { useState } from "react";
+import useTranslations from "@/lib/i18n/useTranslations";
 
 const Pricing = () => {
-  const [isOpen, setIsOpen] = useState(false)
-
-  const plans: Plan[] = [
-    {
-      name: "Essentiel",
-      price: { monthly: "0 Dh", annually: "0 Dh" },
-      description:
-        "Accédez à toutes les fonctionnalités de base. Idéal pour les professionnels débutants.",
-      capacity: ["Consultations illimitées", "Messagerie", "Dossiers patients"],
-      features: [
-        "Gestion de RDV",
-        "Consultations vidéo",
-        "Historique médical complet",
-      ],
-      isStarter: true,
-      isRecommended: false,
-      buttonText: "Commencer gratuitement",
-      buttonLink: "#",
-    },
-    {
-      name: "Plus",
-      price: { monthly: "140 Dh", annually: "1290 Dh" },
-      description:
-        "Des outils avancés pour optimiser votre pratique dès la version 2.",
-      capacity: ["Statistiques patients", "Export PDF", "Support prioritaire"],
-      features: [
-        "Analyse de consultations",
-        "Gestion des rappels automatiques",
-        "Accès anticipé aux nouveautés",
-      ],
-      isStarter: false,
-      isRecommended: false,
-      buttonText: "Pré-inscription V2",
-      buttonLink: "#",
-    },
-    {
-      name: "Pro",
-      price: { monthly: "290 Dh", annually: "2490 Dh" },
-      description:
-        "Pour les professionnels ou cliniques qui veulent tout centraliser.",
-      capacity: ["Multi-profils", "Support premium", "Accès API (v2.1)"],
-      features: [
-        "Statistiques poussées",
-        "Export de données patients",
-        "Accès API & intégrations",
-      ],
-      isStarter: false,
-      isRecommended: true,
-      buttonText: "Pré-inscription V2",
-      buttonLink: "#",
-    },
-  ]
+  const [isOpen, setIsOpen] = useState(false);
+  const t = useTranslations("dashboard.pricing");
+  const plans = (t.raw(
+    "plans"
+  ) ?? []) as Array<{
+    id: string;
+    name: string;
+    price: string | { monthly: string; annually: string };
+    description: string;
+    capacity: string[];
+    features: string[];
+    isStarter: boolean;
+    isRecommended: boolean;
+    buttonText: string;
+    buttonLink: string;
+  }>;
 
   return (
     <div className="flex items-center justify-center pt-6">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button variant="primary" className="w-full">
-            <Wallet className="w-4 h-4 mr-2" />
-            Choisir un plan d&apos;abonnement
+            <Wallet className="w-4 h-4 mx-2" />
+            {t("openDialog")}
           </Button>
         </DialogTrigger>
 
@@ -91,22 +44,22 @@ const Pricing = () => {
             </Button>
           </DialogClose>
 
-          <h3 className="font-semibold text-gray-900 dark:text-gray-50">
-            Choisissez votre plan
+          <h3 className="font-semibold text-gray-900 dark:text-gray-50 [html[lang=ar]_&]:pt-8">
+            {t("title")}
           </h3>
           <p className="mt-1 text-sm/6 text-gray-500 dark:text-gray-500">
-            Comparez nos offres et sélectionnez celle qui correspond à vos besoins.
+            {t("description")}
           </p>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-8">
-            {plans.map((plan, idx) => (
+            {plans.map((plan) => (
               <div
-                key={idx}
+                key={plan.id}
                 className={cx(
                   plan.isRecommended
-                    ? 'border-emerald-500 bg-emerald-50 dark:border-emerald-500 dark:bg-emerald-950'
-                    : 'border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900',
-                  'border-t-2 p-6'
+                    ? "border-emerald-500 bg-emerald-50 dark:border-emerald-500 dark:bg-emerald-950"
+                    : "border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900",
+                  "border-t-2 p-6"
                 )}
               >
                 <div className="flex items-center justify-between">
@@ -115,7 +68,7 @@ const Pricing = () => {
                   </h3>
                   {plan.isRecommended && (
                     <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
-                      Recommandé
+                      {t("recommended")}
                     </span>
                   )}
                 </div>
@@ -130,10 +83,10 @@ const Pricing = () => {
                   ) : (
                     <>
                       <span className="text-2xl font-semibold text-gray-900 dark:text-gray-50">
-                        {plan.price.monthly} <span className="text-sm">/mois</span>
+                        {plan.price.monthly} <span className="text-sm">{t("perMonth")}</span>
                       </span>
                       <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {plan.price.annually} /an
+                        {plan.price.annually} {t("perYear")}
                       </span>
                     </>
                   )}
@@ -149,23 +102,20 @@ const Pricing = () => {
                   </Button>
 
                   <p className="mt-6 text-sm font-medium text-gray-900 dark:text-gray-50">
-                    Capacités:
+                    {t("capacityTitle")}
                   </p>
                   <ul
                     role="list"
                     className="mt-2 text-sm text-gray-700 dark:text-gray-300"
                   >
                     {plan.capacity.map((item) => (
-                      <li
-                        key={item}
-                        className="flex items-center space-x-2 py-2.5"
-                      >
+                      <li key={item} className="flex items-center space-x-2 py-2.5">
                         <RiCheckboxCircleFill
                           className={cx(
                             plan.isRecommended
-                              ? 'text-emerald-500 dark:text-emerald-500'
-                              : 'text-gray-400 dark:text-gray-600',
-                            'size-5 shrink-0',
+                              ? "text-emerald-500 dark:text-emerald-500"
+                              : "text-gray-400 dark:text-gray-600",
+                            "size-5 shrink-0"
                           )}
                           aria-hidden={true}
                         />
@@ -175,23 +125,20 @@ const Pricing = () => {
                   </ul>
 
                   <p className="mt-6 text-sm font-medium text-gray-900 dark:text-gray-50">
-                    Fonctionnalités:
+                    {t("featuresTitle")}
                   </p>
                   <ul
                     role="list"
                     className="mt-2 text-sm text-gray-700 dark:text-gray-300"
                   >
                     {plan.features.map((feature) => (
-                      <li
-                        key={feature}
-                        className="flex items-center space-x-2 py-2.5"
-                      >
+                      <li key={feature} className="flex items-center space-x-2 py-2.5">
                         <RiCheckboxCircleFill
                           className={cx(
                             plan.isRecommended
-                              ? 'text-emerald-500 dark:text-emerald-500'
-                              : 'text-gray-400 dark:text-gray-600',
-                            'size-5 shrink-0',
+                              ? "text-emerald-500 dark:text-emerald-500"
+                              : "text-gray-400 dark:text-gray-600",
+                            "size-5 shrink-0"
                           )}
                           aria-hidden={true}
                         />
@@ -206,7 +153,7 @@ const Pricing = () => {
         </DialogContent>
       </Dialog>
     </div>
-  )
-}
+  );
+};
 
-export default Pricing
+export default Pricing;

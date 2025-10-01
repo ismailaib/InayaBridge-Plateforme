@@ -6,6 +6,8 @@ import { getMessages, type Messages } from "@/lib/i18n/getMessages";
 import { isLocale, locales, getDirection, type Locale } from "@/lib/i18n/i18n";
 import { Toaster } from "@/components/Toaster";
 import { inter, tajawal } from "../layout";
+import { readdir } from "fs/promises";
+import path from "path";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -15,6 +17,22 @@ type LocaleLayoutProps = {
   children: React.ReactNode;
   params: { locale: string };
 };
+
+async function getLocaleNamespaces(locale: Locale): Promise<string[]> {
+  const localeDir = path.join(process.cwd(), "src/app/messages", locale);
+
+  try {
+    const entries = await readdir(localeDir, { withFileTypes: true });
+
+    return entries
+      .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
+      .map((entry) => entry.name.replace(/\.json$/u, ""))
+      .sort();
+  } catch (error) {
+    console.error(`Unable to read namespaces for locale "${locale}"`, error);
+    return [];
+  }
+}
 
 export default async function LocaleLayout({
   children,
@@ -27,20 +45,7 @@ export default async function LocaleLayout({
   }
 
   const locale = localeParam as Locale;
-  const namespaces = [
-    "common",
-    "navigation",
-    "landing",
-    "joinus",
-    "globaldatabase",
-    "features",
-    "benefits",
-    "cta",
-    "faqs",
-    "footer",
-    "pricing",
-    "changelog","auth","common"
-  ] as const;
+  const namespaces = await getLocaleNamespaces(locale);
 
   const messagesEntries = await Promise.all(
     namespaces.map(async (namespace) => {

@@ -1,13 +1,12 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+import { useRouter, usePathname } from "next/navigation"
 import { Button } from "@/components/Button"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -25,21 +24,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/Select"
-
-const moduleList = [
-  { key: "showDiagnostics", label: "Diagnostics" },
-  { key: "showFollowUps", label: "Consultations de suivi" },
-  { key: "showAdvancedStats", label: "Statistiques avancées" },
-  { key: "showEvolutionCharts", label: "Graphiques d’évolution" },
-  { key: "showPatientAlerts", label: "Alertes patients" },
-  { key: "showVideoCalls", label: "Consultations vidéo" },
-  { key: "showVitalsMonitoring", label: "Suivi des signes vitaux" },
-  { key: "showAppointments", label: "Planning des rendez-vous" },
-  { key: "showLabResults", label: "Résultats de laboratoire" },
-  { key: "showPrescriptions", label: "Ordonnances" },
-]
+import { useTranslations } from "@/lib/i18n/useTranslations"
 
 export const DashboardModal = () => {
+  const t = useTranslations("dashboard.dashboardSettings")
+  const router = useRouter()
+  const pathname = usePathname()
+  const initialLocale = pathname.split("/")[1] || "fr"
+
+  const moduleList = Object.entries(t.raw("modulesList") || {}).map(
+    ([key, label]) => ({ key, label: label as string })
+  )
+
   const [settings, setSettings] = useState(
     Object.fromEntries(moduleList.map(({ key }) => [key, true]))
   )
@@ -48,14 +44,28 @@ export const DashboardModal = () => {
     notifications: true,
     compactMode: false,
     specialty: "généraliste",
-    language: "fr",
+    language: initialLocale,
   })
+
+  useEffect(() => {
+    const currentLocale = pathname.split("/")[1]
+    if (currentLocale && currentLocale !== otherSettings.language) {
+      setOtherSettings((prev) => ({ ...prev, language: currentLocale }))
+    }
+  }, [pathname])
 
   const toggleModule = (key: string) =>
     setSettings((prev) => ({ ...prev, [key]: !prev[key] }))
 
-  const updateSelect = (key: keyof typeof otherSettings, value: string) =>
+  const updateSelect = (key: keyof typeof otherSettings, value: string) => {
     setOtherSettings((prev) => ({ ...prev, [key]: value }))
+    if (key === "language") {
+      const parts = pathname.split("/")
+      parts[1] = value
+      const newPath = parts.join("/") || `/${value}/dashboard`
+      router.push(newPath)
+    }
+  }
 
   const toggleSwitch = (key: keyof typeof otherSettings) =>
     setOtherSettings((prev) => ({ ...prev, [key]: !prev[key] }))
@@ -70,18 +80,17 @@ export const DashboardModal = () => {
         </DialogTrigger>
         <DialogContent className="w-full max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Paramètres du tableau de bord</DialogTitle>
+            <DialogTitle>{t("title")}</DialogTitle>
             <DialogDescription className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              Personnalisez les sections de votre interface en activant les
-              modules que vous souhaitez visualiser.
+              {t("description")}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            {/* Section 1: Affichage modules */}
+            {/* Modules */}
             <Card className="space-y-4 p-4">
               <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-50">
-                Modules disponibles
+                {t("modules")}
               </h3>
               {moduleList.map((mod) => (
                 <div key={mod.key} className="flex items-center gap-2">
@@ -95,42 +104,48 @@ export const DashboardModal = () => {
               ))}
             </Card>
 
-            {/* Section 2: Autres préférences */}
+            {/* Preferences */}
             <Card className="space-y-4 p-4">
               <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-50">
-                Préférences personnelles
+                {t("preferences")}
               </h3>
 
               <div className="space-y-2">
-                <Label htmlFor="specialty">Spécialité</Label>
+                <Label htmlFor="specialty">{t("specialty")}</Label>
                 <Select
                   value={otherSettings.specialty}
                   onValueChange={(v) => updateSelect("specialty", v)}
                   disabled
                 >
                   <SelectTrigger className="cursor-not-allowed opacity-70">
-                    <SelectValue placeholder="Votre spécialité" />
+                    <SelectValue placeholder={t("specialty")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="généraliste">Médecin généraliste</SelectItem>
-                    <SelectItem value="cardiologue">Cardiologue</SelectItem>
-                    <SelectItem value="pédiatre">Pédiatre</SelectItem>
-                    <SelectItem value="dentiste">Dentiste</SelectItem>
+                    <SelectItem value="généraliste">
+                      {t("specialties.general")}
+                    </SelectItem>
+                    <SelectItem value="cardiologue">
+                      {t("specialties.cardio")}
+                    </SelectItem>
+                    <SelectItem value="pédiatre">
+                      {t("specialties.pediatre")}
+                    </SelectItem>
+                    <SelectItem value="dentiste">
+                      {t("specialties.dentist")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-gray-400 mt-1">
-                  Ce champ est modifiable uniquement par un administrateur.
-                </p>
+                <p className="text-xs text-gray-400 mt-1">{t("specialtyNote")}</p>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="language">Langue</Label>
+                <Label htmlFor="language">{t("language")}</Label>
                 <Select
                   value={otherSettings.language}
                   onValueChange={(v) => updateSelect("language", v)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Choisir une langue" />
+                    <SelectValue placeholder={t("language")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="fr">Français</SelectItem>
@@ -143,7 +158,7 @@ export const DashboardModal = () => {
               <Divider />
 
               <div className="flex items-center justify-between">
-                <Label htmlFor="notifications">Notifications</Label>
+                <Label htmlFor="notifications">{t("notifications")}</Label>
                 <Switch
                   id="notifications"
                   checked={otherSettings.notifications}
@@ -152,7 +167,7 @@ export const DashboardModal = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <Label htmlFor="compactMode">Mode compact</Label>
+                <Label htmlFor="compactMode">{t("compactMode")}</Label>
                 <Switch
                   id="compactMode"
                   checked={otherSettings.compactMode}
@@ -161,15 +176,6 @@ export const DashboardModal = () => {
               </div>
             </Card>
           </div>
-
-          <DialogFooter className="mt-6">
-            <DialogClose asChild>
-              <Button variant="secondary">Annuler</Button>
-            </DialogClose>
-            <DialogClose asChild>
-              <Button>Enregistrer</Button>
-            </DialogClose>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

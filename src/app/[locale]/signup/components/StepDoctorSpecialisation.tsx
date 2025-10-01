@@ -9,19 +9,13 @@ import {
 import { Input } from "@/components/Input"
 import { Button } from "@/components/Button"
 import Link from "next/link"
+import useTranslations from "@/lib/i18n/useTranslations"
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
 
-const SPECIALITIES = [
-  "Médecin généraliste",
-  "Cardiologue",
-  "Dermatologue",
-  "Pédiatre",
-  "Radiologue",
-  "Neurologue",
-  "Gynécologue",
-  "Dentiste",
-  "Oncologue",
-  "Autre spécialité",
-]
+type SpecialityOption = {
+  id: string
+  label: string
+}
 
 export default function StepDoctorSpecialisation({
   selected,
@@ -32,10 +26,17 @@ export default function StepDoctorSpecialisation({
   onContinue: (spec: string) => void
   onSuccess?: () => void
 }) {
-  const [choice, setChoice] = useState(selected ?? "Médecin généraliste")
+  const t = useTranslations("signup.doctor.specialisation")
+  const { locale } = useTranslationsContext()
+  const options = t.raw<SpecialityOption[]>("options") ?? []
+  const otherOption = options.find((option) => option.id === "other")
+
+  const defaultChoice = selected ?? (options[0]?.label ?? "")
+  const [choice, setChoice] = useState(defaultChoice)
   const [other, setOther] = useState("")
 
-  const current = choice === "Autre spécialité" ? other : choice
+  const isOtherSelected = otherOption && choice === otherOption.label
+  const current = isOtherSelected ? other : choice
   const valid = current.trim().length > 0
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -50,32 +51,32 @@ export default function StepDoctorSpecialisation({
       <form onSubmit={handleSubmit} className="space-y-4">
         <fieldset>
           <RadioCardGroup className="mt-4 grid-cols-2">
-            {SPECIALITIES.map((label) => (
+            {options.map((option) => (
               <RadioCardItem
-                key={label}
-                value={label}
-                checked={choice === label}
-                onClick={() => setChoice(label)}
+                key={option.id}
+                value={option.id}
+                checked={choice === option.label}
+                onClick={() => setChoice(option.label)}
               >
                 <div className="flex items-center gap-3">
                   <RadioCardIndicator />
-                  <span>{label}</span>
+                  <span>{option.label}</span>
                 </div>
               </RadioCardItem>
             ))}
           </RadioCardGroup>
 
-          {choice === "Autre spécialité" && (
+          {isOtherSelected && (
             <div className="mt-6">
               <label
                 htmlFor="other"
                 className="mb-1 block text-sm font-medium"
               >
-                Spécialité
+                {t("otherFieldLabel")}
               </label>
               <Input
                 id="other"
-                placeholder="Ex : Médecin du sport"
+                placeholder={t("otherPlaceholder")}
                 value={other}
                 onChange={(e) => setOther(e.target.value)}
               />
@@ -84,9 +85,9 @@ export default function StepDoctorSpecialisation({
         </fieldset>
 
         <div className="mt-12 flex justify-between gap-4">
-          <Link href="/signup">
+          <Link href={`/${locale}/signup`}>
             <Button variant="secondary" type="button">
-              Retour
+              {t("back")}
             </Button>
           </Link>
 
@@ -96,7 +97,7 @@ export default function StepDoctorSpecialisation({
             className="w-full"
             disabled={!valid}
           >
-            Continuer
+            {t("continue")}
           </Button>
         </div>
       </form>

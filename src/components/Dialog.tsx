@@ -65,6 +65,7 @@ const DialogContent = React.forwardRef<
             "bg-white dark:bg-[#090E1A]",
             // transition
             "data-[state=open]:animate-dialog-content-show",
+            "[html[lang=ar]_&]:overflow-hidden",
             focusRing,
             className,
           )}
@@ -82,7 +83,7 @@ const DialogHeader = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
-  return <div className={cx("flex flex-col gap-y-1", className)} {...props} />
+  return <div className={cx("flex flex-col gap-y-1 ", className)} {...props} />
 }
 
 DialogHeader.displayName = "DialogHeader"

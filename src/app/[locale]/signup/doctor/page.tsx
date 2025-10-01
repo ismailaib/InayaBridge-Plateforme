@@ -9,15 +9,20 @@ import logo from "../../../icon-logo.png"
 import { DatePickerBirthDateExample } from "@/components/DateBirth"
 import { Label } from "@/components/Label"
 import React from "react"
+import useTranslations from "@/lib/i18n/useTranslations"
 
 export default function DoctorWelcomePage() {
+  const t = useTranslations("signup.doctor")
   const [step, setStep] = useState<"shared" | "specialisation">("shared")
   const [speciality, setSpeciality] = useState<string | null>(null)
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(undefined)
 
+  const subtitle =
+    step === "shared" ? t("subtitle.specialisation") : t("subtitle.form")
+
   return (
-    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2 w-full overflow-hidden">
-      <div className="flex flex-col items-center justify-center px-4 sm:px-6 lg:px-12 overflow-y-auto">
+    <div className="grid min-h-screen grid-cols-1 w-full overflow-hidden lg:grid-cols-2">
+      <div className="flex flex-col items-center justify-center px-4 sm:px-6 lg:px-12 overflow-y-auto overflow-hidden">
         <div className="w-full max-w-xl space-y-6 text-start">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -29,7 +34,7 @@ export default function DoctorWelcomePage() {
             <div className="absolute bottom-[9%] left-[9%] size-1 rounded-full bg-gray-100 shadow-inner dark:bg-gray-800" />
             <div className="absolute bottom-[9%] right-[9%] size-1 rounded-full bg-gray-100 shadow-inner dark:bg-gray-800" />
             <div className="w-fit rounded-lg bg-gradient-to-b from-[#00b38fdc] to-[#00b38f] p-3 shadow-sm shadow-[#00b38f]/50 ring-1 ring-inset ring-white/25">
-              <Image src={logo} alt="" width={24} height={24} />
+              <Image src={logo} alt={t("logoAlt")} width={24} height={24} />
             </div>
           </motion.div>
 
@@ -39,12 +44,10 @@ export default function DoctorWelcomePage() {
             transition={{ delay: 0.1 }}
           >
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Bienvenue, Docteur
+              {t("title")}
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-              {step === "shared"
-                ? "Merci ! Maintenant, sélectionnez votre spécialité pour compléter votre profil."
-                : "Vous êtes sur le point de rejoindre notre communauté médicale."}
+              {subtitle}
             </p>
           </motion.div>
 
@@ -76,24 +79,27 @@ export default function DoctorWelcomePage() {
                   transition={{ duration: 0.3 }}
                   className="absolute inset-0"
                 >
-                  <StepSharedFields accountType="doctor" speciality={speciality || ""} additionalFields={
-
-                    <>
-                      <div>
-                        <Label htmlFor="dob" className="font-medium">Date de naissance</Label>
-                        <div className="mt-2">
-                          <DatePickerBirthDateExample value={selectedDate} onChange={setSelectedDate} />
-                          <input
-                            type="hidden"
-                            name="dateOfBirth"
-                            value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
-                            tabIndex={-1}
-                            aria-hidden="true"
-                          />
+                  <StepSharedFields
+                    accountType="doctor"
+                    speciality={speciality || ""}
+                    additionalFields={
+                      <>
+                        <div>
+                          <Label htmlFor="dob" className="font-medium">{t("additionalFields.dateOfBirth")}</Label>
+                          <div className="mt-2">
+                            <DatePickerBirthDateExample value={selectedDate} onChange={setSelectedDate} />
+                            <input
+                              type="hidden"
+                              name="dateOfBirth"
+                              value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
+                              tabIndex={-1}
+                              aria-hidden="true"
+                            />
+                          </div>
                         </div>
-                      </div>
-                    </>
-                  } />
+                      </>
+                    }
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -106,7 +112,7 @@ export default function DoctorWelcomePage() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="hidden h-full overflow-hidden p-6 lg:flex"
-        aria-label="Product showcase"
+        aria-label={t("aside.aria")}
       >
         <div className="flex h-full w-full items-center justify-center rounded-lg bg-gradient-to-br from-[#a7f3d0] to-[#10b981] p-16 xl:p-24 dark:from-[#10b981] dark:to-[#059669]">
           <div className="max-w-lg space-y-10">
@@ -116,10 +122,10 @@ export default function DoctorWelcomePage() {
               transition={{ delay: 0.3 }}
             >
               <h2 className="text-2xl font-semibold leading-9 text-white">
-                La solution intelligente pour les professionnels de santé
+                {t("aside.title")}
               </h2>
               <p className="mt-4 text-white">
-                Gérez vos rendez-vous, vos patients et vos dossiers médicaux simplement.
+                {t("aside.description")}
               </p>
             </motion.div>
 
@@ -130,7 +136,7 @@ export default function DoctorWelcomePage() {
               className="rounded-xl bg-white/10 p-1.5 ring-1 ring-white/20"
             >
               <Image
-                alt="Dashboard illustration"
+                alt={t("aside.imageAlt")}
                 src="/opengraph-image.png"
                 className="rounded-md shadow-2xl ring-1 ring-white/20"
                 width={1028}
@@ -147,7 +153,7 @@ export default function DoctorWelcomePage() {
               {[1, 2, 3].map((id) => (
                 <Image
                   key={id}
-                  alt={`Partner logo ${id}`}
+                  alt={t("aside.logoAlt", { id })}
                   src={`https://blocks.tremor.so/logos/white/placeholder${id}.svg`}
                   width={158}
                   height={48}
@@ -161,3 +167,5 @@ export default function DoctorWelcomePage() {
     </div>
   )
 }
+
+

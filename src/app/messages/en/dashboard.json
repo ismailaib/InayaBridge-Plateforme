@@ -1,0 +1,406 @@
+{
+  "dashboardSettings": {
+    "title": "Dashboard Settings",
+    "description": "Customize your interface sections by enabling the modules you want to view.",
+    "modules": "Available Modules",
+    "preferences": "Personal Preferences",
+    "specialty": "Specialty",
+    "specialtyNote": "This field can only be modified by an administrator.",
+    "specialties": {
+      "general": "General Practitioner",
+      "cardio": "Cardiologist",
+      "pediatre": "Pediatrician",
+      "dentist": "Dentist"
+    },
+    "language": "Language",
+    "notifications": "Notifications",
+    "compactMode": "Compact Mode",
+    "modulesList": {
+      "showDiagnostics": "Diagnostics",
+      "showFollowUps": "Follow-up Consultations",
+      "showAdvancedStats": "Advanced Statistics",
+      "showEvolutionCharts": "Progress Charts",
+      "showPatientAlerts": "Patient Alerts",
+      "showVideoCalls": "Video Consultations",
+      "showVitalsMonitoring": "Vitals Monitoring",
+      "showAppointments": "Appointment Schedule",
+      "showLabResults": "Lab Results",
+      "showPrescriptions": "Prescriptions"
+    }
+  },
+  "onboarding": {
+    "title": "Complete your registration",
+    "description": "To fully access the dashboard, please complete the following steps.",
+    "step": "Step",
+    "completedStep": "✓ Step completed",
+    "steps": {
+      "tenantProfile": {
+        "title": "Set up your organization",
+        "description": "Create or join an organization."
+      },
+      "invitationsSchedule": {
+        "title": "Invite your colleagues",
+        "description": "Add other doctors or staff members."
+      },
+      "accountActivation": {
+        "title": "Activate your account",
+        "description": "Once finished, activate your account to access the dashboard."
+      }
+    },
+    "allDone": {
+      "title": "Congratulations! All steps are completed.",
+      "subtitle": "You can now fully access your dashboard."
+    }
+  },
+  "tenantForm": {
+    "title": "Set up your facility",
+    "description": "A facility groups together professional information and the members who work there.",
+    "name": "Facility name",
+    "namePlaceholder": "e.g. Downtown Clinic",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "e.g. Multidisciplinary medical center",
+    "type": "Facility type",
+    "submit": "Save facility",
+    "submitting": "Saving...",
+    "privacySettings": {
+      "title": "Make the facility private",
+      "description": "Patients will not be able to find this facility in the public list."
+    }
+  },
+  "invitations": {
+    "openDialog": "Invite colleagues",
+    "currentMembers": "Current members",
+    "form": {
+      "title": "Invite members",
+      "description": "Add new members to your workspace. Please follow your organisation's policies when inviting external people.",
+      "placeholder": "Enter the email address...",
+      "submit": "Invite",
+      "submitting": "Sending...",
+      "loadingDescription": "Loading user information...",
+      "loadingPlaceholder": "Loading...",
+      "loadingButton": "Loading..."
+    },
+    "info": {
+      "title": "Email invitation",
+      "description": "Invitees will receive an email with a link to join your workspace."
+    },
+    "emptyState": {
+      "title": "No members in this workspace",
+      "subtitle": "Start by inviting your colleagues!"
+    },
+    "details": {
+      "sentAt": "Sent on",
+      "expiresAt": "Expires on",
+      "acceptedAt": "Accepted on",
+      "invalidDate": "Invalid date"
+    },
+    "actions": {
+      "delete": "Remove invitation",
+      "resend": "Resend invitation"
+    },
+    "status": {
+      "declined": "Declined",
+      "accepted": "Accepted",
+      "pending": "Pending",
+      "expired": "Expired",
+      "unknown": "Unknown"
+    },
+    "errors": {
+      "userMissing": "User not signed in. Please sign in again.",
+      "userIncomplete": "Incomplete user information. Please sign in again.",
+      "selfInvitation": "You cannot invite yourself :)",
+      "invitationNotPending": "The invitation is not pending."
+    },
+    "validation": {
+      "emailRequired": "Please enter an email address!",
+      "emailInvalid": "Please enter a valid email address!"
+    },
+    "toasts": {
+      "successTitle": "Success",
+      "errorTitle": "Error",
+      "invitationSuccess": "An invitation was sent to {email}!",
+      "invitationError": "Something went wrong while sending the invitation.",
+      "fetchError": "Unable to retrieve the members list.",
+      "tenantError": "Unable to fetch workspace information.",
+      "invitationCancelled": "Invitation cancelled successfully.",
+      "invitationCancelError": "Unable to cancel the invitation.",
+      "invitationResent": "Invitation resent successfully.",
+      "invitationResendError": "Unable to resend the invitation."
+    }
+  },
+  "pricing": {
+    "openDialog": "Choose a plan",
+    "title": "Choose your plan",
+    "description": "Compare our offers and pick the one that fits your needs.",
+    "perMonth": "/month",
+    "perYear": "/year",
+    "capacityTitle": "Capacity",
+    "featuresTitle": "Features",
+    "recommended": "Recommended",
+    "plans": [
+      {
+        "id": "essential",
+        "name": "Essential",
+        "price": {
+          "monthly": "0 Dh",
+          "annually": "0 Dh"
+        },
+        "description": "Access all core features. Ideal for professionals starting out.",
+        "capacity": ["Unlimited consultations", "Messaging", "Patient records"],
+        "features": [
+          "Appointment management",
+          "Video consultations",
+          "Full medical history"
+        ],
+        "isStarter": true,
+        "isRecommended": false,
+        "buttonText": "Start for free",
+        "buttonLink": "#"
+      },
+      {
+        "id": "plus",
+        "name": "Plus",
+        "price": {
+          "monthly": "140 Dh",
+          "annually": "1290 Dh"
+        },
+        "description": "Advanced tools to optimise your practice as of v2.",
+        "capacity": ["Patient analytics", "PDF export", "Priority support"],
+        "features": [
+          "Consultation analytics",
+          "Automatic reminders",
+          "Early access to new features"
+        ],
+        "isStarter": false,
+        "isRecommended": false,
+        "buttonText": "Pre-register for v2",
+        "buttonLink": "#"
+      },
+      {
+        "id": "pro",
+        "name": "Pro",
+        "price": {
+          "monthly": "290 Dh",
+          "annually": "2490 Dh"
+        },
+        "description": "For professionals or clinics that want everything centralised.",
+        "capacity": ["Multi-profile", "Premium support", "API access (v2.1)"],
+        "features": [
+          "Advanced statistics",
+          "Patient data export",
+          "API & integrations"
+        ],
+        "isStarter": false,
+        "isRecommended": true,
+        "buttonText": "Pre-register for v2",
+        "buttonLink": "#"
+      }
+    ]
+  },
+  "kpis": {
+    "cardsSection": {
+      "title": "Week overview",
+      "tooltip": "These stats highlight the key metrics for the week."
+    },
+    "cards": {
+      "todayAppointments": {
+        "title": "Today's appointments",
+        "tooltip": "Total number of appointments scheduled for today."
+      },
+      "waitingPatients": {
+        "title": "Patients waiting",
+        "tooltip": "Patients currently in the waiting room or not yet taken care of."
+      },
+      "finishedConsultations": {
+        "title": "Completed consultations (7d)",
+        "tooltip": "Consultations completed during the last 7 days."
+      },
+      "newPatients": {
+        "title": "New patients (month)",
+        "tooltip": "Patients registered during the current month."
+      },
+      "videoConsultations": {
+        "title": "Video consultations",
+        "tooltip": "Number of consultations carried out by video."
+      },
+      "csatScore": {
+        "title": "Patient satisfaction (CSAT)",
+        "tooltip": "Average Customer Satisfaction Score given by patients."
+      }
+    },
+    "alerts": {
+      "title": "Top alerts",
+      "tooltip": "Urgent messages that require immediate attention.",
+      "items": {
+        "urgent": "Urgent message"
+      },
+      "actions": {
+        "close": "Close alert",
+        "pin": "Pin alert",
+        "closed": "Alert resolved"
+      }
+    }
+  },
+  "statistics": {
+    "overview": {
+      "title": "Overview",
+      "tooltip": "Global statistics for your activity.",
+      "followUpsSummary": "{count} follow-up consultations scheduled",
+      "pendingDiagnosticsSummary": "{count} diagnostics awaiting review"
+    },
+    "metrics": [
+      {
+        "key": "followUps",
+        "name": "Follow-up consultations",
+        "tooltip": "Scheduled consultations used to monitor existing patients.",
+        "iconColor": "text-indigo-500 dark:text-indigo-500"
+      },
+      {
+        "key": "closedConsultations",
+        "name": "Closed consultations",
+        "tooltip": "Consultations completed and marked as finished.",
+        "iconColor": "text-emerald-500 dark:text-emerald-500"
+      },
+      {
+        "key": "pendingDiagnostics",
+        "name": "Pending diagnostics",
+        "tooltip": "Cases where the diagnostic is still being evaluated.",
+        "iconColor": "text-indigo-500 dark:text-indigo-500"
+      },
+      {
+        "key": "validatedDiagnostics",
+        "name": "Validated diagnostics",
+        "tooltip": "Cases where the diagnostic has been confirmed.",
+        "iconColor": "text-emerald-500 dark:text-emerald-500"
+      }
+    ],
+    "dividerLabel": "Advanced statistics",
+    "sections": {
+      "activity": {
+        "title": "Medical activity recap",
+        "tooltip": "Weekly summary of your main actions.",
+        "description": "This week, practitioners recorded {total} consultations, including {ongoingDiagnostics} diagnostics in progress and {validatedDiagnostics} validated. An average of {plannedFollowUps} follow-ups has been scheduled, ensuring consistent patient care."
+      },
+      "diseases": {
+        "title": "Most frequent diseases",
+        "tooltip": "Ranking of diseases by number of weekly consultations."
+      }
+    },
+    "diseases": [
+      {
+        "key": "hypertension",
+        "label": "Hypertension",
+        "consultations": 14
+      },
+      {
+        "key": "diabetes",
+        "label": "Type 2 diabetes",
+        "consultations": 11
+      },
+      {
+        "key": "respiratory",
+        "label": "Respiratory infections",
+        "consultations": 9
+      },
+      {
+        "key": "allergies",
+        "label": "Seasonal allergies",
+        "consultations": 7
+      },
+      {
+        "key": "chronicPain",
+        "label": "Chronic pain",
+        "consultations": 6
+      }
+    ]
+  },
+  "dashboardStats": {
+    "title": "Performance Statistics",
+    "subtitle": "Tracking appointments, consultations and care times.",
+    "appointments": {
+      "respectTitle": "Appointment Attendance",
+      "tooltip": "Rate of patients attending their scheduled appointments during the month.",
+      "rate": "Patient attendance rate this month",
+      "honored": "Attended appointments",
+      "missed": "Missed appointments"
+    },
+    "consultation": {
+      "timeTitle": "Average Consultation Time",
+      "tooltip": "Average duration of consultations observed over the last 30 days.",
+      "average": "Average over the last 30 days",
+      "under20": "Consultations < 20 min",
+      "over20": "Consultations > 20 min"
+    },
+    "evolution": {
+      "title": "Consultation Trends",
+      "tooltip": "Daily monitoring of booked appointments and diagnostics performed."
+    }
+  },
+  "doctorAnalytics": {
+    "overview": {
+      "title": "Overview",
+      "tooltip": "Global activity statistics.",
+      "followUpPlanned": "scheduled follow-up consultations",
+      "pendingDiagnostics": "diagnostics pending evaluation"
+    },
+    "items": {
+      "followUp": "Follow-up consultations",
+      "closed": "Closed consultations",
+      "pending": "Pending diagnostics",
+      "validated": "Validated diagnostics"
+    },
+    "tooltips": {
+      "followUp": "Number of consultations planned to ensure medical follow-up of existing patients.",
+      "closed": "Consultations completed and marked as closed.",
+      "pending": "Medical cases for which a diagnosis is still being evaluated.",
+      "validated": "Medical cases with a confirmed diagnosis."
+    },
+    "advancedStats": "Advanced statistics",
+    "summary": {
+      "title": "Medical Activity Summary",
+      "tooltip": "A weekly summary of key activities.",
+      "text": "This week, practitioners recorded a total of {total} consultations, including {pending} pending diagnostics and {validated} validated. An average of {followups} follow-ups was scheduled, ensuring continuous care."
+    },
+    "diseases": {
+      "title": "Most Common Diseases",
+      "tooltip": "Ranking of diseases by number of weekly consultations."
+    }
+  },
+  "patientTracking": {
+    "title": "Patients under management",
+    "description": "Real-time tracking of active cases",
+    "statuses": {
+      "consultation": "In consultation",
+      "waitingRoom": "Waiting room",
+      "videoCall": "Video consultation"
+    },
+    "motifs": {
+      "postOp": "Post-operative follow-up",
+      "vertigo": "Vertigo",
+      "pregnancy": "Pregnancy follow-up",
+      "bloodTest": "Blood test",
+      "anxiety": "Anxiety",
+      "scanner": "Scan results",
+      "diabetes": "Diabetes control"
+    },
+    "locations": {
+      "mainOffice": "Main office",
+      "roomA": "Room A",
+      "roomB": "Room B",
+      "teleconsultation": "Teleconsultation - {{time}}"
+    },
+    "remarks": {
+      "inProgress": "Consultation in progress",
+      "arrived": "Patient arrived",
+      "waiting": "Waiting",
+      "scheduled": "Scheduled",
+      "toConfirm": "To confirm"
+    },
+    "labels": {
+      "description": "Description .....",
+      "consultations": "Consultations"
+    },
+    "updated": "Updated {{time}} ago",
+    "scheduled": "Scheduled at {{time}}"
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "roleSelection": {
+    "title": "On fait connaissance ? Vous êtes plutôt...",
+    "doctor": {
+      "label": "Médecin",
+      "description": "Gérez vos patients, rédigez des ordonnances et connectez-vous aux réseaux de soins."
+    },
+    "patient": {
+      "label": "Patient",
+      "description": "Accédez à des soins personnalisés, gérez vos rendez-vous et échangez avec les médecins."
+    },
+    "back": "Retour",
+    "continue": "C'est parti",
+    "conditions": "En vous inscrivant, vous acceptez nos",
+    "and": "et notre"
+  },
+  "doctor": {
+    "logoAlt": "Logo InayaBridge",
+    "title": "Bienvenue, Docteur",
+    "subtitle": {
+      "specialisation": "Merci ! Maintenant, sélectionnez votre spécialité pour compléter votre profil.",
+      "form": "Vous êtes sur le point de rejoindre notre communauté médicale."
+    },
+    "additionalFields": {
+      "dateOfBirth": "Date de naissance"
+    },
+    "aside": {
+      "aria": "Présentation du produit",
+      "title": "La solution intelligente pour les professionnels de santé",
+      "description": "Gérez vos rendez-vous, vos patients et vos dossiers médicaux simplement.",
+      "imageAlt": "Illustration du tableau de bord de télémédecine",
+      "logoAlt": "Logo partenaire {id}"
+    },
+    "specialisation": {
+      "options": [
+        {
+          "id": "general_practitioner",
+          "label": "Médecin généraliste"
+        },
+        {
+          "id": "cardiologist",
+          "label": "Cardiologue"
+        },
+        {
+          "id": "dermatologist",
+          "label": "Dermatologue"
+        },
+        {
+          "id": "pediatrician",
+          "label": "Pédiatre"
+        },
+        {
+          "id": "radiologist",
+          "label": "Radiologue"
+        },
+        {
+          "id": "neurologist",
+          "label": "Neurologue"
+        },
+        {
+          "id": "gynecologist",
+          "label": "Gynécologue"
+        },
+        {
+          "id": "dentist",
+          "label": "Dentiste"
+        },
+        {
+          "id": "oncologist",
+          "label": "Oncologue"
+        },
+        {
+          "id": "other",
+          "label": "Autre spécialité"
+        }
+      ],
+      "otherFieldLabel": "Spécialité",
+      "otherPlaceholder": "Ex : Médecin du sport",
+      "back": "Retour",
+      "continue": "Continuer"
+    }
+  },
+  "patient": {
+    "logoAlt": "Logo InayaBridge",
+    "title": "Bienvenue, Patient",
+    "subtitle": "Merci de rejoindre notre plateforme. Veuillez compléter les informations ci-dessous pour continuer.",
+    "additionalFields": {
+      "cinLabel": "Numéro CIN",
+      "cinPlaceholder": "Ex. : C123456",
+      "dateOfBirth": "Date de naissance"
+    },
+    "aside": {
+      "aria": "Illustration",
+      "title": "Des soins à portée de clic",
+      "description": "Prenez rendez-vous, consultez vos médecins et accédez à votre historique médical en toute simplicité.",
+      "imageAlt": "Illustration de téléconsultation",
+      "logoAlt": "Logo partenaire {id}"
+    }
+  },
+  "shared": {
+    "validation": {
+      "firstName": "Le prénom doit contenir au moins 2 caractères",
+      "lastName": "Le nom doit contenir au moins 2 caractères",
+      "email": "Veuillez entrer une adresse e-mail valide",
+      "phone": "Le numéro doit être un numéro marocain valide (+212XXXXXXXXX)",
+      "address": "L'adresse doit contenir au moins 5 caractères",
+      "password": "Le mot de passe doit contenir au moins 8 caractères",
+      "confirmPassword": "Les mots de passe ne correspondent pas",
+      "gender": "Veuillez sélectionner votre genre",
+      "cin": "Le CIN doit être au format valide (ex: AB123456)"
+    },
+    "backendErrors": {
+      "phoneNumber": "Numéro de téléphone invalide il faut commencer par +212",
+      "email": "Cette adresse e-mail existe déjà",
+      "cin": "Ce CIN existe déjà",
+      "firstName": "Prénom invalide",
+      "lastName": "Nom invalide",
+      "password": "Mot de passe trop faible",
+      "dateOfBirth": "Date de naissance invalide"
+    },
+    "apiErrors": {
+      "emailExists": "Cette adresse e-mail est déjà utilisée",
+      "phoneExists": "Ce numéro de téléphone est déjà utilisé",
+      "cinExists": "Ce CIN est déjà enregistré",
+      "invalidPhone": "Numéro de téléphone invalide",
+      "validationFailed": "Veuillez vérifier vos informations",
+      "default": "Une erreur s'est produite. Veuillez réessayer."
+    },
+    "toast": {
+      "validationTitle": "Erreur de validation",
+      "registrationErrorTitle": "Erreur d'inscription"
+    },
+    "fields": {
+      "firstName": {
+        "label": "Prénom",
+        "placeholder": "Entrez votre prénom"
+      },
+      "lastName": {
+        "label": "Nom",
+        "placeholder": "Entrez votre nom"
+      },
+      "email": {
+        "label": "Adresse e-mail",
+        "placeholder": "nom@exemple.com"
+      },
+      "phone": {
+        "label": "Numéro de téléphone",
+        "placeholder": "ex: +212612345678"
+      },
+      "address": {
+        "label": "Adresse complète",
+        "placeholder": "Entrez votre adresse complète"
+      },
+      "gender": {
+        "label": "Genre",
+        "placeholder": "Sélectionnez",
+        "options": {
+          "male": "Homme",
+          "female": "Femme"
+        }
+      },
+      "cin": {
+        "label": "CIN (Carte d'identité nationale)",
+        "placeholder": "ex: AB123456",
+        "helper": "Format : 1-2 lettres suivies de 6 chiffres"
+      },
+      "password": {
+        "label": "Mot de passe",
+        "placeholder": "Au moins 8 caractères"
+      },
+      "confirmPassword": {
+        "label": "Confirmer",
+        "placeholder": "Répétez le mot de passe"
+      }
+    },
+    "terms": {
+      "intro": "En vous inscrivant, vous acceptez nos",
+      "and": "et notre"
+    },
+    "buttons": {
+      "back": "Retour",
+      "submit": "Créer mon espace",
+      "submitLoading": "Création en cours..."
+    }
+  }
+}

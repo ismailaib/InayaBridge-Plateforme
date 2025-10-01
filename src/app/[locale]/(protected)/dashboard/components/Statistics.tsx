@@ -7,54 +7,57 @@ import {
 } from "@remixicon/react"
 
 import { cx } from "@/lib/utils"
-
 import { BarChart } from "@/components/BarChart"
 import { Card } from "@/components/Card"
 import { CategoryBar } from "@/components/CategoryBar"
 import { Divider } from "@/components/Divider"
 import { Tooltip } from "@/components/Tooltip"
 import { Info } from "lucide-react"
-
-const data = [
-  {
-    name: "Consultations de suivi",
-    value: 12,
-    icon: RiFileHistoryFill,
-    iconColor: "text-indigo-500 dark:text-indigo-500",
-    tooltip: "Nombre de consultations prévues pour assurer le suivi médical des patients existants.",
-  },
-  {
-    name: "Consultations clôturées",
-    value: 48,
-    icon: RiCheckDoubleFill,
-    iconColor: "text-emerald-500 dark:text-emerald-500",
-    tooltip: "Consultations terminées et enregistrées comme complètes.",
-  },
-  {
-    name: "Diagnostics en attente",
-    value: 9,
-    icon: RiTestTubeFill,
-    iconColor: "text-indigo-500 dark:text-indigo-500",
-    tooltip: "Cas médicaux pour lesquels un diagnostic est encore en cours d'évaluation.",
-  },
-  {
-    name: "Diagnostics validés",
-    value: 31,
-    icon: RiCheckDoubleFill,
-    iconColor: "text-emerald-500 dark:text-emerald-500",
-    tooltip: "Cas médicaux ayant reçu un diagnostic confirmé.",
-  },
-]
+import { useTranslations } from "@/lib/i18n/useTranslations"
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
 
 export default function DoctorAnalyticsSection() {
+  const t = useTranslations("dashboard.doctorAnalytics")
+  const { locale } = useTranslationsContext()
+  const data = [
+    {
+      name: t("items.followUp"),
+      value: 12,
+      icon: RiFileHistoryFill,
+      iconColor: "text-indigo-500 dark:text-indigo-500",
+      tooltip: t("tooltips.followUp"),
+    },
+    {
+      name: t("items.closed"),
+      value: 48,
+      icon: RiCheckDoubleFill,
+      iconColor: "text-emerald-500 dark:text-emerald-500",
+      tooltip: t("tooltips.closed"),
+    },
+    {
+      name: t("items.pending"),
+      value: 9,
+      icon: RiTestTubeFill,
+      iconColor: "text-indigo-500 dark:text-indigo-500",
+      tooltip: t("tooltips.pending"),
+    },
+    {
+      name: t("items.validated"),
+      value: 31,
+      icon: RiCheckDoubleFill,
+      iconColor: "text-emerald-500 dark:text-emerald-500",
+      tooltip: t("tooltips.validated"),
+    },
+  ]
+
   return (
     <>
       <Card className="mt-6 overflow-hidden p-0">
         <div className="border-b border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-900 dark:bg-[#090E1A] flex items-center justify-between">
           <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">
-            Vue d&apos;ensemble
+            {t("overview.title")}
           </h3>
-          <Tooltip content="Statistiques globales des activités." showArrow={false}>
+          <Tooltip content={t("overview.tooltip")} showArrow={false}>
             <span className="text-sm text-gray-500 dark:text-gray-400">
               <Info width={18} />
             </span>
@@ -63,15 +66,15 @@ export default function DoctorAnalyticsSection() {
 
         <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-2">
           <div>
-              <CategoryBar values={[12, 48]} colors={["cyan", "emerald"]} showLabels={false} />
+            <CategoryBar values={[12, 48]} colors={["cyan", "emerald"]} showLabels={false} />
             <p className="mt-2 text-sm text-gray-900 dark:text-gray-50">
-              <span className="font-semibold">12</span> consultations de suivi programmées
+              <span className="font-semibold">12</span> {t("overview.followUpPlanned")}
             </p>
           </div>
           <div>
-              <CategoryBar values={[9, 31]} colors={["cyan", "emerald"]} showLabels={false} />
+            <CategoryBar values={[9, 31]} colors={["cyan", "emerald"]} showLabels={false} />
             <p className="mt-2 text-sm text-gray-900 dark:text-gray-50">
-              <span className="font-semibold">9</span> diagnostics en attente d’évaluation
+              <span className="font-semibold">9</span> {t("overview.pendingDiagnostics")}
             </p>
           </div>
         </div>
@@ -98,70 +101,50 @@ export default function DoctorAnalyticsSection() {
         </ul>
       </Card>
 
-      <Divider className="my-10">Statistiques avancées</Divider>
+      <Divider className="my-10">{t("advancedStats")}</Divider>
 
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
         <div>
           <div className="flex items-center justify-between">
             <h4 className="font-semibold text-gray-900 dark:text-gray-50">
-              Résumé d&apos;activité médicale
+              {t("summary.title")}
             </h4>
-            <Tooltip
-              content="Un résumé hebdomadaire des principales activités."
-              showArrow={false}
-            >
+            <Tooltip content={t("summary.tooltip")} showArrow={false}>
               <Info width={18} className="text-gray-500 dark:text-gray-400" />
             </Tooltip>
           </div>
           <p className="mt-4 text-sm/6 text-gray-500 dark:text-gray-500">
-            Cette semaine, les praticiens ont enregistré un total de{" "}
-            <span className="font-medium text-gray-900 dark:text-gray-50">
-              60 consultations
-            </span>
-            , incluant{" "}
-            <span className="font-medium text-gray-900 dark:text-gray-50">
-              9 diagnostics en cours
-            </span>{" "}
-            et{" "}
-            <span className="font-medium text-gray-900 dark:text-gray-50">
-              31 validés
-            </span>
-            . Une moyenne de{" "}
-            <span className="font-medium text-gray-900 dark:text-gray-50">
-              12 suivis
-            </span>{" "}
-            a été planifiée, assurant un bon rythme de prise en charge continue.
+            {t("summary.text", { total: 60, pending: 9, validated: 31, followups: 12 })}
           </p>
         </div>
 
         <div>
           <div className="flex items-center justify-between">
             <h4 className="font-semibold text-gray-900 dark:text-gray-50">
-              Maladies les plus fréquentes
+              {t("diseases.title")}
             </h4>
-            <Tooltip
-              content="Classement des maladies selon le nombre de consultations hebdomadaires."
-              showArrow={false}
-            >
+            <Tooltip content={t("diseases.tooltip")} showArrow={false}>
               <Info width={18} className="text-gray-500 dark:text-gray-400" />
             </Tooltip>
           </div>
-          <BarChart
-            data={[
-              { maladie: "Hypertension", Consultations: 14 },
-              { maladie: "Diabète de type 2", Consultations: 11 },
-              { maladie: "Infections respiratoires", Consultations: 9 },
-              { maladie: "Allergies saisonnières", Consultations: 7 },
-              { maladie: "Douleurs chroniques", Consultations: 6 },
-            ]}
-            index="maladie"
-            categories={["Consultations"]}
-            colors={["amber"]}
-            showLegend={false}
-            layout="vertical"
-            yAxisWidth={120}
-            className="mt-4 h-48"
-          />
+          <div dir="ltr">
+            <BarChart
+              data={[
+                { maladie: "Hypertension", Consultations: 14 },
+                { maladie: "Diabète de type 2", Consultations: 11 },
+                { maladie: "Infections respiratoires", Consultations: 9 },
+                { maladie: "Allergies saisonnières", Consultations: 7 },
+                { maladie: "Douleurs chroniques", Consultations: 6 },
+              ]}
+              index="maladie"
+              categories={["Consultations"]}
+              colors={["amber"]}
+              showLegend={false}
+              layout="vertical"
+              yAxisWidth={120}
+              className="mt-4 h-48"
+            />
+          </div>
         </div>
       </div>
     </>

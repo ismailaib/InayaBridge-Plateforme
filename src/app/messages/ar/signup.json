@@ -1,0 +1,186 @@
+{
+  "roleSelection": {
+    "title": "دعنا نتعرّف عليك! هل أنت أقرب إلى...",
+    "doctor": {
+      "label": "طبيب",
+      "description": "أدر مرضاك، وحرّر الوصفات الطبية، وتواصل مع شبكات الرعاية."
+    },
+    "patient": {
+      "label": "مريض",
+      "description": "احصل على رعاية مخصّصة، نظّم مواعيدك، وتواصل مع الأطباء."
+    },
+    "back": "رجوع",
+    "continue": "لننطلق",
+    "conditions": "بالتسجيل، فإنك توافق على",
+    "and": "و"
+  },
+  "doctor": {
+    "logoAlt": "شعار إنايابريدج",
+    "title": "مرحبًا دكتور",
+    "subtitle": {
+      "specialisation": "رائع! اختر تخصصك الآن لإكمال ملفك.",
+      "form": "أنت على وشك الانضمام إلى مجتمعنا الطبي."
+    },
+    "additionalFields": {
+      "dateOfBirth": "تاريخ الميلاد"
+    },
+    "aside": {
+      "aria": "عرض المنتج",
+      "title": "الحل الذكي للمهنيين الصحيين",
+      "description": "أدر المواعيد والمرضى والملفات الطبية بسهولة.",
+      "imageAlt": "رسم توضيحي للوحة تحكم الطب عن بُعد",
+      "logoAlt": "شعار شريك {id}"
+    },
+    "specialisation": {
+      "options": [
+        {
+          "id": "general_practitioner",
+          "label": "طبيب عام"
+        },
+        {
+          "id": "cardiologist",
+          "label": "طبيب قلب"
+        },
+        {
+          "id": "dermatologist",
+          "label": "طبيب جلدية"
+        },
+        {
+          "id": "pediatrician",
+          "label": "طبيب أطفال"
+        },
+        {
+          "id": "radiologist",
+          "label": "طبيب أشعة"
+        },
+        {
+          "id": "neurologist",
+          "label": "طبيب أعصاب"
+        },
+        {
+          "id": "gynecologist",
+          "label": "طبيب نساء وتوليد"
+        },
+        {
+          "id": "dentist",
+          "label": "طبيب أسنان"
+        },
+        {
+          "id": "oncologist",
+          "label": "طبيب أورام"
+        },
+        {
+          "id": "other",
+          "label": "تخصص آخر"
+        }
+      ],
+      "otherFieldLabel": "التخصص",
+      "otherPlaceholder": "مثال: طبّ رياضي",
+      "back": "رجوع",
+      "continue": "متابعة"
+    }
+  },
+  "patient": {
+    "logoAlt": "شعار إنايابريدج",
+    "title": "مرحبًا بك",
+    "subtitle": "شكرًا لانضمامك إلى منصتنا. يرجى إكمال البيانات أدناه للمتابعة.",
+    "additionalFields": {
+      "cinLabel": "رقم البطاقة الوطنية (CIN)",
+      "cinPlaceholder": "مثال: C123456",
+      "dateOfBirth": "تاريخ الميلاد"
+    },
+    "aside": {
+      "aria": "صورة توضيحية",
+      "title": "رعاية في متناول يدك",
+      "description": "احجز مواعيدك، تواصل مع أطبائك، واطّلع على سجلك الطبي بكل سهولة.",
+      "imageAlt": "رسم توضيحي للاستشارة عن بُعد",
+      "logoAlt": "شعار شريك {id}"
+    }
+  },
+  "shared": {
+    "validation": {
+      "firstName": "يجب أن يتكوّن الاسم الشخصي من حرفين على الأقل",
+      "lastName": "يجب أن يتكوّن اسم العائلة من حرفين على الأقل",
+      "email": "يرجى إدخال بريد إلكتروني صالح",
+      "phone": "يجب أن يكون رقم الهاتف مغربيًا صالحًا (+212XXXXXXXXX)",
+      "address": "يجب أن يتكوّن العنوان من 5 أحرف على الأقل",
+      "password": "يجب أن تتكوّن كلمة المرور من 8 أحرف على الأقل",
+      "confirmPassword": "كلمتا المرور غير متطابقتين",
+      "gender": "يرجى اختيار الجنس",
+      "cin": "يجب أن يكون رقم CIN بالتنسيق الصحيح (مثال: AB123456)"
+    },
+    "backendErrors": {
+      "phoneNumber": "رقم الهاتف غير صالح ويجب أن يبدأ بـ +212",
+      "email": "هذا البريد الإلكتروني مسجّل مسبقًا",
+      "cin": "رقم CIN مسجّل مسبقًا",
+      "firstName": "الاسم الشخصي غير صالح",
+      "lastName": "اسم العائلة غير صالح",
+      "password": "كلمة المرور ضعيفة جدًا",
+      "dateOfBirth": "تاريخ الميلاد غير صالح"
+    },
+    "apiErrors": {
+      "emailExists": "هذا البريد الإلكتروني مستخدم بالفعل",
+      "phoneExists": "رقم الهاتف هذا مستخدم بالفعل",
+      "cinExists": "رقم CIN هذا مسجّل مسبقًا",
+      "invalidPhone": "رقم الهاتف غير صالح",
+      "validationFailed": "يرجى التحقق من بياناتك",
+      "default": "حدث خطأ ما. يرجى إعادة المحاولة."
+    },
+    "toast": {
+      "validationTitle": "خطأ في التحقق",
+      "registrationErrorTitle": "خطأ في التسجيل"
+    },
+    "fields": {
+      "firstName": {
+        "label": "الاسم الشخصي",
+        "placeholder": "أدخل اسمك الشخصي"
+      },
+      "lastName": {
+        "label": "اسم العائلة",
+        "placeholder": "أدخل اسم العائلة"
+      },
+      "email": {
+        "label": "البريد الإلكتروني",
+        "placeholder": "name@example.com"
+      },
+      "phone": {
+        "label": "رقم الهاتف",
+        "placeholder": "مثال: +212612345678"
+      },
+      "address": {
+        "label": "العنوان الكامل",
+        "placeholder": "أدخل عنوانك الكامل"
+      },
+      "gender": {
+        "label": "الجنس",
+        "placeholder": "اختر",
+        "options": {
+          "male": "ذكر",
+          "female": "أنثى"
+        }
+      },
+      "cin": {
+        "label": "رقم CIN (البطاقة الوطنية)",
+        "placeholder": "مثال: AB123456",
+        "helper": "التنسيق: حرف أو حرفان متبوعان بستة أرقام"
+      },
+      "password": {
+        "label": "كلمة المرور",
+        "placeholder": "ثمانية أحرف على الأقل"
+      },
+      "confirmPassword": {
+        "label": "تأكيد كلمة المرور",
+        "placeholder": "أعد إدخال كلمة المرور"
+      }
+    },
+    "terms": {
+      "intro": "بالتسجيل، فإنك توافق على",
+      "and": "و"
+    },
+    "buttons": {
+      "back": "رجوع",
+      "submit": "إنشاء مساحتي",
+      "submitLoading": "جاري الإنشاء..."
+    }
+  }
+}

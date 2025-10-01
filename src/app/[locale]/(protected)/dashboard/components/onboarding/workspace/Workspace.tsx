@@ -11,6 +11,7 @@ import {
 import { TenantManagementProps } from './types/tenant';
 import { useTenantManagement } from './hooks/useTenantManagement';
 import { TenantForm } from './components/TenantForm';
+import useTranslations from '@/lib/i18n/useTranslations';
 
 
 export const TenantManagement: React.FC<TenantManagementProps> = ({ onSuccess }) => {
@@ -22,13 +23,15 @@ export const TenantManagement: React.FC<TenantManagementProps> = ({ onSuccess })
         createTenant,
     } = useTenantManagement(onSuccess);
 
+     const t = useTranslations("dashboard.tenantForm")
+     
     return (
         <div className="flex items-end justify-center pt-8">
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                     <Button variant="primary" className="w-full">
-                        <Hospital className="mr-2 h-4 w-4 text-white" />
-                        Créer un établissement
+                        <Hospital className="mr-2 h-4 w-4 [html[lang=ar]_&]:ml-2  text-white" />
+                        {t('title')}
                     </Button>
                 </DialogTrigger>
                 

@@ -34,191 +34,183 @@ import {
   FileText,
 } from "lucide-react"
 import { cx, focusRing } from "@/lib/utils"
-
 import Image from "next/image"
-
-const doctornavigation = [
-  { name: "Accueil", icon: LayoutDashboard, root: "dashboard" },
-  { name: "Messagerie", icon: MessagesSquare, root: "chat" },
-  { name: "Mon Agent", icon: Bot, root: "ai" },
-] as const
-
-const patientnavigation = [
-  { name: "Accueil", icon: LayoutDashboard, root: "dashboard" },
-  { name: "Messagerie", icon: MessagesSquare, root: "chat" },
-  { name: "Mon Suivi", icon: Heart, root: "suivi" },
-] as const
-
-const doctornavigation2 = [
-  {
-    name: "Rendez-vous",
-    icon: CalendarDays,
-    root: "/appointment",
-    active: false,
-    children: [
-      { name: "Tous les rendez-vous", root: "/appointment" },
-      { name: "Créer un rendez-vous", root: "/appointment/create" },
-      { name: "Salle d'attente", root: "/appointment/waitingroom" },
-      { name: "Historique des consultations", root: "/appointment/history" },
-    ],
-  },
-  {
-    name: "Mes Patients",
-    icon: UserCircle,
-    root: "/mes-patients",
-    active: false,
-    children: [
-      { name: "Gestion des patients", root: "/mes-patients/search" },
-      { name: "Dossier patient", root: "/mes-patients/root" },
-    ],
-  },
-  {
-    name: "Consultations Vidéo",
-    icon: Video,
-    root: "consultations-video",
-    active: false,
-    children: [
-      { name: "Lancer une consultation", root: "/visioconference/321" },
-      { name: "Historique des appels", root: "#" },
-      { name: "Paramètres caméra & micro", root: "#" },
-      { name: "Feedback visio", root: "#" },
-    ],
-  },
-  {
-    name: "Doc. Médicaux",
-    icon: FolderSearch,
-    root: "doc-medicaux",
-    active: false,
-    children: [
-      { name: "Reçus des patients", root: "#" },
-      { name: "Envoyés aux patients", root: "#" },
-      { name: "Ordonnances", root: "#" },
-      { name: "Créer une ordonnance", root: "#" },
-    ],
-  },
-  {
-    name: "Statistiques",
-    icon: BarChart3,
-    root: "statistiques",
-    active: false,
-    children: [
-      { name: "Consultations par période", root: "#" },
-      { name: "Profil des patients vus", root: "#" },
-      { name: "Satisfaction / feedback", root: "#" },
-      { name: "Rendement / revenus", root: "#" },
-    ],
-  },
-  {
-    name: "Paramètres",
-    icon: Settings,
-    root: "parametres",
-    active: false,
-    children: [
-      { name: "Mes informations", root: "#" },
-      { name: "Disponibilité / calendrier", root: "#" },
-      { name: "Mot de passe / sécurité", root: "#" },
-      { name: "Pièces justificatives", root: "#" },
-      { name: "Préférences", root: "#" },
-    ],
-  },
-  {
-    name: "Gestion Cabinet",
-    icon: Building2,
-    root: "gestion-cabinet",
-    active: false,
-    children: [
-      { name: "Liste des employés", root: "#" },
-      { name: "Matériel médical", root: "#" },
-      { name: "Gestion des stocks", root: "#" },
-      { name: "Salle de consultation", root: "#" },
-    ],
-  },
-] as const
-
-const patientnavigation2 = [
-  {
-    name: "Mes Rendez-vous",
-    icon: CalendarDays,
-    root: "/patient/appointment",
-    active: false,
-    children: [
-      { name: "Prendre un rendez-vous", root: "/patient/appointment/book" },
-      { name: "Mes rendez-vous", root: "/patient/appointment/list" },
-      { name: "Historique", root: "/patient/appointment/history" },
-    ],
-  },
-  {
-    name: "Mon Dossier Médical",
-    icon: FileText,
-    root: "/patient/dossier",
-    active: false,
-    children: [
-      { name: "Mes informations", root: "/patient/dossier/info" },
-      { name: "Mes ordonnances", root: "/patient/dossier/prescriptions" },
-      { name: "Mes résultats", root: "/patient/dossier/results" },
-      { name: "Mes documents", root: "/patient/dossier/documents" },
-    ],
-  },
-  {
-    name: "Téléconsultations",
-    icon: Video,
-    root: "/patient/teleconsultation",
-    active: false,
-    children: [
-      { name: "Rejoindre une consultation", root: "/patient/teleconsultation/join" },
-      { name: "Historique des appels", root: "/patient/teleconsultation/history" },
-      { name: "Test audio/vidéo", root: "/patient/teleconsultation/test" },
-    ],
-  },
-  {
-    name: "Paramètres",
-    icon: Settings,
-    root: "/patient/settings",
-    active: false,
-    children: [
-      { name: "Mes informations", root: "/patient/settings/profile" },
-      { name: "Préférences", root: "/patient/settings/preferences" },
-      { name: "Sécurité", root: "/patient/settings/security" },
-      { name: "Notifications", root: "/patient/settings/notifications" },
-    ],
-  },
-] as const
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
-  
-  // Check if user is a patient based on URL
-  const isPatient = pathname.startsWith('/patient/')
-  
-  // Select navigation based on user type
+  const t = useTranslations("sidebar")
+  const { locale } = useTranslationsContext();
+  const isPatient = pathname.startsWith("/patient/")
+
+  const doctornavigation = [
+    { name: t("doctor.home"), icon: LayoutDashboard, root: "dashboard" },
+    { name: t("doctor.messages"), icon: MessagesSquare, root: "chat" },
+    { name: t("doctor.agent"), icon: Bot, root: "ai" },
+  ] as const
+
+  const patientnavigation = [
+    { name: t("patient.home"), icon: LayoutDashboard, root: "dashboard" },
+    { name: t("patient.messages"), icon: MessagesSquare, root: "chat" },
+    { name: t("patient.followup"), icon: Heart, root: "suivi" },
+  ] as const
+
+  const doctornavigation2 = [
+    {
+      name: t("doctor.appointments"),
+      icon: CalendarDays,
+      root: "/appointment",
+      active: false,
+      children: [
+        { name: t("doctor.appointmentsChildren.all"), root: "appointment" },
+        { name: t("doctor.appointmentsChildren.create"), root: "appointment/create" },
+        { name: t("doctor.appointmentsChildren.waiting"), root: "appointment/waitingroom" },
+        { name: t("doctor.appointmentsChildren.history"), root: "appointment/history" },
+      ],
+    },
+    {
+      name: t("doctor.patients"),
+      icon: UserCircle,
+      root: "/mes-patients",
+      active: false,
+      children: [
+        { name: t("doctor.patientsChildren.management"), root: "/mes-patients/search" },
+        { name: t("doctor.patientsChildren.record"), root: "/mes-patients/root" },
+      ],
+    },
+    {
+      name: t("doctor.video"),
+      icon: Video,
+      root: "consultations-video",
+      active: false,
+      children: [
+        { name: t("doctor.videoChildren.start"), root: "/visioconference/321" },
+        { name: t("doctor.videoChildren.history"), root: "#" },
+        { name: t("doctor.videoChildren.settings"), root: "#" },
+        { name: t("doctor.videoChildren.feedback"), root: "#" },
+      ],
+    },
+    {
+      name: t("doctor.docs"),
+      icon: FolderSearch,
+      root: "doc-medicaux",
+      active: false,
+      children: [
+        { name: t("doctor.docsChildren.received"), root: "#" },
+        { name: t("doctor.docsChildren.sent"), root: "#" },
+        { name: t("doctor.docsChildren.prescriptions"), root: "#" },
+        { name: t("doctor.docsChildren.createPrescription"), root: "#" },
+      ],
+    },
+    {
+      name: t("doctor.stats"),
+      icon: BarChart3,
+      root: "statistiques",
+      active: false,
+      children: [
+        { name: t("doctor.statsChildren.period"), root: "#" },
+        { name: t("doctor.statsChildren.profile"), root: "#" },
+        { name: t("doctor.statsChildren.feedback"), root: "#" },
+        { name: t("doctor.statsChildren.revenues"), root: "#" },
+      ],
+    },
+    {
+      name: t("doctor.settings"),
+      icon: Settings,
+      root: "parametres",
+      active: false,
+      children: [
+        { name: t("doctor.settingsChildren.profile"), root: "#" },
+        { name: t("doctor.settingsChildren.availability"), root: "#" },
+        { name: t("doctor.settingsChildren.security"), root: "#" },
+        { name: t("doctor.settingsChildren.docs"), root: "#" },
+        { name: t("doctor.settingsChildren.preferences"), root: "#" },
+      ],
+    },
+    {
+      name: t("doctor.cabinet"),
+      icon: Building2,
+      root: "gestion-cabinet",
+      active: false,
+      children: [
+        { name: t("doctor.cabinetChildren.employees"), root: "#" },
+        { name: t("doctor.cabinetChildren.equipment"), root: "#" },
+        { name: t("doctor.cabinetChildren.stocks"), root: "#" },
+        { name: t("doctor.cabinetChildren.room"), root: "#" },
+      ],
+    },
+  ] as const
+
+  const patientnavigation2 = [
+    {
+      name: t("patient.appointments"),
+      icon: CalendarDays,
+      root: "/patient/appointment",
+      active: false,
+      children: [
+        { name: t("patient.appointmentsChildren.book"), root: "/patient/appointment/book" },
+        { name: t("patient.appointmentsChildren.list"), root: "/patient/appointment/list" },
+        { name: t("patient.appointmentsChildren.history"), root: "/patient/appointment/history" },
+      ],
+    },
+    {
+      name: t("patient.dossier"),
+      icon: FileText,
+      root: "/patient/dossier",
+      active: false,
+      children: [
+        { name: t("patient.dossierChildren.info"), root: "/patient/dossier/info" },
+        { name: t("patient.dossierChildren.prescriptions"), root: "/patient/dossier/prescriptions" },
+        { name: t("patient.dossierChildren.results"), root: "/patient/dossier/results" },
+        { name: t("patient.dossierChildren.documents"), root: "/patient/dossier/documents" },
+      ],
+    },
+    {
+      name: t("patient.teleconsultation"),
+      icon: Video,
+      root: "/patient/teleconsultation",
+      active: false,
+      children: [
+        { name: t("patient.teleconsultationChildren.join"), root: "/patient/teleconsultation/join" },
+        { name: t("patient.teleconsultationChildren.history"), root: "/patient/teleconsultation/history" },
+        { name: t("patient.teleconsultationChildren.test"), root: "/patient/teleconsultation/test" },
+      ],
+    },
+    {
+      name: t("patient.settings"),
+      icon: Settings,
+      root: "/patient/settings",
+      active: false,
+      children: [
+        { name: t("patient.settingsChildren.profile"), root: "/patient/settings/profile" },
+        { name: t("patient.settingsChildren.preferences"), root: "/patient/settings/preferences" },
+        { name: t("patient.settingsChildren.security"), root: "/patient/settings/security" },
+        { name: t("patient.settingsChildren.notifications"), root: "/patient/settings/notifications" },
+      ],
+    },
+  ] as const
+
   const primaryNavigation = isPatient ? patientnavigation : doctornavigation
   const secondaryNavigation = isPatient ? patientnavigation2 : doctornavigation2
-  
-  const [openMenus, setOpenMenus] = React.useState<string[]>([
-    secondaryNavigation[0].name,
-  ])
-  
+
+  const [openMenus, setOpenMenus] = React.useState<string[]>([secondaryNavigation[0].name])
+
   const toggleMenu = (name: string) =>
     setOpenMenus((prev) =>
       prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name],
     )
 
-  // Helper function to generate href based on user type
   const generateHref = (root: string) => {
+    const base = `/${locale}`;
     if (isPatient) {
-      // For patient routes, ensure we maintain the /patient prefix
-      if (root.startsWith('/patient/')) {
-        return root
-      }
-      return `/patient/${root}`
+      if (root.startsWith("/patient/")) return `${base}${root}`;
+      return `${base}/patient/${root}`;
     } else {
-      // For doctor routes, use the root as is
-      if (root.startsWith('/')) {
-        return root
-      }
-      return `/${root}`
+      if (root.startsWith("/")) return `${base}${root}`;
+      return `${base}/${root}`;
     }
-  }
+  };
 
   return (
     <Sidebar {...props} className="bg-gray-50 dark:bg-gray-900/25">
@@ -234,20 +226,21 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
           </span>
           <div>
             <span className="block text-sm font-semibold text-gray-900 dark:text-gray-50">
-              InnayaBridge
+              InayaBridge
             </span>
             <span className="block text-xs text-gray-900 dark:text-gray-50">
-              {isPatient ? "Espace Patient" : "Plan Essentiel"}
+              {isPatient ? t("patientSpace") : t("doctorPlan")}
             </span>
           </div>
         </div>
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <Input
               type="search"
-              placeholder="Search items…"
+              placeholder={t("search")}
               className="[&>input]:sm:py-1.5"
             />
           </SidebarGroupContent>
@@ -305,7 +298,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
                       <SidebarMenuSub>
                         <div className={`absolute inset-y-0 left-4 w-px`} />
                         {item.children.map((child) => (
-                          <SidebarMenuItem key={child.name}>
+                          <SidebarMenuItem key={child.root}>
                             <SidebarSubLink
                               href={child.root}
                               className={

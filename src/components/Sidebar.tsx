@@ -183,7 +183,7 @@ const Sidebar = React.forwardRef<HTMLDivElement, React.ComponentProps<"div">>(
             "left-0 group-data-[collapsible=true]:left-[calc(var(--sidebar-width)*-1)]",
             // RTL (Arabic)
             "[html[lang=ar]_&]:right-0 group-data-[collapsible=true]:right-[calc(var(--sidebar-width)*-1)]",
-            "border-r border-gray-200 dark:border-gray-800",
+            "border-x border-gray-200 dark:border-gray-800",
             className,
           )}
           {...props}

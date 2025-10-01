@@ -1,7 +1,6 @@
 "use client"
 
 import { RiTimeLine } from "@remixicon/react"
-
 import { cx } from "@/lib/utils"
 import { Card } from "@/components/Card"
 import { Divider } from "@/components/Divider"
@@ -13,112 +12,115 @@ import {
   MonitorDot,
   SquareActivity,
 } from "lucide-react"
-
-const data = [
-  {
-    status: "En consultation",
-    icon: SquareActivity,
-    iconColor: "text-blue-500",
-    dossiers: [
-      {
-        patient: "Fatima El Amrani",
-        motif: "Suivi post-opératoire",
-        lieu: "Cabinet principal",
-        remarque: "Consultation en cours",
-        progressionActuelle: 1,
-        progressionTotale: 2,
-        misAJour: "il y a 5 min",
-      },
-    ],
-  },
-  {
-    status: "Salle d’attente",
-    icon: RiTimeLine,
-    iconColor: "text-orange-500",
-    dossiers: [
-      {
-        patient: "Mohamed Lakhlifi",
-        motif: "Vertiges",
-        lieu: "Salle A",
-        remarque: "Patient arrivé",
-        progressionActuelle: 1,
-        progressionTotale: 2,
-        misAJour: "il y a 2 min",
-      },
-      {
-        patient: "Zineb Rami",
-        motif: "Suivi de grossesse",
-        lieu: "Salle A",
-        remarque: "En attente",
-        progressionActuelle: 1,
-        progressionTotale: 1,
-        misAJour: "il y a 10 min",
-      },
-      {
-        patient: "Amine Hafidi",
-        motif: "Bilan sanguin",
-        lieu: "Salle B",
-        remarque: "Arrivé",
-        progressionActuelle: 1,
-        progressionTotale: 1,
-        misAJour: "il y a 15 min",
-      },
-    ],
-  },
-  {
-    status: "Rendez-vous visioconférence",
-    icon: MonitorDot,
-    iconColor: "text-emerald-500",
-    dossiers: [
-      {
-        patient: "Soukaina Jebari",
-        motif: "Anxiété",
-        lieu: "Téléconsultation - 17:00",
-        remarque: "En attente",
-        progressionActuelle: 0,
-        progressionTotale: 1,
-        misAJour: "prévu à 17:00",
-      },
-      {
-        patient: "Omar El Idrissi",
-        motif: "Résultats scanner",
-        lieu: "Téléconsultation - 18:30",
-        remarque: "Prévu",
-        progressionActuelle: 0,
-        progressionTotale: 1,
-        misAJour: "prévu à 18:30",
-      },
-      {
-        patient: "Sofia Berrada",
-        motif: "Contrôle diabète",
-        lieu: "Téléconsultation - 19:00",
-        remarque: "À confirmer",
-        progressionActuelle: 0,
-        progressionTotale: 1,
-        misAJour: "prévu à 19:00",
-      },
-    ],
-  },
-]
-
-const statusColor = {
-  "En consultation":
-    "bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/20",
-  "Salle d’attente":
-    "bg-orange-50 text-orange-700 ring-orange-600/20 dark:bg-orange-400/10 dark:text-orange-400 dark:ring-orange-400/20",
-  "Rendez-vous visioconférence":
-    "bg-emerald-50 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-400/10 dark:text-emerald-400 dark:ring-emerald-400/20",
-}
+import { useTranslations } from "@/lib/i18n/useTranslations"
 
 export default function PatientTracking() {
+  const t = useTranslations("dashboard.patientTracking")
+
+  const data = [
+    {
+      status: t("statuses.consultation"),
+      icon: SquareActivity,
+      iconColor: "text-blue-500",
+      dossiers: [
+        {
+          patient: "Fatima El Amrani",
+          motif: t("motifs.postOp"),
+          lieu: t("locations.mainOffice"),
+          remarque: t("remarks.inProgress"),
+          progressionActuelle: 1,
+          progressionTotale: 2,
+          misAJour: t("updated", { time: "5 min" }),
+        },
+      ],
+    },
+    {
+      status: t("statuses.waitingRoom"),
+      icon: RiTimeLine,
+      iconColor: "text-orange-500",
+      dossiers: [
+        {
+          patient: "Mohamed Lakhlifi",
+          motif: t("motifs.vertigo"),
+          lieu: t("locations.roomA"),
+          remarque: t("remarks.arrived"),
+          progressionActuelle: 1,
+          progressionTotale: 2,
+          misAJour: t("updated", { time: "2 min" }),
+        },
+        {
+          patient: "Zineb Rami",
+          motif: t("motifs.pregnancy"),
+          lieu: t("locations.roomA"),
+          remarque: t("remarks.waiting"),
+          progressionActuelle: 1,
+          progressionTotale: 1,
+          misAJour: t("updated", { time: "10 min" }),
+        },
+        {
+          patient: "Amine Hafidi",
+          motif: t("motifs.bloodTest"),
+          lieu: t("locations.roomB"),
+          remarque: t("remarks.arrived"),
+          progressionActuelle: 1,
+          progressionTotale: 1,
+          misAJour: t("updated", { time: "15 min" }),
+        },
+      ],
+    },
+    {
+      status: t("statuses.videoCall"),
+      icon: MonitorDot,
+      iconColor: "text-emerald-500",
+      dossiers: [
+        {
+          patient: "Soukaina Jebari",
+          motif: t("motifs.anxiety"),
+          lieu: t("locations.teleconsultation", { time: "17:00" }),
+          remarque: t("remarks.waiting"),
+          progressionActuelle: 0,
+          progressionTotale: 1,
+          misAJour: t("scheduled", { time: "17:00" }),
+        },
+        {
+          patient: "Omar El Idrissi",
+          motif: t("motifs.scanner"),
+          lieu: t("locations.teleconsultation", { time: "18:30" }),
+          remarque: t("remarks.scheduled"),
+          progressionActuelle: 0,
+          progressionTotale: 1,
+          misAJour: t("scheduled", { time: "18:30" }),
+        },
+        {
+          patient: "Sofia Berrada",
+          motif: t("motifs.diabetes"),
+          lieu: t("locations.teleconsultation", { time: "19:00" }),
+          remarque: t("remarks.toConfirm"),
+          progressionActuelle: 0,
+          progressionTotale: 1,
+          misAJour: t("scheduled", { time: "19:00" }),
+        },
+      ],
+    },
+  ]
+
+  const statusColor = {
+    [t("statuses.consultation")]:
+      "bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/20",
+    [t("statuses.waitingRoom")]:
+      "bg-orange-50 text-orange-700 ring-orange-600/20 dark:bg-orange-400/10 dark:text-orange-400 dark:ring-orange-400/20",
+    [t("statuses.videoCall")]:
+      "bg-emerald-50 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-400/10 dark:text-emerald-400 dark:ring-emerald-400/20",
+  }
+
   return (
     <Card className="mt-6 bg-gray-50 p-0 dark:bg-gray-900">
       <div className="p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-          Patients en cours de gestion
+          {t("title")}
         </h3>
         <p className="text-sm text-gray-500 dark:text-gray-500">
-          Suivi en temps réel des dossiers actifs
+          {t("description")}
         </p>
       </div>
       <Tabs defaultValue={data[0].status}>
@@ -165,9 +167,7 @@ export default function PatientTracking() {
                         </h4>
                         <span
                           className={cx(
-                            statusColor[
-                              category.status as keyof typeof statusColor
-                            ],
+                            statusColor[category.status],
                             "inline-flex items-center whitespace-nowrap rounded px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset",
                           )}
                         >
@@ -190,7 +190,7 @@ export default function PatientTracking() {
                             className="text-gray-400 dark:text-gray-600"
                           />
                           <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Description .....
+                            {t("labels.description")}
                           </p>
                         </div>
                       </div>
@@ -207,12 +207,13 @@ export default function PatientTracking() {
                             strokeWidth={3.5}
                           />
                           <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                            Consultations ({dossier.progressionActuelle}/
+                            {t("labels.consultations")} (
+                            {dossier.progressionActuelle}/
                             {dossier.progressionTotale})
                           </p>
                         </div>
                         <p className="mt-2 text-sm text-gray-500 sm:mt-0 dark:text-gray-500">
-                          Mis à jour {dossier.misAJour}
+                          {dossier.misAJour}
                         </p>
                       </div>
                     </li>

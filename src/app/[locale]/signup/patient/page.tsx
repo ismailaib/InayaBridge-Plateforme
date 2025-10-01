@@ -8,8 +8,10 @@ import { DatePickerBirthDateExample } from "@/components/DateBirth"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import React from "react"
+import useTranslations from "@/lib/i18n/useTranslations"
 
 export default function PatientWelcomePage() {
+  const t = useTranslations("signup.patient")
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(undefined)
 
   return (
@@ -28,7 +30,7 @@ export default function PatientWelcomePage() {
             <div className="absolute bottom-[9%] left-[9%] size-1 rounded-full bg-gray-100 shadow-inner dark:bg-gray-800" />
             <div className="absolute bottom-[9%] right-[9%] size-1 rounded-full bg-gray-100 shadow-inner dark:bg-gray-800" />
             <div className="w-fit rounded-lg bg-gradient-to-b from-[#00b38fdc] to-[#00b38f] p-3 shadow-sm shadow-[#00b38f]/50 ring-1 ring-inset ring-white/25">
-              <Image src={logo} alt="logo" width={24} height={24} />
+              <Image src={logo} alt={t("logoAlt")} width={24} height={24} />
             </div>
           </motion.div>
 
@@ -38,11 +40,10 @@ export default function PatientWelcomePage() {
             transition={{ delay: 0.1 }}
           >
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Bienvenue, Patient
+              {t("title")}
             </h1>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              Merci de rejoindre notre plateforme. Veuillez compléter les
-              informations ci-dessous pour continuer.
+              {t("subtitle")}
             </p>
           </motion.div>
 
@@ -64,19 +65,19 @@ export default function PatientWelcomePage() {
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="cin" className="font-medium">
-                            Numéro CIN
+                            {t("additionalFields.cinLabel")}
                           </Label>
                           <Input
                             type="text"
                             id="cin"
                             name="cin"
-                            placeholder="C123456"
+                            placeholder={t("additionalFields.cinPlaceholder")}
                             autoComplete="off"
                             className="mt-2"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="dob" className="font-medium">Date de naissance</Label>
+                          <Label htmlFor="dob" className="font-medium">{t("additionalFields.dateOfBirth")}</Label>
                           <div className="mt-2">
                             <DatePickerBirthDateExample value={selectedDate} onChange={setSelectedDate} />
                             <input
@@ -104,7 +105,7 @@ export default function PatientWelcomePage() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="hidden h-full overflow-hidden p-6 lg:flex"
-        aria-label="Illustration"
+        aria-label={t("aside.aria")}
       >
         <div className="flex h-full w-full items-center justify-center rounded-lg bg-gradient-to-br from-[#a7f3d0] to-[#10b981] p-16 xl:p-24 dark:from-[#10b981] dark:to-[#059669]">
           <div className="max-w-lg space-y-10">
@@ -114,11 +115,10 @@ export default function PatientWelcomePage() {
               transition={{ delay: 0.3 }}
             >
               <h2 className="text-2xl font-semibold leading-9 text-white">
-                Des soins à portée de clic
+                {t("aside.title")}
               </h2>
               <p className="mt-4 text-white">
-                Prenez rendez-vous, consultez vos médecins et accédez à votre
-                historique médical en toute simplicité.
+                {t("aside.description")}
               </p>
             </motion.div>
 
@@ -129,7 +129,7 @@ export default function PatientWelcomePage() {
               className="rounded-xl bg-white/10 p-1.5 ring-1 ring-white/20"
             >
               <Image
-                alt="Illustration"
+                alt={t("aside.imageAlt")}
                 src="/opengraph-image.png"
                 className="rounded-md shadow-2xl ring-1 ring-white/20"
                 width={512}
@@ -146,7 +146,7 @@ export default function PatientWelcomePage() {
               {[1, 2, 3].map((id) => (
                 <Image
                   key={id}
-                  alt={`Logo partenaire ${id}`}
+                  alt={t("aside.logoAlt", { id })}
                   src={`https://blocks.tremor.so/logos/white/placeholder${id}.svg`}
                   width={158}
                   height={48}

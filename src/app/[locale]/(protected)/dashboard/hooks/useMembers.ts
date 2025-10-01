@@ -1,25 +1,33 @@
-import { useCallback, useEffect, useState } from 'react';
-import { getInvitations } from '@/api/invitations';
-import { toast } from '@/lib/useToast';
-import { TOAST_MESSAGES } from './constants';
-import { Member } from './types';
+import { useCallback, useEffect, useState } from "react";
+import { getInvitations } from "@/api/invitations";
+import { toast } from "@/lib/useToast";
+import useTranslations from "@/lib/i18n/useTranslations";
+import { Member } from "./types";
 
 export const useMembers = (tenantId: string) => {
-    const [members, setMembers] = useState<Member[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
+  const t = useTranslations("dashboard.invitations");
 
-    const fetchMembers = useCallback(async () => {
-        if (!tenantId) return;
-        try {
-            const res = await getInvitations(tenantId);
-            setMembers(Array.isArray(res.data) ? res.data : []);
-        } catch (err) {
-            console.error("Error fetching invitations:", err);
-            setMembers([]);
-            toast({ title: "Erreur", description: TOAST_MESSAGES.FETCH_ERROR, variant: "error", duration: 3000 });
-        }
-    }, [tenantId]);
+  const fetchMembers = useCallback(async () => {
+    if (!tenantId) return;
+    try {
+      const res = await getInvitations(tenantId);
+      setMembers(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Error fetching invitations:", err);
+      setMembers([]);
+      toast({
+        title: t("toasts.errorTitle"),
+        description: t("toasts.fetchError"),
+        variant: "error",
+        duration: 3000,
+      });
+    }
+  }, [tenantId, t]);
 
-    useEffect(() => { fetchMembers(); }, [fetchMembers]);
+  useEffect(() => {
+    fetchMembers();
+  }, [fetchMembers]);
 
-    return { members, refreshMembers: fetchMembers };
+  return { members, refreshMembers: fetchMembers };
 };

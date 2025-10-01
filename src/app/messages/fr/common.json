@@ -12,5 +12,59 @@
     "clause4Description": "Vos informations personnelles sont traitées conformément à notre politique de confidentialité. Aucune donnée médicale n'est partagée sans votre consentement explicite.",
     "signature": "En continuant, vous acceptez l'ensemble des termes ci-dessus. Ces conditions peuvent être modifiées à tout moment, avec notification."
   },
-  "close": "Fermer"
+  "policy": {
+    "link": "politique de confidentialité",
+    "title": "Politique de confidentialité",
+    "description": "Nous nous engageons à protéger vos données personnelles.",
+    "intro": "Votre vie privée est notre priorité. Cette politique explique comment nous collectons, utilisons et protégeons vos données personnelles.",
+    "collected": {
+      "title": "Données collectées :",
+      "text": "Nous recueillons uniquement les données nécessaires à l'utilisation de nos services : nom, prénom, e-mail, date de naissance, et informations médicales si applicables."
+    },
+    "usage": {
+      "title": "Utilisation des données :",
+      "text": "Les données sont utilisées pour personnaliser votre expérience, vous permettre d'accéder à votre espace, et améliorer nos services."
+    },
+    "storage": {
+      "title": "Stockage sécurisé :",
+      "text": "Vos informations sont stockées de manière sécurisée, avec des protocoles de chiffrement et d’accès restreint."
+    },
+    "sharing": {
+      "title": "Partage :",
+      "text": "Aucune donnée ne sera vendue ou partagée avec des tiers sans votre consentement explicite, sauf en cas d’obligation légale."
+    },
+    "rights": "Vous avez le droit de consulter, modifier ou supprimer vos données à tout moment. Pour toute question, contactez-nous à confidentialité@inayabridge.com.",
+    "close": "Fermer",
+    "confirm": "J'ai compris"
+  },
+  "close": "Fermer",
+  "greetingDoc": "Bienvenue Dr.",
+  "greetingPatient": "Bienvenue",
+  "404Title": "Page introuvable",
+  "404Description": "Désolé, nous n'avons pas trouvé la page que vous recherchez.",
+  "goHome": "Retourner à la page d'accueil",
+  "months": {
+    "1": "Janvier",
+    "2": "Février",
+    "3": "Mars",
+    "4": "Avril",
+    "5": "Mai",
+    "6": "Juin",
+    "7": "Juillet",
+    "8": "Août",
+    "9": "Septembre",
+    "10": "Octobre",
+    "11": "Novembre",
+    "12": "Décembre"
+  },
+  "profile": {
+    "theme": "Thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système",
+    "changelog": "Journal des modifications",
+    "docs": "Documentation",
+    "community": "Rejoindre la communauté",
+    "logout": "Se déconnecter"
+  }
 }

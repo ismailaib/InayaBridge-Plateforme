@@ -33,14 +33,14 @@ const switchVariants = tv({
       focusRing,
     ],
     thumb: [
-      // base
       "pointer-events-none relative inline-block transform appearance-none rounded-full border-none shadow-lg outline-none transition-all duration-150 ease-in-out focus:border-none focus:outline-none focus:outline-transparent",
-      // background color
       "bg-white dark:bg-gray-50",
-      // disabled
       "group-data-[disabled]:shadow-none",
       "group-data-[disabled]:bg-gray-50 group-data-[disabled]:dark:bg-gray-500",
-    ],
+      // Handle LTR and RTL directions
+      "data-[state=checked]:ltr:translate-x-4 data-[state=unchecked]:ltr:translate-x-0",
+      "data-[state=checked]:rtl:-translate-x-4 data-[state=unchecked]:rtl:translate-x-0"
+    ]
   },
   variants: {
     size: {
@@ -63,10 +63,10 @@ const switchVariants = tv({
 
 interface SwitchProps
   extends Omit<
-      React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>,
-      "asChild"
-    >,
-    VariantProps<typeof switchVariants> {}
+    React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>,
+    "asChild"
+  >,
+  VariantProps<typeof switchVariants> { }
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
