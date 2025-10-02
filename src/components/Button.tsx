@@ -21,10 +21,10 @@ const buttonVariants = tv({
       primary: [
         "border-transparent",
         "text-white dark:text-white",
-        "bg-[#00B38F] dark:bg-[#00B38F]",
-        "hover:bg-[#009e7f] dark:hover:bg-[#007e68]",
-        "disabled:bg-[#009e7f6c] disabled:text-[#00b38fb6]",
-        "disabled:dark:bg-[#007e6866] disabled:dark:text-[#00b38fb3]",
+        "bg-[#3b82f6] dark:bg-[#3b82f6]",
+        "hover:bg-[#3b82f6] dark:hover:bg-[#3b82f6]",
+        "disabled:bg-[#3b82f66c] disabled:text-[#3b82f6b6]",
+        "disabled:dark:bg-[#3b82f666] disabled:dark:text-[#3b82f6b3]",
       ],
       secondary: [
         // border
@@ -89,7 +89,7 @@ const buttonVariants = tv({
 
 interface ButtonProps
   extends React.ComponentPropsWithoutRef<"button">,
-    VariantProps<typeof buttonVariants> {
+  VariantProps<typeof buttonVariants> {
   asChild?: boolean
   isLoading?: boolean
   loadingText?: string
@@ -140,3 +140,4 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button"
 
 export { Button, buttonVariants, type ButtonProps }
+

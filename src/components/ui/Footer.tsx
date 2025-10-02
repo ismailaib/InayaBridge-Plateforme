@@ -1,12 +1,12 @@
 "use client"
 
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
+import { useTranslations } from "@/lib/i18n/useTranslations"
 import { RiArrowRightUpLine } from "@remixicon/react"
 import Link from "next/link"
 import { DatabaseLogo } from "../../../public/DatabaseLogo"
-import ThemeSwitch from "../ThemeSwitch"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
 import { DatabaseLogoArabic } from "../../../public/DatabaseLogoArabic"
+import ThemeSwitch from "../ThemeSwitch"
 
 export default function Footer() {
   const t = useTranslations("footer")
@@ -168,8 +168,8 @@ export default function Footer() {
           <div className="rounded-full border border-gray-200 py-1 pl-1 pr-2 dark:border-gray-800">
             <div className="flex items-center gap-1.5">
               <div className="relative size-4 shrink-0">
-                <div className="absolute inset-[1px] rounded-full bg-emerald-500/20 dark:bg-emerald-600/20" />
-                <div className="absolute inset-1 rounded-full bg-emerald-600 dark:bg-emerald-500" />
+                <div className="absolute inset-[1px] rounded-full bg-blue-500/20 dark:bg-blue-600/20" />
+                <div className="absolute inset-1 rounded-full bg-blue-600 dark:bg-blue-500" />
               </div>
               <span className="text-xs text-gray-700 dark:text-gray-50">
                 {t("status")}

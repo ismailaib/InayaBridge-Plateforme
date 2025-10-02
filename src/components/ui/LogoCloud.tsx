@@ -1,17 +1,17 @@
 "use client"
 
-import { RiArrowRightUpLine } from "@remixicon/react"
-import { useTranslations } from "@/lib/i18n/useTranslations";
-import { cx } from "@/lib/utils"
 import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
+import { RiArrowRightUpLine } from "@remixicon/react";
 
 const data = [
   {
     name: "Dr. Zineb",
     initials: "SE",
     email: "s.zineb@inayabridge.com",
-    textColor: "text-emerald-800 dark:text-emerald-500",
-    bgColor: "bg-emerald-100 dark:bg-emerald-500/20",
+    textColor: "text-blue-800 dark:text-blue-500",
+    bgColor: "bg-blue-100 dark:bg-blue-500/20",
     href: "#",
   },
   {
@@ -26,8 +26,8 @@ const data = [
     name: "Dr. Ismail Ait Bouhmad",
     initials: "IA",
     email: "m.ismail@inayabridge.com",
-    textColor: "text-emerald-800 dark:text-emerald-500",
-    bgColor: "bg-emerald-100 dark:bg-emerald-500/20",
+    textColor: "text-blue-800 dark:text-blue-500",
+    bgColor: "bg-blue-100 dark:bg-blue-500/20",
     href: "#",
   },
   {

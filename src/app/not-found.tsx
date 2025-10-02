@@ -3,9 +3,9 @@
 import { Button } from "@/components/Button"
 import { ArrowAnimated } from "@/components/ui/ArrowAnimated"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 import { DatabaseLogo } from "../../public/DatabaseLogo"
 import { makeLinks, siteConfig } from "./siteConfig"
-import { useParams } from "next/navigation"
 
 export default function NotFound() {
   const { locale } = useParams() as { locale?: "en" | "fr" | "ar" }
@@ -37,7 +37,7 @@ export default function NotFound() {
       <Link href={links.home} aria-label={siteConfig.name}>
         <DatabaseLogo className="mt-6 h-10" />
       </Link>
-      <p className="mt-6 text-4xl font-semibold text-[#009e7f] sm:text-5xl dark:text-[#00b38f]">
+      <p className="mt-6 text-4xl font-semibold text-[#3b82f6] sm:text-5xl dark:text-[#3b82f6]">
         404
       </p>
       <h1 className="mt-4 text-2xl font-semibold text-gray-900 dark:text-gray-50">

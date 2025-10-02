@@ -32,10 +32,10 @@ export default function CodeExampleTabs({
             />
           </div>
           <div className="flex items-center gap-4">
-            <div className="aspect-square w-fit rounded-lg bg-white p-2 text-gray-700 ring-1 ring-black/10 transition-all group-data-[state=active]:text-[#009e7f] dark:bg-gray-950 dark:text-gray-400 dark:ring-white/10 dark:group-data-[state=active]:text-[#33ccad]">
+            <div className="aspect-square w-fit rounded-lg bg-white p-2 text-gray-700 ring-1 ring-black/10 transition-all group-data-[state=active]:text-[#3b82f6] dark:bg-gray-950 dark:text-gray-400 dark:ring-white/10 dark:group-data-[state=active]:text-[#3b82f6]">
               <RiShareForwardLine aria-hidden="true" className="size-5" />
             </div>
-            <p className="font-semibold tracking-tight text-gray-700 transition-all group-data-[state=active]:text-[#009e7f] sm:text-lg dark:text-gray-400 dark:group-data-[state=active]:text-[#33ccad]">
+            <p className="font-semibold tracking-tight text-gray-700 transition-all group-data-[state=active]:text-[#3b82f6] sm:text-lg dark:text-gray-400 dark:group-data-[state=active]:text-[#3b82f6]">
               Intégration API dans vos systèmes
             </p>
           </div>
@@ -58,10 +58,10 @@ export default function CodeExampleTabs({
             />
           </div>
           <div className="flex flex-row gap-4 items-center">
-            <div className="aspect-square w-fit rounded-lg bg-white p-2 text-gray-700 ring-1 ring-black/10 transition-all group-data-[state=active]:text-[#009e7f] dark:bg-gray-950 dark:text-gray-400 dark:ring-white/10 dark:group-data-[state=active]:text-[#33ccad]">
+            <div className="aspect-square w-fit rounded-lg bg-white p-2 text-gray-700 ring-1 ring-black/10 transition-all group-data-[state=active]:text-[#3b82f6] dark:bg-gray-950 dark:text-gray-400 dark:ring-white/10 dark:group-data-[state=active]:text-[#3b82f6]">
               <RiCodeSSlashLine aria-hidden="true" className="size-5" />
             </div>
-            <p className="font-semibold tracking-tight text-gray-700 transition-all group-data-[state=active]:text-[#009e7f] sm:text-lg dark:text-gray-400 dark:group-data-[state=active]:text-[#33ccad]">
+            <p className="font-semibold tracking-tight text-gray-700 transition-all group-data-[state=active]:text-[#3b82f6] sm:text-lg dark:text-gray-400 dark:group-data-[state=active]:text-[#3b82f6]">
               Exécution & Sécurité
             </p>
           </div>

@@ -78,8 +78,8 @@ export default function DoctorKPIBlock() {
                         {kpi.value}
                       </dd>
                       <div className="flex flex-row items-center gap-0.5">
-                        <div className="w-1.5 h-6 bg-green-500 dark:bg-green-800 rounded-lg"></div>
-                        <div className="w-1.5 h-6 bg-green-500 dark:bg-green-800 rounded-lg"></div>
+                        <div className="w-1.5 h-6 bg-blue-500 dark:bg-blue-800 rounded-lg"></div>
+                        <div className="w-1.5 h-6 bg-blue-500 dark:bg-blue-800 rounded-lg"></div>
                         <div className="w-1.5 h-6 bg-yellow-200 dark:bg-yellow-600 rounded-lg"></div>
                         <div className="w-1.5 h-6 bg-blue-200/20 rounded-lg"></div>
                       </div>
@@ -120,7 +120,7 @@ export default function DoctorKPIBlock() {
 
               {closed ? (
                 <Tooltip content={t("alerts.actions.closed")} showArrow={false}>
-                  <CheckCheck width={18} className="cursor-pointer text-green-500" />
+                  <CheckCheck width={18} className="cursor-pointer text-blue-500" />
                 </Tooltip>
               ) : (
                 <div className="items-top flex justify-end gap-2">

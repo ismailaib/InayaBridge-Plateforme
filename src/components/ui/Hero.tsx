@@ -1,12 +1,12 @@
 "use client";
 
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import { RiPlayCircleFill } from "@remixicon/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../Button";
-import { useTranslations } from "@/lib/i18n/useTranslations";
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
 
 const statKeys = ["users", "support", "satisfaction"] as const;
 
@@ -24,8 +24,8 @@ export default function Hero() {
   return (
     <section aria-labelledby="hero-title" className="relative mt-16 py-20">
       {/* Background gradient circles for visual flair */}
-      <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-emerald-50 blur-3xl opacity-70 dark:bg-emerald-900/20" />
-      <div className="absolute top-1/2 right-1/4 h-64 w-64 rounded-full bg-teal-50 blur-3xl opacity-60 dark:bg-teal-900/20" />
+      <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-50 blur-3xl opacity-70 dark:bg-blue-900/20" />
+      <div className="absolute top-1/2 right-1/4 h-64 w-64 rounded-full bg-blue-50 blur-3xl opacity-60 dark:bg-blue-900/20" />
 
       <div className="container mx-auto px-4">
         <div
@@ -39,17 +39,17 @@ export default function Hero() {
             className={`max-w-xl ${isRTL ? "text-right" : "text-left"}`}
           >
             {/* Small badge */}
-            <div className={`mb-6 inline-flex items-center gap-2 rounded-full bg-emerald-100/70 px-4 py-1.5 text-sm font-semibold text-emerald-800 shadow-sm dark:bg-emerald-900/40 dark:text-emerald-200 ${isRTL ? "flex-row-reverse" : ""}`}>
+            <div className={`mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100/70 px-4 py-1.5 text-sm font-semibold text-blue-800 shadow-sm dark:bg-blue-900/40 dark:text-blue-200 ${isRTL ? "flex-row-reverse" : ""}`}>
               <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-500"></span>
               </span>
               <span>{t("badge")}</span>
             </div>
 
             <h1
               id="hero-title"
-              className="bg-gradient-to-r from-emerald-600 via-emerald-800 to-teal-600 bg-clip-text text-5xl font-bold leading-tight tracking-tight text-transparent sm:text-5xl md:text-6xl"
+              className="bg-gradient-to-r from-blue-600 via-blue-800 to-blue-600 bg-clip-text text-5xl font-bold leading-tight tracking-tight text-transparent sm:text-5xl md:text-6xl"
             >
               {t("titleLine1")}
               <br />
@@ -61,7 +61,7 @@ export default function Hero() {
             <div className={`mt-10 flex flex-col gap-4 sm:flex-row ${isRTL ? "sm:flex-row-reverse justify-end" : ""}`}>
               <Button
                 asChild
-                className="h-12 rounded-lg bg-emerald-600 px-6 text-base font-medium text-white shadow-lg shadow-emerald-500/20 transition-all duration-300 hover:bg-emerald-700 dark:shadow-emerald-900/30"
+                className="h-12 rounded-lg bg-blue-600 px-6 text-base font-medium text-white shadow-lg shadow-blue-500/20 transition-all duration-300 hover:bg-blue-700 dark:shadow-blue-900/30"
               >
                 <Link href={`/${locale}/signup`}>{t("primaryCta")}</Link>
               </Button>
@@ -73,8 +73,8 @@ export default function Hero() {
                   }`}
               >
                 <Link href="https://www.youtube.com/watch?v=QRZ_l7cVzzU" target="_blank">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-50 transition-all group-hover:bg-emerald-100 dark:bg-gray-700 dark:group-hover:bg-gray-600">
-                    <RiPlayCircleFill aria-hidden="true" className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-50 transition-all group-hover:bg-blue-100 dark:bg-gray-700 dark:group-hover:bg-gray-600">
+                    <RiPlayCircleFill aria-hidden="true" className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                   </span>
                   {t("videoCta")}
                 </Link>
@@ -85,7 +85,7 @@ export default function Hero() {
             <div className={`mt-12 grid grid-cols-3 gap-4 border-t border-gray-200 pt-6 dark:border-gray-800 ${isRTL ? "text-right" : "text-left"}`}>
               {stats.map(({ key, value, label }) => (
                 <div key={key}>
-                  <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{value}</p>
+                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{value}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">{label}</p>
                 </div>
               ))}
@@ -123,10 +123,10 @@ export default function Hero() {
                   }`}
               >
                 <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse text-right" : ""}`}>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 text-green-600 dark:text-green-400"
+                      className="h-5 w-5 text-blue-600 dark:text-blue-400"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -149,10 +149,10 @@ export default function Hero() {
                   }`}
               >
                 <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse text-right" : ""}`}>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-emerald-600 dark:text-emerald-400"
+                      className="h-4 w-4 text-blue-600 dark:text-blue-400"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"

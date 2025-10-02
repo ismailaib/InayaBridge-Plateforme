@@ -405,11 +405,14 @@
       "toConfirm": "À confirmer"
     },
     "labels": {
-      "description": "Description .....",
-      "consultations": "Consultations"
+      "descriptionPlaceholder": "Description .....",
+      "consultations": "Consultations ({{current}}/{{total}})"
     },
-    "updated": "Mis à jour il y a {{time}}",
-    "scheduled": "Prévu à {{time}}"
+    "updated": "Mis à jour {{time}}",
+    "scheduled": "Prévu à {{time}}",
+    "updatedTimes": {
+      "minutesAgo": "il y a {{count}} min"
+    }
   }
 
 }

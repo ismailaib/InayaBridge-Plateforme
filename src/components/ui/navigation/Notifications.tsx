@@ -1,28 +1,28 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/Button'
-import { Bell, HeartHandshake, ListChecks } from 'lucide-react'
-import { cx } from '@/lib/utils'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
-import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/Tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs'
+import { cx } from '@/lib/utils'
+import { Bell, HeartHandshake, ListChecks } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { getnotifications } from '../../../api/Notifications'
 
 const WelcomeNotificationCard = ({ notification }: { notification: any }) => {
   return (
-    <li className="relative overflow-hidden rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 dark:from-emerald-900/20 dark:to-emerald-900/20 border border-emerald-200 dark:border-emerald-700/50 p-4 hover:shadow-md transition-all duration-300">
+    <li className="relative overflow-hidden rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-blue-900/20 border border-blue-200 dark:border-blue-700/50 p-4 hover:shadow-md transition-all duration-300">
       {/* Decorative elements */}
       <div className="absolute top-0 right-0 -mt-2 -mr-2">
-        <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-full opacity-20" />
+        <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full opacity-20" />
       </div>
       <div className="absolute bottom-0 left-0 -mb-1 -ml-1">
-        <div className="w-6 h-6 bg-gradient-to-tr from-emerald-400 to-emerald-400 rounded-full opacity-15" />
+        <div className="w-6 h-6 bg-gradient-to-tr from-blue-400 to-blue-400 rounded-full opacity-15" />
       </div>
 
       <div className="relative flex items-start gap-3">
         {/* Welcome Icon */}
         <div className="flex-shrink-0 mt-1">
-          <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
             <HeartHandshake className="w-4 h-4 text-white" />
           </div>
         </div>
@@ -30,7 +30,7 @@ const WelcomeNotificationCard = ({ notification }: { notification: any }) => {
         <div className="flex-1 min-w-0">
           {/* Welcome Title */}
           <div className="flex items-center gap-2 mb-1">
-            <h4 className="text-sm font-semibold text-emerald-800 dark:text-emerald-400">
+            <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-400">
               Bienvenue ! 🎉
             </h4>
           </div>
@@ -41,12 +41,12 @@ const WelcomeNotificationCard = ({ notification }: { notification: any }) => {
 
           <div className="flex items-center justify-between">
             <span className="text-xs text-gray-500 dark:text-gray-400">
-              {(  new Date(notification.createdAt)).toLocaleDateString('fr-FR')}
+              {(new Date(notification.createdAt)).toLocaleDateString('fr-FR')}
             </span>
             {!notification.read && (
               <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+                <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">
                   Nouveau
                 </span>
               </div>

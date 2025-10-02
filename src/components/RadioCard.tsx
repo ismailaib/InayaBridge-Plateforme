@@ -1,7 +1,7 @@
 // Tremor Radio Card [v1.0.0]
 
-import React from "react"
 import * as RadioGroupPrimitives from "@radix-ui/react-radio-group"
+import React from "react"
 
 import { cx, focusInput, focusRing } from "@/lib/utils"
 
@@ -35,8 +35,8 @@ const RadioCardItem = React.forwardRef<
         "bg-white dark:bg-gray-950",
         // border color
         "border-gray-300 dark:border-gray-800",
-        "data-[state=checked]:border-[#00b38f]",
-        "dark:data-[state=checked]:border-[#00b38f]",
+        "data-[state=checked]:border-[#3b82f6]",
+        "dark:data-[state=checked]:border-[#3b82f6]",
         // disabled
         "data-disabled:border-gray-100 dark:data-disabled:border-gray-800",
         "data-disabled:bg-gray-50 data-disabled:shadow-none dark:data-disabled:bg-gray-900",
@@ -66,7 +66,7 @@ const RadioCardIndicator = React.forwardRef<
         // background color
         "bg-white dark:bg-gray-950",
         // checked
-        "group-data-[state=checked]:border-0 group-data-[state=checked]:border-transparent group-data-[state=checked]:bg-[#00b38f]",
+        "group-data-[state=checked]:border-0 group-data-[state=checked]:border-transparent group-data-[state=checked]:bg-[#3b82f6]",
         // disabled
         "group-data-disabled:border-gray-300 group-data-disabled:bg-gray-100 group-data-disabled:text-gray-400",
         "dark:group-data-disabled:border-gray-700 dark:group-data-disabled:bg-gray-800",
@@ -98,3 +98,4 @@ const RadioCardIndicator = React.forwardRef<
 RadioCardIndicator.displayName = "RadioCardIndicator"
 
 export { RadioCardGroup, RadioCardIndicator, RadioCardItem }
+

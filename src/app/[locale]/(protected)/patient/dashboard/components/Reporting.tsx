@@ -51,12 +51,12 @@ export default function Example() {
             <p className="text-sm/6 text-gray-500 dark:text-gray-500">
               Taux de présence des patients ce mois
             </p>
-              <CategoryBar
-                values={[92.4, 7.6]}
-                colors={["emerald", "amber"]}
-                showLabels={false}
-                className="mt-6"
-              />
+            <CategoryBar
+              values={[92.4, 7.6]}
+              colors={["blue", "amber"]}
+              showLabels={false}
+              className="mt-6"
+            />
             <ul className="mt-6 space-y-3 text-sm text-gray-600 dark:text-gray-400">
               <li className="flex justify-between">
                 <span>Rendez-vous honorés</span>
@@ -94,12 +94,12 @@ export default function Example() {
             <p className="text-sm/6 text-gray-500 dark:text-gray-500">
               Moyenne sur les 30 derniers jours
             </p>
-              <CategoryBar
-                values={[85.2, 14.8]}
-                colors={["blue", "gray"]}
-                showLabels={false}
-                className="mt-6"
-              />
+            <CategoryBar
+              values={[85.2, 14.8]}
+              colors={["blue", "gray"]}
+              showLabels={false}
+              className="mt-6"
+            />
             <ul className="mt-6 space-y-3 text-sm text-gray-600 dark:text-gray-400">
               <li className="flex justify-between">
                 <span>Consultations {"<"} 20 min</span>
@@ -136,10 +136,10 @@ export default function Example() {
             data={data}
             index="date"
             categories={["Rendez-vous", "diagnostics"]}
-            colors={["emerald", "blue"]}
+            colors={["blue", "blue"]}
             fill="solid"
             valueFormatter={(v) => `${v}`}
-            onValueChange={() => {}}
+            onValueChange={() => { }}
             tickGap={15}
             className="hidden sm:block"
           />
@@ -147,10 +147,10 @@ export default function Example() {
             data={data}
             index="date"
             categories={["Rendez-vous", "diagnostics"]}
-            colors={["emerald", "blue"]}
+            colors={["blue", "blue"]}
             fill="solid"
             valueFormatter={(v) => `${v}`}
-            onValueChange={() => {}}
+            onValueChange={() => { }}
             showYAxis={false}
             startEndOnly={true}
             tickGap={15}

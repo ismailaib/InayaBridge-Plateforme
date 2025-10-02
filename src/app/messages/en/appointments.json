@@ -1,0 +1,189 @@
+{
+  "page": {
+    "title": "Appointment Management",
+    "description": "You can manage your appointments here. You can create, edit, or delete appointments as needed.",
+    "newAppointment": "New Appointment"
+  },
+  "calendar": {
+    "locale": "en",
+    "today": "Today",
+    "views": {
+      "month": "Month",
+      "week": "Week",
+      "day": "Day",
+      "list": "List"
+    },
+    "monthView": {
+      "days": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      },
+      "more": "more"
+    },
+    "listView": {
+      "locale": "en",
+      "types": {
+        "local": "Main Office",
+        "home": "Home Visit",
+        "video": "Video Call"
+      },
+      "status": {
+        "confirmed": "Confirmed",
+        "pending": "Pending"
+      }
+    },
+    "dayView": {
+      "hour": "Hour",
+      "appointments": "Appointments"
+    },
+    "weekView": {
+      "locale": "en",
+      "timeLabel": "Time"
+    }
+  },
+  "form": {
+    "title": "Create Appointment",
+    "subtitle": "Select an existing patient or add a new one.",
+    "patient": {
+      "label": "Patient",
+      "placeholder": "Select a patient",
+      "searchPlaceholder": "Search for a patient...",
+      "noResults": "No patient found"
+    },
+    "date": "Date",
+    "cost": "Cost",
+    "motif": "Reason",
+    "note": "Note",
+    "location": {
+      "label": "Location",
+      "office": {
+        "title": "Main Office",
+        "desc": "Located downtown, equipped for all standard medical exams."
+      },
+      "home": {
+        "title": "Home Visit",
+        "desc": "Consultation at the patient’s home."
+      },
+      "video": {
+        "title": "Teleconsultation",
+        "desc": "Remote appointment via video or phone call."
+      }
+    },
+    "waitingRoom": "Add to waiting room",
+    "urgent": "Mark as urgent",
+    "cancel": "Cancel",
+    "submit": "Create appointment",
+    "placeholders": {
+      "cost": "Ex. 250 DH",
+      "motif": "Ex. Blood test",
+      "note": "Ex. Note"
+    },
+    "alerts": {
+      "fillAllFields": "Please fill all required fields.",
+      "success": "Appointment created successfully!",
+      "error": "Error while creating appointment."
+    }
+  },
+  "waitingRoom": {
+    "page": {
+      "title": "Interactive waiting room & consultation management",
+      "subtitle": "Select an existing patient or add a new one."
+    },
+    "drawer": {
+      "openButton": "Add to waiting room",
+      "title": "Add to waiting room",
+      "description": "From the appointment list, you can add a patient to the waiting room.",
+      "noAppointments": "No appointments found for today",
+      "createAppointment": "Create an appointment",
+      "hasAppointmentsContent": "Content to display if appointments exist",
+      "back": "Back",
+      "validate": "Validate"
+    },
+    "section": {
+      "noPatient": "No patient"
+    },
+    "card": {
+      "descriptionPlaceholder": "Description .....",
+      "consultations": "Consultations ({{current}}/{{total}})",
+      "updatedAt": "Updated {{time}}"
+    },
+    "patientTracking": {
+      "title": "Patients currently managed",
+      "subtitle": "Real-time tracking of active cases",
+      "statuses": {
+        "inConsultation": "In consultation",
+        "waitingRoom": "Waiting room",
+        "video": "Video appointments"
+      },
+      "labels": {
+        "descriptionPlaceholder": "Description .....",
+        "consultations": "Consultations ({{current}}/{{total}})",
+        "updated": "Updated {{time}}"
+      },
+      "motifs": {
+        "postOpFollowUp": "Post-operative follow-up",
+        "vertigo": "Vertigo",
+        "pregnancyFollowUp": "Pregnancy follow-up",
+        "bloodTest": "Blood test",
+        "anxiety": "Anxiety",
+        "scanResults": "Scan results",
+        "diabetesControl": "Diabetes control"
+      },
+      "locations": {
+        "mainOffice": "Main office",
+        "roomA": "Room A",
+        "roomB": "Room B",
+        "teleconsultation": "Teleconsultation - {{time}}"
+      },
+      "remarks": {
+        "inProgress": "Consultation in progress",
+        "patientArrived": "Patient arrived",
+        "waiting": "Waiting",
+        "arrived": "Arrived",
+        "scheduled": "Scheduled",
+        "toConfirm": "To confirm"
+      },
+      "updatedTimes": {
+        "minutesAgo": "{{count}} min ago",
+        "scheduledAt": "scheduled at {{time}}"
+      }
+    }
+  },
+  "history": {
+    "title": "Consultation History",
+    "subtitle": "Here you can view all your appointments and generate a report",
+    "generateReport": "Generate Report",
+    "filters": {
+      "date": "Date",
+      "type": "Consultation Type",
+      "status": "Status",
+      "paymentStatus": "Payment Status",
+      "allTypes": "All types",
+      "video": "Video call",
+      "phone": "Phone",
+      "inPerson": "In-person",
+      "all": "All",
+      "completed": "Completed",
+      "confirmed": "Confirmed",
+      "canceled": "Canceled",
+      "absent": "Absent",
+      "paid": "Paid",
+      "notPaid": "Not paid",
+      "select": "Select"
+    },
+    "table": {
+      "patient": "Patient",
+      "status": "Status",
+      "date": "Date",
+      "time": "Time",
+      "duration": "Duration",
+      "type": "Type",
+      "lastUpdated": "Last Updated"
+    }
+  }
+}

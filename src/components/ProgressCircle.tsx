@@ -29,8 +29,8 @@ const progressCircleVariants = tv({
         circle: "stroke-red-500 dark:stroke-red-500",
       },
       success: {
-        background: "stroke-emerald-200 dark:stroke-emerald-500/30",
-        circle: "stroke-emerald-500 dark:stroke-emerald-500",
+        background: "stroke-blue-200 dark:stroke-blue-500/30",
+        circle: "stroke-blue-500 dark:stroke-blue-500",
       },
     },
   },
@@ -41,7 +41,7 @@ const progressCircleVariants = tv({
 
 interface ProgressCircleProps
   extends Omit<React.SVGProps<SVGSVGElement>, "value">,
-    VariantProps<typeof progressCircleVariants> {
+  VariantProps<typeof progressCircleVariants> {
   value?: number
   max?: number
   showAnimation?: boolean
@@ -116,7 +116,7 @@ const ProgressCircle = React.forwardRef<SVGSVGElement, ProgressCircleProps>(
                 "transition-colors ease-linear",
                 circle(),
                 showAnimation &&
-                  "transform-gpu transition-all duration-300 ease-in-out",
+                "transform-gpu transition-all duration-300 ease-in-out",
               )}
             />
           ) : null}

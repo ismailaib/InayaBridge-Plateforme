@@ -1,9 +1,8 @@
-"use client"
+﻿"use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import invariant from "tiny-invariant"
 
-// Pragmatic DnD – element adapter helpers
 import {
   draggable,
   dropTargetForElements,
@@ -11,16 +10,53 @@ import {
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"
 import { attachClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge"
-
-// Utilities for reordering and moving items
 import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder"
 import { getReorderDestinationIndex } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index"
 
-// Icons
-import { ClockFading, SquareActivity } from "lucide-react"
+import { cx } from "@/lib/utils"
+import { useTranslations } from "@/lib/i18n/useTranslations"
+import { ClockFading, MonitorDot, SquareActivity } from "lucide-react"
 
-/* ---------- Types & Initial data ---------- */
-interface Patient {
+/* ---------- Types ---------- */
+
+type StatusKey = "consultation" | "waitingRoom" | "video"
+type MotifKey =
+  | "postOpFollowUp"
+  | "vertigo"
+  | "pregnancyFollowUp"
+  | "bloodTest"
+  | "anxiety"
+  | "scanResults"
+  | "diabetesControl"
+type RemarkKey =
+  | "inProgress"
+  | "arrived"
+  | "waiting"
+  | "scheduled"
+  | "toConfirm"
+
+type LocationInfo =
+  | { key: "mainOffice" | "roomA" | "roomB" }
+  | { key: "teleconsultation"; time: string }
+
+type UpdatedInfo =
+  | { type: "minutesAgo"; count: number }
+  | { type: "scheduledAt"; time: string }
+
+type IconComponent = (props: { className?: string }) => JSX.Element
+
+type BasePatient = {
+  id: string
+  name: string
+  motifKey: MotifKey
+  location: LocationInfo
+  remarkKey: RemarkKey
+  progressCurrent: number
+  progressTotal: number
+  updated: UpdatedInfo
+}
+
+type Patient = {
   id: string
   patient: string
   motif: string
@@ -31,93 +67,164 @@ interface Patient {
   misAJour: string
 }
 
-interface DataState {
-  consultation: Patient[]
-  salleAttente: Patient[]
-  visioconference: Patient[]
+type DataState = Record<StatusKey, Patient[]>
+
+type ColumnConfig = {
+  status: StatusKey
+  icon: IconComponent
+  iconColor: string
+  patients: BasePatient[]
 }
 
-const initialData: DataState = {
-  consultation: [
-    {
-      id: "patient-1",
-      patient: "Fatima El Amrani",
-      motif: "Suivi post‑opératoire",
-      lieu: "Cabinet principal",
-      remarque: "Consultation en cours",
-      progressionActuelle: 1,
-      progressionTotale: 2,
-      misAJour: "il y a 5 min",
-    },
-  ],
-  salleAttente: [
-    {
-      id: "patient-2",
-      patient: "Mohamed Lakhlifi",
-      motif: "Vertiges",
-      lieu: "Salle A",
-      remarque: "Patient arrivé",
-      progressionActuelle: 1,
-      progressionTotale: 2,
-      misAJour: "il y a 2 min",
-    },
-    {
-      id: "patient-3",
-      patient: "Zineb Rami",
-      motif: "Suivi de grossesse",
-      lieu: "Salle A",
-      remarque: "En attente",
-      progressionActuelle: 1,
-      progressionTotale: 1,
-      misAJour: "il y a 10 min",
-    },
-    {
-      id: "patient-4",
-      patient: "Amine Hafidi",
-      motif: "Bilan sanguin",
-      lieu: "Salle B",
-      remarque: "Arrivé",
-      progressionActuelle: 1,
-      progressionTotale: 1,
-      misAJour: "il y a 15 min",
-    },
-  ],
-  visioconference: [
-    {
-      id: "patient-5",
-      patient: "Soukaina Jebari",
-      motif: "Anxiété",
-      lieu: "Téléconsultation ‑ 17:00",
-      remarque: "En attente",
-      progressionActuelle: 0,
-      progressionTotale: 1,
-      misAJour: "prévu à 17:00",
-    },
-    {
-      id: "patient-6",
-      patient: "Omar El Idrissi",
-      motif: "Résultats scanner",
-      lieu: "Téléconsultation ‑ 18:30",
-      remarque: "Prévu",
-      progressionActuelle: 0,
-      progressionTotale: 1,
-      misAJour: "prévu à 18:30",
-    },
-    {
-      id: "patient-7",
-      patient: "Sofia Berrada",
-      motif: "Contrôle diabète",
-      lieu: "Téléconsultation ‑ 19:00",
-      remarque: "À confirmer",
-      progressionActuelle: 0,
-      progressionTotale: 1,
-      misAJour: "prévu à 19:00",
-    },
-  ],
+const STATUS_BADGE_STYLES: Record<StatusKey, string> = {
+  consultation:
+    "bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/20",
+  waitingRoom:
+    "bg-orange-50 text-orange-700 ring-orange-600/20 dark:bg-orange-400/10 dark:text-orange-400 dark:ring-orange-400/20",
+  video:
+    "bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/20",
 }
+
+const COLUMNS: ColumnConfig[] = [
+  {
+    status: "consultation",
+    icon: SquareActivity,
+    iconColor: "text-blue-500",
+    patients: [
+      {
+        id: "patient-1",
+        name: "Fatima El Amrani",
+        motifKey: "postOpFollowUp",
+        location: { key: "mainOffice" },
+        remarkKey: "inProgress",
+        progressCurrent: 1,
+        progressTotal: 2,
+        updated: { type: "minutesAgo", count: 5 },
+      },
+    ],
+  },
+  {
+    status: "waitingRoom",
+    icon: ClockFading,
+    iconColor: "text-orange-500",
+    patients: [
+      {
+        id: "patient-2",
+        name: "Mohamed Lakhlifi",
+        motifKey: "vertigo",
+        location: { key: "roomA" },
+        remarkKey: "arrived",
+        progressCurrent: 1,
+        progressTotal: 2,
+        updated: { type: "minutesAgo", count: 2 },
+      },
+      {
+        id: "patient-3",
+        name: "Zineb Rami",
+        motifKey: "pregnancyFollowUp",
+        location: { key: "roomA" },
+        remarkKey: "waiting",
+        progressCurrent: 1,
+        progressTotal: 1,
+        updated: { type: "minutesAgo", count: 10 },
+      },
+      {
+        id: "patient-4",
+        name: "Amine Hafidi",
+        motifKey: "bloodTest",
+        location: { key: "roomB" },
+        remarkKey: "arrived",
+        progressCurrent: 1,
+        progressTotal: 1,
+        updated: { type: "minutesAgo", count: 15 },
+      },
+    ],
+  },
+  {
+    status: "video",
+    icon: MonitorDot,
+    iconColor: "text-blue-500",
+    patients: [
+      {
+        id: "patient-5",
+        name: "Soukaina Jebari",
+        motifKey: "anxiety",
+        location: { key: "teleconsultation", time: "17:00" },
+        remarkKey: "waiting",
+        progressCurrent: 0,
+        progressTotal: 1,
+        updated: { type: "scheduledAt", time: "17:00" },
+      },
+      {
+        id: "patient-6",
+        name: "Omar El Idrissi",
+        motifKey: "scanResults",
+        location: { key: "teleconsultation", time: "18:30" },
+        remarkKey: "scheduled",
+        progressCurrent: 0,
+        progressTotal: 1,
+        updated: { type: "scheduledAt", time: "18:30" },
+      },
+      {
+        id: "patient-7",
+        name: "Sofia Berrada",
+        motifKey: "diabetesControl",
+        location: { key: "teleconsultation", time: "19:00" },
+        remarkKey: "toConfirm",
+        progressCurrent: 0,
+        progressTotal: 1,
+        updated: { type: "scheduledAt", time: "19:00" },
+      },
+    ],
+  },
+]
+
+const getLocationLabel = (
+  t: ReturnType<typeof useTranslations>,
+  location: LocationInfo,
+) => {
+  if (location.key === "teleconsultation") {
+    return t("locations.teleconsultation", { time: location.time })
+  }
+
+  return t(`locations.${location.key}`)
+}
+
+const getUpdatedLabel = (
+  t: ReturnType<typeof useTranslations>,
+  updated: UpdatedInfo,
+) => {
+  if (updated.type === "minutesAgo") {
+    return t("updatedTimes.minutesAgo", { count: updated.count })
+  }
+
+  return t("scheduled", { time: updated.time })
+}
+
+const toLocalizedPatient = (
+  patient: BasePatient,
+  t: ReturnType<typeof useTranslations>,
+) => ({
+  id: patient.id,
+  patient: patient.name,
+  motif: t(`motifs.${patient.motifKey}`),
+  lieu: getLocationLabel(t, patient.location),
+  remarque: t(`remarks.${patient.remarkKey}`),
+  progressionActuelle: patient.progressCurrent,
+  progressionTotale: patient.progressTotal,
+  misAJour: getUpdatedLabel(t, patient.updated),
+})
 
 /* ---------- Patient card ---------- */
-function PatientCard({ patient }: { patient: Patient }) {
+function PatientCard({
+  patient,
+  statusKey,
+  statusLabel,
+}: {
+  patient: Patient
+  statusKey: StatusKey
+  statusLabel: string
+}) {
   const ref = useRef<HTMLDivElement | null>(null)
   const [dragging, setDragging] = useState(false)
 
@@ -126,14 +233,12 @@ function PatientCard({ patient }: { patient: Patient }) {
     invariant(el)
 
     return combine(
-      // make the card *draggable*
       draggable({
         element: el,
         getInitialData: () => ({ type: "patient", id: patient.id }),
         onDragStart: () => setDragging(true),
         onDrop: () => setDragging(false),
       }),
-      // …and also a *drop target* (so we can drop above/below another card)
       dropTargetForElements({
         element: el,
         getData: ({ input, element }) =>
@@ -152,17 +257,22 @@ function PatientCard({ patient }: { patient: Patient }) {
   return (
     <div
       ref={ref}
-      className={`mb-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-all dark:border-gray-800 dark:bg-gray-900 ${
-        dragging ? "shadow-lg ring-2 ring-blue-500" : ""
-      }`}
+      className={cx(
+        "mb-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-all dark:border-gray-800 dark:bg-gray-900",
+        dragging && "shadow-lg ring-2 ring-blue-500",
+      )}
     >
-      {/* header */}
       <div className="flex items-center justify-between">
         <span className="font-medium text-gray-900 dark:text-white">
           {patient.patient}
         </span>
-        <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-          {patient.lieu}
+        <span
+          className={cx(
+            "rounded-full px-2.5 py-0.5 text-xs font-medium",
+            STATUS_BADGE_STYLES[statusKey],
+          )}
+        >
+          {statusLabel}
         </span>
       </div>
 
@@ -170,39 +280,50 @@ function PatientCard({ patient }: { patient: Patient }) {
         {patient.motif}
       </p>
 
-      {/* meta + progress bar */}
-      <div className="mt-4">
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-gray-500 dark:text-gray-400">
-            {patient.remarque}
-          </span>
-          <span className="text-gray-500 dark:text-gray-400">
-            {patient.misAJour}
-          </span>
-        </div>
-        <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
-          <div
-            style={{ width: `${progress}%` }}
-            className="h-full rounded-full bg-blue-500 dark:bg-blue-400"
-          />
-        </div>
+      <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+        {patient.lieu}
+      </div>
+
+      <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        {patient.remarque}
+      </div>
+
+      <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+        {patient.misAJour}
+      </div>
+
+      <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+        <div
+          style={{ width: `${progress}%` }}
+          className="h-full rounded-full bg-blue-500 dark:bg-blue-400"
+        />
       </div>
     </div>
   )
 }
 
 /* ---------- Column / Section ---------- */
-function Section(props: {
-  id: keyof DataState
+function Section({
+  id,
+  title,
+  statusKey,
+  statusLabel,
+  icon: Icon,
+  iconColor,
+  items,
+}: {
+  id: StatusKey
   title: string
-  icon: any
+  statusKey: StatusKey
+  statusLabel: string
+  icon: IconComponent
+  iconColor: string
   items: Patient[]
 }) {
-  const { id, title, icon: Icon, items } = props
   const ref = useRef<HTMLDivElement | null>(null)
   const [highlight, setHighlight] = useState(false)
+  const sectionTranslations = useTranslations("appointments.waitingRoom.section")
 
-  // register column as a drop target
   useEffect(() => {
     const el = ref.current
     invariant(el)
@@ -220,22 +341,32 @@ function Section(props: {
   return (
     <div
       ref={ref}
-      className={`rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-950 ${
-        highlight ? "bg-blue-50 dark:bg-blue-900/10" : ""
-      }`}
+      className={cx(
+        "rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-950",
+        highlight && "bg-blue-50 dark:bg-blue-900/10",
+      )}
     >
-      {/* column header */}
       <div className="mb-4 flex items-center gap-2">
-        <Icon className="h-5 w-5 text-blue-500 dark:text-blue-400" />
+        <Icon className={cx("h-5 w-5", iconColor)} />
         <h3 className="font-semibold text-gray-900 dark:text-white">{title}</h3>
         <span className="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
           {items.length}
         </span>
       </div>
 
-      {/* all cards */}
-      {items.map((p) => (
-        <PatientCard key={p.id} patient={p} />
+      {items.length === 0 && (
+        <div className="flex h-48 items-center justify-center text-sm text-gray-500 dark:text-gray-400">
+          {sectionTranslations("noPatient")}
+        </div>
+      )}
+
+      {items.map((patient) => (
+        <PatientCard
+          key={patient.id}
+          patient={patient}
+          statusKey={statusKey}
+          statusLabel={statusLabel}
+        />
       ))}
     </div>
   )
@@ -243,11 +374,38 @@ function Section(props: {
 
 /* ---------- Main board ---------- */
 export default function CardsView() {
-  const [data, setData] = useState<DataState>(initialData)
+  const t = useTranslations("appointments.waitingRoom.patientTracking")
 
-  /* -- helpers --------------------------------------------------------- */
+  const localizedInitialData = useMemo<DataState>(() => {
+    return COLUMNS.reduce((acc, column) => {
+      acc[column.status] = column.patients.map((patient) =>
+        toLocalizedPatient(patient, t),
+      )
+      return acc
+    }, {
+      consultation: [],
+      waitingRoom: [],
+      video: [],
+    } as DataState)
+  }, [t])
+
+  const statusLabels = useMemo(
+    () => ({
+      consultation: t("statuses.inConsultation"),
+      waitingRoom: t("statuses.waitingRoom"),
+      video: t("statuses.video"),
+    }),
+    [t],
+  )
+
+  const [data, setData] = useState<DataState>(localizedInitialData)
+
+  useEffect(() => {
+    setData(localizedInitialData)
+  }, [localizedInitialData])
+
   const reorderCard = useCallback(
-    (columnId: keyof DataState, startIndex: number, finishIndex: number) => {
+    (columnId: StatusKey, startIndex: number, finishIndex: number) => {
       const updated = reorder({
         list: data[columnId],
         startIndex,
@@ -266,8 +424,8 @@ export default function CardsView() {
       destinationIndex,
     }: {
       cardId: string
-      sourceColumn: keyof DataState
-      destinationColumn: keyof DataState
+      sourceColumn: StatusKey
+      destinationColumn: StatusKey
       destinationIndex: number
     }) => {
       const card = data[sourceColumn].find((c) => c.id === cardId)
@@ -287,41 +445,33 @@ export default function CardsView() {
     [data],
   )
 
-  /* -- global drop monitor -------------------------------------------- */
   useEffect(() => {
     return monitorForElements({
       onDrop: ({ source, location }) => {
-        // No destination? abort.
         if (!location.current.dropTargets.length) return
 
         const draggedId = source.data.id as string
 
-        // Find which column the card is coming from
-        let sourceColumnId: keyof DataState | null = null
-
-        // Check each column to find which one contains the dragged card
-        for (const column of Object.keys(data) as Array<keyof DataState>) {
+        let sourceColumnId: StatusKey | null = null
+        for (const column of Object.keys(data) as StatusKey[]) {
           if (data[column].some((item) => item.id === draggedId)) {
             sourceColumnId = column
             break
           }
         }
 
-        // If we couldn't find the source column, abort
         if (!sourceColumnId) return
 
         const startIndex = data[sourceColumnId].findIndex(
-          (p) => p.id === draggedId,
+          (patient) => patient.id === draggedId,
         )
 
-        // ── Only one drop target → dropped in empty space  ───────────
         if (location.current.dropTargets.length === 1) {
           const [destColumnTarget] = location.current.dropTargets
           const destinationColumnId = destColumnTarget.data
-            .columnId as keyof DataState
+            .columnId as StatusKey
 
           if (sourceColumnId === destinationColumnId) {
-            // reorder inside same column
             const finishIndex = getReorderDestinationIndex({
               startIndex,
               indexOfTarget: data[sourceColumnId].length - 1,
@@ -330,7 +480,6 @@ export default function CardsView() {
             })
             reorderCard(sourceColumnId, startIndex, finishIndex)
           } else {
-            // move to bottom of another column
             moveCard({
               cardId: draggedId,
               sourceColumn: sourceColumnId,
@@ -341,24 +490,23 @@ export default function CardsView() {
           return
         }
 
-        /* Two drop targets (card + column) → dropped on another card  */
         const [cardTarget, columnTarget] = location.current.dropTargets
-        const destColumnId = columnTarget.data.columnId as keyof DataState
+        const destinationColumnId = columnTarget.data.columnId as StatusKey
         const { closestEdge } = cardTarget.data
-        const indexOfTarget = data[destColumnId].findIndex(
-          (p) => p.id === cardTarget.data.id,
+        const indexOfTarget = data[destinationColumnId].findIndex(
+          (patient) => patient.id === cardTarget.data.id,
         )
 
         const finishIndex =
           closestEdge === "bottom" ? indexOfTarget + 1 : indexOfTarget
 
-        if (sourceColumnId === destColumnId) {
-          reorderCard(destColumnId, startIndex, finishIndex)
+        if (sourceColumnId === destinationColumnId) {
+          reorderCard(destinationColumnId, startIndex, finishIndex)
         } else {
           moveCard({
             cardId: draggedId,
             sourceColumn: sourceColumnId,
-            destinationColumn: destColumnId,
+            destinationColumn: destinationColumnId,
             destinationIndex: finishIndex,
           })
         }
@@ -366,23 +514,22 @@ export default function CardsView() {
     })
   }, [data, reorderCard, moveCard])
 
-  /* -- render ---------------------------------------------------------- */
   return (
     <div className="mt-6">
       <div className="rounded-b-md bg-white dark:bg-gray-950">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-2">
-          <Section
-            id="consultation"
-            title="En consultation"
-            icon={SquareActivity}
-            items={data.consultation}
-          />
-          <Section
-            id="salleAttente"
-            title="Salle d'attente"
-            icon={ClockFading}
-            items={data.salleAttente}
-          />
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+          {COLUMNS.map((column) => (
+            <Section
+              key={column.status}
+              id={column.status}
+              title={statusLabels[column.status]}
+              statusKey={column.status}
+              statusLabel={statusLabels[column.status]}
+              icon={column.icon}
+              iconColor={column.iconColor}
+              items={data[column.status]}
+            />
+          ))}
         </div>
       </div>
     </div>

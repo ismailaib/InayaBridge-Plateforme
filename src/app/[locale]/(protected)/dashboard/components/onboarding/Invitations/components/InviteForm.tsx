@@ -2,11 +2,11 @@ import { sendInvitation, SendInvitation } from "@/api/invitations";
 import { Button } from "@/components/Button";
 import { DialogDescription, DialogHeader, DialogTitle } from "@/components/Dialog";
 import { Input } from "@/components/Input";
+import useTranslations from "@/lib/i18n/useTranslations";
 import { UserRoundPlus } from "lucide-react";
 import React, { useCallback, useState } from "react";
 import { TOAST_MESSAGE_KEYS } from "../../../../hooks/constants";
 import { showToast, validateEmail } from "../../../../hooks/utils";
-import useTranslations from "@/lib/i18n/useTranslations";
 
 interface InviteFormProps {
   tenantId: string;
@@ -89,7 +89,7 @@ export const InviteForm: React.FC<InviteFormProps> = ({ tenantId, onSuccess, onI
       <div>
         <DialogHeader>
           <DialogTitle className="text-base flex items-center">
-            <UserRoundPlus className="w-5 h-5 mr-2 text-emerald-500" />
+            <UserRoundPlus className="w-5 h-5 mr-2 text-blue-500" />
             {t("form.title")}
           </DialogTitle>
           <DialogDescription className="mt-1 text-sm/6">
@@ -113,7 +113,7 @@ export const InviteForm: React.FC<InviteFormProps> = ({ tenantId, onSuccess, onI
     <div>
       <DialogHeader>
         <DialogTitle className="text-base flex items-center">
-          <UserRoundPlus className="w-5 h-5 mx-2 text-emerald-500" />
+          <UserRoundPlus className="w-5 h-5 mx-2 text-blue-500" />
           {t("form.title")}
         </DialogTitle>
         <DialogDescription className="mt-1 text-sm/6">

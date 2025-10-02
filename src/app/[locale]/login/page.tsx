@@ -1,23 +1,23 @@
 ﻿"use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { login as loginApi } from "@/api/login";
+import { Conditions } from "@/app/Conditions";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
+import { extractApiError } from "@/helpers/extractApiError";
+import { useAuth } from "@/lib/auth-context";
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { useToast } from "@/lib/useToast";
+import { useUserStore } from "@/store/useAuthStore";
 import { RiArrowRightSLine } from "@remixicon/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import logo from "../../icon-logo.png";
-import { login as loginApi } from "@/api/login";
-import { useAuth } from "@/lib/auth-context";
-import { useUserStore } from "@/store/useAuthStore";
-import { useToast } from "@/lib/useToast";
-import { extractApiError } from "@/helpers/extractApiError";
-import { Conditions } from "@/app/Conditions";
-import { useTranslations } from "@/lib/i18n/useTranslations";
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
 
 export default function LoginPage() {
   const t = useTranslations("auth");
@@ -112,7 +112,7 @@ export default function LoginPage() {
               animate={{ opacity: 1, y: 0 }}
               className="relative w-fit rounded-xl bg-gray-50 p-4 shadow-md shadow-black/10 ring-1 ring-black/10 dark:bg-gray-900 dark:ring-gray-800"
             >
-              <div className="w-fit rounded-lg bg-gradient-to-b from-[#00b38fdc] to-[#00b38f] p-3 ring-1 ring-white/25">
+              <div className="w-fit rounded-lg bg-gradient-to-b from-[#3b82f6dc] to-[#3b82f6] p-3 ring-1 ring-white/25">
                 <Image src={logo} alt="InayaBridge Logo" width={24} height={24} />
               </div>
             </motion.div>
@@ -195,7 +195,7 @@ export default function LoginPage() {
               </p>
             </div>
 
-            <div className="relative mt-6 h-64 max-w-[450px] overflow-hidden rounded-xl bg-gradient-to-br from-[#00b38f]/80 to-[#1ec9a8]/20 p-6 shadow-lg shadow-black/10">
+            <div className="relative mt-6 h-64 max-w-[450px] overflow-hidden rounded-xl bg-gradient-to-br from-[#3b82f6]/80 to-[#3b82f6]/20 p-6 shadow-lg shadow-black/10">
               <div className="flex h-full flex-col justify-between text-white">
                 <p className="text-2xl font-semibold">{t("aside.releaseName")}</p>
                 <p className="text-lg">{t("aside.releaseYear")}</p>
@@ -204,7 +204,7 @@ export default function LoginPage() {
 
             <Link
               href={`/${locale}/changelog`}
-              className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-[#00b38f] hover:underline hover:underline-offset-4"
+              className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-[#3b82f6] hover:underline hover:underline-offset-4"
             >
               {t("aside.discover")}
               <RiArrowRightSLine className="size-5 shrink-0" aria-hidden="true" />

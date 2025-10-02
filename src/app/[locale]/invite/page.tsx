@@ -1,18 +1,18 @@
 "use client";
 
 import { acceptInvitations, getInvitation } from "@/api/invitations";
+import { getTenant } from "@/api/tenant";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
-import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "@/lib/useToast";
+import { AnimatePresence, motion } from "framer-motion";
+import { AlertCircle, CheckCircle2, Clock, Loader2, MailCheck, Shield, UserCheck, Users } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import logo from "../../icon-logo.png";
-import { MailCheck, AlertCircle, CheckCircle2, Clock, UserCheck, Loader2, Shield, Users } from "lucide-react";
-import { getTenant } from "@/api/tenant";
-import { toast } from "@/lib/useToast";
 
 // Types
 interface Invitation {
@@ -71,7 +71,7 @@ export default function InvitePage() {
       try {
         const invitationRes = await getInvitation(token ?? "");
         const invitationData = invitationRes.data;
-        
+
         setInvitation(invitationData);
 
         // Handle different invitation statuses
@@ -156,7 +156,7 @@ export default function InvitePage() {
         },
         token ?? ""
       );
-      
+
       setSuccess(true);
       toast({
         title: "Compte créé avec succès !",
@@ -170,7 +170,7 @@ export default function InvitePage() {
     } catch (err: any) {
       console.error("Erreur lors de l'acceptation de l'invitation:", err);
       setError(
-        err?.response?.data?.message || 
+        err?.response?.data?.message ||
         "Impossible d'accepter l'invitation. Veuillez réessayer."
       );
     } finally {
@@ -200,8 +200,8 @@ export default function InvitePage() {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900">
-            <Loader2 className="h-8 w-8 animate-spin text-emerald-600 dark:text-emerald-400" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
           </div>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
             Chargement de l&apos;invitation...
@@ -230,7 +230,7 @@ export default function InvitePage() {
           <p className="text-sm text-red-600 dark:text-red-400 mb-6 max-w-md">
             {error}
           </p>
-          <Button 
+          <Button
             onClick={() => router.push("/login")}
             variant="secondary"
           >
@@ -250,13 +250,13 @@ export default function InvitePage() {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
-            <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900">
+            <CheckCircle2 className="h-8 w-8 text-blue-600 dark:text-blue-400" />
           </div>
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
             Bienvenue dans InayaBridge !
           </h2>
-          <p className="text-sm text-green-600 dark:text-green-400 mb-4">
+          <p className="text-sm text-blue-600 dark:text-blue-400 mb-4">
             Votre compte a été créé avec succès
           </p>
           <p className="text-xs text-gray-500">
@@ -284,15 +284,15 @@ export default function InvitePage() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="relative w-fit rounded-xl bg-white p-4 shadow-lg shadow-emerald-500/10 ring-1 ring-emerald-500/20 dark:bg-gray-900 dark:shadow-emerald-400/5 dark:ring-emerald-400/20"
+                className="relative w-fit rounded-xl bg-white p-4 shadow-lg shadow-blue-500/10 ring-1 ring-blue-500/20 dark:bg-gray-900 dark:shadow-blue-400/5 dark:ring-blue-400/20"
               >
                 {/* Decorative dots */}
-                <div className="absolute left-[9%] top-[9%] size-1 rounded-full bg-emerald-200 dark:bg-emerald-800" />
-                <div className="absolute right-[9%] top-[9%] size-1 rounded-full bg-emerald-200 dark:bg-emerald-800" />
-                <div className="absolute bottom-[9%] left-[9%] size-1 rounded-full bg-emerald-200 dark:bg-emerald-800" />
-                <div className="absolute bottom-[9%] right-[9%] size-1 rounded-full bg-emerald-200 dark:bg-emerald-800" />
-                
-                <div className="rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 p-3 shadow-md">
+                <div className="absolute left-[9%] top-[9%] size-1 rounded-full bg-blue-200 dark:bg-blue-800" />
+                <div className="absolute right-[9%] top-[9%] size-1 rounded-full bg-blue-200 dark:bg-blue-800" />
+                <div className="absolute bottom-[9%] left-[9%] size-1 rounded-full bg-blue-200 dark:bg-blue-800" />
+                <div className="absolute bottom-[9%] right-[9%] size-1 rounded-full bg-blue-200 dark:bg-blue-800" />
+
+                <div className="rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 p-3 shadow-md">
                   <Image src={logo} alt="InayaBridge Logo" width={28} height={28} />
                 </div>
               </motion.div>
@@ -308,8 +308,8 @@ export default function InvitePage() {
               Vous êtes invité à rejoindre
             </h1>
             <div className="flex items-center justify-center gap-2 mb-4">
-              <Users className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-              <span className="text-xl font-semibold text-emerald-600 dark:text-emerald-400">
+              <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <span className="text-xl font-semibold text-blue-600 dark:text-blue-400">
                 {tenant?.name}
               </span>
             </div>
@@ -331,7 +331,7 @@ export default function InvitePage() {
           <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl ring-1 ring-gray-200/50 dark:bg-gray-900/80 dark:ring-gray-800/50">
             <div className="p-8">
               <div className="flex items-center gap-2 mb-6">
-                <UserCheck className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                <UserCheck className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                   Créer votre compte
                 </h2>
@@ -465,9 +465,9 @@ export default function InvitePage() {
                 </div>
 
                 {/* Submit Button */}
-                <Button 
-                  type="submit" 
-                  className="w-full h-12 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white shadow-lg hover:shadow-xl transition-all duration-200" 
+                <Button
+                  type="submit"
+                  className="w-full h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-200"
                   disabled={submitting}
                 >
                   {submitting ? (

@@ -1,9 +1,9 @@
 "use client"
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
+import { useTranslations } from "@/lib/i18n/useTranslations"
 import Balancer from "react-wrap-balancer"
 import { Button } from "../Button"
 import { Input } from "../Input"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
 
 export default function Cta() {
   const t = useTranslations("cta")
@@ -27,7 +27,7 @@ export default function Cta() {
                 <div className="flex size-full gap-2">
                   {Array.from({ length: 41 }, (_, idx2) => (
                     <div key={`inner-${idx}-${idx2}`}>
-                      <div className="size-5 rounded-md shadow shadow-[#00b38f]/20 ring-1 ring-black/5 dark:shadow-[#00b38f]/20 dark:ring-white/5"></div>
+                      <div className="size-5 rounded-md shadow shadow-[#3b82f6]/20 ring-1 ring-black/5 dark:shadow-[#3b82f6]/20 dark:ring-white/5"></div>
                     </div>
                   ))}
                 </div>
@@ -49,7 +49,7 @@ export default function Cta() {
               </p>
             </div>
             <div className="mt-14 w-full rounded-[16px] bg-gray-300/5 p-1.5 ring-1 ring-black/[3%] backdrop-blur dark:bg-gray-900/10 dark:ring-white/[3%]">
-              <div className="rounded-xl bg-white p-4 shadow-lg shadow-[#00b38f]/10 ring-1 ring-black/5 dark:bg-gray-950 dark:shadow-[#00b38f]/10 dark:ring-white/5">
+              <div className="rounded-xl bg-white p-4 shadow-lg shadow-[#3b82f6]/10 ring-1 ring-black/5 dark:bg-gray-950 dark:shadow-[#3b82f6]/10 dark:ring-white/5">
                 <form
                   className="flex flex-col items-center gap-3 sm:flex-row"
                   onSubmit={(e) => e.preventDefault()}

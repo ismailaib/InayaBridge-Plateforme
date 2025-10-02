@@ -7,8 +7,8 @@ import {
   RiFileTextLine,
 } from '@remixicon/react';
 
-import { ProgressBar } from '@/components/ProgressBar';
 import { Card } from '@/components/Card';
+import { ProgressBar } from '@/components/ProgressBar';
 
 export default function Example() {
   return (
@@ -27,7 +27,7 @@ export default function Example() {
               <p>Drag and drop or</p>
               <label
                 htmlFor="file-upload-5"
-                className="relative cursor-pointer rounded-md pl-1 font-medium text-emerald-500 hover:underline hover:underline-offset-4 dark:text-emerald-500"
+                className="relative cursor-pointer rounded-md pl-1 font-medium text-blue-500 hover:underline hover:underline-offset-4 dark:text-blue-500"
               >
                 <span>choose file</span>
                 <input

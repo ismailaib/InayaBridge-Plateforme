@@ -1,8 +1,8 @@
 "use client"
 
 import {
-  RiFileHistoryFill,
   RiCheckDoubleFill,
+  RiFileHistoryFill,
   RiTestTubeFill,
 } from "@remixicon/react"
 
@@ -27,7 +27,7 @@ const data = [
     name: "Consultations clôturées",
     value: 48,
     icon: RiCheckDoubleFill,
-    iconColor: "text-emerald-500 dark:text-emerald-500",
+    iconColor: "text-blue-500 dark:text-blue-500",
     tooltip: "Consultations terminées et enregistrées comme complètes.",
   },
   {
@@ -41,7 +41,7 @@ const data = [
     name: "Diagnostics validés",
     value: 31,
     icon: RiCheckDoubleFill,
-    iconColor: "text-emerald-500 dark:text-emerald-500",
+    iconColor: "text-blue-500 dark:text-blue-500",
     tooltip: "Cas médicaux ayant reçu un diagnostic confirmé.",
   },
 ]
@@ -63,13 +63,13 @@ export default function DoctorAnalyticsSection() {
 
         <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-2">
           <div>
-              <CategoryBar values={[12, 48]} colors={["cyan", "emerald"]} showLabels={false} />
+            <CategoryBar values={[12, 48]} colors={["cyan", "blue"]} showLabels={false} />
             <p className="mt-2 text-sm text-gray-900 dark:text-gray-50">
               <span className="font-semibold">12</span> consultations de suivi programmées
             </p>
           </div>
           <div>
-              <CategoryBar values={[9, 31]} colors={["cyan", "emerald"]} showLabels={false} />
+            <CategoryBar values={[9, 31]} colors={["cyan", "blue"]} showLabels={false} />
             <p className="mt-2 text-sm text-gray-900 dark:text-gray-50">
               <span className="font-semibold">9</span> diagnostics en attente d’évaluation
             </p>

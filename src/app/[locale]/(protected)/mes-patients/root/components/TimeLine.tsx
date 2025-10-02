@@ -1,21 +1,21 @@
 "use client";
 
-import { useState } from 'react';
 import {
-  RiCheckLine,
   RiAddLine,
+  RiCheckLine,
+  RiCloseLine,
   RiDeleteBin6Line,
   RiSaveLine,
-  RiCloseLine,
 } from '@remixicon/react';
+import { useState } from 'react';
 
-import { cx } from '@/lib/utils';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs';
-import { FileCheck2, Phone, User, Heart, Shield, AlertTriangle, Pill, Activity } from 'lucide-react';
-import jsPDF from 'jspdf';
 import axios from '@/lib/axios';
+import { cx } from '@/lib/utils';
+import jsPDF from 'jspdf';
+import { Activity, AlertTriangle, FileCheck2, Heart, Phone, Pill, Shield, User } from 'lucide-react';
 
 interface Patient {
   id?: number;
@@ -52,14 +52,14 @@ interface MedicalHistoryEntry {
   type: 'allergy' | 'condition' | 'chronic' | 'medication';
 }
 
-const PatientHistorySidebar = ({ 
-  patient, 
+const PatientHistorySidebar = ({
+  patient,
   onPatientUpdate,
-  onSuccess 
-}: { 
+  onSuccess
+}: {
   patient: Patient | null;
   onPatientUpdate?: (updatedPatient: Patient) => void;
-  onSuccess?: () => void 
+  onSuccess?: () => void
 }) => {
   const [isAddingEntry, setIsAddingEntry] = useState(false);
   const [newEntry, setNewEntry] = useState<{
@@ -106,7 +106,7 @@ const PatientHistorySidebar = ({
 
     doc.setFontSize(10);
     doc.setFont('Elvetica', 'normal');
-    
+
     const personalInfo = [
       `Nom complet: ${patient.first_name || ''} ${patient.last_name || ''}`,
       `CIN: ${patient.cin || 'N/A'}`,
@@ -130,7 +130,7 @@ const PatientHistorySidebar = ({
       doc.setFont('Elvetica', 'bold');
       doc.text('CONTACT D\'URGENCE', margin, yPosition);
       yPosition += lineHeight;
-      
+
       doc.setFontSize(10);
       doc.setFont('Elvetica', 'normal');
       doc.text(`Relation: ${patient.contact_urgence.relation}`, margin, yPosition);
@@ -145,7 +145,7 @@ const PatientHistorySidebar = ({
       doc.setFont('Elvetica', 'bold');
       doc.text('HISTORIQUE MÉDICAL', margin, yPosition);
       yPosition += lineHeight;
-      
+
       doc.setFontSize(10);
       doc.setFont('Elvetica', 'normal');
 
@@ -201,7 +201,7 @@ const PatientHistorySidebar = ({
       doc.setFont('Elvetica', 'bold');
       doc.text('DOCUMENTS', margin, yPosition);
       yPosition += lineHeight;
-      
+
       doc.setFontSize(10);
       doc.setFont('Elvetica', 'normal');
       patient.documents.forEach(doc_item => {
@@ -258,7 +258,7 @@ const PatientHistorySidebar = ({
     }
   };
 
-  const handleDeleteMedicalEntry = async (category: string, index: number ) => {
+  const handleDeleteMedicalEntry = async (category: string, index: number) => {
     if (!patient.id) return;
 
     const updatedMedicalHistory = { ...medicalHistory };
@@ -348,7 +348,7 @@ const PatientHistorySidebar = ({
       case 'chronic':
         return <Activity className="size-5 text-orange-500" />;
       case 'medication':
-        return <Pill className="size-5 text-green-500" />;
+        return <Pill className="size-5 text-blue-500" />;
       default:
         return <RiCheckLine className="size-5 text-gray-500" />;
     }
@@ -363,7 +363,7 @@ const PatientHistorySidebar = ({
       case 'chronic':
         return 'text-orange-600 dark:text-orange-400';
       case 'medication':
-        return 'text-green-600 dark:text-green-400';
+        return 'text-blue-600 dark:text-blue-400';
       default:
         return 'text-gray-600 dark:text-gray-400';
     }
@@ -372,25 +372,25 @@ const PatientHistorySidebar = ({
   const timelineEntries = renderMedicalHistoryTimeline();
 
   const getPatientInfo = () => [
-    { 
-      label: 'Informations personnelles', 
-      value: 'Complètes', 
-      icon: <User className="size-4 text-blue-500" /> 
+    {
+      label: 'Informations personnelles',
+      value: 'Complètes',
+      icon: <User className="size-4 text-blue-500" />
     },
-    { 
-      label: 'Contact d\'urgence', 
-      value: patient.contact_urgence ? 'Configuré' : 'Non configuré', 
-      icon: <Phone className="size-4 text-green-500" /> 
+    {
+      label: 'Contact d\'urgence',
+      value: patient.contact_urgence ? 'Configuré' : 'Non configuré',
+      icon: <Phone className="size-4 text-blue-500" />
     },
-    { 
-      label: 'Groupe sanguin', 
-      value: patient.blood_type || 'Non spécifié', 
-      icon: <Heart className="size-4 text-red-500" /> 
+    {
+      label: 'Groupe sanguin',
+      value: patient.blood_type || 'Non spécifié',
+      icon: <Heart className="size-4 text-red-500" />
     },
-    { 
-      label: 'Documents', 
-      value: `${patient.documents?.length || 0} document(s)`, 
-      icon: <Shield className="size-4 text-purple-500" /> 
+    {
+      label: 'Documents',
+      value: `${patient.documents?.length || 0} document(s)`,
+      icon: <Shield className="size-4 text-purple-500" />
     }
   ];
 
@@ -470,17 +470,17 @@ const PatientHistorySidebar = ({
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm h-16 dark:border-gray-600 dark:bg-gray-800"
                   />
                   <div className="flex gap-2">
-                    <Button onClick={handleAddMedicalEntry}   className="h-8">
+                    <Button onClick={handleAddMedicalEntry} className="h-8">
                       <RiSaveLine className="size-4 mr-1" />
                       Sauvegarder
                     </Button>
-                    <Button 
+                    <Button
                       onClick={() => {
                         setIsAddingEntry(false);
                         setNewEntry({ category: 'allergies', title: '', description: '', dosage: '' });
                       }}
-                        
-                      variant="secondary" 
+
+                      variant="secondary"
                       className="h-8"
                     >
                       <RiCloseLine className="size-4 mr-1" />
@@ -520,9 +520,9 @@ const PatientHistorySidebar = ({
                             )}>
                               {entry.title}
                               <span className="ml-2 text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                                {entry.type === 'allergy' ? 'Allergie' : 
-                                 entry.type === 'condition' ? 'Antécédent' :
-                                 entry.type === 'chronic' ? 'Chronique' : 'Médicament'}
+                                {entry.type === 'allergy' ? 'Allergie' :
+                                  entry.type === 'condition' ? 'Antécédent' :
+                                    entry.type === 'chronic' ? 'Chronique' : 'Médicament'}
                               </span>
                             </p>
                             <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
@@ -532,7 +532,7 @@ const PatientHistorySidebar = ({
                           <div className="flex gap-1 ml-2">
                             <Button
                               onClick={() => handleDeleteMedicalEntry(entry.category, parseInt(categoryIndex))}
-                               
+
                               variant="ghost"
                               className="h-6 w-6 p-0 text-red-500 hover:text-red-600"
                             >
@@ -546,7 +546,7 @@ const PatientHistorySidebar = ({
                 );
               })}
             </ul>
-            
+
             {timelineEntries.length === 0 && !isAddingEntry && (
               <p className="text-center text-sm text-gray-500 dark:text-gray-400 py-8">
                 Aucun historique médical disponible. Cliquez sur Ajouter pour créer une entrée.
@@ -592,14 +592,14 @@ const PatientHistorySidebar = ({
                   </p>
                 </div>
               )}
-              
+
               {medicalHistory.current_medications && medicalHistory.current_medications.length > 0 && (
-                <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-md">
-                  <h5 className="text-sm font-medium text-green-800 dark:text-green-400 flex items-center gap-2">
+                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
+                  <h5 className="text-sm font-medium text-blue-800 dark:text-blue-400 flex items-center gap-2">
                     <Pill className="size-4" />
                     Médicaments Actuels ({medicalHistory.current_medications.length})
                   </h5>
-                  <div className="text-sm text-green-600 dark:text-green-300">
+                  <div className="text-sm text-blue-600 dark:text-blue-300">
                     {medicalHistory.current_medications.map((med, idx) => (
                       <div key={idx}>{med.name} - {med.dosage}</div>
                     ))}

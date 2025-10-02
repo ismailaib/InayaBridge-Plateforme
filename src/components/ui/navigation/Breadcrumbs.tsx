@@ -5,12 +5,14 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Fragment } from "react"
 
+const LOCALES = ["ar", "en", "fr"] // add your supported locales here
+
 export function Breadcrumbs() {
   const pathname = usePathname()
 
   const segments = pathname
     .split("/")
-    .filter((segment) => segment.length > 0)
+    .filter((segment) => segment.length > 0 && !LOCALES.includes(segment))
 
   const breadcrumbItems = segments.map((segment, index) => {
     const href = "/" + segments.slice(0, index + 1).join("/")

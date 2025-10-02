@@ -62,6 +62,7 @@ const TimeSegment = ({ segment, state }: TimeSegmentProps) => {
     <div
       {...segmentProps}
       ref={ref}
+      style={{ direction: "ltr" }}
       className={cx(
         // base
         "relative block w-full appearance-none rounded-md border px-2.5 py-1.5 text-left uppercase tabular-nums shadow-xs outline-hidden transition sm:text-sm",
@@ -163,6 +164,7 @@ const triggerStyles = tv({
     // invalid (optional)
     // "dark:aria-invalid:ring-red-400/20 aria-invalid:ring-2 aria-invalid:ring-red-200 aria-invalid:border-red-500 invalid:ring-2 invalid:ring-red-200 invalid:border-red-500"
   ],
+  
   variants: {
     hasError: {
       true: hasErrorInput,
@@ -187,6 +189,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, TriggerProps>(
           ref={forwardedRef}
           className={cx(triggerStyles({ hasError }), className)}
           {...props}
+          style={{ direction: "ltr" }}
         >
           <RiCalendar2Fill className="size-5 shrink-0 text-gray-400 dark:text-gray-600" />
           <span className="flex-1 overflow-hidden text-left text-ellipsis whitespace-nowrap text-gray-900 dark:text-gray-50">
@@ -222,6 +225,7 @@ const CalendarPopover = React.forwardRef<
         align={align}
         avoidCollisions
         onOpenAutoFocus={(e) => e.preventDefault()}
+        style={{ direction: "ltr" }}
         className={cx(
           // base
           "relative z-50 w-fit rounded-md border text-sm shadow-xl shadow-black/[2.5%]",
@@ -350,7 +354,7 @@ const PresetContainer = <TPreset extends Preset, TValue>({
   }
 
   return (
-    <ul className="flex items-start gap-x-2 sm:flex-col">
+    <ul className="flex items-start gap-x-2 sm:flex-col" style={{ direction: "ltr" }}>
       {presets.map((preset) => {
         return (
           <li key={`preset-${preset.label}`} className="sm:w-full sm:py-px">
@@ -461,6 +465,7 @@ interface SingleProps extends Omit<PickerProps, "translations"> {
 }
 
 const SingleDatePicker = ({
+  
   defaultValue,
   value,
   onChange,
@@ -609,7 +614,7 @@ const SingleDatePicker = ({
         {formattedDate}
       </Trigger>
       <CalendarPopover align={align}>
-        <div className="flex">
+        <div className="flex" style={{ direction: "ltr" }}>
           <div className="flex flex-col sm:flex-row sm:items-start">
             {presets && presets.length > 0 && (
               <div

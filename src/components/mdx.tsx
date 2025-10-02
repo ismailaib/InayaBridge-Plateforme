@@ -81,7 +81,7 @@ export const Bold = (props: React.HTMLAttributes<HTMLSpanElement>) => (
 export function CustomLink(props: any) {
   let href = props.href
   const style =
-    "text-[#009e7f] font-medium hover:text-[#00b38f] dark:text-[#00b38f] hover:dark:text-[#33ccad]"
+    "text-[#3b82f6] font-medium hover:text-[#3b82f6] dark:text-[#3b82f6] hover:dark:text-[#3b82f6]"
   if (href.startsWith("/")) {
     return (
       <Link className={style} href={href} {...props}>
@@ -111,7 +111,7 @@ export const ChangelogEntry = ({
   <div className="relative my-20 flex flex-col justify-center gap-x-14 border-b border-gray-200 md:flex-row dark:border-gray-800">
     <div className="mb-4 md:mb-10 md:w-1/3">
       <div className="sticky top-24 flex items-center space-x-2 md:block md:space-x-0 md:space-y-1.5">
-        <span className="inline-flex items-center rounded-lg bg-[#e6f9f5] px-2.5 py-1 text-xs font-medium text-[#007e68] ring-1 ring-inset ring-[#007e68]/10 dark:bg-[#00b38f]/20 dark:text-[#33ccad] dark:ring-[#33ccad]/10">
+        <span className="inline-flex items-center rounded-lg bg-[#3b82f6]/20 px-2.5 py-1 text-xs font-medium text-[#3b82f6] ring-1 ring-inset ring-[#3b82f6]/10 dark:bg-[#3b82f6]/20 dark:text-[#3b82f6] dark:ring-[#3b82f6]/10">
           {version}
         </span>
         <span className="block whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">

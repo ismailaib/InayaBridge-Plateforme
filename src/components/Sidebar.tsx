@@ -11,9 +11,9 @@ import { cx, focusRing } from "@/lib/utils"
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden"
 import { RiCloseLine } from "@remixicon/react"
 import { PanelLeft } from "lucide-react"
+import Link from "next/link"
 import * as React from "react"
 import { Button } from "./Button"
-import Link from "next/link"
 
 // This component is based on shadcn's sidebar component
 
@@ -298,7 +298,7 @@ const SidebarLink = React.forwardRef<
       className={cx(
         "flex items-center justify-between rounded-md p-2 text-base transition hover:bg-gray-200/50 sm:text-sm hover:dark:bg-gray-900",
         "text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
-        "data-[active=true]:text-[#00b38f] data-[active=true]:dark:text-[#00b38f]",
+        "data-[active=true]:text-[#3b82f6] data-[active=true]:dark:text-[#3b82f6]",
         focusRing,
       )}
       {...props}
@@ -308,7 +308,7 @@ const SidebarLink = React.forwardRef<
         {children}
       </span>
       {notifications && (
-        <span className="inline-flex size-5 items-center justify-center rounded bg-blue-100 text-sm font-medium text-[#00b38f] sm:text-xs dark:bg-blue-500/10 dark:text-[#00b38f]">
+        <span className="inline-flex size-5 items-center justify-center rounded bg-blue-100 text-sm font-medium text-[#3b82f6] sm:text-xs dark:bg-blue-500/10 dark:text-[#3b82f6]">
           {notifications}
         </span>
       )}
@@ -424,5 +424,6 @@ export {
   SidebarProvider,
   SidebarSubLink,
   SidebarTrigger,
-  useSidebar,
+  useSidebar
 }
+

@@ -110,10 +110,10 @@ export default function CodeExample() {
             key={item.name}
             className="col-span-full sm:col-span-2 lg:col-span-1"
           >
-            <div className="w-fit rounded-lg p-2 ring-1 ring-black/5 dark:shadow-[#009e7f]/30 dark:ring-white/5">
+            <div className="w-fit rounded-lg p-2 ring-1 ring-black/5 dark:shadow-[#3b82f6]/30 dark:ring-white/5">
               <item.icon
                 aria-hidden="true"
-                className="size-6 text-[#009e7f] dark:text-[#33ccad]"
+                className="size-6 text-[#3b82f6] dark:text-[#3b82f6]"
               />
             </div>
             <dt className="mt-6 font-semibold text-gray-900 dark:text-gray-50">

@@ -397,10 +397,13 @@
       "toConfirm": "To confirm"
     },
     "labels": {
-      "description": "Description .....",
-      "consultations": "Consultations"
+      "descriptionPlaceholder": "Description .....",
+      "consultations": "Consultations ({{current}}/{{total}})"
     },
-    "updated": "Updated {{time}} ago",
-    "scheduled": "Scheduled at {{time}}"
+    "updated": "Updated {{time}}",
+    "scheduled": "Scheduled at {{time}}",
+    "updatedTimes": {
+      "minutesAgo": "{{count}} min ago"
+    }
   }
 }

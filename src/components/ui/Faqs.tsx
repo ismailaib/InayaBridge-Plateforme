@@ -6,7 +6,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "../Accordion"
+} from "../Accordion";
 
 export function Faqs() {
   const t = useTranslations("faqs")
@@ -28,7 +28,7 @@ export function Faqs() {
             {t("contact")}&nbsp;
             <a
               href="#"
-              className="font-medium text-[#009e7f] hover:text-[#66d9c2] dark:text-[#33ccad]"
+              className="font-medium text-[#3b82f6] hover:text-[#3b82f6] dark:text-[#3b82f6]"
             >
               {t("link")}
             </a>

@@ -1,9 +1,7 @@
 "use client"
 
-import React, { useState } from "react"
-import { RiCloseLine } from "@remixicon/react"
-import { UserRoundPlus } from "lucide-react"
 import { Button } from "@/components/Button"
+import { DatePicker } from "@/components/DatePicker"
 import {
   Dialog,
   DialogClose,
@@ -18,14 +16,16 @@ import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/Select"
-import { DatePicker } from "@/components/DatePicker"
-import { createPatient } from "../../api/patients"
+import { RiCloseLine } from "@remixicon/react"
 import { format } from "date-fns"
+import { UserRoundPlus } from "lucide-react"
+import React, { useState } from "react"
+import { createPatient } from "../../api/patients"
 
 interface AddPatientModalProps {
   onSuccess?: () => void
@@ -78,7 +78,7 @@ export default function AddPatientModal({ onSuccess }: AddPatientModalProps) {
   if (loading) {
     return (
       <div className="flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     )
   }

@@ -13,8 +13,8 @@ const progressBarVariants = tv({
   variants: {
     variant: {
       default: {
-        background: "bg-emerald-200 dark:bg-emerald-500/30",
-        bar: "bg-emerald-500 dark:bg-emerald-500",
+        background: "bg-blue-200 dark:bg-blue-500/30",
+        bar: "bg-blue-500 dark:bg-blue-500",
       },
       neutral: {
         background: "bg-gray-200 dark:bg-gray-500/40",
@@ -29,8 +29,8 @@ const progressBarVariants = tv({
         bar: "bg-red-500 dark:bg-red-500",
       },
       success: {
-        background: "bg-emerald-200 dark:bg-emerald-500/30",
-        bar: "bg-emerald-500 dark:bg-emerald-500",
+        background: "bg-blue-200 dark:bg-blue-500/30",
+        bar: "bg-blue-500 dark:bg-blue-500",
       },
     },
   },
@@ -41,7 +41,7 @@ const progressBarVariants = tv({
 
 interface ProgressBarProps
   extends React.HTMLProps<HTMLDivElement>,
-    VariantProps<typeof progressBarVariants> {
+  VariantProps<typeof progressBarVariants> {
   value?: number
   max?: number
   showAnimation?: boolean
@@ -85,7 +85,7 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
               "h-full flex-col rounded-full",
               bar(),
               showAnimation &&
-                "transform-gpu transition-all duration-300 ease-in-out",
+              "transform-gpu transition-all duration-300 ease-in-out",
             )}
             style={{
               width: max ? `${(safeValue / max) * 100}%` : `${safeValue}%`,

@@ -2,10 +2,10 @@
 import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
 import Benefits from "@/components/ui/Benefits"
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
+import { useTranslations } from "@/lib/i18n/useTranslations"
 import { cx } from "@/lib/utils"
 import Balancer from "react-wrap-balancer"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
 
 export default function About() {
   const t = useTranslations("about")
@@ -49,13 +49,13 @@ export default function About() {
           <p className="text-lg leading-8">{t("vision3")}</p>
           <p
             className={cx(
-              "w-fit rotate-3 font-handwriting text-3xl text-[#009e7f] dark:text-[#33ccad]",
+              "w-fit rotate-3 font-handwriting text-3xl text-[#3b82f6] dark:text-[#3b82f6]",
             )}
           >
             {t("teamSignature")}
           </p>
         </div>
-        <Button className="mt-32 h-10 w-full shadow-xl shadow-[#00b38f]/20">
+        <Button className="mt-32 h-10 w-full shadow-xl shadow-[#3b82f6]/20">
           {t("donate")}
         </Button>
       </section>

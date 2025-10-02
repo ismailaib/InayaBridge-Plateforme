@@ -44,6 +44,7 @@ const NavigationButton = React.forwardRef<
         ref={forwardedRef}
         type="button"
         disabled={disabled}
+        style={{ direction: "ltr" }}
         className={cx(
           "flex size-8 shrink-0 select-none items-center justify-center rounded-sm border p-1 outline-hidden transition sm:size-[30px]",
           // text color
@@ -110,6 +111,7 @@ const Calendar = ({
       locale={locale}
       showOutsideDays={numberOfMonths === 1}
       className={cx(className)}
+      style={{ direction: "ltr" }}
       classNames={{
         months: "flex space-y-0",
         month: "space-y-4 p-3",
@@ -145,6 +147,7 @@ const Calendar = ({
         day_range_start: "rounded-r-none rounded-l!",
         day_range_end: "rounded-l-none rounded-r!",
         day_hidden: "invisible",
+        
         ...classNames,
       }}
       components={{

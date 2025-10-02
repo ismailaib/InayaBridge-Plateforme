@@ -1,13 +1,13 @@
-import { notFound } from "next/navigation";
-import { ThemeProvider } from "next-themes";
-import { LayoutWrapper } from "./(landing)/Layout";
+import { Toaster } from "@/components/Toaster";
 import { TranslationsProvider } from "@/lib/i18n/TranslationsProvider";
 import { getMessages, type Messages } from "@/lib/i18n/getMessages";
-import { isLocale, locales, getDirection, type Locale } from "@/lib/i18n/i18n";
-import { Toaster } from "@/components/Toaster";
-import { inter, tajawal } from "../layout";
+import { getDirection, isLocale, locales, type Locale } from "@/lib/i18n/i18n";
 import { readdir } from "fs/promises";
+import { ThemeProvider } from "next-themes";
+import { notFound } from "next/navigation";
 import path from "path";
+import { inter, tajawal } from "../layout";
+import { LayoutWrapper } from "./(landing)/Layout";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -68,7 +68,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning>
       <body
-        className={`${fontClass} ${inter.variable} ${tajawal.variable} min-h-screen scroll-auto antialiased selection:bg-green-100 selection:text-[#007e68] dark:bg-gray-950`}
+        className={`${fontClass} ${inter.variable} ${tajawal.variable} min-h-screen scroll-auto antialiased selection:bg-blue-100 selection:text-[#3b82f6] dark:bg-gray-950`}
       >
         <ThemeProvider
           attribute="class"

@@ -1,14 +1,14 @@
 "use client"
 
-import StepSharedFields from "../components/StepSharedFields"
-import { motion, AnimatePresence } from "framer-motion"
-import Image from "next/image"
-import logo from "../../../icon-logo.png"
 import { DatePickerBirthDateExample } from "@/components/DateBirth"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
-import React from "react"
 import useTranslations from "@/lib/i18n/useTranslations"
+import { AnimatePresence, motion } from "framer-motion"
+import Image from "next/image"
+import React from "react"
+import logo from "../../../icon-logo.png"
+import StepSharedFields from "../components/StepSharedFields"
 
 export default function PatientWelcomePage() {
   const t = useTranslations("signup.patient")
@@ -29,7 +29,7 @@ export default function PatientWelcomePage() {
             <div className="absolute right-[9%] top-[9%] size-1 rounded-full bg-gray-100 shadow-inner dark:bg-gray-800" />
             <div className="absolute bottom-[9%] left-[9%] size-1 rounded-full bg-gray-100 shadow-inner dark:bg-gray-800" />
             <div className="absolute bottom-[9%] right-[9%] size-1 rounded-full bg-gray-100 shadow-inner dark:bg-gray-800" />
-            <div className="w-fit rounded-lg bg-gradient-to-b from-[#00b38fdc] to-[#00b38f] p-3 shadow-sm shadow-[#00b38f]/50 ring-1 ring-inset ring-white/25">
+            <div className="w-fit rounded-lg bg-gradient-to-b from-[#3b82f6dc] to-[#3b82f6] p-3 shadow-sm shadow-[#3b82f6]/50 ring-1 ring-inset ring-white/25">
               <Image src={logo} alt={t("logoAlt")} width={24} height={24} />
             </div>
           </motion.div>
@@ -107,7 +107,7 @@ export default function PatientWelcomePage() {
         className="hidden h-full overflow-hidden p-6 lg:flex"
         aria-label={t("aside.aria")}
       >
-        <div className="flex h-full w-full items-center justify-center rounded-lg bg-gradient-to-br from-[#a7f3d0] to-[#10b981] p-16 xl:p-24 dark:from-[#10b981] dark:to-[#059669]">
+        <div className="flex h-full w-full items-center justify-center rounded-lg bg-gradient-to-br from-[#3b82f6] to-[#3b82f6] p-16 xl:p-24 dark:from-[#3b82f6] dark:to-[#3b82f6]">
           <div className="max-w-lg space-y-10">
             <motion.div
               initial={{ opacity: 0, y: 10 }}

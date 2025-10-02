@@ -1,7 +1,7 @@
 // Tremor Checkbox [v1.0.0]
 
-import React from "react"
 import * as CheckboxPrimitives from "@radix-ui/react-checkbox"
+import React from "react"
 
 import { cx, focusRing } from "@/lib/utils"
 
@@ -27,9 +27,9 @@ const Checkbox = React.forwardRef<
         "data-disabled:bg-gray-100 data-disabled:text-gray-400 data-disabled:ring-gray-300",
         "dark:data-disabled:bg-gray-800 dark:data-disabled:text-gray-500 dark:data-disabled:ring-gray-700",
         // checked and enabled
-        "enabled:data-[state=checked]:bg-[#00B38F] enabled:data-[state=checked]:ring-0 enabled:data-[state=checked]:ring-transparent",
+        "enabled:data-[state=checked]:bg-[#3b82f6] enabled:data-[state=checked]:ring-0 enabled:data-[state=checked]:ring-transparent",
         // indeterminate
-        "enabled:data-[state=indeterminate]:bg-[#00B38F] enabled:data-[state=indeterminate]:ring-0 enabled:data-[state=indeterminate]:ring-transparent",
+        "enabled:data-[state=indeterminate]:bg-[#3b82f6] enabled:data-[state=indeterminate]:ring-0 enabled:data-[state=indeterminate]:ring-transparent",
         // focus
         focusRing,
         className,
@@ -85,3 +85,4 @@ const Checkbox = React.forwardRef<
 Checkbox.displayName = "Checkbox"
 
 export { Checkbox }
+

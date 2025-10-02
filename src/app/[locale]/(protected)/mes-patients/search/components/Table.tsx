@@ -1,6 +1,5 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
 import { RiArrowLeftSLine, RiArrowRightSLine } from '@remixicon/react';
 import {
     flexRender,
@@ -9,6 +8,7 @@ import {
     RowData,
     useReactTable,
 } from '@tanstack/react-table';
+import React, { useEffect, useState } from 'react';
 
 import { cx } from '@/lib/utils';
 
@@ -22,9 +22,9 @@ import {
     TableRow,
 } from '@/components/Table';
 
-import Edit from './Edit';
-import Delete from './Delete';
 import { getDoctorPatients, Patient } from '../../api/patients';
+import Delete from './Delete';
+import Edit from './Edit';
 
 declare module '@tanstack/react-table' {
     interface ColumnMeta<TData extends RowData, TValue> {
@@ -195,7 +195,7 @@ export default function Example({ refreshKey }: { refreshKey: number }) {
                             getDoctorPatients()
                                 .then((res) => setPatients(res.data))
                                 .catch((err) => console.error("Failed to fetch patients", err));
-                        }}/>
+                        }} />
                     </div>
                 );
             },
@@ -230,7 +230,7 @@ export default function Example({ refreshKey }: { refreshKey: number }) {
     if (loading) {
         return (
             <div className="flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
             </div>
         )
     }

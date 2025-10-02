@@ -4,25 +4,31 @@ import { AreaChart } from "@/components/AreaChart"
 import { Card } from "@/components/Card"
 import { CategoryBar } from "@/components/CategoryBar"
 import { Tooltip } from "@/components/Tooltip"
-import { Info } from "lucide-react"
 import { useTranslations } from "@/lib/i18n/useTranslations"
-
-const data = [
-  { date: "19-09-2025", "Rendez-vous": 0, diagnostics: 0 },
-  { date: "20-09-2025", "Rendez-vous": 16, diagnostics: 5 },
-  { date: "21-09-2025", "Rendez-vous": 24, diagnostics: 8 },
-  { date: "22-09-2025", "Rendez-vous": 28, diagnostics: 10 },
-  { date: "23-09-2025", "Rendez-vous": 31, diagnostics: 12 },
-  { date: "24-09-2025", "Rendez-vous": 32, diagnostics: 13 },
-  { date: "25-09-2025", "Rendez-vous": 35, diagnostics: 15 },
-  { date: "26-09-2025", "Rendez-vous": 65, diagnostics: 24 },
-  { date: "27-09-2025", "Rendez-vous": 58, diagnostics: 22 },
-  { date: "28-09-2025", "Rendez-vous": 60, diagnostics: 24 },
-  { date: "29-09-2025", "Rendez-vous": 65, diagnostics: 25 },
-]
+import { Info } from "lucide-react"
 
 export default function DashboardStats() {
+
+
   const t = useTranslations("dashboard.dashboardStats")
+
+  const category1 = t("categories.1")
+  const category2 = t("categories.2")
+
+  const data = [
+    { date: "19-09-2025", [category1]: 0, [category2]: 0 },
+    { date: "20-09-2025", [category1]: 16, [category2]: 5 },
+    { date: "21-09-2025", [category1]: 24, [category2]: 8 },
+    { date: "22-09-2025", [category1]: 28, [category2]: 10 },
+    { date: "23-09-2025", [category1]: 31, [category2]: 12 },
+    { date: "24-09-2025", [category1]: 32, [category2]: 13 },
+    { date: "25-09-2025", [category1]: 35, [category2]: 15 },
+    { date: "26-09-2025", [category1]: 65, [category2]: 24 },
+    { date: "27-09-2025", [category1]: 58, [category2]: 22 },
+    { date: "28-09-2025", [category1]: 60, [category2]: 24 },
+    { date: "29-09-2025", [category1]: 65, [category2]: 25 },
+  ]
+
 
   return (
     <>
@@ -53,7 +59,7 @@ export default function DashboardStats() {
             </p>
             <CategoryBar
               values={[92.4, 7.6]}
-              colors={["emerald", "amber"]}
+              colors={["blue", "amber"]}
               showLabels={false}
               className="mt-6"
             />
@@ -129,22 +135,22 @@ export default function DashboardStats() {
           <AreaChart
             data={data}
             index="date"
-            categories={["Rendez-vous", "diagnostics"]}
-            colors={["emerald", "blue"]}
+            categories={[t("categories.1"), t("categories.2")]}
+            colors={["blue", "amber"]}
             fill="solid"
             valueFormatter={(v) => `${v}`}
-            onValueChange={() => {}}
+            onValueChange={() => { }}
             tickGap={15}
             className="hidden sm:block"
           />
           <AreaChart
             data={data}
             index="date"
-            categories={["Rendez-vous", "diagnostics"]}
-            colors={["emerald", "blue"]}
+            categories={[t("categories.1"), t("categories.2")]}
+            colors={["blue", "amber"]}
             fill="solid"
             valueFormatter={(v) => `${v}`}
-            onValueChange={() => {}}
+            onValueChange={() => { }}
             showYAxis={false}
             startEndOnly={true}
             tickGap={15}

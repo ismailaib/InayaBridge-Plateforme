@@ -1,11 +1,11 @@
 'use client';
+import { onboardingStatus } from '@/api/tenant';
 import { Card } from '@/components/Card';
+import useTranslations from '@/lib/i18n/useTranslations';
 import { useCallback, useEffect, useState } from 'react';
 import InviteMembers from './Invitations/InviteMembers';
-import Workspace from './workspace/Workspace';
 import Pricing from './pricing/Pricing';
-import { onboardingStatus } from '@/api/tenant';
-import useTranslations from '@/lib/i18n/useTranslations';
+import Workspace from './workspace/Workspace';
 
 type StepKey = 'tenantProfile' | 'invitationsSchedule' | 'accountActivation';
 
@@ -129,14 +129,13 @@ export default function DoctorOnboarding() {
         {steps.map((item) => (
           <div
             key={item.title}
-            className={`flex flex-col justify-between border-l-2 py-1 pl-4 transition-colors ${
-              item.completed
-                ? 'border-emerald-500'
-                : 'border-emerald-100 dark:border-[#33ccad]/20'
-            }`}
+            className={`flex flex-col justify-between border-l-2 py-1 pl-4 transition-colors ${item.completed
+              ? 'border-blue-500'
+              : 'border-blue-100 dark:border-[#3b82f6]/20'
+              }`}
           >
             <div>
-              <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-semibold text-[#33ccad] dark:bg-[#33ccad]/20 dark:text-[#33ccad]">
+              <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-semibold text-[#3b82f6] dark:bg-[#3b82f6]/20 dark:text-[#3b82f6]">
                 {item.completed && '✓'} {t('step')} {item.step}
               </span>
               <h4 className="mt-4 text-sm font-medium text-gray-900 dark:text-gray-50">
@@ -147,12 +146,11 @@ export default function DoctorOnboarding() {
               </p>
             </div>
             <div
-              className={`transition-opacity ${
-                item.disabled ? 'opacity-50 pointer-events-none' : 'opacity-100'
-              }`}
+              className={`transition-opacity ${item.disabled ? 'opacity-50 pointer-events-none' : 'opacity-100'
+                }`}
             >
               {item.completed ? (
-                <div className="flex items-center justify-center py-2 text-emerald-600 dark:text-emerald-400 font-medium text-sm">
+                <div className="flex items-center justify-center py-2 text-blue-600 dark:text-blue-400 font-medium text-sm">
                   {t('completedStep')}
                 </div>
               ) : (
@@ -164,10 +162,10 @@ export default function DoctorOnboarding() {
       </div>
 
       {completedSteps === totalSteps && (
-        <div className="mt-8 p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border border-green-200 dark:border-green-700">
+        <div className="mt-8 p-4 bg-gradient-to-r from-blue-50 to-blue-50 dark:from-blue-900/20 dark:to-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500">
                 <svg
                   className="h-5 w-5 text-white"
                   fill="none"
@@ -184,10 +182,10 @@ export default function DoctorOnboarding() {
               </div>
             </div>
             <div className="ml-3">
-              <p className="text-sm font-medium text-green-800 dark:text-green-300">
+              <p className="text-sm font-medium text-blue-800 dark:text-blue-300">
                 {t('allDone.title')}
               </p>
-              <p className="mt-1 text-sm text-green-600 dark:text-green-400">
+              <p className="mt-1 text-sm text-blue-600 dark:text-blue-400">
                 {t('allDone.subtitle')}
               </p>
             </div>

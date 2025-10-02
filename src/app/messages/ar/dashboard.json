@@ -338,39 +338,42 @@
   },
   "patientTracking": {
     "title": "المرضى قيد المتابعة",
-    "description": "متابعة مباشرة للملفات النشطة",
+    "description": "متابعة فورية للملفات النشطة",
     "statuses": {
-      "consultation": "في الاستشارة",
+      "consultation": "قيد الاستشارة",
       "waitingRoom": "قاعة الانتظار",
-      "videoCall": "استشارة عبر الفيديو"
+      "videoCall": "مواعيد عبر الفيديو"
     },
     "motifs": {
-      "postOp": "متابعة بعد العملية",
+      "postOp": "متابعة بعد الجراحة",
       "vertigo": "دوار",
       "pregnancy": "متابعة الحمل",
-      "bloodTest": "تحاليل دم",
+      "bloodTest": "تحليل دم",
       "anxiety": "قلق",
-      "scanner": "نتائج الفحص",
-      "diabetes": "مراقبة السكري"
+      "scanner": "نتائج الأشعة",
+      "diabetes": "متابعة السكري"
     },
     "locations": {
-      "mainOffice": "المكتب الرئيسي",
-      "roomA": "قاعة أ",
-      "roomB": "قاعة ب",
-      "teleconsultation": "استشارة عبر الفيديو - {{time}}"
+      "mainOffice": "العيادة الرئيسية",
+      "roomA": "غرفة أ",
+      "roomB": "غرفة ب",
+      "teleconsultation": "استشارة عن بعد - {{time}}"
     },
     "remarks": {
       "inProgress": "الاستشارة جارية",
-      "arrived": "المريض وصل",
-      "waiting": "في الانتظار",
+      "arrived": "وصل المريض",
+      "waiting": "بانتظار",
       "scheduled": "مجدول",
       "toConfirm": "بانتظار التأكيد"
     },
     "labels": {
-      "description": "وصف .....",
-      "consultations": "الاستشارات"
+      "descriptionPlaceholder": "وصف .....",
+      "consultations": "الاستشارات ({{current}}/{{total}})"
     },
-    "updated": "تم التحديث منذ {{time}}",
-    "scheduled": "مجدول عند {{time}}"
+    "updated": "تم التحديث {{time}}",
+    "scheduled": "مجدول عند {{time}}",
+    "updatedTimes": {
+      "minutesAgo": "منذ {{count}} دقيقة"
+    }
   }
 }

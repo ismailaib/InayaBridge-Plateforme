@@ -1,20 +1,20 @@
 "use client"
 
 import {
-  RiFileHistoryFill,
   RiCheckDoubleFill,
+  RiFileHistoryFill,
   RiTestTubeFill,
 } from "@remixicon/react"
 
-import { cx } from "@/lib/utils"
 import { BarChart } from "@/components/BarChart"
 import { Card } from "@/components/Card"
 import { CategoryBar } from "@/components/CategoryBar"
 import { Divider } from "@/components/Divider"
 import { Tooltip } from "@/components/Tooltip"
-import { Info } from "lucide-react"
-import { useTranslations } from "@/lib/i18n/useTranslations"
 import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
+import { useTranslations } from "@/lib/i18n/useTranslations"
+import { cx } from "@/lib/utils"
+import { Info } from "lucide-react"
 
 export default function DoctorAnalyticsSection() {
   const t = useTranslations("dashboard.doctorAnalytics")
@@ -31,7 +31,7 @@ export default function DoctorAnalyticsSection() {
       name: t("items.closed"),
       value: 48,
       icon: RiCheckDoubleFill,
-      iconColor: "text-emerald-500 dark:text-emerald-500",
+      iconColor: "text-blue-500 dark:text-blue-500",
       tooltip: t("tooltips.closed"),
     },
     {
@@ -45,7 +45,7 @@ export default function DoctorAnalyticsSection() {
       name: t("items.validated"),
       value: 31,
       icon: RiCheckDoubleFill,
-      iconColor: "text-emerald-500 dark:text-emerald-500",
+      iconColor: "text-blue-500 dark:text-blue-500",
       tooltip: t("tooltips.validated"),
     },
   ]
@@ -66,13 +66,13 @@ export default function DoctorAnalyticsSection() {
 
         <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-2">
           <div>
-            <CategoryBar values={[12, 48]} colors={["cyan", "emerald"]} showLabels={false} />
+            <CategoryBar values={[12, 48]} colors={["cyan", "blue"]} showLabels={false} />
             <p className="mt-2 text-sm text-gray-900 dark:text-gray-50">
               <span className="font-semibold">12</span> {t("overview.followUpPlanned")}
             </p>
           </div>
           <div>
-            <CategoryBar values={[9, 31]} colors={["cyan", "emerald"]} showLabels={false} />
+            <CategoryBar values={[9, 31]} colors={["cyan", "blue"]} showLabels={false} />
             <p className="mt-2 text-sm text-gray-900 dark:text-gray-50">
               <span className="font-semibold">9</span> {t("overview.pendingDiagnostics")}
             </p>

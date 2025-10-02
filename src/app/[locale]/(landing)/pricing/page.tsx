@@ -128,10 +128,10 @@ export default function Pricing() {
                   <div className="flex h-4 items-center">
                     <div className="relative w-full">
                       <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                        <div className="w-full border-t border-[#009e7f] dark:border-[#33ccad]" />
+                        <div className="w-full border-t border-[#3b82f6] dark:border-[#3b82f6]" />
                       </div>
                       <div className="relative flex justify-center">
-                        <span className="bg-white px-3 text-xs font-medium text-[#009e7f] dark:bg-gray-950 dark:text-[#33ccad]">
+                        <span className="bg-white px-3 text-xs font-medium text-[#3b82f6] dark:bg-gray-950 dark:text-[#3b82f6]">
                           {t("sections.popular")}
                         </span>
                       </div>
@@ -188,7 +188,7 @@ export default function Pricing() {
                   <ul className="mt-4 text-sm text-gray-700 dark:text-gray-400">
                     {data.features.map((f: string) => (
                       <li key={f} className="flex items-center gap-x-3 py-1.5">
-                        <RiCheckLine className="size-4 shrink-0 text-[#009e7f] dark:text-[#33ccad]" />
+                        <RiCheckLine className="size-4 shrink-0 text-[#3b82f6] dark:text-[#3b82f6]" />
                         <span>{f}</span>
                       </li>
                     ))}
@@ -220,7 +220,7 @@ export default function Pricing() {
                     <th key={plan.key} className="border-b border-gray-100 bg-white px-6 pb-8 dark:border-gray-800 dark:bg-gray-950">
                       <div
                         className={cx(
-                          plan.isStarter ? "text-gray-900 dark:text-gray-50" : "text-[#009e7f] dark:text-[#33ccad]",
+                          plan.isStarter ? "text-gray-900 dark:text-gray-50" : "text-[#3b82f6] dark:text-[#3b82f6]",
                           "font-semibold leading-7",
                         )}
                       >
@@ -247,7 +247,7 @@ export default function Pricing() {
                     </th>
                   </tr>
                   {section.features.map((feature) => (
-                    <tr key={feature.key} className="transition hover:bg-[#e6f9f5]/30 dark:hover:bg-[#005f4d]/5">
+                    <tr key={feature.key} className="transition hover:bg-[#3b82f6]/30 dark:hover:bg-[#3b82f6]/5">
                       <th className="flex items-center gap-2 border-b border-gray-100 py-4 text-sm font-normal leading-6 text-gray-900 dark:border-gray-800 dark:text-gray-50">
                         <span>{t(`features.${feature.key}.label`)}</span>
                         {t(`features.${feature.key}.tooltip`) && (
@@ -263,7 +263,7 @@ export default function Pricing() {
                               {t(`features.${feature.key}.${feature.plans[plan.key]}`)}
                             </div>
                           ) : feature.plans[plan.key] ? (
-                            <RiCheckLine className="h-5 w-5 text-[#009e7f] dark:text-[#33ccad]" />
+                            <RiCheckLine className="h-5 w-5 text-[#3b82f6] dark:text-[#3b82f6]" />
                           ) : (
                             <RiSubtractLine className="h-5 w-5 text-gray-400 dark:text-gray-600" />
                           )}

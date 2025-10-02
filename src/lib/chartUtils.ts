@@ -9,11 +9,11 @@ export const chartColors = {
     fill: "fill-blue-500",
     text: "text-blue-500",
   },
-  emerald: {
-    bg: "bg-emerald-500",
-    stroke: "stroke-emerald-500",
-    fill: "fill-emerald-500",
-    text: "text-emerald-500",
+  blue: {
+    bg: "bg-blue-500",
+    stroke: "stroke-blue-500",
+    fill: "fill-blue-500",
+    text: "text-blue-500",
   },
   violet: {
     bg: "bg-violet-500",
@@ -100,7 +100,7 @@ export const getYAxisDomain = (
   minValue: number | undefined,
   maxValue: number | undefined,
 ) => {
-  const minDomain = autoMinValue ? "auto" : minValue ?? 0
+  const minDomain = autoMinValue ? "auto" : (minValue ?? 0)
   const maxDomain = maxValue ?? "auto"
   return [minDomain, maxDomain]
 }

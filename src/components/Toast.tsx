@@ -1,6 +1,5 @@
 // Tremor Toast [v1.0.0]
 
-import React from "react"
 import * as ToastPrimitives from "@radix-ui/react-toast"
 import {
   RiCheckboxCircleFill,
@@ -9,6 +8,7 @@ import {
   RiInformationFill,
   RiLoader2Fill,
 } from "@remixicon/react"
+import React from "react"
 
 import { cx } from "@/lib/utils"
 
@@ -68,7 +68,7 @@ const Toast = React.forwardRef<
       case "success":
         Icon = (
           <RiCheckboxCircleFill
-            className="size-5 shrink-0 text-emerald-600 dark:text-emerald-500"
+            className="size-5 shrink-0 text-blue-600 dark:text-blue-500"
             aria-hidden="true"
           />
         )
@@ -212,5 +212,5 @@ export {
   ToastProvider,
   ToastViewport,
   type ToastActionElement,
-  type ToastProps,
+  type ToastProps
 }

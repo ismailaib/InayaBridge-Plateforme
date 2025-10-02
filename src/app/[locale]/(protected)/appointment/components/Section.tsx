@@ -1,40 +1,46 @@
-import { Draggable, Droppable } from "react-beautiful-dnd";
-import { PatientCard } from "./PatientCard";
-import { ArrowRight } from "lucide-react";
-import { cx } from "@/lib/utils";
+"use client"
+
+import { Draggable, Droppable } from "react-beautiful-dnd"
+import { PatientCard } from "./PatientCard"
+import { ArrowRight } from "lucide-react"
+import { cx } from "@/lib/utils"
+import { useTranslations } from "@/lib/i18n/useTranslations"
 
 interface Patient {
-    patient: string
-    motif: string
-    lieu: string
-    remarque: string
-    progressionActuelle: number
-    progressionTotale: number
-    misAJour: string
-  }
-  
-  interface DataState {
-    consultation: Patient[]
-    salleAttente: Patient[]
-    visioconference: Patient[]
-  }
+  patient: string
+  motif: string
+  lieu: string
+  remarque: string
+  progressionActuelle: number
+  progressionTotale: number
+  misAJour: string
+}
+
+interface DataState {
+  consultation: Patient[]
+  salleAttente: Patient[]
+  visioconference: Patient[]
+}
 
 export const Section = ({
-    title,
-    icon: Icon,
-    items,
-    droppableId,
-    status,
-  }: {
-    title: string
-    icon: React.ComponentType<{ className?: string; size?: number }>
-    items: Patient[]
-    droppableId: keyof DataState
-    status:
-      | "En consultation"
-      | "Salle d'attente"
-      | "Rendez-vous visioconférence"
-  }) => (
+  title,
+  icon: Icon,
+  items,
+  droppableId,
+  status,
+}: {
+  title: string
+  icon: React.ComponentType<{ className?: string; size?: number }>
+  items: Patient[]
+  droppableId: keyof DataState
+  status:
+    | "En consultation"
+    | "Salle d'attente"
+    | "Rendez-vous visioconférence"
+}) => {
+  const t = useTranslations("waitingRoom.section")
+
+  return (
     <div>
       <div className="mb-4 flex items-center space-x-2">
         <Icon
@@ -88,7 +94,7 @@ export const Section = ({
             {provided.placeholder}
             {items.length === 0 && (
               <div className="flex h-48 items-center justify-center text-gray-500 dark:text-gray-400">
-                <p>Aucun patient</p>
+                <p>{t("noPatient")}</p>
               </div>
             )}
           </div>
@@ -96,3 +102,4 @@ export const Section = ({
       </Droppable>
     </div>
   )
+}

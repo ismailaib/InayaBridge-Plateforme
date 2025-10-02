@@ -15,7 +15,7 @@ const switchVariants = tv({
       // ring color
       "ring-black/5 dark:ring-gray-800",
       // checked
-      "data-[state=checked]:bg-[#00b38f] data-[state=checked]:dark:bg-[#00b38f]",
+      "data-[state=checked]:bg-[#3b82f6] data-[state=checked]:dark:bg-[#3b82f6]",
       // disabled
       "data-[disabled]:cursor-default",
       // disabled checked
@@ -23,7 +23,7 @@ const switchVariants = tv({
       "data-[disabled]:data-[state=checked]:ring-gray-300",
       // disabled checked dark
       "data-[disabled]:data-[state=checked]:dark:ring-gray-900",
-      "data-[disabled]:data-[state=checked]:dark:bg-[#003c30]",
+      "data-[disabled]:data-[state=checked]:dark:bg-[#3b82f6]",
       // disabled unchecked
       "data-[disabled]:data-[state=unchecked]:ring-gray-300",
       "data-[disabled]:data-[state=unchecked]:bg-gray-100",
@@ -88,3 +88,4 @@ const Switch = React.forwardRef<
 Switch.displayName = "Switch"
 
 export { Switch }
+

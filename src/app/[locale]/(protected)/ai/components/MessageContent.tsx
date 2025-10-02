@@ -1,8 +1,8 @@
 "use client"
 
 import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
 import rehypeRaw from "rehype-raw"
+import remarkGfm from "remark-gfm"
 
 type Props = {
   content: string
@@ -39,7 +39,7 @@ export default function MessageContent({ content }: Props) {
           return (
             <a
               {...props}
-              className="text-emerald-600 underline"
+              className="text-blue-600 underline"
               target="_blank"
               rel="noopener noreferrer"
             >

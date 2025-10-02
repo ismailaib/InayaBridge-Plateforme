@@ -36,7 +36,7 @@ const kpiData = [
       value: "42",
       tooltip: "Nombre de nouveaux patients enregistrés ce mois-ci.",
     },
-        {
+    {
       title: "Consultations vidéo effectuées",
       value: "16",
       tooltip: "Nombre total de consultations effectuées via vidéoconférence.",
@@ -80,8 +80,8 @@ export default function DoctorKPIBlock() {
                         {kpi.value}
                       </dd>
                       <div className="flex flex-row items-center gap-0.5">
-                        <div className="w-1.5 h-6 bg-green-500 dark:bg-green-800 rounded-lg"></div>
-                        <div className="w-1.5 h-6 bg-green-500 dark:bg-green-800 rounded-lg"></div>
+                        <div className="w-1.5 h-6 bg-blue-500 dark:bg-blue-800 rounded-lg"></div>
+                        <div className="w-1.5 h-6 bg-blue-500 dark:bg-blue-800 rounded-lg"></div>
                         <div className="w-1.5 h-6 bg-yellow-200 dark:bg-yellow-600 rounded-lg"></div>
                         <div className="w-1.5 h-6 bg-blue-200/20 rounded-lg"></div>
                       </div>
@@ -112,9 +112,8 @@ export default function DoctorKPIBlock() {
           {topMedicalAlerts.map((issue, index) => (
             <li
               key={index}
-              className={`flex cursor-pointer items-center justify-between px-2 py-2 transition-all duration-300 hover:bg-gray-50 hover:dark:bg-gray-800 ${
-                issue.clotured ? "" : ""
-              } `}
+              className={`flex cursor-pointer items-center justify-between px-2 py-2 transition-all duration-300 hover:bg-gray-50 hover:dark:bg-gray-800 ${issue.clotured ? "" : ""
+                } `}
             >
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
@@ -147,7 +146,7 @@ export default function DoctorKPIBlock() {
                   <Tooltip content="Alerte Cloturée" showArrow={false}>
                     <CheckCheck
                       width={18}
-                      className="cursor-pointer text-green-500"
+                      className="cursor-pointer text-blue-500"
                     />
                   </Tooltip>
                 </>

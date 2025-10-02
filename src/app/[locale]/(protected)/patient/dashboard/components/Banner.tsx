@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 
@@ -46,10 +45,10 @@ export default function DoctorOnboarding() {
           {data.map((item) => (
             <div
               key={item.title}
-              className="flex flex-col justify-between border-l-2 border-green-100 py-1 pl-4 dark:border-[#33ccad]/20"
+              className="flex flex-col justify-between border-l-2 border-blue-100 py-1 pl-4 dark:border-[#3b82f6]/20"
             >
               <div>
-                <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-semibold text-[#33ccad] dark:bg-[#33ccad]/20 dark:text-[#33ccad]">
+                <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-semibold text-[#3b82f6] dark:bg-[#3b82f6]/20 dark:text-[#3b82f6]">
                   Étape {item.step}
                 </span>
                 <h4 className="mt-4 text-sm font-medium text-gray-900 dark:text-gray-50">

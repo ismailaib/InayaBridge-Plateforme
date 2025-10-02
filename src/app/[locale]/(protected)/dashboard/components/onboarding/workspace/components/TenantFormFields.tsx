@@ -1,12 +1,12 @@
 "use client"
 
-import React from "react"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { RadioCardGroup, RadioCardItem } from "@/components/RadioCardGroup"
-import { cx } from "@/lib/utils"
-import { StatusItem, TenantFormData } from "../types/tenant"
 import useTranslations from "@/lib/i18n/useTranslations"
+import { cx } from "@/lib/utils"
+import React from "react"
+import { StatusItem, TenantFormData } from "../types/tenant"
 
 interface TenantFormFieldsProps {
   formData: TenantFormData
@@ -75,8 +75,8 @@ export const TenantFormFields: React.FC<TenantFormFieldsProps> = ({
               key={item.id}
               className={cx(
                 "w-fit px-2.5 py-2 text-sm text-gray-900 dark:text-gray-50",
-                "data-[state=checked]:bg-emerald-500 data-[state=checked]:text-white",
-                "data-[state=checked]:dark:bg-emerald-500 data-[state=checked]:dark:text-white",
+                "data-[state=checked]:bg-blue-500 data-[state=checked]:text-white",
+                "data-[state=checked]:dark:bg-blue-500 data-[state=checked]:dark:text-white",
               )}
             >
               {item.label || item.type}

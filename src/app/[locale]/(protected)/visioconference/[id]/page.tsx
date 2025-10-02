@@ -1,24 +1,24 @@
 'use client'
 
+import {
+  Camera,
+  Copy,
+  Mic,
+  MicOff,
+  Monitor,
+  MoreVertical,
+  Phone,
+  PhoneOff,
+  Settings,
+  Share,
+  UserPlus,
+  Video,
+  VideoOff,
+  Volume2,
+  VolumeX
+} from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { io, Socket } from 'socket.io-client'
-import { 
-  Video, 
-  VideoOff, 
-  Mic, 
-  MicOff, 
-  Phone, 
-  PhoneOff, 
-  Settings, 
-  Share,
-  Camera,
-  Monitor,
-  Volume2,
-  VolumeX,
-  MoreVertical,
-  UserPlus,
-  Copy
-} from 'lucide-react'
 
 const peerConfig = {
   iceServers: [
@@ -32,7 +32,7 @@ export default function VideoCall() {
   const peerRef = useRef<RTCPeerConnection | null>(null)
   const localStreamRef = useRef<MediaStream | null>(null)
   const remoteStreamRef = useRef<MediaStream | null>(null)
-  
+
   // UI State
   const [waiting, setWaiting] = useState(false)
   const [isVideoOn, setIsVideoOn] = useState(true)
@@ -41,7 +41,7 @@ export default function VideoCall() {
   const [isInCall, setIsInCall] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [connectionStatus, setConnectionStatus] = useState('disconnected')
-  
+
   // Socket and WebRTC
   const [socket, setSocket] = useState<Socket>()
   const [didOffer, setDidOffer] = useState(false)
@@ -81,7 +81,7 @@ export default function VideoCall() {
     remoteStreamRef.current = new MediaStream()
     if (remoteVid.current) remoteVid.current.srcObject = remoteStreamRef.current
     localStreamRef.current?.getTracks().forEach(t => peerRef.current?.addTrack(t, localStreamRef.current!))
-    
+
     peerRef.current.onicecandidate = e => {
       if (e.candidate)
         socket?.emit('sendIceCandidateToSignalingServer', {
@@ -90,14 +90,14 @@ export default function VideoCall() {
           didIOffer: didOffer
         })
     }
-    
+
     peerRef.current.ontrack = e => e.streams[0].getTracks().forEach(t => remoteStreamRef.current?.addTrack(t))
     peerRef.current.onconnectionstatechange = () => {
       const state = peerRef.current?.connectionState
       if (state === 'connected') setIsInCall(true)
       if (state === 'disconnected' || state === 'failed') setIsInCall(false)
     }
-    
+
     if (offerObj) await peerRef.current.setRemoteDescription(offerObj.offer)
   }
 
@@ -191,7 +191,7 @@ export default function VideoCall() {
 
   const getStatusColor = () => {
     switch (connectionStatus) {
-      case 'connected': return 'bg-green-500'
+      case 'connected': return 'bg-blue-500'
       case 'calling': case 'answering': return 'bg-yellow-500'
       case 'media-error': return 'bg-red-500'
       default: return 'bg-gray-500'
@@ -209,7 +209,7 @@ export default function VideoCall() {
     }
   }
 
-  const [showCopySuccess , setShowCopySuccess ] = useState<Boolean>(false)
+  const [showCopySuccess, setShowCopySuccess] = useState<Boolean>(false)
 
   return (
     <div className="h-screen dark:bg-gray-900 bg-white dark:text-white text-gray-800 flex flex-col">
@@ -222,15 +222,15 @@ export default function VideoCall() {
           </div>
           <span className="text-lg font-semibold">Visio Conférence</span>
         </div>
-        
+
         <div className="flex items-center gap-2">
-          <button 
+          <button
             onClick={() => setShowSettings(!showSettings)}
             className="p-2 dark:hover:bg-gray-700 hover:bg-gray-300 rounded-lg transition-colors"
           >
             <Settings className="w-5 h-5" />
           </button>
-            <button
+          <button
             onClick={async () => {
               await navigator.clipboard.writeText('http://localhost:3000/patient/visioconference/321')
               setShowCopySuccess(true)
@@ -238,15 +238,15 @@ export default function VideoCall() {
             }}
             className="p-2 dark:hover:bg-gray-700 hover:bg-gray-300 rounded-lg transition-colors relative"
             title="Copier le lien"
-            >
+          >
             {showCopySuccess ? (
-              <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             ) : (
               <Copy className="w-5 h-5" />
             )}
-            </button>
+          </button>
           <button className="p-2 dark:hover:bg-gray-700 hover:bg-gray-300 rounded-lg transition-colors">
             <MoreVertical className="w-5 h-5" />
           </button>
@@ -257,23 +257,23 @@ export default function VideoCall() {
       {showSettings && (
         <div className="dark:bg-gray-900 bg-gray-100 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
           <div className="flex flex-wrap gap-2">
-            <button 
+            <button
               onClick={testMicrophone}
-              className="px-3 py-2 bg-[#00b38f]/80 hover:bg-[#00b38f] rounded-lg text-sm transition-colors flex items-center gap-2  text-white"
+              className="px-3 py-2 bg-[#3b82f6]/80 hover:bg-[#3b82f6] rounded-lg text-sm transition-colors flex items-center gap-2  text-white"
             >
               <Mic className="w-4 h-4" />
               Test Micro
             </button>
-            <button 
+            <button
               onClick={testCamera}
-              className="px-3 py-2 bg-[#00b38f]/80 hover:bg-[#00b38f] rounded-lg text-sm transition-colors flex items-center gap-2  text-white"
+              className="px-3 py-2 bg-[#3b82f6]/80 hover:bg-[#3b82f6] rounded-lg text-sm transition-colors flex items-center gap-2  text-white"
             >
               <Camera className="w-4 h-4" />
               Test Caméra
             </button>
-            <button 
+            <button
               onClick={testSpeakers}
-              className="px-3 py-2 bg-[#00b38f]/80 hover:bg-[#00b38f] rounded-lg text-sm transition-colors flex items-center gap-2 text-white"
+              className="px-3 py-2 bg-[#3b82f6]/80 hover:bg-[#3b82f6] rounded-lg text-sm transition-colors flex items-center gap-2 text-white"
             >
               <Volume2 className="w-4 h-4" />
               Test Haut-parleurs
@@ -286,21 +286,21 @@ export default function VideoCall() {
         {/* Video Area */}
         <div className="flex-1 relative bg-black">
           {/* Remote Video (Main) */}
-          <video 
-            ref={remoteVid} 
-            className="w-full h-full object-cover" 
-            autoPlay 
-            playsInline 
+          <video
+            ref={remoteVid}
+            className="w-full h-full object-cover"
+            autoPlay
+            playsInline
           />
-          
+
           {/* Local Video (Picture-in-Picture) */}
           <div className="absolute top-4 right-4 w-48 h-36 bg-gray-800 rounded-lg overflow-hidden border-2 border-gray-600">
-            <video 
-              ref={localVid} 
-              className="w-full h-full object-cover" 
-              autoPlay 
-              playsInline 
-              muted 
+            <video
+              ref={localVid}
+              className="w-full h-full object-cover"
+              autoPlay
+              playsInline
+              muted
             />
             {!isVideoOn && (
               <div className="absolute inset-0 bg-gray-700 flex items-center justify-center">
@@ -323,13 +323,13 @@ export default function VideoCall() {
           {offers.length > 0 && (
             <div className="absolute top-4 left-4 space-y-2">
               {offers.map((offer, i) => (
-                <div key={i} className="bg-green-600 hover:bg-green-700 rounded-lg p-4 transition-colors">
+                <div key={i} className="bg-blue-600 hover:bg-blue-700 rounded-lg p-4 transition-colors">
                   <div className="flex items-center gap-3">
                     <UserPlus className="w-5 h-5" />
                     <span className="font-medium">{offer.offererUserName} is calling</span>
-                    <button 
+                    <button
                       onClick={() => answerOffer(offer)}
-                      className="ml-auto px-4 py-2 bg-white text-green-600 rounded-lg hover:bg-gray-100 transition-colors"
+                      className="ml-auto px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors"
                     >
                       Answer
                     </button>
@@ -343,40 +343,37 @@ export default function VideoCall() {
         {/* Control Bar */}
         <div className="absolute left-[56.5%] bottom-8 -translate-x-1/2 z-20 rounded-xl dark:bg-gray-950 bg-gray-100 px-6 py-4 flex items-center justify-center gap-4 border-t dark:border-gray-800 border-gray-400 shadow-lg">
           {/* Audio Controls */}
-          <button 
+          <button
             onClick={toggleAudio}
-            className={`p-3 rounded-full transition-colors ${
-              isAudioOn ? 'bg-gray-300 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700' : 'bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800'
-            }`}
+            className={`p-3 rounded-full transition-colors ${isAudioOn ? 'bg-gray-300 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700' : 'bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800'
+              }`}
             title={isAudioOn ? 'Couper le micro' : 'Activer le micro'}
           >
             {isAudioOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}
           </button>
 
           {/* Video Controls */}
-          <button 
+          <button
             onClick={toggleVideo}
-            className={`p-3 rounded-full transition-colors ${
-              isVideoOn ? 'bg-gray-300 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700' : 'bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800'
-            }`}
+            className={`p-3 rounded-full transition-colors ${isVideoOn ? 'bg-gray-300 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700' : 'bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800'
+              }`}
             title={isVideoOn ? 'Couper la vidéo' : 'Activer la vidéo'}
           >
             {isVideoOn ? <Video className="w-5 h-5" /> : <VideoOff className="w-5 h-5" />}
           </button>
 
           {/* Speaker Controls */}
-          <button 
+          <button
             onClick={() => setIsSpeakerOn(!isSpeakerOn)}
-            className={`p-3 rounded-full transition-colors ${
-              isSpeakerOn ? 'bg-gray-300 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700' : 'bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800'
-            }`}
+            className={`p-3 rounded-full transition-colors ${isSpeakerOn ? 'bg-gray-300 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700' : 'bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800'
+              }`}
             title={isSpeakerOn ? 'Couper le son' : 'Activer le son'}
           >
             {isSpeakerOn ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
           </button>
 
           {/* Screen Share */}
-          <button 
+          <button
             className="p-3 bg-gray-300 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-full transition-colors"
             title="Partager l'écran"
           >
@@ -385,15 +382,15 @@ export default function VideoCall() {
 
           {/* Call/Hangup */}
           {!isInCall && !waiting ? (
-            <button 
+            <button
               onClick={callPeer}
-              className="p-4  text-white bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 rounded-full transition-colors"
+              className="p-4  text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-full transition-colors"
               title="Démarrer l'appel"
             >
               <Phone className="w-6 h-6" />
             </button>
           ) : isInCall || waiting ? (
-            <button 
+            <button
               onClick={hangup}
               className="p-4 text-white bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 rounded-full transition-colors"
               title="Raccrocher"
@@ -401,7 +398,7 @@ export default function VideoCall() {
               <PhoneOff className="w-6 h-6" />
             </button>
           ) : (
-            <button 
+            <button
               className="p-4 bg-gray-300 dark:bg-gray-300 rounded-full cursor-not-allowed opacity-50"
               disabled
               title="En attente d'un participant"
@@ -411,7 +408,7 @@ export default function VideoCall() {
           )}
 
           {/* More Options */}
-          <button 
+          <button
             className="p-3 bg-gray-300 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-full transition-colors"
             title="Plus d'options"
           >

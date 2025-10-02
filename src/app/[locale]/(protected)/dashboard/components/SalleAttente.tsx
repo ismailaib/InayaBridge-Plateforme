@@ -1,18 +1,18 @@
 "use client"
 
-import { RiTimeLine } from "@remixicon/react"
-import { cx } from "@/lib/utils"
 import { Card } from "@/components/Card"
 import { Divider } from "@/components/Divider"
 import { ProgressCircle } from "@/components/ProgressCircle"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/Tabs"
+import { useTranslations } from "@/lib/i18n/useTranslations"
+import { cx } from "@/lib/utils"
+import { RiTimeLine } from "@remixicon/react"
 import {
   ClipboardPlus,
   FileText,
   MonitorDot,
   SquareActivity,
 } from "lucide-react"
-import { useTranslations } from "@/lib/i18n/useTranslations"
 
 export default function PatientTracking() {
   const t = useTranslations("dashboard.patientTracking")
@@ -71,7 +71,7 @@ export default function PatientTracking() {
     {
       status: t("statuses.videoCall"),
       icon: MonitorDot,
-      iconColor: "text-emerald-500",
+      iconColor: "text-blue-500",
       dossiers: [
         {
           patient: "Soukaina Jebari",
@@ -110,7 +110,7 @@ export default function PatientTracking() {
     [t("statuses.waitingRoom")]:
       "bg-orange-50 text-orange-700 ring-orange-600/20 dark:bg-orange-400/10 dark:text-orange-400 dark:ring-orange-400/20",
     [t("statuses.videoCall")]:
-      "bg-emerald-50 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-400/10 dark:text-emerald-400 dark:ring-emerald-400/20",
+      "bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/20",
   }
 
   return (

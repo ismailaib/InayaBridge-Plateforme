@@ -1,18 +1,18 @@
 "use client"
 
-import { RiStethoscopeLine, RiUserHeartLine } from "@remixicon/react"
-import { Card } from "@/components/Card"
-import { Button } from "@/components/Button"
-import { useState } from "react"
-import { Frown, Smile } from "lucide-react"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import logo from "./../../icon-logo.png"
-import Link from "next/link"
 import { Conditions } from "@/app/Conditions"
 import { Politique } from "@/app/Politique"
-import useTranslations from "@/lib/i18n/useTranslations"
+import { Button } from "@/components/Button"
+import { Card } from "@/components/Card"
 import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
+import useTranslations from "@/lib/i18n/useTranslations"
+import { RiStethoscopeLine, RiUserHeartLine } from "@remixicon/react"
+import { motion } from "framer-motion"
+import { Frown, Smile } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
+import { useState } from "react"
+import logo from "./../../icon-logo.png"
 
 export default function RoleSelection() {
   const t = useTranslations("signup.roleSelection")
@@ -26,7 +26,7 @@ export default function RoleSelection() {
       value: "doctor",
       icon: RiStethoscopeLine,
       description: t("doctor.description"),
-      border: "border-[#00b38f]",
+      border: "border-[#3b82f6]",
     },
     {
       key: "patient",
@@ -34,7 +34,7 @@ export default function RoleSelection() {
       value: "patient",
       icon: RiUserHeartLine,
       description: t("patient.description"),
-      border: "border-[#00b38f]",
+      border: "border-[#3b82f6]",
     },
   ] as const
 
@@ -50,7 +50,7 @@ export default function RoleSelection() {
           animate={{ opacity: 1, y: 0 }}
           className="relative mx-auto w-fit rounded-xl bg-gray-50 p-4 shadow-md shadow-black/10 ring-1 ring-black/10 dark:bg-gray-900 dark:ring-gray-800"
         >
-          <div className="w-fit rounded-lg bg-gradient-to-b from-[#00b38fdc] to-[#00b38f] p-3 shadow-sm shadow-[#00b38f]/50 ring-1 ring-inset ring-white/25">
+          <div className="w-fit rounded-lg bg-gradient-to-b from-[#3b82f6dc] to-[#3b82f6] p-3 shadow-sm shadow-[#3b82f6]/50 ring-1 ring-inset ring-white/25">
             <Image src={logo} alt="InayaBridge logo" width={24} height={24} />
           </div>
         </motion.div>
@@ -75,11 +75,10 @@ export default function RoleSelection() {
             >
               <Card
                 onClick={() => setSelectedRole(value)}
-                className={`flex h-full cursor-pointer flex-col justify-between border transition-all duration-200 ${
-                  selectedRole === value
-                    ? `ring-2 ring-[#00b38f] ${border} shadow-md`
-                    : "border-gray-300 dark:border-gray-700"
-                }`}
+                className={`flex h-full cursor-pointer flex-col justify-between border transition-all duration-200 ${selectedRole === value
+                  ? `ring-2 ring-[#3b82f6] ${border} shadow-md`
+                  : "border-gray-300 dark:border-gray-700"
+                  }`}
               >
                 <div className="flex items-start gap-4">
                   <div className="rounded-md bg-gray-100 p-3 dark:bg-gray-800">

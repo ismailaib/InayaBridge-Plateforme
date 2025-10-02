@@ -1,23 +1,23 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { io, Socket } from 'socket.io-client'
 import {
-  Video,
-  VideoOff,
+  Camera,
   Mic,
   MicOff,
+  Monitor,
+  MoreVertical,
   Phone,
   PhoneOff,
   Settings,
   Share,
-  Camera,
-  Monitor,
+  UserPlus,
+  Video,
+  VideoOff,
   Volume2,
-  VolumeX,
-  MoreVertical,
-  UserPlus
+  VolumeX
 } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { io, Socket } from 'socket.io-client'
 
 const peerConfig = {
   iceServers: [
@@ -190,7 +190,7 @@ export default function VideoCall() {
 
   const getStatusColor = () => {
     switch (connectionStatus) {
-      case 'connected': return 'bg-green-500'
+      case 'connected': return 'bg-blue-500'
       case 'calling': case 'answering': return 'bg-yellow-500'
       case 'media-error': return 'bg-red-500'
       default: return 'bg-gray-500'
@@ -239,21 +239,21 @@ export default function VideoCall() {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={testMicrophone}
-              className="px-3 py-2 bg-[#00b38f]/80 hover:bg-[#00b38f] rounded-lg text-sm transition-colors flex items-center gap-2 dark:text-gray-900 text-white"
+              className="px-3 py-2 bg-[#3b82f6]/80 hover:bg-[#3b82f6] rounded-lg text-sm transition-colors flex items-center gap-2 dark:text-gray-900 text-white"
             >
               <Mic className="w-4 h-4" />
               Test Micro
             </button>
             <button
               onClick={testCamera}
-              className="px-3 py-2 bg-[#00b38f]/80 hover:bg-[#00b38f] rounded-lg text-sm transition-colors flex items-center gap-2 dark:text-gray-900 text-white"
+              className="px-3 py-2 bg-[#3b82f6]/80 hover:bg-[#3b82f6] rounded-lg text-sm transition-colors flex items-center gap-2 dark:text-gray-900 text-white"
             >
               <Camera className="w-4 h-4" />
               Test Caméra
             </button>
             <button
               onClick={testSpeakers}
-              className="px-3 py-2 bg-[#00b38f]/80 hover:bg-[#00b38f] rounded-lg text-sm transition-colors flex items-center gap-2 dark:text-gray-900 text-white"
+              className="px-3 py-2 bg-[#3b82f6]/80 hover:bg-[#3b82f6] rounded-lg text-sm transition-colors flex items-center gap-2 dark:text-gray-900 text-white"
             >
               <Volume2 className="w-4 h-4" />
               Test Haut-parleurs
@@ -303,13 +303,13 @@ export default function VideoCall() {
           {offers.length > 0 && (
             <div className="absolute top-4 left-4 space-y-2">
               {offers.map((offer, i) => (
-                <div key={i} className="bg-green-600 hover:bg-green-700 rounded-lg p-4 transition-colors">
+                <div key={i} className="bg-blue-600 hover:bg-blue-700 rounded-lg p-4 transition-colors">
                   <div className="flex items-center gap-3">
                     <UserPlus className="w-5 h-5" />
                     <span className="font-medium">{offer.offererUserName} is calling</span>
                     <button
                       onClick={() => answerOffer(offer)}
-                      className="ml-auto px-4 py-2 bg-white text-green-600 rounded-lg hover:bg-gray-100 transition-colors"
+                      className="ml-auto px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors"
                     >
                       Answer
                     </button>
@@ -364,7 +364,7 @@ export default function VideoCall() {
           {!isInCall && !waiting ? (
             <button
               onClick={callPeer}
-              className="p-4  text-white bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 rounded-full transition-colors"
+              className="p-4  text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-full transition-colors"
               title="Démarrer l'appel"
             >
               <Phone className="w-6 h-6" />

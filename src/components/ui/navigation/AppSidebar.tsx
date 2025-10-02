@@ -1,8 +1,7 @@
 "use client"
 
-import * as React from "react"
-import { usePathname } from "next/navigation"
-import { RiArrowDownSFill } from "@remixicon/react"
+import { Divider } from "@/components/Divider"
+import { Input } from "@/components/Input"
 import {
   Sidebar,
   SidebarContent,
@@ -16,27 +15,28 @@ import {
   SidebarMenuSub,
   SidebarSubLink,
 } from "@/components/Sidebar"
-import { Divider } from "@/components/Divider"
-import { Input } from "@/components/Input"
-import { UserProfile } from "./UserProfile"
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
+import { useTranslations } from "@/lib/i18n/useTranslations"
+import { cx, focusRing } from "@/lib/utils"
+import { RiArrowDownSFill } from "@remixicon/react"
 import {
+  BarChart3,
+  Bot,
+  Building2,
+  CalendarDays,
+  FileText,
+  FolderSearch,
+  Heart,
   LayoutDashboard,
   MessagesSquare,
-  CalendarDays,
+  Settings,
   UserCircle,
   Video,
-  FolderSearch,
-  BarChart3,
-  Settings,
-  Building2,
-  Bot,
-  Heart,
-  FileText,
 } from "lucide-react"
-import { cx, focusRing } from "@/lib/utils"
 import Image from "next/image"
-import { useTranslations } from "@/lib/i18n/useTranslations";
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
+import { usePathname } from "next/navigation"
+import * as React from "react"
+import { UserProfile } from "./UserProfile"
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
@@ -63,10 +63,10 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       root: "/appointment",
       active: false,
       children: [
-        { name: t("doctor.appointmentsChildren.all"), root: "appointment" },
-        { name: t("doctor.appointmentsChildren.create"), root: "appointment/create" },
-        { name: t("doctor.appointmentsChildren.waiting"), root: "appointment/waitingroom" },
-        { name: t("doctor.appointmentsChildren.history"), root: "appointment/history" },
+        { name: t("doctor.appointmentsChildren.all"), root: "/appointment" },
+        { name: t("doctor.appointmentsChildren.create"), root: "/appointment/create" },
+        { name: t("doctor.appointmentsChildren.waiting"), root: "/appointment/waitingroom" },
+        { name: t("doctor.appointmentsChildren.history"), root: "/appointment/history" },
       ],
     },
     {
@@ -202,21 +202,21 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
     )
 
   const generateHref = (root: string) => {
+    if (!root || root.startsWith("#") || root.startsWith("http")) return root;
     const base = `/${locale}`;
     if (isPatient) {
       if (root.startsWith("/patient/")) return `${base}${root}`;
       return `${base}/patient/${root}`;
-    } else {
-      if (root.startsWith("/")) return `${base}${root}`;
-      return `${base}/${root}`;
     }
+    if (root.startsWith("/")) return `${base}${root}`;
+    return `${base}/${root}`;
   };
 
   return (
     <Sidebar {...props} className="bg-gray-50 dark:bg-gray-900/25">
       <SidebarHeader className="px-3 py-4">
         <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded-md bg-[#00b38f] p-1.5 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
+          <span className="flex size-9 items-center justify-center rounded-md bg-[#3b82f6] p-1.5 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
             <Image
               src="/images/icon-logo.png"
               alt="INAYABRIDGE ICON"
@@ -297,20 +297,23 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
                     {isOpen && (
                       <SidebarMenuSub>
                         <div className={`absolute inset-y-0 left-4 w-px`} />
-                        {item.children.map((child) => (
-                          <SidebarMenuItem key={child.root}>
-                            <SidebarSubLink
-                              href={child.root}
-                              className={
-                                pathname === child.root
-                                  ? "text-[#00b38f] dark:text-gray-100"
-                                  : ""
-                              }
-                            >
-                              {child.name}
-                            </SidebarSubLink>
-                          </SidebarMenuItem>
-                        ))}
+                        {item.children.map((child) => {
+                          const childHref = generateHref(child.root);
+                          return (
+                            <SidebarMenuItem key={child.root}>
+                              <SidebarSubLink
+                                href={childHref}
+                                className={
+                                  pathname === childHref
+                                    ? "text-[#3b82f6] dark:text-gray-100"
+                                    : ""
+                                }
+                              >
+                                {child.name}
+                              </SidebarSubLink>
+                            </SidebarMenuItem>
+                          );
+                        })}
                       </SidebarMenuSub>
                     )}
                   </SidebarMenuItem>
@@ -328,3 +331,4 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
+

@@ -1,12 +1,12 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from 'react'
-import TimeLine from './components/TimeLine'
+import { Input } from '@/components/Input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/Select'
 import { Search } from 'lucide-react'
-import { Input } from '@/components/Input'
-import Details from './components/Details'
+import React, { useEffect, useRef, useState } from 'react'
 import { getDoctorPatients, Patient } from '../api/patients'
+import Details from './components/Details'
+import TimeLine from './components/TimeLine'
 
 const PatientDossierPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -19,22 +19,22 @@ const PatientDossierPage: React.FC = () => {
   const searchInputRef = useRef<HTMLInputElement>(null)
 
   const refetchPatients = React.useCallback(async () => {
-  setLoading(true)
-  try {
-    const { data } = await getDoctorPatients()
-    setPatients(data)
+    setLoading(true)
+    try {
+      const { data } = await getDoctorPatients()
+      setPatients(data)
 
-    // keep the current selection fresh
-    if (selectedPatient) {
-      const fresh = data.find(p => p.id === selectedPatient.id)
-      setSelectedPatient(fresh ?? null)
+      // keep the current selection fresh
+      if (selectedPatient) {
+        const fresh = data.find(p => p.id === selectedPatient.id)
+        setSelectedPatient(fresh ?? null)
+      }
+    } catch (err) {
+      console.error('Failed to refetch patients', err)
+    } finally {
+      setLoading(false)
     }
-  } catch (err) {
-    console.error('Failed to refetch patients', err)
-  } finally {
-    setLoading(false)
-  }
-}, [selectedPatient])
+  }, [selectedPatient])
 
 
   useEffect(() => {
@@ -88,13 +88,13 @@ const PatientDossierPage: React.FC = () => {
     handlePatientSelect(patientId)
   }
 
-   if (loading) {
-        return (
-            <div className="flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-            </div>
-        )
-    }
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    )
+  }
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -172,7 +172,7 @@ const PatientDossierPage: React.FC = () => {
         <div className="col-span-4 h-full">
           <div className="sticky top-4">
             {/* @ts-ignore */}
-            <TimeLine patient={selectedPatient!} onSuccess={refetchPatients}/>
+            <TimeLine patient={selectedPatient!} onSuccess={refetchPatients} />
           </div>
         </div>
       </div>

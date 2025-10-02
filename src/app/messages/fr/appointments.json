@@ -1,0 +1,189 @@
+{
+  "page": {
+    "title": "Géstion des rendez-vous",
+    "description": "Vous pouvez gérer vos rendez-vous ici. Vous pouvez créer, modifier ou supprimer des rendez-vous selon vos besoins.",
+    "newAppointment": "Nouveau rendez-vous"
+  },
+  "calendar": {
+    "locale": "fr",
+    "today": "Aujourd'hui",
+    "views": {
+      "month": "Mois",
+      "week": "Semaine",
+      "day": "Jour",
+      "list": "Liste"
+    },
+    "monthView": {
+      "days": {
+        "mon": "Lun",
+        "tue": "Mar",
+        "wed": "Mer",
+        "thu": "Jeu",
+        "fri": "Ven",
+        "sat": "Sam",
+        "sun": "Dim"
+      },
+      "more": "plus"
+    },
+    "listView": {
+      "locale": "fr",
+      "types": {
+        "local": "Cabinet principal",
+        "home": "À domicile",
+        "video": "Visioconférence"
+      },
+      "status": {
+        "confirmed": "Confirmé",
+        "pending": "À confirmer"
+      }
+    },
+    "dayView": {
+      "hour": "Heure",
+      "appointments": "Rendez-vous"
+    },
+    "weekView": {
+      "locale": "fr",
+      "timeLabel": "Heure"
+    }
+  },
+  "form": {
+    "title": "Créer un rendez-vous",
+    "subtitle": "Sélectionnez un patient existant ou ajoutez-en un nouveau.",
+    "patient": {
+      "label": "Patient",
+      "placeholder": "Sélectionner un patient",
+      "searchPlaceholder": "Rechercher un patient...",
+      "noResults": "Aucun patient trouvé"
+    },
+    "date": "Date",
+    "cost": "Coût",
+    "motif": "Motif",
+    "note": "Note",
+    "location": {
+      "label": "Lieu",
+      "office": {
+        "title": "Cabinet principal",
+        "desc": "Situé au centre-ville, équipé pour tous les examens médicaux courants."
+      },
+      "home": {
+        "title": "À domicile",
+        "desc": "Consultation réalisée au domicile du patient."
+      },
+      "video": {
+        "title": "Téléconsultation",
+        "desc": "Rendez-vous à distance par appel vidéo ou téléphonique."
+      }
+    },
+    "waitingRoom": "Ajouter à la salle d’attente",
+    "urgent": "Marquer comme urgent",
+    "cancel": "Annuler",
+    "submit": "Créer le rendez-vous",
+    "placeholders": {
+      "cost": "Ex. 250 DH",
+      "motif": "Ex. Bilan sanguin",
+      "note": "Ex. Note"
+    },
+    "alerts": {
+      "fillAllFields": "Veuillez remplir tous les champs obligatoires.",
+      "success": "Rendez-vous créé avec succès !",
+      "error": "Erreur lors de la création du rendez-vous."
+    }
+  },
+  "waitingRoom": {
+    "page": {
+      "title": "Salle d’attente interactive & gestion des consultations",
+      "subtitle": "Sélectionnez un patient existant ou ajoutez-en un nouveau."
+    },
+    "drawer": {
+      "openButton": "Ajouter à la salle d’attente",
+      "title": "Ajouter à la salle d’attente",
+      "description": "D’après la liste des rendez-vous, vous pouvez ajouter un patient à la salle d’attente.",
+      "noAppointments": "Aucun rendez-vous trouvé à la date d’aujourd’hui",
+      "createAppointment": "Créer un rendez-vous",
+      "hasAppointmentsContent": "Contenu à afficher si des rendez-vous existent",
+      "back": "Retour",
+      "validate": "Valider"
+    },
+    "section": {
+      "noPatient": "Aucun patient"
+    },
+    "card": {
+      "descriptionPlaceholder": "Description .....",
+      "consultations": "Consultations ({{current}}/{{total}})",
+      "updatedAt": "Mis à jour {{time}}"
+    },
+    "patientTracking": {
+      "title": "Patients en cours de gestion",
+      "subtitle": "Suivi en temps réel des dossiers actifs",
+      "statuses": {
+        "inConsultation": "En consultation",
+        "waitingRoom": "Salle d’attente",
+        "video": "Rendez-vous visioconférence"
+      },
+      "labels": {
+        "descriptionPlaceholder": "Description .....",
+        "consultations": "Consultations ({{current}}/{{total}})",
+        "updated": "Mis à jour {{time}}"
+      },
+      "motifs": {
+        "postOpFollowUp": "Suivi post-opératoire",
+        "vertigo": "Vertiges",
+        "pregnancyFollowUp": "Suivi de grossesse",
+        "bloodTest": "Bilan sanguin",
+        "anxiety": "Anxiété",
+        "scanResults": "Résultats scanner",
+        "diabetesControl": "Contrôle diabète"
+      },
+      "locations": {
+        "mainOffice": "Cabinet principal",
+        "roomA": "Salle A",
+        "roomB": "Salle B",
+        "teleconsultation": "Téléconsultation - {{time}}"
+      },
+      "remarks": {
+        "inProgress": "Consultation en cours",
+        "patientArrived": "Patient arrivé",
+        "waiting": "En attente",
+        "arrived": "Arrivé",
+        "scheduled": "Prévu",
+        "toConfirm": "À confirmer"
+      },
+      "updatedTimes": {
+        "minutesAgo": "il y a {{count}} min",
+        "scheduledAt": "prévu à {{time}}"
+      }
+    }
+  },
+  "history": {
+    "title": "Historique des consultations",
+    "subtitle": "Ici vous pouvez consulter tous vos rendez-vous et générer un rapport",
+    "generateReport": "Générer un rapport",
+    "filters": {
+      "date": "Date",
+      "type": "Type de consultation",
+      "status": "Statut",
+      "paymentStatus": "Statut du paiement",
+      "allTypes": "Tous les types",
+      "video": "Visioconférence",
+      "phone": "Téléphone",
+      "inPerson": "Présentiel",
+      "all": "Tous",
+      "completed": "Terminé",
+      "confirmed": "Confirmé",
+      "canceled": "Annulé",
+      "absent": "Absent",
+      "paid": "Payées",
+      "notPaid": "Non payée",
+      "select": "Sélectionner"
+    },
+    "table": {
+      "patient": "Patient",
+      "status": "Statut",
+      "date": "Date",
+      "time": "Heure",
+      "duration": "Durée",
+      "type": "Type",
+      "lastUpdated": "Dernière mise à jour"
+    }
+}
+}

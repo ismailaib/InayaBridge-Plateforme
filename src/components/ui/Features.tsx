@@ -1,8 +1,8 @@
 "use client"
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
+import { useTranslations } from "@/lib/i18n/useTranslations"
 import React from "react"
 import { Badge } from "../Badge"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
 
 export default function Features() {
   const t = useTranslations("features")
@@ -43,8 +43,8 @@ export default function Features() {
       <dl className="mt-12 grid grid-cols-1 gap-y-8 md:grid-cols-3 md:border-y md:border-gray-200 md:py-14 dark:border-gray-800">
         {stats.map((stat, index) => (
           <React.Fragment key={index}>
-            <div className="border-l-2 border-green-100 pl-6 md:border-l md:text-center lg:border-gray-200 lg:first:border-none dark:border-[#003c30] lg:dark:border-gray-800">
-              <dd className="inline-block bg-gradient-to-t from-[#003c30] to-[#009e7f] bg-clip-text text-5xl font-bold tracking-tight text-transparent lg:text-6xl dark:from-[#007e68] dark:to-[#33ccad]">
+            <div className="border-l-2 border-blue-100 pl-6 md:border-l md:text-center lg:border-gray-200 lg:first:border-none dark:border-[#3b82f6] lg:dark:border-gray-800">
+              <dd className="inline-block bg-gradient-to-t from-[#3b82f6] to-[#3b82f6] bg-clip-text text-5xl font-bold tracking-tight text-transparent lg:text-6xl dark:from-[#3b82f6] dark:to-[#3b82f6]">
                 {stat.value}
               </dd>
               <dt className="mt-1 text-gray-600 dark:text-gray-400">

@@ -19,6 +19,7 @@ import {
   TableRoot,
   TableRow,
 } from '@/components/Table';
+import {useTranslations} from '@/lib/i18n/useTranslations';
 
 const appointments = [
   {
@@ -68,58 +69,6 @@ const appointments = [
   },
 ];
 
-const appointmentsColumns = [
-  {
-    header: 'Patient',
-    accessorKey: 'patient',
-    meta: {
-      align: 'text-left',
-    },
-  },
-
-  {
-    header: 'Statut',
-    accessorKey: 'status',
-    meta: {
-      align: 'text-left',
-    },
-  },
-  {
-    header: 'Date',
-    accessorKey: 'date',
-    meta: {
-      align: 'text-left',
-    },
-  },
-  {
-    header: 'Heure',
-    accessorKey: 'time',
-    meta: {
-      align: 'text-right',
-    },
-  },
-  {
-    header: 'Durée',
-    accessorKey: 'duration',
-    meta: {
-      align: 'text-right',
-    },
-  },
-  {
-    header: 'Type',
-    accessorKey: 'type',
-    meta: {
-      align: 'text-left',
-    },
-  },
-  {
-    header: 'Dernière mise à jour',
-    accessorKey: 'lastUpdated',
-    meta: {
-      align: 'text-right',
-    },
-  },
-];
 
 
 declare module '@tanstack/react-table' {
@@ -205,6 +154,46 @@ const MobileButton = ({
 
 export default function Example() {
   const pageSize = 8;
+
+    const t = useTranslations("appointments.history.table")
+
+const appointmentsColumns = [
+    {
+      header: t("patient"),
+      accessorKey: "patient",
+      meta: { align: "text-left" },
+    },
+    {
+      header: t("status"),
+      accessorKey: "status",
+      meta: { align: "text-left" },
+    },
+    {
+      header: t("date"),
+      accessorKey: "date",
+      meta: { align: "text-left" },
+    },
+    {
+      header: t("time"),
+      accessorKey: "time",
+      meta: { align: "text-right" },
+    },
+    {
+      header: t("duration"),
+      accessorKey: "duration",
+      meta: { align: "text-right" },
+    },
+    {
+      header: t("type"),
+      accessorKey: "type",
+      meta: { align: "text-left" },
+    },
+    {
+      header: t("lastUpdated"),
+      accessorKey: "lastUpdated",
+      meta: { align: "text-right" },
+    },
+  ]
 
   const data = React.useMemo(
     // multiply dummy data to better demonstrate pagination over several pages

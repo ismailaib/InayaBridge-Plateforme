@@ -1,10 +1,10 @@
 import { Button } from "@/components/Button";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/Dialog";
+import useTranslations from "@/lib/i18n/useTranslations";
 import { cx } from "@/lib/utils";
 import { RiCheckboxCircleFill, RiCloseLine } from "@remixicon/react";
 import { Wallet } from "lucide-react";
-import React, { useState } from "react";
-import useTranslations from "@/lib/i18n/useTranslations";
+import { useState } from "react";
 
 const Pricing = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +57,7 @@ const Pricing = () => {
                 key={plan.id}
                 className={cx(
                   plan.isRecommended
-                    ? "border-emerald-500 bg-emerald-50 dark:border-emerald-500 dark:bg-emerald-950"
+                    ? "border-blue-500 bg-blue-50 dark:border-blue-500 dark:bg-blue-950"
                     : "border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900",
                   "border-t-2 p-6"
                 )}
@@ -67,7 +67,7 @@ const Pricing = () => {
                     {plan.name}
                   </h3>
                   {plan.isRecommended && (
-                    <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
+                    <span className="text-xs font-medium text-blue-700 dark:text-blue-400">
                       {t("recommended")}
                     </span>
                   )}
@@ -113,7 +113,7 @@ const Pricing = () => {
                         <RiCheckboxCircleFill
                           className={cx(
                             plan.isRecommended
-                              ? "text-emerald-500 dark:text-emerald-500"
+                              ? "text-blue-500 dark:text-blue-500"
                               : "text-gray-400 dark:text-gray-600",
                             "size-5 shrink-0"
                           )}
@@ -136,7 +136,7 @@ const Pricing = () => {
                         <RiCheckboxCircleFill
                           className={cx(
                             plan.isRecommended
-                              ? "text-emerald-500 dark:text-emerald-500"
+                              ? "text-blue-500 dark:text-blue-500"
                               : "text-gray-400 dark:text-gray-600",
                             "size-5 shrink-0"
                           )}

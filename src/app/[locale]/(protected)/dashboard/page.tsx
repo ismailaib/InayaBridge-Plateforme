@@ -8,19 +8,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/Select"
-import { motion, AnimatePresence } from "framer-motion"
-import { useState, useEffect } from "react"
+import { AnimatePresence, motion } from "framer-motion"
+import { useEffect, useState } from "react"
 import { DashboardModal } from "./components/DashboardModal"
 import Kpis from "./components/Kpis"
 import Banner from "./components/onboarding/Banner"
 import Reporting from "./components/Reporting"
 import SalleAttente from "./components/SalleAttente"
 import Statistics from "./components/Statistics"
+import useTranslations from "@/lib/i18n/useTranslations"
 
 // Greeting Loader Component
 function GreetingLoader() {
   const greetings = ["Hello", "Hola", "Bonjour", "سلام"]
   const [currentIndex, setCurrentIndex] = useState(0)
+
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -54,11 +57,10 @@ function GreetingLoader() {
           {greetings.map((_, index) => (
             <div
               key={index}
-              className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                index === currentIndex
+              className={`h-2 w-2 rounded-full transition-all duration-300 ${index === currentIndex
                   ? "bg-blue-500 w-8"
                   : "bg-gray-300 dark:bg-gray-700"
-              }`}
+                }`}
             />
           ))}
         </motion.div>
@@ -69,6 +71,7 @@ function GreetingLoader() {
 
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true)
+  const t = useTranslations("common")
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -106,18 +109,18 @@ export default function Dashboard() {
 
   // --- Month & Year Selects ---
   const monthSelect = [
-    { label: "Janvier", value: "janvier" },
-    { label: "Février", value: "février" },
-    { label: "Mars", value: "mars" },
-    { label: "Avril", value: "avril" },
-    { label: "Mai", value: "mai" },
-    { label: "Juin", value: "juin" },
-    { label: "Juillet", value: "juillet" },
-    { label: "Août", value: "août" },
-    { label: "Septembre", value: "septembre" },
-    { label: "Octobre", value: "octobre" },
-    { label: "Novembre", value: "novembre" },
-    { label: "Décembre", value: "décembre" },
+    { label: t("months.1"), value: "janvier" },
+    { label: t("months.2"), value: "février" },
+    { label: t("months.3"), value: "mars" },
+    { label: t("months.4"), value: "avril" },
+    { label: t("months.5"), value: "mai" },
+    { label: t("months.6"), value: "juin" },
+    { label: t("months.7"), value: "juillet" },
+    { label: t("months.8"), value: "août" },
+    { label: t("months.9"), value: "septembre" },
+    { label: t("months.10"), value: "octobre" },
+    { label: t("months.11"), value: "novembre" },
+    { label: t("months.12"), value: "décembre" },
   ]
 
   const currentYear = new Date().getFullYear()

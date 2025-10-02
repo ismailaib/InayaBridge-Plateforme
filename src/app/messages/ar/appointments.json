@@ -1,0 +1,189 @@
+{
+  "page": {
+    "title": "إدارة المواعيد",
+    "description": "يمكنك إدارة مواعيدك هنا. يمكنك إنشاء أو تعديل أو حذف المواعيد حسب احتياجاتك.",
+    "newAppointment": "موعد جديد"
+  },
+  "calendar": {
+    "locale": "ar",
+    "today": "اليوم",
+    "views": {
+      "month": "شهر",
+      "week": "أسبوع",
+      "day": "يوم",
+      "list": "قائمة"
+    },
+    "monthView": {
+      "days": {
+        "mon": "الاثنين",
+        "tue": "الثلاثاء",
+        "wed": "الأربعاء",
+        "thu": "الخميس",
+        "fri": "الجمعة",
+        "sat": "السبت",
+        "sun": "الأحد"
+      },
+      "more": "أكثر"
+    },
+    "listView": {
+      "locale": "ar",
+      "types": {
+        "local": "العيادة الرئيسية",
+        "home": "زيارة منزلية",
+        "video": "استشارة فيديو"
+      },
+      "status": {
+        "confirmed": "مؤكد",
+        "pending": "في انتظار التأكيد"
+      }
+    },
+    "dayView": {
+      "hour": "الوقت",
+      "appointments": "المواعيد"
+    },
+    "weekView": {
+      "locale": "ar",
+      "timeLabel": "الوقت"
+    }
+  },
+  "form": {
+    "title": "إنشاء موعد",
+    "subtitle": "اختر مريضًا موجودًا أو أضف مريضًا جديدًا.",
+    "patient": {
+      "label": "المريض",
+      "placeholder": "اختر مريضًا",
+      "searchPlaceholder": "ابحث عن مريض...",
+      "noResults": "لم يتم العثور على أي مريض"
+    },
+    "date": "التاريخ",
+    "cost": "التكلفة",
+    "motif": "السبب",
+    "note": "ملاحظة",
+    "location": {
+      "label": "المكان",
+      "office": {
+        "title": "العيادة الرئيسية",
+        "desc": "تقع في وسط المدينة، مجهزة لجميع الفحوصات الطبية الشائعة."
+      },
+      "home": {
+        "title": "زيارة منزلية",
+        "desc": "استشارة تتم في منزل المريض."
+      },
+      "video": {
+        "title": "استشارة عن بعد",
+        "desc": "موعد عن بعد عبر مكالمة فيديو أو هاتف."
+      }
+    },
+    "waitingRoom": "إضافة إلى غرفة الانتظار",
+    "urgent": "وضع علامة كعاجل",
+    "cancel": "إلغاء",
+    "submit": "إنشاء الموعد",
+    "placeholders": {
+      "cost": "مثال: 250 درهم",
+      "motif": "مثال: تحليل دم",
+      "note": "مثال: ملاحظة"
+    },
+    "alerts": {
+      "fillAllFields": "يرجى ملء جميع الحقول المطلوبة.",
+      "success": "تم إنشاء الموعد بنجاح!",
+      "error": "خطأ أثناء إنشاء الموعد."
+    }
+  },
+  "waitingRoom": {
+    "page": {
+      "title": "غرفة الانتظار التفاعلية وإدارة الاستشارات",
+      "subtitle": "اختر مريضًا موجودًا أو أضف مريضًا جديدًا."
+    },
+    "drawer": {
+      "openButton": "إضافة إلى غرفة الانتظار",
+      "title": "إضافة إلى غرفة الانتظار",
+      "description": "من قائمة المواعيد، يمكنك إضافة مريض إلى غرفة الانتظار.",
+      "noAppointments": "لم يتم العثور على أي موعد لليوم",
+      "createAppointment": "إنشاء موعد",
+      "hasAppointmentsContent": "محتوى يظهر إذا كانت هناك مواعيد",
+      "back": "رجوع",
+      "validate": "تأكيد"
+    },
+    "section": {
+      "noPatient": "لا يوجد مريض"
+    },
+    "card": {
+      "descriptionPlaceholder": "وصف .....",
+      "consultations": "الاستشارات ({{current}}/{{total}})",
+      "updatedAt": "تم التحديث {{time}}"
+    },
+    "patientTracking": {
+      "title": "المرضى قيد المتابعة",
+      "subtitle": "متابعة فورية للملفات النشطة",
+      "statuses": {
+        "inConsultation": "قيد الاستشارة",
+        "waitingRoom": "قاعة الانتظار",
+        "video": "مواعيد عبر الفيديو"
+      },
+      "labels": {
+        "descriptionPlaceholder": "وصف .....",
+        "consultations": "الاستشارات ({{current}}/{{total}})",
+        "updated": "تم التحديث {{time}}"
+      },
+      "motifs": {
+        "postOpFollowUp": "متابعة بعد الجراحة",
+        "vertigo": "دوار",
+        "pregnancyFollowUp": "متابعة الحمل",
+        "bloodTest": "تحليل دم",
+        "anxiety": "قلق",
+        "scanResults": "نتائج الأشعة",
+        "diabetesControl": "متابعة السكري"
+      },
+      "locations": {
+        "mainOffice": "العيادة الرئيسية",
+        "roomA": "غرفة أ",
+        "roomB": "غرفة ب",
+        "teleconsultation": "استشارة عن بعد - {{time}}"
+      },
+      "remarks": {
+        "inProgress": "الاستشارة جارية",
+        "patientArrived": "وصل المريض",
+        "waiting": "بانتظار",
+        "arrived": "وصل",
+        "scheduled": "مجدول",
+        "toConfirm": "بانتظار التأكيد"
+      },
+      "updatedTimes": {
+        "minutesAgo": "منذ {{count}} دقيقة",
+        "scheduledAt": "مجدول عند {{time}}"
+      }
+    }
+  },
+  "history": {
+    "title": "سجل الاستشارات",
+    "subtitle": "هنا يمكنك عرض جميع مواعيدك وإنشاء تقرير",
+    "generateReport": "إنشاء تقرير",
+    "filters": {
+      "date": "التاريخ",
+      "type": "نوع الاستشارة",
+      "status": "الحالة",
+      "paymentStatus": "حالة الدفع",
+      "allTypes": "جميع الأنواع",
+      "video": "استشارة عبر الفيديو",
+      "phone": "هاتف",
+      "inPerson": "حضوري",
+      "all": "الكل",
+      "completed": "منجز",
+      "confirmed": "مؤكد",
+      "canceled": "ملغى",
+      "absent": "غائب",
+      "paid": "مدفوع",
+      "notPaid": "غير مدفوع",
+      "select": "اختر"
+    },
+    "table": {
+      "patient": "المريض",
+      "status": "الحالة",
+      "date": "التاريخ",
+      "time": "الوقت",
+      "duration": "المدة",
+      "type": "النوع",
+      "lastUpdated": "آخر تحديث"
+    }
+  }
+}

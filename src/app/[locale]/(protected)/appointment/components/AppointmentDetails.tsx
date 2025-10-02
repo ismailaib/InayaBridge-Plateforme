@@ -6,14 +6,23 @@ import {
   DialogTitle,
 } from "@/components/Dialog"
 import { cx } from "@/lib/utils"
+import type { CalendarAppointment } from "./types"
 import { deleteAppointment, updateAppointment } from "../api/appointment"
 
 import {
   format,
 } from "date-fns"
 import { fr } from "date-fns/locale"
-import { Calendar1, Clock, Phone, User, Edit2, Save, X } from "lucide-react"
-import { useState } from "react"
+import { Calendar1, Clock, Edit2, Phone, Save, User, X } from "lucide-react"
+import { useEffect, useState } from "react"
+
+type AppointmentDetailsProps = {
+  appointment: CalendarAppointment | null
+  isOpen: boolean
+  onClose: () => void
+  onAppointmentUpdated?: (updatedAppointment: CalendarAppointment) => void
+  onAppointmentDeleted?: (appointmentId: string) => void
+}
 
 export const AppointmentDetails = ({
   appointment,
@@ -21,42 +30,48 @@ export const AppointmentDetails = ({
   onClose,
   onAppointmentUpdated,
   onAppointmentDeleted,
-}: {
-  appointment: {
-    date_of_birth: string
-    id: string
-    patient: string
-    phoneNumber: string
-    type: string
-    typeColor: string
-    date: Date
-    startTime: string
-    endTime: string
-    location: string
-    notes: string
-    confirmed: boolean
-  } | null
-  isOpen: boolean
-  onClose: () => void
-  onAppointmentUpdated?: (updatedAppointment: any) => void
-  onAppointmentDeleted?: (appointmentId: string) => void
-}) => {
+}: AppointmentDetailsProps) => {
+  const formatDateForInput = (value?: string) => {
+    if (!value) return ""
+    const parsed = new Date(value)
+    return Number.isNaN(parsed.getTime()) ? "" : format(parsed, "yyyy-MM-dd")
+  }
+
+  const getValidDate = (value?: string) => {
+    if (!value) return null
+    const parsed = new Date(value)
+    return Number.isNaN(parsed.getTime()) ? null : parsed
+  }
+
   const [isDeleting, setIsDeleting] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
   const [editingField, setEditingField] = useState<string | null>(null)
   const [tempValues, setTempValues] = useState({
-    date: appointment?.date ? format(new Date(appointment.date), "yyyy-MM-dd") : "",
-    notes: appointment?.notes || "",
-    confirmed: appointment?.confirmed || false,
-    startTime: appointment?.startTime || "",
-    endTime: appointment?.endTime || ""
+    date: formatDateForInput(appointment?.date),
+    notes: appointment?.notes ?? "",
+    confirmed: appointment?.confirmed ?? false,
+    startTime: appointment?.startTime ?? "",
+    endTime: appointment?.endTime ?? "",
   })
+
+  useEffect(() => {
+    setTempValues({
+      date: formatDateForInput(appointment?.date),
+      notes: appointment?.notes ?? "",
+      confirmed: appointment?.confirmed ?? false,
+      startTime: appointment?.startTime ?? "",
+      endTime: appointment?.endTime ?? "",
+    })
+  }, [appointment])
 
   if (!appointment) return null
 
+  const appointmentDate = getValidDate(appointment.date)
+  const appointmentBirthDate = getValidDate(appointment.date_of_birth)
+
   const handleDelete = async () => {
     if (!appointment.id) return
-    
+
     setIsDeleting(true)
     try {
       await deleteAppointment(appointment.id)
@@ -73,62 +88,62 @@ export const AppointmentDetails = ({
   const formatTimeToHi = (time: string) => {
     // Convert time to H:i format (e.g., "14:30" or "9:15")
     if (!time) return time
-    
+
     // Handle different input formats
     let cleanTime = time.trim()
-    
+
     // If it's already in H:i or HH:MM format
     if (cleanTime.includes(':')) {
       const [hours, minutes] = cleanTime.split(':')
       const h = parseInt(hours, 10)
       const m = parseInt(minutes, 10)
-      
+
       // Validate time values
       if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
         return time // Return original if invalid
       }
-      
+
       return `${h}:${m.toString().padStart(2, '0')}`
     }
-    
+
     return time
   }
 
   const convertToTimeInput = (time: string) => {
     // Convert H:i format to HH:MM for HTML time input
     if (!time || !time.includes(':')) return time
-    
+
     const [hours, minutes] = time.split(':')
     const h = parseInt(hours, 10)
     const m = parseInt(minutes, 10)
-    
+
     if (isNaN(h) || isNaN(m)) return time
-    
+
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`
   }
 
   const handleStatusToggle = async () => {
     const newStatus = !appointment.confirmed
     setIsUpdating(true)
-    
+
     try {
       const payload = {
-        patientId: parseInt(appointment.id),
-        date: format(new Date(appointment.date), "yyyy-MM-dd"),
+        patientId: parseInt(appointment.id, 10),
+        date: formatDateForInput(appointment.date) || tempValues.date,
         startTime: formatTimeToHi(appointment.startTime),
         status: newStatus ? "confirmed" : "pending",
         consultationType: appointment.type as "local" | "video" | "in-person",
         motif: appointment.notes || "",
         endTime: formatTimeToHi(appointment.endTime)
       }
-      
+
       await updateAppointment(appointment.id, payload)
-      
+
       const updatedAppointment = {
         ...appointment,
         confirmed: newStatus
       }
-      
+
       onAppointmentUpdated?.(updatedAppointment)
       onClose()
     } catch (error) {
@@ -140,12 +155,12 @@ export const AppointmentDetails = ({
 
   const handleFieldUpdate = async (field: string) => {
     setIsUpdating(true)
-    
+
     try {
-      let updatedData: any = { ...appointment }
-      
+      let updatedData: CalendarAppointment = { ...appointment }
+
       if (field === 'date') {
-        updatedData.date = new Date(tempValues.date)
+        updatedData.date = tempValues.date
       } else if (field === 'notes') {
         updatedData.notes = tempValues.notes
       } else if (field === 'startTime') {
@@ -156,17 +171,17 @@ export const AppointmentDetails = ({
         updatedData.startTime = tempValues.startTime
         updatedData.endTime = tempValues.endTime
       }
-      
+
       const payload = {
-        patientId: parseInt(appointment.id),
-        date: field === 'date' ? tempValues.date : format(new Date(appointment.date), "yyyy-MM-dd"),
+        patientId: parseInt(appointment.id, 10),
+        date: field === 'date' ? tempValues.date : (formatDateForInput(appointment.date) || tempValues.date),
         startTime: formatTimeToHi(field === 'startTime' || field === 'times' ? tempValues.startTime : appointment.startTime),
         status: appointment.confirmed ? "confirmed" : "pending",
         consultationType: appointment.type as "local" | "video" | "in-person",
         motif: field === 'notes' ? tempValues.notes : (appointment.notes || ""),
         endTime: formatTimeToHi(field === 'endTime' || field === 'times' ? tempValues.endTime : appointment.endTime)
       }
-      
+
       await updateAppointment(appointment.id, payload)
       onAppointmentUpdated?.(updatedData)
       setEditingField(null)
@@ -185,7 +200,7 @@ export const AppointmentDetails = ({
     if (field === 'date') {
       setTempValues(prev => ({
         ...prev,
-        date: appointment?.date ? format(new Date(appointment.date), "yyyy-MM-dd") : ""
+        date: formatDateForInput(appointment?.date)
       }))
     } else if (field === 'notes') {
       setTempValues(prev => ({
@@ -223,7 +238,7 @@ export const AppointmentDetails = ({
               <div
                 className={cx(
                   "inline-flex items-center rounded px-2 py-1 text-xs font-medium",
-                  appointment.typeColor,
+                  appointment.typeColor ?? "",
                 )}
               >
                 {appointment.type === "local" && (
@@ -244,7 +259,7 @@ export const AppointmentDetails = ({
                   </span>
                 )}
               </div>
-              
+
               <button
                 onClick={handleStatusToggle}
                 disabled={isUpdating}
@@ -285,9 +300,9 @@ export const AppointmentDetails = ({
               ) : (
                 <div className="flex items-center gap-2">
                   <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">
-                    {format(new Date(appointment.date), "EEEE d MMMM yyyy", {
-                      locale: fr,
-                    })}
+                    {appointmentDate
+                      ? format(appointmentDate, "EEEE d MMMM yyyy", { locale: fr })
+                      : "--"}
                   </h3>
                   <button
                     onClick={() => setEditingField('date')}
@@ -331,7 +346,7 @@ export const AppointmentDetails = ({
                   </button>
                 )}
               </div>
-              
+
               {editingField === 'times' ? (
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
@@ -389,8 +404,8 @@ export const AppointmentDetails = ({
                 Date de Naissance
               </h4>
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                {appointment.date_of_birth
-                  ? format(new Date(appointment.date_of_birth), "dd/MM/yyyy")
+                {appointmentBirthDate
+                  ? format(appointmentBirthDate, "dd/MM/yyyy")
                   : "--"}
               </p>
             </div>
@@ -410,7 +425,7 @@ export const AppointmentDetails = ({
                 </button>
               )}
             </div>
-            
+
             {editingField === 'notes' ? (
               <div className="space-y-2">
                 <textarea
@@ -448,8 +463,8 @@ export const AppointmentDetails = ({
             <Button variant="secondary" onClick={onClose}>
               Fermer
             </Button>
-            <Button 
-              variant="destructive" 
+            <Button
+              variant="destructive"
               onClick={handleDelete}
               disabled={isDeleting}
             >
