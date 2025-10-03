@@ -71,8 +71,8 @@ export default function LoginPage() {
     } catch (error) {
       console.error("[LoginPage] loginApi error", error);
       toast({
-        title: "Erreur",
-        description: extractApiError(error),
+        title: c("errors.generic.title"),
+        description: c("errors.generic.description"),
         variant: "error",
         duration: 3000,
       });

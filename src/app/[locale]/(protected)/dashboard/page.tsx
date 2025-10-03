@@ -72,7 +72,7 @@ function GreetingLoader() {
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const t = useTranslations("common")
-
+  const d = useTranslations("signup")
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false)
@@ -145,7 +145,7 @@ export default function Dashboard() {
         <div className="sm:flex sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-              Bienvenue Dr. {user.lastName} {user.firstName}
+              {d('doctor.title')} {user.lastName} {user.firstName}
             </h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               {user.doctorProfile?.specialty ?? "Médecin"} •{" "}

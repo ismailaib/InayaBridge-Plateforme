@@ -334,6 +334,10 @@
     "evolution": {
       "title": "Consultation Trends",
       "tooltip": "Daily monitoring of booked appointments and diagnostics performed."
+    },
+    "categories": {
+      "1": "Appointments",
+      "2": "Diagnostics"
     }
   },
   "doctorAnalytics": {

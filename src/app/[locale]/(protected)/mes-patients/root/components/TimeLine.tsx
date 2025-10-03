@@ -78,7 +78,7 @@ const PatientHistorySidebar = ({
     return (
       <Card className="p-6 text-center">
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          Veuillez sélectionner un patient pour voir son historique médical.
+          Please select a patient to view their medical history.
         </p>
       </Card>
     );
@@ -94,28 +94,28 @@ const PatientHistorySidebar = ({
 
     // Header
     doc.setFontSize(18);
-    doc.setFont('Elvetica', 'bold');
-    doc.text('RAPPORT MÉDICAL DU PATIENT', margin, yPosition);
+    doc.setFont('helvetica', 'bold');
+    doc.text('PATIENT MEDICAL REPORT', margin, yPosition);
     yPosition += lineHeight * 2;
 
     // Patient Information Section
     doc.setFontSize(14);
-    doc.setFont('Elvetica', 'bold');
-    doc.text('INFORMATIONS PERSONNELLES', margin, yPosition);
+    doc.setFont('helvetica', 'bold');
+    doc.text('PERSONAL INFORMATION', margin, yPosition);
     yPosition += lineHeight;
 
     doc.setFontSize(10);
-    doc.setFont('Elvetica', 'normal');
+    doc.setFont('helvetica', 'normal');
 
     const personalInfo = [
-      `Nom complet: ${patient.first_name || ''} ${patient.last_name || ''}`,
+      `Full name: ${patient.first_name || ''} ${patient.last_name || ''}`,
       `CIN: ${patient.cin || 'N/A'}`,
-      `Date de naissance: ${patient.date_of_birth || 'N/A'}`,
-      `Genre: ${patient.gender === 'male' ? 'Masculin' : patient.gender === 'female' ? 'Féminin' : patient.gender || 'N/A'}`,
-      `Groupe sanguin: ${patient.blood_type || 'N/A'}`,
-      `Téléphone: ${patient.phone_number || 'N/A'}`,
+      `Date of birth: ${patient.date_of_birth || 'N/A'}`,
+      `Gender: ${patient.gender === 'male' ? 'Male' : patient.gender === 'female' ? 'Female' : patient.gender || 'N/A'}`,
+      `Blood type: ${patient.blood_type || 'N/A'}`,
+      `Phone: ${patient.phone_number || 'N/A'}`,
       `Email: ${patient.email || 'N/A'}`,
-      `Adresse: ${patient.address || 'N/A'}`
+      `Address: ${patient.address || 'N/A'}`
     ];
 
     personalInfo.forEach(info => {
@@ -127,68 +127,68 @@ const PatientHistorySidebar = ({
     if (patient.contact_urgence) {
       yPosition += lineHeight;
       doc.setFontSize(12);
-      doc.setFont('Elvetica', 'bold');
-      doc.text('CONTACT D\'URGENCE', margin, yPosition);
+      doc.setFont('helvetica', 'bold');
+      doc.text('EMERGENCY CONTACT', margin, yPosition);
       yPosition += lineHeight;
 
       doc.setFontSize(10);
-      doc.setFont('Elvetica', 'normal');
-      doc.text(`Relation: ${patient.contact_urgence.relation}`, margin, yPosition);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Relationship: ${patient.contact_urgence.relation}`, margin, yPosition);
       yPosition += lineHeight;
-      doc.text(`Téléphone: ${patient.contact_urgence.phone_number}`, margin, yPosition);
+      doc.text(`Phone: ${patient.contact_urgence.phone_number}`, margin, yPosition);
       yPosition += lineHeight * 1.5;
     }
 
     // Medical History
     if (medicalHistory) {
       doc.setFontSize(12);
-      doc.setFont('Elvetica', 'bold');
-      doc.text('HISTORIQUE MÉDICAL', margin, yPosition);
+      doc.setFont('helvetica', 'bold');
+      doc.text('MEDICAL HISTORY', margin, yPosition);
       yPosition += lineHeight;
 
       doc.setFontSize(10);
-      doc.setFont('Elvetica', 'normal');
+      doc.setFont('helvetica', 'normal');
 
       if (medicalHistory.allergies && medicalHistory.allergies.length > 0) {
-        doc.setFont('Elvetica', 'bold');
+        doc.setFont('helvetica', 'bold');
         doc.text('Allergies:', margin, yPosition);
-        doc.setFont('Elvetica', 'normal');
+        doc.setFont('helvetica', 'normal');
         yPosition += lineHeight;
         medicalHistory.allergies.forEach(allergy => {
-          doc.text(`• ${allergy}`, margin + 5, yPosition);
+          doc.text(`- ${allergy}`, margin + 5, yPosition);
           yPosition += lineHeight;
         });
       }
 
       if (medicalHistory.past_conditions && medicalHistory.past_conditions.length > 0) {
-        doc.setFont('Elvetica', 'bold');
-        doc.text('Antécédents médicaux:', margin, yPosition);
-        doc.setFont('Elvetica', 'normal');
+        doc.setFont('helvetica', 'bold');
+        doc.text('Past medical conditions:', margin, yPosition);
+        doc.setFont('helvetica', 'normal');
         yPosition += lineHeight;
         medicalHistory.past_conditions.forEach(condition => {
-          doc.text(`• ${condition}`, margin + 5, yPosition);
+          doc.text(`- ${condition}`, margin + 5, yPosition);
           yPosition += lineHeight;
         });
       }
 
       if (medicalHistory.current_medications && medicalHistory.current_medications.length > 0) {
-        doc.setFont('Elvetica', 'bold');
-        doc.text('Médicaments actuels:', margin, yPosition);
-        doc.setFont('Elvetica', 'normal');
+        doc.setFont('helvetica', 'bold');
+        doc.text('Current medications:', margin, yPosition);
+        doc.setFont('helvetica', 'normal');
         yPosition += lineHeight;
         medicalHistory.current_medications.forEach(med => {
-          doc.text(`• ${med.name} - ${med.dosage}`, margin + 5, yPosition);
+          doc.text(`- ${med.name} - ${med.dosage}`, margin + 5, yPosition);
           yPosition += lineHeight;
         });
       }
 
       if (medicalHistory.chronic_illnesses && medicalHistory.chronic_illnesses.length > 0) {
-        doc.setFont('Elvetica', 'bold');
-        doc.text('Maladies chroniques:', margin, yPosition);
-        doc.setFont('Elvetica', 'normal');
+        doc.setFont('helvetica', 'bold');
+        doc.text('Chronic conditions:', margin, yPosition);
+        doc.setFont('helvetica', 'normal');
         yPosition += lineHeight;
         medicalHistory.chronic_illnesses.forEach(illness => {
-          doc.text(`• ${illness}`, margin + 5, yPosition);
+          doc.text(`- ${illness}`, margin + 5, yPosition);
           yPosition += lineHeight;
         });
       }
@@ -198,14 +198,14 @@ const PatientHistorySidebar = ({
     if (patient.documents && patient.documents.length > 0) {
       yPosition += lineHeight;
       doc.setFontSize(12);
-      doc.setFont('Elvetica', 'bold');
+      doc.setFont('helvetica', 'bold');
       doc.text('DOCUMENTS', margin, yPosition);
       yPosition += lineHeight;
 
       doc.setFontSize(10);
-      doc.setFont('Elvetica', 'normal');
+      doc.setFont('helvetica', 'normal');
       patient.documents.forEach(doc_item => {
-        doc.text(`• ${doc_item.type}`, margin, yPosition);
+        doc.text(`- ${doc_item.type}`, margin, yPosition);
         yPosition += lineHeight;
       });
     }
@@ -215,11 +215,11 @@ const PatientHistorySidebar = ({
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(8);
-      doc.text(`Page ${i} sur ${pageCount}`, doc.internal.pageSize.width - 40, doc.internal.pageSize.height - 10);
-      doc.text(`Généré le ${new Date().toLocaleDateString('fr-FR')}`, margin, doc.internal.pageSize.height - 10);
+      doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 40, doc.internal.pageSize.height - 10);
+      doc.text(`Generated on ${new Date().toLocaleDateString('fr-FR')}`, margin, doc.internal.pageSize.height - 10);
     }
 
-    doc.save(`rapport_medical_${patient.last_name || 'inconnu'}_${new Date().toISOString().split('T')[0]}.pdf`);
+    doc.save(`medical_report_${patient.last_name || 'inconnu'}_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
   const handleAddMedicalEntry = async () => {
@@ -240,7 +240,7 @@ const PatientHistorySidebar = ({
       case 'current_medications':
         updatedMedicalHistory.current_medications = [
           ...(updatedMedicalHistory.current_medications || []),
-          { name: newEntry.title, dosage: newEntry.dosage || 'Non spécifié' }
+          { name: newEntry.title, dosage: newEntry.dosage || 'Not specified' }
         ];
         break;
     }
@@ -298,7 +298,7 @@ const PatientHistorySidebar = ({
         id: `allergy-${index}`,
         category: 'allergies',
         title: allergy,
-        description: 'Allergie connue',
+        description: 'Known allergy',
         type: 'allergy'
       });
     });
@@ -309,7 +309,7 @@ const PatientHistorySidebar = ({
         id: `past-${index}`,
         category: 'past_conditions',
         title: condition,
-        description: 'Antécédent médical',
+        description: 'Past condition',
         type: 'condition'
       });
     });
@@ -320,7 +320,7 @@ const PatientHistorySidebar = ({
         id: `chronic-${index}`,
         category: 'chronic_illnesses',
         title: illness,
-        description: 'Maladie chronique',
+        description: 'Chronic condition',
         type: 'chronic'
       });
     });
@@ -331,7 +331,7 @@ const PatientHistorySidebar = ({
         id: `medication-${index}`,
         category: 'current_medications',
         title: med.name,
-        description: `Posologie: ${med.dosage}`,
+        description: `Dosage: ${med.dosage}`,
         type: 'medication'
       });
     });
@@ -373,18 +373,18 @@ const PatientHistorySidebar = ({
 
   const getPatientInfo = () => [
     {
-      label: 'Informations personnelles',
-      value: 'Complètes',
+      label: 'Personal information',
+      value: 'Complete',
       icon: <User className="size-4 text-blue-500" />
     },
     {
-      label: 'Contact d\'urgence',
-      value: patient.contact_urgence ? 'Configuré' : 'Non configuré',
+      label: 'Emergency contact',
+      value: patient.contact_urgence ? 'Configured' : 'Not configured',
       icon: <Phone className="size-4 text-blue-500" />
     },
     {
-      label: 'Groupe sanguin',
-      value: patient.blood_type || 'Non spécifié',
+      label: 'Blood type',
+      value: patient.blood_type || 'Not specified',
       icon: <Heart className="size-4 text-red-500" />
     },
     {
@@ -400,7 +400,7 @@ const PatientHistorySidebar = ({
         <div className="flex flex-col space-y-4 border-b border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-900 dark:bg-[#090E1A]">
           <div>
             <h3 className="font-medium text-gray-900 dark:text-gray-50">
-              Historique médical du patient
+              Patient medical history
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               {patient.first_name} {patient.last_name} - CIN: {patient.cin}
@@ -410,7 +410,7 @@ const PatientHistorySidebar = ({
         <Tabs defaultValue="history" className="p-6">
           <TabsList className="w-full" variant="solid">
             <TabsTrigger value="history" className="w-full">
-              Historique médical
+              Medical history
             </TabsTrigger>
             <TabsTrigger value="details" className="w-full">
               Informations
@@ -421,7 +421,7 @@ const PatientHistorySidebar = ({
           <TabsContent value="history">
             <div className="flex items-center justify-between mb-4 mt-4">
               <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                Entrées médicales ({timelineEntries.length})
+                Medical entries ({timelineEntries.length})
               </h4>
               <Button
                 onClick={() => setIsAddingEntry(true)}
@@ -429,7 +429,7 @@ const PatientHistorySidebar = ({
                 className="h-8"
               >
                 <RiAddLine className="size-4 mr-1" />
-                Ajouter
+                Add
               </Button>
             </div>
 
@@ -442,14 +442,14 @@ const PatientHistorySidebar = ({
                     onChange={(e) => setNewEntry({ ...newEntry, category: e.target.value as any })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm dark:border-gray-600 dark:bg-gray-800"
                   >
-                    <option value="allergies">Allergie</option>
-                    <option value="past_conditions">Antécédent médical</option>
-                    <option value="chronic_illnesses">Maladie chronique</option>
-                    <option value="current_medications">Médicament actuel</option>
+                    <option value="allergies">Allergy</option>
+                    <option value="past_conditions">Past condition</option>
+                    <option value="chronic_illnesses">Chronic condition</option>
+                    <option value="current_medications">Current medication</option>
                   </select>
                   <input
                     type="text"
-                    placeholder={newEntry.category === 'current_medications' ? 'Nom du médicament' : 'Titre'}
+                    placeholder={newEntry.category === 'current_medications' ? 'Medication name' : 'Title'}
                     value={newEntry.title}
                     onChange={(e) => setNewEntry({ ...newEntry, title: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm dark:border-gray-600 dark:bg-gray-800"
@@ -457,14 +457,14 @@ const PatientHistorySidebar = ({
                   {newEntry.category === 'current_medications' && (
                     <input
                       type="text"
-                      placeholder="Posologie (ex: 2 comprimés par jour)"
+                      placeholder="Dosage (e.g., 2 tablets per day)"
                       value={newEntry.dosage}
                       onChange={(e) => setNewEntry({ ...newEntry, dosage: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm dark:border-gray-600 dark:bg-gray-800"
                     />
                   )}
                   <textarea
-                    placeholder="Description (optionnel)"
+                    placeholder="Description (optional)"
                     value={newEntry.description}
                     onChange={(e) => setNewEntry({ ...newEntry, description: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm h-16 dark:border-gray-600 dark:bg-gray-800"
@@ -472,7 +472,7 @@ const PatientHistorySidebar = ({
                   <div className="flex gap-2">
                     <Button onClick={handleAddMedicalEntry} className="h-8">
                       <RiSaveLine className="size-4 mr-1" />
-                      Sauvegarder
+                      Save
                     </Button>
                     <Button
                       onClick={() => {
@@ -484,7 +484,7 @@ const PatientHistorySidebar = ({
                       className="h-8"
                     >
                       <RiCloseLine className="size-4 mr-1" />
-                      Annuler
+                      Cancel
                     </Button>
                   </div>
                 </div>
@@ -520,9 +520,9 @@ const PatientHistorySidebar = ({
                             )}>
                               {entry.title}
                               <span className="ml-2 text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                                {entry.type === 'allergy' ? 'Allergie' :
-                                  entry.type === 'condition' ? 'Antécédent' :
-                                    entry.type === 'chronic' ? 'Chronique' : 'Médicament'}
+                                {entry.type === 'allergy' ? 'Allergy' :
+                                  entry.type === 'condition' ? 'Past condition' :
+                                    entry.type === 'chronic' ? 'Chronic' : 'Medication'}
                               </span>
                             </p>
                             <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
@@ -549,20 +549,20 @@ const PatientHistorySidebar = ({
 
             {timelineEntries.length === 0 && !isAddingEntry && (
               <p className="text-center text-sm text-gray-500 dark:text-gray-400 py-8">
-                Aucun historique médical disponible. Cliquez sur Ajouter pour créer une entrée.
+                No medical history available. Click Add to create an entry.
               </p>
             )}
 
             <Button onClick={handleGeneratePDF} className="mt-6 h-10 w-full" variant="secondary">
               <FileCheck2 className="mr-2 size-5" />
-              Générer Un Rapport Médical
+              Generate Medical Report
             </Button>
           </TabsContent>
 
           {/* Details Tab */}
           <TabsContent value="details">
             <h4 className="mt-6 text-xs font-medium uppercase tracking-widest text-gray-400 dark:text-gray-600">
-              Informations du Patient
+              Patient Information
             </h4>
             <ul className="mt-3 divide-y divide-gray-200 rounded-md bg-gray-50 text-sm text-gray-500 dark:divide-gray-700 dark:bg-gray-800 dark:text-gray-400">
               {getPatientInfo().map((item) => (
@@ -578,7 +578,7 @@ const PatientHistorySidebar = ({
 
             {/* Medical History Details */}
             <h4 className="mt-6 text-xs font-medium uppercase tracking-widest text-gray-400 dark:text-gray-600">
-              Résumé Médical
+              Medical Summary
             </h4>
             <div className="mt-3 space-y-3">
               {medicalHistory.allergies && medicalHistory.allergies.length > 0 && (
@@ -597,7 +597,7 @@ const PatientHistorySidebar = ({
                 <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
                   <h5 className="text-sm font-medium text-blue-800 dark:text-blue-400 flex items-center gap-2">
                     <Pill className="size-4" />
-                    Médicaments Actuels ({medicalHistory.current_medications.length})
+                    Current Medications ({medicalHistory.current_medications.length})
                   </h5>
                   <div className="text-sm text-blue-600 dark:text-blue-300">
                     {medicalHistory.current_medications.map((med, idx) => (
@@ -611,7 +611,7 @@ const PatientHistorySidebar = ({
                 <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
                   <h5 className="text-sm font-medium text-blue-800 dark:text-blue-400 flex items-center gap-2">
                     <Activity className="size-4" />
-                    Antécédents ({medicalHistory.past_conditions.length})
+                    Past Conditions ({medicalHistory.past_conditions.length})
                   </h5>
                   <p className="text-sm text-blue-600 dark:text-blue-300">
                     {medicalHistory.past_conditions.join(', ')}
@@ -623,7 +623,7 @@ const PatientHistorySidebar = ({
                 <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-md">
                   <h5 className="text-sm font-medium text-orange-800 dark:text-orange-400 flex items-center gap-2">
                     <Heart className="size-4" />
-                    Maladies Chroniques ({medicalHistory.chronic_illnesses.length})
+                    Chronic Conditions ({medicalHistory.chronic_illnesses.length})
                   </h5>
                   <p className="text-sm text-orange-600 dark:text-orange-300">
                     {medicalHistory.chronic_illnesses.join(', ')}

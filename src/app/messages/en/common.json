@@ -12,6 +12,16 @@
     "clause4Description": "Your personal information is processed in accordance with our privacy policy. No medical data is shared without your explicit consent.",
     "signature": "By continuing, you accept all the terms above. These conditions may be updated at any time, with notification."
   },
+  "errors": {
+    "session": {
+      "title": "Session Expired",
+      "description": "Your session has expired. Please log in again to continue."
+    },
+    "generic": {
+      "title": "Something Went Wrong",
+      "description": "An unexpected error occurred. Please try again later."
+    }
+  },
   "policy": {
     "link": "privacy policy",
     "title": "Privacy Policy",

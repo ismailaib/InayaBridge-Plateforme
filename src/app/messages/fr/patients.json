@@ -1,0 +1,48 @@
+{
+  "patients": {
+    "title": "Gestion des patients",
+    "subtitle": "Ici vous pouvez consulter tous vos patients et générer un rapport",
+    "exportButton": "Exporter en Excel",
+    "export": {
+      "sheetName": "Patients",
+      "fileName": "patients",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "gender": "Sexe",
+      "male": "Homme",
+      "female": "Femme",
+      "birthDate": "Date de naissance",
+      "cin": "CIN",
+      "phone": "Téléphone",
+      "email": "Email",
+      "address": "Adresse",
+      "bloodType": "Groupe sanguin",
+      "allergies": "Allergies",
+      "emergencyContact": "Urgence (tel)"
+    }
+  },
+  "filter": {
+      "filter": "Filtrer",
+      "searchPlaceholder": "Filtrer par Nom, Prénom, Tel...",
+      "dob": "Date de naissance",
+      "gender": "Genre",
+      "select": "Sélectionner",
+      "all": "Tous",
+      "male": "Homme",
+      "female": "Femme",
+      "lastVisit": "Dernière visite",
+      "sort": "Trier",
+      "recent": "Plus récente",
+      "oldest": "Plus ancienne"
+    },
+    "table": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "gender": "Genre",
+      "dob": "Date de naissance",
+      "cin": "CIN",
+      "phone": "Téléphone",
+      "email": "Email",
+      "action": "Action"
+    }
+}

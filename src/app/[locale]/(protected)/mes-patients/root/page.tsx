@@ -8,7 +8,7 @@ import { getDoctorPatients, Patient } from '../api/patients'
 import Details from './components/Details'
 import TimeLine from './components/TimeLine'
 
-const PatientDossierPage: React.FC = () => {
+const PatientRecordPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null)
   const [selectOpen, setSelectOpen] = useState<boolean>(false)
@@ -101,10 +101,10 @@ const PatientDossierPage: React.FC = () => {
       <div className="mb-4 flex items-center justify-between">
         <div className="mb-4 flex flex-col items-start justify-between">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-            Dossier Patient
+            Patient Record
           </h3>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Ici vous pouvez consulter tous les détails concernant un patient
+            Here you can review every detail for a patient
           </p>
         </div>
 
@@ -117,7 +117,7 @@ const PatientDossierPage: React.FC = () => {
               onOpenChange={setSelectOpen}
             >
               <SelectTrigger id="patient" name="patient">
-                <SelectValue placeholder="Sélectionner un patient" />
+                <SelectValue placeholder="Select a patient" />
               </SelectTrigger>
               <SelectContent className="max-h-60 overflow-auto">
                 <div className="sticky top-0 z-10 bg-white p-2 dark:bg-gray-800">
@@ -125,7 +125,7 @@ const PatientDossierPage: React.FC = () => {
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
                     <Input
                       ref={searchInputRef}
-                      placeholder="Rechercher un patient..."
+                      placeholder="Search for a patient..."
                       value={searchQuery}
                       onChange={handleSearchInputChange}
                       className="pl-8 text-sm"
@@ -149,13 +149,13 @@ const PatientDossierPage: React.FC = () => {
                   ))
                 ) : (
                   <div className="px-2 py-2 text-sm text-gray-500">
-                    Aucun patient trouvé
+                    No patients found
                   </div>
                 )}
 
                 {filteredPatients.length > 0 && !searchQuery && (
                   <div className="px-2 py-2 text-xs text-gray-500">
-                    Saisissez au moins 3 caractères
+                    Type at least 3 characters
                   </div>
                 )}
               </SelectContent>
@@ -171,7 +171,6 @@ const PatientDossierPage: React.FC = () => {
         </div>
         <div className="col-span-4 h-full">
           <div className="sticky top-4">
-            {/* @ts-ignore */}
             <TimeLine patient={selectedPatient!} onSuccess={refetchPatients} />
           </div>
         </div>
@@ -182,4 +181,4 @@ const PatientDossierPage: React.FC = () => {
   )
 }
 
-export default PatientDossierPage
+export default PatientRecordPage

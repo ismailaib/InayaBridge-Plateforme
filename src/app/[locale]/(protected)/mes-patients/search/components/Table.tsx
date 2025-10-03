@@ -25,6 +25,7 @@ import {
 import { getDoctorPatients, Patient } from '../../api/patients';
 import Delete from './Delete';
 import Edit from './Edit';
+import useTranslations from '@/lib/i18n/useTranslations';
 
 declare module '@tanstack/react-table' {
     interface ColumnMeta<TData extends RowData, TValue> {
@@ -113,7 +114,7 @@ export default function Example({ refreshKey }: { refreshKey: number }) {
 
     const [patients, setPatients] = useState<Patient[]>([])
     const [loading, setLoading] = useState(true)
-
+    const t = useTranslations("patients.table")
     useEffect(() => {
         setLoading(true);
         getDoctorPatients()
@@ -126,28 +127,28 @@ export default function Example({ refreshKey }: { refreshKey: number }) {
 
     const patientsColumns = [
         {
-            header: 'Nom',
+            header: t("firstName"),
             accessorKey: 'first_name',
             meta: {
                 align: 'text-left',
             },
         },
         {
-            header: 'Prénom',
+            header: t("lastName"),
             accessorKey: 'last_name',
             meta: {
                 align: 'text-left',
             },
         },
         {
-            header: 'Genre',
+            header: t("gender"),
             accessorKey: 'gender',
             meta: {
                 align: 'text-left',
             },
         },
         {
-            header: 'Date de naissance',
+            header: t("dob"),
             accessorKey: 'date_of_birth',
             cell: ({ getValue }: { getValue: () => string }) => {
                 const value = getValue();
@@ -160,28 +161,28 @@ export default function Example({ refreshKey }: { refreshKey: number }) {
             },
         },
         {
-            header: 'CIN',
+            header: t("cin"),
             accessorKey: 'cin',
             meta: {
                 align: 'text-left',
             },
         },
         {
-            header: 'Téléphone',
+            header: t("phone"),
             accessorKey: 'phone_number',
             meta: {
                 align: 'text-right',
             },
         },
         {
-            header: 'Email',
+            header: t("email"),
             accessorKey: 'email',
             meta: {
                 align: 'text-left',
             },
         },
         {
-            header: 'Action',
+            header: t("action"),
             accessorKey: 'action',
             cell: ({ row }: { row: any }) => {
                 return (

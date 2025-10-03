@@ -63,7 +63,7 @@
     "submit": "Enregistrer l'établissement",
     "submitting": "Enregistrement...",
     "privacySettings": {
-      "title": "Rendre l&apos;établissement privé",
+      "title": "Rendre l'établissement privé",
       "description": "Les patients ne pourront pas trouver cet établissement dans la liste publique."
     }
   },
@@ -342,6 +342,10 @@
     "evolution": {
       "title": "Évolution des consultations",
       "tooltip": "Suivi quotidien du nombre de rendez-vous pris et de diagnostics réalisés."
+    },
+    "categories": {
+      "1": "Rendez-vous",
+      "2": "Diagnostics"
     }
   },
   "doctorAnalytics": {

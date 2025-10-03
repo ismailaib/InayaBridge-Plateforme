@@ -1,7 +1,10 @@
 "use client"
 
+import { getUserProfile } from "@/api/profile"
+import { showToast } from "@/app/[locale]/(protected)/dashboard/hooks/utils"
+import { usePathname, useRouter } from "next/navigation"
 import { createContext, useContext, useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import useTranslations from "./i18n/useTranslations"
 
 interface User {
   id: number
@@ -23,7 +26,9 @@ interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const t = useTranslations("common.errors.session")
   const router = useRouter()
+  const pathname = usePathname()
 
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
@@ -32,7 +37,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const storedToken = localStorage.getItem("token")
     const storedUser = localStorage.getItem("user")
-
     if (storedToken && storedUser) {
       setToken(storedToken)
       setUser(JSON.parse(storedUser))
@@ -40,12 +44,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(false)
   }, [])
 
+  useEffect(() => {
+    if (loading || !token) return
+
+    const locale = getLocaleFromPath()
+
+      ; (async () => {
+        try {
+          const res = await getUserProfile(String(user?.id))
+          const freshUser = res?.data as User
+          if (freshUser) {
+            setUser(freshUser)
+            localStorage.setItem("user", JSON.stringify(freshUser))
+          } else {
+            throw new Error("Invalid profile response")
+          }
+        } catch (err: any) {
+          const status = err?.response?.status
+          if ([401, 403, 404, 500].includes(status) || !status) {
+            // Toast on session expiration
+            showToast("error", t("title"), t("description"))
+
+            localStorage.removeItem("token")
+            localStorage.removeItem("user")
+            setToken(null)
+            setUser(null)
+            router.replace(`/${locale}/login`)
+          }
+        }
+      })()
+  }, [pathname, token, loading])
+
   const login = ({ token, user }: { token: string; user: User }) => {
     localStorage.setItem("token", token)
     localStorage.setItem("user", JSON.stringify(user))
     setToken(token)
     setUser(user)
-
     const locale = getLocaleFromPath()
     if (user.role === "doctor") {
       router.push(`/${locale}/dashboard`)
@@ -61,21 +95,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("user")
     setToken(null)
     setUser(null)
-
     const locale = getLocaleFromPath()
     router.push(`/${locale}`)
   }
-
-  useEffect(() => {
-    if (!loading && !token) {
-      const locale = getLocaleFromPath()
-      const pathname = window.location.pathname
-
-      if (!pathname.endsWith("/signup")) {
-        router.push(`/${locale}/login`)
-      }
-    }
-  }, [token, loading, router])
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout, loading }}>

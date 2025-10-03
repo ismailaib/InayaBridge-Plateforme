@@ -55,7 +55,7 @@ const InfoItem: React.FC<InfoItemProps> = ({
         {label}
       </p>
       <p className={`text-sm font-medium ${valueColor} break-words`}>
-        {value || "—"}
+        {value ?? "N/A"}
       </p>
     </div>
   </div>
@@ -100,7 +100,7 @@ const Details: React.FC<{ patient: Patient | null }> = ({ patient }) => {
     return (
       <div className="h-full flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 text-sm">
         <User className="h-8 w-8 mb-2 text-blue-600 dark:text-blue-400" />
-        Veuillez sélectionner un patient pour voir les détails.
+        Please select a patient to view their details.
       </div>
     );
   }
@@ -117,27 +117,27 @@ const Details: React.FC<{ patient: Patient | null }> = ({ patient }) => {
               {patient.first_name} {patient.last_name}
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Dossier Patient • CIN: {patient.cin || "—"}
+              Patient Record - CIN: {patient.cin || "N/A"}
             </p>
           </div>
         </div>
       </div>
 
       <Card>
-        <SectionHeader icon={User} title="Informations Générales" />
+        <SectionHeader icon={User} title="General Information" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InfoItem
             icon={User}
-            label="Nom complet"
+            label="Full name"
             value={`${patient.first_name} ${patient.last_name}`}
           />
-          <InfoItem icon={Calendar} label="Date de naissance" value={patient.date_of_birth} />
+          <InfoItem icon={Calendar} label="Date of birth" value={patient.date_of_birth} />
           <InfoItem icon={CreditCard} label="CIN" value={patient.cin} />
-          <InfoItem icon={Users} label="Genre" value={patient.gender} />
+          <InfoItem icon={Users} label="Gender" value={patient.gender} />
           <div className="md:col-span-2 relative">
             <InfoItem
               icon={Droplet}
-              label="Groupe sanguin"
+              label="Blood type"
               value={
                 editingBlood ? (
                   <input
@@ -154,7 +154,7 @@ const Details: React.FC<{ patient: Patient | null }> = ({ patient }) => {
                     }}
                   />
                 ) : (
-                  bloodType || "—"
+                  bloodType ?? "N/A"
                 )
               }
             />
@@ -167,9 +167,9 @@ const Details: React.FC<{ patient: Patient | null }> = ({ patient }) => {
       </Card>
 
       <Card>
-        <SectionHeader icon={Phone} title="Coordonnées" />
+        <SectionHeader icon={Phone} title="Contact Information" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InfoItem icon={Phone} label="Téléphone" value={patient.phone_number} />
+          <InfoItem icon={Phone} label="Phone" value={patient.phone_number} />
           <InfoItem
             icon={Mail}
             label="Email"
@@ -177,18 +177,18 @@ const Details: React.FC<{ patient: Patient | null }> = ({ patient }) => {
             valueColor="text-blue-600 dark:text-blue-400"
           />
           <div className="md:col-span-2">
-            <InfoItem icon={MapPin} label="Adresse" value={patient.address} />
+            <InfoItem icon={MapPin} label="Address" value={patient.address} />
           </div>
           <div className="md:col-span-2 relative">
             <InfoItem
               icon={UserCheck}
-              label="Contact d'urgence"
+              label="Emergency contact"
               value={
                 editingEmergency ? (
                   <div className="flex flex-col gap-1">
                     <input
                       className="bg-transparent outline-none border-b border-blue-500 text-sm"
-                      placeholder="Relation"
+                      placeholder="Relationship"
                       value={emergency.relation}
                       onChange={(e) =>
                         setEmergency({ ...emergency, relation: e.target.value })
@@ -196,7 +196,7 @@ const Details: React.FC<{ patient: Patient | null }> = ({ patient }) => {
                     />
                     <input
                       className="bg-transparent outline-none border-b border-blue-500 text-sm"
-                      placeholder="Téléphone"
+                      placeholder="Phone"
                       value={emergency.phone_number}
                       onChange={(e) =>
                         setEmergency({ ...emergency, phone_number: e.target.value })
@@ -214,9 +214,9 @@ const Details: React.FC<{ patient: Patient | null }> = ({ patient }) => {
                     />
                   </div>
                 ) : emergency.relation && emergency.phone_number ? (
-                  `${emergency.relation} – ${emergency.phone_number}`
+                  `${emergency.relation} - ${emergency.phone_number}`
                 ) : (
-                  "—"
+                  "N/A"
                 )
               }
             />

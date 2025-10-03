@@ -12,6 +12,16 @@
     "clause4Description": "Vos informations personnelles sont traitées conformément à notre politique de confidentialité. Aucune donnée médicale n'est partagée sans votre consentement explicite.",
     "signature": "En continuant, vous acceptez l'ensemble des termes ci-dessus. Ces conditions peuvent être modifiées à tout moment, avec notification."
   },
+  "errors": {
+    "session": {
+      "title": "Session expirée",
+      "description": "Votre session a expiré. Veuillez vous reconnecter pour continuer."
+    },
+    "generic": {
+      "title": "Une erreur est survenue",
+      "description": "Une erreur inattendue s'est produite. Veuillez réessayer plus tard."
+    }
+  },
   "policy": {
     "link": "politique de confidentialité",
     "title": "Politique de confidentialité",

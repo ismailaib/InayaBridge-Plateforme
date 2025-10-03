@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Tajawal } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "./siteConfig";
+import { headers, cookies } from "next/headers";
+import { defaultLocale, getDirection, isLocale, type Locale } from "@/lib/i18n/i18n";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -40,10 +42,59 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.ico" },
 };
 
+function extractLocaleFromPath(pathname: string | null): Locale | undefined {
+  if (!pathname) {
+    return undefined;
+  }
+
+  let normalized = pathname;
+  if (normalized.includes("://")) {
+    try {
+      normalized = new URL(normalized).pathname;
+    } catch (error) {
+      normalized = pathname;
+    }
+  }
+
+  const segment = normalized.split("/").filter(Boolean)[0];
+
+  return isLocale(segment ?? "") ? (segment as Locale) : undefined;
+}
+
+function resolveLocale(): Locale {
+  const headerList = headers();
+  const pathname = headerList.get("x-pathname") ?? headerList.get("next-url") ?? null;
+  const cookieLocale = cookies().get("NEXT_LOCALE")?.value;
+
+  const pathnameLocale = extractLocaleFromPath(pathname);
+  if (pathnameLocale) {
+    return pathnameLocale;
+  }
+
+  if (cookieLocale && isLocale(cookieLocale)) {
+    return cookieLocale as Locale;
+  }
+
+  return defaultLocale;
+}
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  const locale = resolveLocale();
+  const dir = getDirection(locale);
+  const appliedFont = locale === "ar" ? tajawal.className : inter.className;
+
+  return (
+    <html lang={locale} dir={dir} suppressHydrationWarning>
+      <body
+        className={`${appliedFont} ${inter.variable} ${tajawal.variable} min-h-screen scroll-auto antialiased selection:bg-blue-100 selection:text-[#3b82f6] dark:bg-gray-950`}
+      >
+        {children}
+      </body>
+    </html>
+  );
 }
+

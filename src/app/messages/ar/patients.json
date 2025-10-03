@@ -1,0 +1,48 @@
+{
+  "patients": {
+    "title": "إدارة المرضى",
+    "subtitle": "هنا يمكنك عرض جميع المرضى وإنشاء تقرير",
+    "exportButton": "تصدير إلى Excel",
+    "export": {
+      "sheetName": "المرضى",
+      "fileName": "patients",
+      "firstName": "الاسم",
+      "lastName": "اللقب",
+      "gender": "الجنس",
+      "male": "ذكر",
+      "female": "أنثى",
+      "birthDate": "تاريخ الميلاد",
+      "cin": "رقم البطاقة الوطنية",
+      "phone": "الهاتف",
+      "email": "البريد الإلكتروني",
+      "address": "العنوان",
+      "bloodType": "فصيلة الدم",
+      "allergies": "الحساسيات",
+      "emergencyContact": "رقم الطوارئ"
+    }
+  },
+  "filter": {
+      "filter": "تصفية",
+      "searchPlaceholder": "تصفية بالاسم، اللقب، الهاتف...",
+      "dob": "تاريخ الميلاد",
+      "gender": "الجنس",
+      "select": "اختر",
+      "all": "الكل",
+      "male": "ذكر",
+      "female": "أنثى",
+      "lastVisit": "آخر زيارة",
+      "sort": "ترتيب",
+      "recent": "الأحدث",
+      "oldest": "الأقدم"
+    },
+    "table": {
+      "firstName": "الاسم",
+      "lastName": "اللقب",
+      "gender": "الجنس",
+      "dob": "تاريخ الميلاد",
+      "cin": "رقم البطاقة الوطنية",
+      "phone": "الهاتف",
+      "email": "البريد الإلكتروني",
+      "action": "إجراء"
+    }
+}

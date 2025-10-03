@@ -5,6 +5,8 @@
   ],
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit"
-  }
+    "source.organizeImports": true,
+    "source.fixAll.eslint": true
+  },
+  "eslint.format.enable": true
 }

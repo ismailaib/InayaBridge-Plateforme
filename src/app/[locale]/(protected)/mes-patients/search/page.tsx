@@ -6,11 +6,14 @@ import { useEffect, useState } from "react"
 import * as XLSX from "xlsx"
 
 import { Button } from "@/components/Button"
-import { getDoctorPatients, Patient } from "../api/patients"; // ⇦ déjà utilisé plus bas
+import { getDoctorPatients, Patient } from "../api/patients"
 import Add from "./components/Add"
 import Filter from "./components/Filter"
+import { useTranslations } from "@/lib/i18n/useTranslations"
 
 export default function PatientsPage() {
+  const t = useTranslations("patients.patients")
+
   const [patients, setPatients] = useState<Patient[]>([])
   const [refreshKey, setRefreshKey] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -28,30 +31,27 @@ export default function PatientsPage() {
   const handleExport = () => {
     if (!patients.length) return
 
-    // 1. on transforme les objets pour avoir des colonnes lisibles
     const rows = patients.map((p) => ({
-      Prenom: p.last_name,
-      Nom: p.first_name,
-      Sexe: p.gender === "male" ? "Homme" : "Femme",
-      "Date naissance": new Date(p?.date_of_birth || "").toLocaleDateString("fr-FR"),
-      CIN: p.cin,
-      Téléphone: p.phone_number,
-      Email: p.email,
-      Adresse: p.address,
-      "Groupe sanguin": p.blood_type,
-      Allergies: p.medical_history?.allergies?.join(", ") ?? "",
-      "Urgence (tel)": p.contact_urgence?.phone_number ?? "",
+      [t("export.firstName")]: p.last_name,
+      [t("export.lastName")]: p.first_name,
+      [t("export.gender")]: p.gender === "male" ? t("export.male") : t("export.female"),
+      [t("export.birthDate")]: new Date(p?.date_of_birth || "").toLocaleDateString("fr-FR"),
+      [t("export.cin")]: p.cin,
+      [t("export.phone")]: p.phone_number,
+      [t("export.email")]: p.email,
+      [t("export.address")]: p.address,
+      [t("export.bloodType")]: p.blood_type,
+      [t("export.allergies")]: p.medical_history?.allergies?.join(", ") ?? "",
+      [t("export.emergencyContact")]: p.contact_urgence?.phone_number ?? "",
     }))
 
-    // 2. JSON → worksheet / workbook
     const ws = XLSX.utils.json_to_sheet(rows)
     const wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, ws, "Patients")
+    XLSX.utils.book_append_sheet(wb, ws, t("export.sheetName"))
 
-    // 3. Génère un blob et télécharge
     const wbBlob = XLSX.write(wb, { bookType: "xlsx", type: "array" })
     const file = new Blob([wbBlob], { type: "application/octet-stream" })
-    saveAs(file, `patients_${new Date().toISOString().slice(0, 10)}.xlsx`)
+    saveAs(file, `${t("export.fileName")}_${new Date().toISOString().slice(0, 10)}.xlsx`)
   }
 
   return (
@@ -59,10 +59,10 @@ export default function PatientsPage() {
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-            Gestion des patients
+            {t("title")}
           </h3>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Ici vous pouvez consulter tous vos patients et générer un rapport
+            {t("subtitle")}
           </p>
         </div>
 
@@ -78,8 +78,8 @@ export default function PatientsPage() {
             onClick={handleExport}
             disabled={loading || !patients.length}
           >
-            <FileDown className="mr-1" width={22} />
-            Exporter en Excel
+            <FileDown className="mx-1" width={22} />
+            {t("exportButton")}
           </Button>
         </div>
       </div>
