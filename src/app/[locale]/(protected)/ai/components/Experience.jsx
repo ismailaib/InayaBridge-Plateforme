@@ -1,33 +1,34 @@
-import { CameraControls, Environment, Text } from "@react-three/drei"
-import { Suspense, useEffect, useRef, useState } from "react"
-import { Avatar } from "./Avatar"
-import Environement from "./Environement"
-import { Leva } from "leva"
-import { UI } from "./UI"
+import { CameraControls, Environment, Text } from "@react-three/drei";
+import { Leva } from "leva";
+
+import { Suspense, useEffect, useRef, useState } from "react";
+
+import { Avatar } from "./Avatar";
+import Environement from "./Environement";
+import { UI } from "./UI";
 
 const Dots = (props) => {
-  const [loadingText, setLoadingText] = useState("")
-  return <group {...props}></group>
-}
+  const [loadingText, setLoadingText] = useState("");
+  return <group {...props}></group>;
+};
 
 const OfficeEnvironment = () => {
   return (
     <group>
       <Environement position={[0, 0, -2]} rotation={[0, 0, 0]} />
     </group>
-  )
-}
+  );
+};
 
 export const Experience = () => {
-  const cameraControls = useRef()
-  const avatarRef = useRef()
+  const cameraControls = useRef();
+  const avatarRef = useRef();
 
   useEffect(() => {
-    if (!cameraControls.current) return
+    if (!cameraControls.current) return;
 
-    cameraControls.current.setLookAt(0.05, 4.2, 2, -0.1, 4.1, 1, true, 5)
-
-  }, [cameraControls])
+    cameraControls.current.setLookAt(0.05, 4.2, 2, -0.1, 4.1, 1, true, 5);
+  }, [cameraControls]);
 
   return (
     <>
@@ -53,8 +54,8 @@ export const Experience = () => {
       <>
         <Avatar ref={avatarRef} position={[0, 2.5, 1]} />
       </>
-      
+
       <Leva hidden />
     </>
-  )
-}
+  );
+};

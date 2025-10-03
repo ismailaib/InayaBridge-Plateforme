@@ -1,10 +1,9 @@
 // Tremor Switch [v0.0.1]
+import { cx, focusRing } from "@/lib/utils";
+import * as SwitchPrimitives from "@radix-ui/react-switch";
+import { VariantProps, tv } from "tailwind-variants";
 
-import * as SwitchPrimitives from "@radix-ui/react-switch"
-import React from "react"
-import { tv, VariantProps } from "tailwind-variants"
-
-import { cx, focusRing } from "@/lib/utils"
+import React from "react";
 
 const switchVariants = tv({
   slots: {
@@ -39,8 +38,8 @@ const switchVariants = tv({
       "group-data-[disabled]:bg-gray-50 group-data-[disabled]:dark:bg-gray-500",
       // Handle LTR and RTL directions
       "data-[state=checked]:ltr:translate-x-4 data-[state=unchecked]:ltr:translate-x-0",
-      "data-[state=checked]:rtl:-translate-x-4 data-[state=unchecked]:rtl:translate-x-0"
-    ]
+      "data-[state=checked]:rtl:-translate-x-4 data-[state=unchecked]:rtl:translate-x-0",
+    ],
   },
   variants: {
     size: {
@@ -59,20 +58,20 @@ const switchVariants = tv({
   defaultVariants: {
     size: "default",
   },
-})
+});
 
 interface SwitchProps
   extends Omit<
-    React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>,
-    "asChild"
-  >,
-  VariantProps<typeof switchVariants> { }
+      React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>,
+      "asChild"
+    >,
+    VariantProps<typeof switchVariants> {}
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
   SwitchProps
 >(({ className, size, ...props }: SwitchProps, forwardedRef) => {
-  const { root, thumb } = switchVariants({ size })
+  const { root, thumb } = switchVariants({ size });
   return (
     <SwitchPrimitives.Root
       ref={forwardedRef}
@@ -82,10 +81,9 @@ const Switch = React.forwardRef<
     >
       <SwitchPrimitives.Thumb className={cx(thumb())} />
     </SwitchPrimitives.Root>
-  )
-})
+  );
+});
 
-Switch.displayName = "Switch"
+Switch.displayName = "Switch";
 
-export { Switch }
-
+export { Switch };

@@ -1,38 +1,45 @@
 // store/ChatStore.ts
-import create from 'zustand';
+import create from "zustand";
 
 export type LipsyncEntry = {
-  start: number;    // seconde où commence ce viseme
-  end: number;      // seconde où se termine
-  value: string;    // lettre (ex: "A", "B", etc.) mappée à un morph target
+  start: number; // seconde où commence ce viseme
+  end: number; // seconde où se termine
+  value: string; // lettre (ex: "A", "B", etc.) mappée à un morph target
 };
 
 export type Message = {
   id: string;
-  sender: 'user' | 'ai';
+  sender: "user" | "ai";
   content: string;
   timestamp: number;
-  audio: string | null;        // base64 ou null
+  audio: string | null; // base64 ou null
   lipsync: LipsyncEntry[] | null;
-  facialExpression: string;    // exemple: "smile"
-  animation: string;           // exemple: "Idle1"
+  facialExpression: string; // exemple: "smile"
+  animation: string; // exemple: "Idle1"
 };
 
 interface ChatState {
   messages: Message[];
   isLoading: boolean;
 
-  addMessage: (m: Omit<Message, 'id' | 'timestamp'>) => void;
+  addMessage: (m: Omit<Message, "id" | "timestamp">) => void;
   clearMessages: () => void;
   setLoading: (loading: boolean) => void;
   sendMessage: (content: string) => Promise<void>;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
-  messages: [ ],
+  messages: [],
   isLoading: false,
 
-  addMessage: ({ sender, content, audio = null, lipsync = null, facialExpression, animation }) => {
+  addMessage: ({
+    sender,
+    content,
+    audio = null,
+    lipsync = null,
+    facialExpression,
+    animation,
+  }) => {
     const newMsg: Message = {
       id: crypto.randomUUID(),
       sender,
@@ -58,44 +65,45 @@ export const useChatStore = create<ChatState>((set, get) => ({
     const { addMessage, setLoading } = get();
 
     addMessage({
-      sender: 'user',
+      sender: "user",
       content,
       audio: null,
       lipsync: null,
-      facialExpression: 'default',
-      animation: 'Idle',
+      facialExpression: "default",
+      animation: "Idle",
     });
 
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:3001/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("http://localhost:3001/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: content }),
       });
       const data = await res.json();
       if (data.messages && Array.isArray(data.messages)) {
         data.messages.forEach((m: any) => {
           addMessage({
-            sender: 'ai',
+            sender: "ai",
             content: m.text,
             audio: m.audio || null,
             lipsync: m.lipsync || null,
-            facialExpression: m.facialExpression || 'default',
-            animation: m.animation || 'Idle',
+            facialExpression: m.facialExpression || "default",
+            animation: m.animation || "Idle",
           });
         });
       }
     } catch (err) {
-      console.error('Erreur dans sendMessage:', err);
+      console.error("Erreur dans sendMessage:", err);
       addMessage({
-        sender: 'ai',
-        content: "Désolé, une erreur est survenue. Veuillez réessayer plus tard.",
+        sender: "ai",
+        content:
+          "Désolé, une erreur est survenue. Veuillez réessayer plus tard.",
         audio: null,
         lipsync: null,
-        facialExpression: 'default',
-        animation: 'Idle',
+        facialExpression: "default",
+        animation: "Idle",
       });
     } finally {
       setLoading(false);

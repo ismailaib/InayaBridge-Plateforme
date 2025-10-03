@@ -1,4 +1,4 @@
-export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const TOAST_MESSAGE_KEYS = {
   TENANT_ERROR: "toasts.tenantError",
@@ -6,7 +6,7 @@ export const TOAST_MESSAGE_KEYS = {
   EMAIL_INVALID: "validation.emailInvalid",
   INVITATION_SUCCESS: "toasts.invitationSuccess",
   INVITATION_ERROR: "toasts.invitationError",
-} as const
+} as const;
 
 export const STATUS_CONFIG = {
   DECLINED: {
@@ -34,4 +34,4 @@ export const STATUS_CONFIG = {
     text: "text-gray-400 dark:text-gray-400",
     labelKey: "status.unknown",
   },
-} as const
+} as const;

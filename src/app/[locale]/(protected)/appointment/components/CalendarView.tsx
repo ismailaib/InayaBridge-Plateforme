@@ -1,41 +1,49 @@
-"use client"
+"use client";
 
-import { addDays, addMonths, addWeeks, subDays, subMonths, subWeeks } from "date-fns"
-import { useCallback, useEffect, useState } from "react"
+import {
+  addDays,
+  addMonths,
+  addWeeks,
+  subDays,
+  subMonths,
+  subWeeks,
+} from "date-fns";
 
-import { getAppointments } from "../api/appointment"
-import { AppointmentDetails } from "./AppointmentDetails"
-import { CalendarHeader } from "./CalendarHeader"
-import { DayView } from "./DayView"
-import { ListView } from "./ListView"
-import { MonthView } from "./MonthView"
-import { CalendarAppointment, CalendarViewType } from "./types"
-import { WeekView } from "./WeekView"
+import { useCallback, useEffect, useState } from "react";
+
+import { getAppointments } from "../api/appointment";
+import { AppointmentDetails } from "./AppointmentDetails";
+import { CalendarHeader } from "./CalendarHeader";
+import { DayView } from "./DayView";
+import { ListView } from "./ListView";
+import { MonthView } from "./MonthView";
+import { WeekView } from "./WeekView";
+import { CalendarAppointment, CalendarViewType } from "./types";
 
 type AppointmentApi = {
-  id?: string
+  id?: string;
   patient: {
-    first_name?: string
-    date_of_birth?: string
-  }
-  patient_phone_number?: string
-  consultationType?: string
-  date?: string
-  startTime?: string
-  endTime?: string
-  typeColor?: string
-  location?: string
-  motif?: string
-  status?: string
+    first_name?: string;
+    date_of_birth?: string;
+  };
+  patient_phone_number?: string;
+  consultationType?: string;
+  date?: string;
+  startTime?: string;
+  endTime?: string;
+  typeColor?: string;
+  location?: string;
+  motif?: string;
+  status?: string;
   timeSpentInWaitingRoom?: {
-    enterTime?: string
-    endTime?: string
-  }
-  timeOfExitFromConsultation?: string
-}
+    enterTime?: string;
+    endTime?: string;
+  };
+  timeOfExitFromConsultation?: string;
+};
 
-const DEFAULT_VIEW: CalendarViewType = "month"
-const BUSINESS_HOURS_FALLBACK = "--"
+const DEFAULT_VIEW: CalendarViewType = "month";
+const BUSINESS_HOURS_FALLBACK = "--";
 
 const APPOINTMENT_EMPTY_STATE: CalendarAppointment = {
   id: "",
@@ -54,24 +62,36 @@ const APPOINTMENT_EMPTY_STATE: CalendarAppointment = {
   motif: "",
   timeSpentInWaitingRoom: { enterTime: "", endTime: "" },
   timeOfExitFromConsultation: "",
-}
+};
 
-const VIEW_COMPONENTS: Record<CalendarViewType, React.ComponentType<{
-  currentDate: Date
-  appointments: CalendarAppointment[]
-  onSelectAppointment: (appointment: CalendarAppointment) => void
-}>> = {
+const VIEW_COMPONENTS: Record<
+  CalendarViewType,
+  React.ComponentType<{
+    currentDate: Date;
+    appointments: CalendarAppointment[];
+    onSelectAppointment: (appointment: CalendarAppointment) => void;
+  }>
+> = {
   month: MonthView,
   week: WeekView,
   day: DayView,
   list: ListView,
-}
+};
 
-function buildAppointment(item: AppointmentApi, index: number): CalendarAppointment {
-  const baseId = item.id ?? `appointment-${index}`
-  const patient = item.patient?.first_name?.trim() || "--"
-  const startTime = item.startTime && item.startTime !== "" ? item.startTime : BUSINESS_HOURS_FALLBACK
-  const endTime = item.endTime && item.endTime !== "" ? item.endTime : BUSINESS_HOURS_FALLBACK
+function buildAppointment(
+  item: AppointmentApi,
+  index: number,
+): CalendarAppointment {
+  const baseId = item.id ?? `appointment-${index}`;
+  const patient = item.patient?.first_name?.trim() || "--";
+  const startTime =
+    item.startTime && item.startTime !== ""
+      ? item.startTime
+      : BUSINESS_HOURS_FALLBACK;
+  const endTime =
+    item.endTime && item.endTime !== ""
+      ? item.endTime
+      : BUSINESS_HOURS_FALLBACK;
 
   return {
     ...APPOINTMENT_EMPTY_STATE,
@@ -94,88 +114,93 @@ function buildAppointment(item: AppointmentApi, index: number): CalendarAppointm
       endTime: item.timeSpentInWaitingRoom?.endTime ?? "",
     },
     timeOfExitFromConsultation: item.timeOfExitFromConsultation ?? "",
-  }
+  };
 }
 
 const LoadingState = () => (
   <div className="flex h-screen items-center justify-center">
     <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
   </div>
-)
+);
 
 export default function DoctorCalendar() {
-  const [currentDate, setCurrentDate] = useState(new Date())
-  const [view, setView] = useState<CalendarViewType>(DEFAULT_VIEW)
-  const [selectedAppointment, setSelectedAppointment] = useState<CalendarAppointment | null>(null)
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [appointments, setAppointments] = useState<CalendarAppointment[]>([])
-  const [loading, setLoading] = useState(true)
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [view, setView] = useState<CalendarViewType>(DEFAULT_VIEW);
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<CalendarAppointment | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [appointments, setAppointments] = useState<CalendarAppointment[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const loadAppointments = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await getAppointments()
-      const data = Array.isArray(response.data) ? (response.data as AppointmentApi[]) : []
-      const normalised = data.map((item, index) => buildAppointment(item, index))
-      setAppointments(normalised)
+      const response = await getAppointments();
+      const data = Array.isArray(response.data)
+        ? (response.data as AppointmentApi[])
+        : [];
+      const normalised = data.map((item, index) =>
+        buildAppointment(item, index),
+      );
+      setAppointments(normalised);
     } catch (error) {
-      console.error("Erreur lors du chargement des rendez-vous", error)
+      console.error("Erreur lors du chargement des rendez-vous", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    void loadAppointments()
-  }, [loadAppointments])
+    void loadAppointments();
+  }, [loadAppointments]);
 
   const handlePrevious = () => {
     setCurrentDate((date) => {
       switch (view) {
         case "month":
-          return subMonths(date, 1)
+          return subMonths(date, 1);
         case "week":
-          return subWeeks(date, 1)
+          return subWeeks(date, 1);
         case "day":
-          return subDays(date, 1)
+          return subDays(date, 1);
         default:
-          return date
+          return date;
       }
-    })
-  }
+    });
+  };
 
   const handleNext = () => {
     setCurrentDate((date) => {
       switch (view) {
         case "month":
-          return addMonths(date, 1)
+          return addMonths(date, 1);
         case "week":
-          return addWeeks(date, 1)
+          return addWeeks(date, 1);
         case "day":
-          return addDays(date, 1)
+          return addDays(date, 1);
         default:
-          return date
+          return date;
       }
-    })
-  }
+    });
+  };
 
   const handleToday = () => {
-    setCurrentDate(new Date())
-  }
+    setCurrentDate(new Date());
+  };
 
   const handleViewChange = (newView: CalendarViewType) => {
-    setView(newView)
-  }
+    setView(newView);
+  };
 
   const handleSelectAppointment = (appointment: CalendarAppointment) => {
-    setSelectedAppointment(appointment)
-    setDialogOpen(true)
-  }
+    setSelectedAppointment(appointment);
+    setDialogOpen(true);
+  };
 
-  const ActiveView = VIEW_COMPONENTS[view]
+  const ActiveView = VIEW_COMPONENTS[view];
 
   if (loading) {
-    return <LoadingState />
+    return <LoadingState />;
   }
 
   return (
@@ -199,10 +224,10 @@ export default function DoctorCalendar() {
         appointment={selectedAppointment}
         isOpen={dialogOpen}
         onClose={async () => {
-          setDialogOpen(false)
-          await loadAppointments()
+          setDialogOpen(false);
+          await loadAppointments();
         }}
       />
     </div>
-  )
+  );
 }

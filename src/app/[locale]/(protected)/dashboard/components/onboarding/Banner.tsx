@@ -1,13 +1,16 @@
-'use client';
-import { onboardingStatus } from '@/api/tenant';
-import { Card } from '@/components/Card';
-import useTranslations from '@/lib/i18n/useTranslations';
-import { useCallback, useEffect, useState } from 'react';
-import InviteMembers from './Invitations/InviteMembers';
-import Pricing from './pricing/Pricing';
-import Workspace from './workspace/Workspace';
+"use client";
 
-type StepKey = 'tenantProfile' | 'invitationsSchedule' | 'accountActivation';
+import { onboardingStatus } from "@/api/tenant";
+import { Card } from "@/components/Card";
+import useTranslations from "@/lib/i18n/useTranslations";
+
+import { useCallback, useEffect, useState } from "react";
+
+import InviteMembers from "./Invitations/InviteMembers";
+import Pricing from "./pricing/Pricing";
+import Workspace from "./workspace/Workspace";
+
+type StepKey = "tenantProfile" | "invitationsSchedule" | "accountActivation";
 
 type Step = {
   step: number;
@@ -20,7 +23,7 @@ type Step = {
 };
 
 export default function DoctorOnboarding() {
-  const t = useTranslations('dashboard.onboarding');
+  const t = useTranslations("dashboard.onboarding");
   const [steps, setSteps] = useState<Step[]>([]);
   const [_, setStatus] = useState<Record<StepKey, boolean>>({
     tenantProfile: false,
@@ -36,7 +39,7 @@ export default function DoctorOnboarding() {
     try {
       setLoading(true);
 
-      const storedUser = localStorage.getItem('user');
+      const storedUser = localStorage.getItem("user");
       if (!storedUser) {
         setLoading(false);
         return;
@@ -58,27 +61,29 @@ export default function DoctorOnboarding() {
       const processedSteps: Step[] = [
         {
           step: 1,
-          key: 'tenantProfile',
-          title: t('steps.tenantProfile.title'),
-          description: t('steps.tenantProfile.description'),
+          key: "tenantProfile",
+          title: t("steps.tenantProfile.title"),
+          description: t("steps.tenantProfile.description"),
           buttonText: <Workspace onSuccess={() => fetchOnboardingStatus()} />,
           completed: statusMapping.tenantProfile,
           disabled: false,
         },
         {
           step: 2,
-          key: 'invitationsSchedule',
-          title: t('steps.invitationsSchedule.title'),
-          description: t('steps.invitationsSchedule.description'),
-          buttonText: <InviteMembers onSuccess={() => fetchOnboardingStatus()} />,
+          key: "invitationsSchedule",
+          title: t("steps.invitationsSchedule.title"),
+          description: t("steps.invitationsSchedule.description"),
+          buttonText: (
+            <InviteMembers onSuccess={() => fetchOnboardingStatus()} />
+          ),
           completed: statusMapping.invitationsSchedule,
           disabled: !statusMapping.tenantProfile,
         },
         {
           step: 3,
-          key: 'accountActivation',
-          title: t('steps.accountActivation.title'),
-          description: t('steps.accountActivation.description'),
+          key: "accountActivation",
+          title: t("steps.accountActivation.title"),
+          description: t("steps.accountActivation.description"),
           buttonText: <Pricing />,
           completed: statusMapping.accountActivation,
           disabled: !statusMapping.tenantProfile,
@@ -87,7 +92,7 @@ export default function DoctorOnboarding() {
 
       setSteps(processedSteps);
     } catch (err) {
-      console.error('Error fetching onboarding status:', err);
+      console.error("Error fetching onboarding status:", err);
     } finally {
       setLoading(false);
     }
@@ -120,23 +125,24 @@ export default function DoctorOnboarding() {
   return (
     <Card>
       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-        {t('title')}
+        {t("title")}
       </h3>
       <p className="mt-2 text-sm/6 text-gray-500 dark:text-gray-500">
-        {t('description')}
+        {t("description")}
       </p>
       <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
         {steps.map((item) => (
           <div
             key={item.title}
-            className={`flex flex-col justify-between border-l-2 py-1 pl-4 transition-colors ${item.completed
-              ? 'border-blue-500'
-              : 'border-blue-100 dark:border-[#3b82f6]/20'
-              }`}
+            className={`flex flex-col justify-between border-l-2 py-1 pl-4 transition-colors ${
+              item.completed
+                ? "border-blue-500"
+                : "border-blue-100 dark:border-[#3b82f6]/20"
+            }`}
           >
             <div>
               <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-semibold text-[#3b82f6] dark:bg-[#3b82f6]/20 dark:text-[#3b82f6]">
-                {item.completed && '✓'} {t('step')} {item.step}
+                {item.completed && "✓"} {t("step")} {item.step}
               </span>
               <h4 className="mt-4 text-sm font-medium text-gray-900 dark:text-gray-50">
                 {item.title}
@@ -146,12 +152,13 @@ export default function DoctorOnboarding() {
               </p>
             </div>
             <div
-              className={`transition-opacity ${item.disabled ? 'opacity-50 pointer-events-none' : 'opacity-100'
-                }`}
+              className={`transition-opacity ${
+                item.disabled ? "opacity-50 pointer-events-none" : "opacity-100"
+              }`}
             >
               {item.completed ? (
                 <div className="flex items-center justify-center py-2 text-blue-600 dark:text-blue-400 font-medium text-sm">
-                  {t('completedStep')}
+                  {t("completedStep")}
                 </div>
               ) : (
                 item.buttonText
@@ -183,10 +190,10 @@ export default function DoctorOnboarding() {
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-blue-800 dark:text-blue-300">
-                {t('allDone.title')}
+                {t("allDone.title")}
               </p>
               <p className="mt-1 text-sm text-blue-600 dark:text-blue-400">
-                {t('allDone.subtitle')}
+                {t("allDone.subtitle")}
               </p>
             </div>
           </div>

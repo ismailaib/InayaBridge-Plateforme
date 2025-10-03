@@ -1,37 +1,37 @@
-"use client"
+"use client";
 
-import { Divider } from "@/components/Divider"
+import { Divider } from "@/components/Divider";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/Select"
-import { AnimatePresence, motion } from "framer-motion"
-import { useEffect, useState } from "react"
-import { DashboardModal } from "./components/DashboardModal"
-import Kpis from "./components/Kpis"
-import Banner from "./components/onboarding/Banner"
-import Reporting from "./components/Reporting"
-import SalleAttente from "./components/SalleAttente"
-import Statistics from "./components/Statistics"
-import useTranslations from "@/lib/i18n/useTranslations"
+} from "@/components/Select";
+import useTranslations from "@/lib/i18n/useTranslations";
+import { AnimatePresence, motion } from "framer-motion";
+
+import { useEffect, useState } from "react";
+
+import { DashboardModal } from "./components/DashboardModal";
+import Kpis from "./components/Kpis";
+import Reporting from "./components/Reporting";
+import SalleAttente from "./components/SalleAttente";
+import Statistics from "./components/Statistics";
+import Banner from "./components/onboarding/Banner";
 
 // Greeting Loader Component
 function GreetingLoader() {
-  const greetings = ["Hello", "Hola", "Bonjour", "سلام"]
-  const [currentIndex, setCurrentIndex] = useState(0)
-
-  
+  const greetings = ["Hello", "Hola", "Bonjour", "سلام"];
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % greetings.length)
-    }, 1000)
+      setCurrentIndex((prev) => (prev + 1) % greetings.length);
+    }, 1000);
 
-    return () => clearInterval(interval)
-  }, [greetings.length])
+    return () => clearInterval(interval);
+  }, [greetings.length]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-gray-950">
@@ -57,52 +57,53 @@ function GreetingLoader() {
           {greetings.map((_, index) => (
             <div
               key={index}
-              className={`h-2 w-2 rounded-full transition-all duration-300 ${index === currentIndex
+              className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                index === currentIndex
                   ? "bg-blue-500 w-8"
                   : "bg-gray-300 dark:bg-gray-700"
-                }`}
+              }`}
             />
           ))}
         </motion.div>
       </div>
     </div>
-  )
+  );
 }
 
 export default function Dashboard() {
-  const [isLoading, setIsLoading] = useState(true)
-  const t = useTranslations("common")
-  const d = useTranslations("signup")
+  const [isLoading, setIsLoading] = useState(true);
+  const t = useTranslations("common");
+  const d = useTranslations("signup");
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 2000)
-    return () => clearTimeout(timer)
-  }, [])
+      setIsLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // --- Load user from localStorage ---
   let user: {
-    lastName?: string
-    firstName?: string
-    role?: string
-    doctorProfile?: { specialty?: string }
-  } = {}
+    lastName?: string;
+    firstName?: string;
+    role?: string;
+    doctorProfile?: { specialty?: string };
+  } = {};
 
   if (typeof window !== "undefined") {
-    const storedUser = localStorage.getItem("user")
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       try {
-        const parsed = JSON.parse(storedUser)
-        console.log("Parsed user from localStorage:", parsed)
+        const parsed = JSON.parse(storedUser);
+        console.log("Parsed user from localStorage:", parsed);
 
         user = {
           lastName: parsed.lastName,
           firstName: parsed.firstName,
           role: parsed.role,
           doctorProfile: parsed.doctorProfile,
-        }
+        };
       } catch (err) {
-        console.error("Failed to parse user from localStorage:", err)
+        console.error("Failed to parse user from localStorage:", err);
       }
     }
   }
@@ -121,16 +122,16 @@ export default function Dashboard() {
     { label: t("months.10"), value: "octobre" },
     { label: t("months.11"), value: "novembre" },
     { label: t("months.12"), value: "décembre" },
-  ]
+  ];
 
-  const currentYear = new Date().getFullYear()
+  const currentYear = new Date().getFullYear();
   const yearSelect = Array.from({ length: 6 }, (_, i) => {
-    const year = (currentYear - i).toString()
-    return { label: year, value: year }
-  })
+    const year = (currentYear - i).toString();
+    return { label: year, value: year };
+  });
 
   if (isLoading) {
-    return <GreetingLoader />
+    return <GreetingLoader />;
   }
 
   return (
@@ -145,7 +146,7 @@ export default function Dashboard() {
         <div className="sm:flex sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-              {d('doctor.title')} {user.lastName} {user.firstName}
+              {d("doctor.title")} {user.lastName} {user.firstName}
             </h2>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               {user.doctorProfile?.specialty ?? "Médecin"} •{" "}
@@ -219,5 +220,5 @@ export default function Dashboard() {
         </motion.div>
       </main>
     </motion.div>
-  )
+  );
 }

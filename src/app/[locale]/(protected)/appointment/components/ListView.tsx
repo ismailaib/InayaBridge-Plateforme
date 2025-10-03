@@ -1,54 +1,60 @@
-"use client"
+"use client";
 
-import { cx } from "@/lib/utils"
-import { endOfMonth, format, isToday, parseISO, startOfMonth } from "date-fns"
-import { fr, enUS, arSA } from "date-fns/locale"
-import { Clock, MapPin } from "lucide-react"
-import { CalendarAppointment } from "./types"
-import { useTranslations } from "@/lib/i18n/useTranslations"
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
+import { endOfMonth, format, isToday, parseISO, startOfMonth } from "date-fns";
+import { arSA, enUS, fr } from "date-fns/locale";
+import { Clock, MapPin } from "lucide-react";
+
+import { CalendarAppointment } from "./types";
 
 type ListViewProps = {
-  currentDate: Date
-  appointments: CalendarAppointment[]
-  onSelectAppointment: (appointment: CalendarAppointment) => void
-}
+  currentDate: Date;
+  appointments: CalendarAppointment[];
+  onSelectAppointment: (appointment: CalendarAppointment) => void;
+};
 
-export function ListView({ currentDate, appointments, onSelectAppointment }: ListViewProps) {
-  const t = useTranslations("appointments.calendar.listView")
+export function ListView({
+  currentDate,
+  appointments,
+  onSelectAppointment,
+}: ListViewProps) {
+  const t = useTranslations("appointments.calendar.listView");
 
-  const locale = t("locale") === "ar" ? arSA : t("locale") === "fr" ? fr : enUS
+  const locale = t("locale") === "ar" ? arSA : t("locale") === "fr" ? fr : enUS;
 
-  const monthStart = startOfMonth(currentDate)
-  const monthEnd = endOfMonth(currentDate)
+  const monthStart = startOfMonth(currentDate);
+  const monthEnd = endOfMonth(currentDate);
 
   const monthAppointments = appointments
     .filter((appointment) => {
-      const appointmentDate = new Date(appointment.date)
-      return appointmentDate >= monthStart && appointmentDate <= monthEnd
+      const appointmentDate = new Date(appointment.date);
+      return appointmentDate >= monthStart && appointmentDate <= monthEnd;
     })
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  const groupedAppointments = monthAppointments.reduce<Record<string, CalendarAppointment[]>>(
-    (groups, appointment) => {
-      const date = format(new Date(appointment.date), "yyyy-MM-dd")
-      if (!groups[date]) groups[date] = []
-      groups[date].push(appointment)
-      return groups
-    },
-    {},
-  )
+  const groupedAppointments = monthAppointments.reduce<
+    Record<string, CalendarAppointment[]>
+  >((groups, appointment) => {
+    const date = format(new Date(appointment.date), "yyyy-MM-dd");
+    if (!groups[date]) groups[date] = [];
+    groups[date].push(appointment);
+    return groups;
+  }, {});
 
   return (
     <div className="space-y-6">
       {Object.keys(groupedAppointments).map((date) => {
-        const dateObj = parseISO(date)
+        const dateObj = parseISO(date);
         return (
           <div key={date}>
             <h3 className="mb-2 flex items-center space-x-2 text-sm font-medium text-gray-500 dark:text-gray-400">
               <span
                 className={cx(
                   "flex h-6 w-6 items-center justify-center rounded-full text-xs",
-                  isToday(dateObj) ? "bg-blue-600 text-white dark:bg-blue-500" : "bg-gray-100 dark:bg-gray-800",
+                  isToday(dateObj)
+                    ? "bg-blue-600 text-white dark:bg-blue-500"
+                    : "bg-gray-100 dark:bg-gray-800",
                 )}
               >
                 {format(dateObj, "d")}
@@ -57,7 +63,10 @@ export function ListView({ currentDate, appointments, onSelectAppointment }: Lis
             </h3>
 
             <div className="rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
-              <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-800">
+              <ul
+                role="list"
+                className="divide-y divide-gray-200 dark:divide-gray-800"
+              >
                 {groupedAppointments[date].map((appointment) => (
                   <li key={appointment.id}>
                     <button
@@ -106,7 +115,9 @@ export function ListView({ currentDate, appointments, onSelectAppointment }: Lis
                                 : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
                             )}
                           >
-                            {appointment.confirmed ? t("status.confirmed") : t("status.pending")}
+                            {appointment.confirmed
+                              ? t("status.confirmed")
+                              : t("status.pending")}
                           </div>
                         </div>
                       </div>
@@ -116,8 +127,8 @@ export function ListView({ currentDate, appointments, onSelectAppointment }: Lis
               </ul>
             </div>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

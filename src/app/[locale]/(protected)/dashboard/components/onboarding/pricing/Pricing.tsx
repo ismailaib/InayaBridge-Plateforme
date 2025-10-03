@@ -1,17 +1,21 @@
 import { Button } from "@/components/Button";
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/Dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/Dialog";
 import useTranslations from "@/lib/i18n/useTranslations";
 import { cx } from "@/lib/utils";
 import { RiCheckboxCircleFill, RiCloseLine } from "@remixicon/react";
 import { Wallet } from "lucide-react";
+
 import { useState } from "react";
 
 const Pricing = () => {
   const [isOpen, setIsOpen] = useState(false);
   const t = useTranslations("dashboard.pricing");
-  const plans = (t.raw(
-    "plans"
-  ) ?? []) as Array<{
+  const plans = (t.raw("plans") ?? []) as Array<{
     id: string;
     name: string;
     price: string | { monthly: string; annually: string };
@@ -59,7 +63,7 @@ const Pricing = () => {
                   plan.isRecommended
                     ? "border-blue-500 bg-blue-50 dark:border-blue-500 dark:bg-blue-950"
                     : "border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900",
-                  "border-t-2 p-6"
+                  "border-t-2 p-6",
                 )}
               >
                 <div className="flex items-center justify-between">
@@ -83,7 +87,8 @@ const Pricing = () => {
                   ) : (
                     <>
                       <span className="text-2xl font-semibold text-gray-900 dark:text-gray-50">
-                        {plan.price.monthly} <span className="text-sm">{t("perMonth")}</span>
+                        {plan.price.monthly}{" "}
+                        <span className="text-sm">{t("perMonth")}</span>
                       </span>
                       <span className="text-sm text-gray-500 dark:text-gray-400">
                         {plan.price.annually} {t("perYear")}
@@ -109,13 +114,16 @@ const Pricing = () => {
                     className="mt-2 text-sm text-gray-700 dark:text-gray-300"
                   >
                     {plan.capacity.map((item) => (
-                      <li key={item} className="flex items-center space-x-2 py-2.5">
+                      <li
+                        key={item}
+                        className="flex items-center space-x-2 py-2.5"
+                      >
                         <RiCheckboxCircleFill
                           className={cx(
                             plan.isRecommended
                               ? "text-blue-500 dark:text-blue-500"
                               : "text-gray-400 dark:text-gray-600",
-                            "size-5 shrink-0"
+                            "size-5 shrink-0",
                           )}
                           aria-hidden={true}
                         />
@@ -132,13 +140,16 @@ const Pricing = () => {
                     className="mt-2 text-sm text-gray-700 dark:text-gray-300"
                   >
                     {plan.features.map((feature) => (
-                      <li key={feature} className="flex items-center space-x-2 py-2.5">
+                      <li
+                        key={feature}
+                        className="flex items-center space-x-2 py-2.5"
+                      >
                         <RiCheckboxCircleFill
                           className={cx(
                             plan.isRecommended
                               ? "text-blue-500 dark:text-blue-500"
                               : "text-gray-400 dark:text-gray-600",
-                            "size-5 shrink-0"
+                            "size-5 shrink-0",
                           )}
                           aria-hidden={true}
                         />

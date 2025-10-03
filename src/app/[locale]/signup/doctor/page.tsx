@@ -1,23 +1,28 @@
-"use client"
+"use client";
 
-import { DatePickerBirthDateExample } from "@/components/DateBirth"
-import { Label } from "@/components/Label"
-import useTranslations from "@/lib/i18n/useTranslations"
-import { AnimatePresence, motion } from "framer-motion"
-import Image from "next/image"
-import React, { SetStateAction, useState } from "react"
-import logo from "../../../icon-logo.png"
-import StepDoctorSpecialisation from "../components/StepDoctorSpecialisation"
-import StepSharedFields from "../components/StepSharedFields"
+import { DatePickerBirthDateExample } from "@/components/DateBirth";
+import { Label } from "@/components/Label";
+import useTranslations from "@/lib/i18n/useTranslations";
+import { AnimatePresence, motion } from "framer-motion";
+
+import React, { SetStateAction, useState } from "react";
+
+import Image from "next/image";
+
+import logo from "../../../icon-logo.png";
+import StepDoctorSpecialisation from "../components/StepDoctorSpecialisation";
+import StepSharedFields from "../components/StepSharedFields";
 
 export default function DoctorWelcomePage() {
-  const t = useTranslations("signup.doctor")
-  const [step, setStep] = useState<"shared" | "specialisation">("shared")
-  const [speciality, setSpeciality] = useState<string | null>(null)
-  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(undefined)
+  const t = useTranslations("signup.doctor");
+  const [step, setStep] = useState<"shared" | "specialisation">("shared");
+  const [speciality, setSpeciality] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(
+    undefined,
+  );
 
   const subtitle =
-    step === "shared" ? t("subtitle.specialisation") : t("subtitle.form")
+    step === "shared" ? t("subtitle.specialisation") : t("subtitle.form");
 
   return (
     <div className="grid min-h-screen grid-cols-1 w-full overflow-hidden lg:grid-cols-2">
@@ -64,8 +69,8 @@ export default function DoctorWelcomePage() {
                   <StepDoctorSpecialisation
                     onSuccess={() => setStep("specialisation")}
                     onContinue={(spec: SetStateAction<string | null>) => {
-                      setSpeciality(spec)
-                      setStep("shared")
+                      setSpeciality(spec);
+                      setStep("shared");
                     }}
                   />
                 </motion.div>
@@ -84,13 +89,22 @@ export default function DoctorWelcomePage() {
                     additionalFields={
                       <>
                         <div>
-                          <Label htmlFor="dob" className="font-medium">{t("additionalFields.dateOfBirth")}</Label>
+                          <Label htmlFor="dob" className="font-medium">
+                            {t("additionalFields.dateOfBirth")}
+                          </Label>
                           <div className="mt-2">
-                            <DatePickerBirthDateExample value={selectedDate} onChange={setSelectedDate} />
+                            <DatePickerBirthDateExample
+                              value={selectedDate}
+                              onChange={setSelectedDate}
+                            />
                             <input
                               type="hidden"
                               name="dateOfBirth"
-                              value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
+                              value={
+                                selectedDate
+                                  ? selectedDate.toISOString().split("T")[0]
+                                  : ""
+                              }
                               tabIndex={-1}
                               aria-hidden="true"
                             />
@@ -123,9 +137,7 @@ export default function DoctorWelcomePage() {
               <h2 className="text-2xl font-semibold leading-9 text-white">
                 {t("aside.title")}
               </h2>
-              <p className="mt-4 text-white">
-                {t("aside.description")}
-              </p>
+              <p className="mt-4 text-white">{t("aside.description")}</p>
             </motion.div>
 
             <motion.div
@@ -164,7 +176,5 @@ export default function DoctorWelcomePage() {
         </div>
       </motion.aside>
     </div>
-  )
+  );
 }
-
-

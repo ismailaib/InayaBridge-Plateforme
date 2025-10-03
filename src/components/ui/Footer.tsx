@@ -1,45 +1,59 @@
-"use client"
+"use client";
 
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import { RiArrowRightUpLine } from "@remixicon/react"
-import Link from "next/link"
-import { DatabaseLogo } from "../../../public/DatabaseLogo"
-import { DatabaseLogoArabic } from "../../../public/DatabaseLogoArabic"
-import ThemeSwitch from "../ThemeSwitch"
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { RiArrowRightUpLine } from "@remixicon/react";
+
+import Link from "next/link";
+
+import { DatabaseLogo } from "../../../public/DatabaseLogo";
+import { DatabaseLogoArabic } from "../../../public/DatabaseLogoArabic";
+import ThemeSwitch from "../ThemeSwitch";
 
 export default function Footer() {
-  const t = useTranslations("footer")
-  const { locale } = useTranslationsContext()
-  const isRTL = locale === "ar"
+  const t = useTranslations("footer");
+  const { locale } = useTranslationsContext();
+  const isRTL = locale === "ar";
 
   // Build navigation directly from translations
   const navigation = {
     product: [
       { name: t("navigation.product.enterprise"), href: "#", external: false },
-      { name: t("navigation.product.pricing"), href: "pricing", external: false },
-      { name: t("navigation.product.changelog"), href: "/changelog", external: false }
+      {
+        name: t("navigation.product.pricing"),
+        href: "pricing",
+        external: false,
+      },
+      {
+        name: t("navigation.product.changelog"),
+        href: "/changelog",
+        external: false,
+      },
     ],
     resources: [
-      { name: t("navigation.resources.faqs"), href: "pricing#faq-title", external: false },
+      {
+        name: t("navigation.resources.faqs"),
+        href: "pricing#faq-title",
+        external: false,
+      },
       { name: t("navigation.resources.docs"), href: "#", external: false },
       { name: t("navigation.resources.api"), href: "#", external: false },
       { name: t("navigation.resources.blog"), href: "#", external: false },
-      { name: t("navigation.resources.support"), href: "#", external: false }
+      { name: t("navigation.resources.support"), href: "#", external: false },
     ],
     company: [
       { name: t("navigation.company.about"), href: "about", external: false },
       { name: t("navigation.company.careers"), href: "#", external: true },
       { name: t("navigation.company.contact"), href: "#", external: false },
-      { name: t("navigation.company.status"), href: "#", external: false }
+      { name: t("navigation.company.status"), href: "#", external: false },
     ],
     legal: [
       { name: t("navigation.legal.imprint"), href: "#", external: false },
       { name: t("navigation.legal.privacy"), href: "#", external: false },
       { name: t("navigation.legal.terms"), href: "#", external: false },
-      { name: t("navigation.legal.dpa"), href: "#", external: false }
-    ]
-  }
+      { name: t("navigation.legal.dpa"), href: "#", external: false },
+    ],
+  };
 
   return (
     <footer id="footer" dir={isRTL ? "rtl" : "ltr"}>
@@ -179,5 +193,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

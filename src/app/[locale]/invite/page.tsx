@@ -8,10 +8,22 @@ import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
 import { toast } from "@/lib/useToast";
 import { AnimatePresence, motion } from "framer-motion";
-import { AlertCircle, CheckCircle2, Clock, Loader2, MailCheck, Shield, UserCheck, Users } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  Loader2,
+  MailCheck,
+  Shield,
+  UserCheck,
+  Users,
+} from "lucide-react";
+
+import { useEffect, useState } from "react";
+
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+
 import logo from "../../icon-logo.png";
 
 // Types
@@ -54,7 +66,7 @@ export default function InvitePage() {
     firstName: "",
     lastName: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const [formErrors, setFormErrors] = useState<Partial<FormData>>({});
@@ -78,7 +90,8 @@ export default function InvitePage() {
         if (invitationData.status === "ACCEPTED") {
           toast({
             title: "Invitation déjà acceptée",
-            description: "Cette invitation a déjà été acceptée. Redirection vers la connexion...",
+            description:
+              "Cette invitation a déjà été acceptée. Redirection vers la connexion...",
             variant: "error",
             duration: 3000,
           });
@@ -87,7 +100,9 @@ export default function InvitePage() {
         }
 
         if (invitationData.status === "EXPIRED") {
-          setError("Cette invitation a expiré. Veuillez contacter votre administrateur.");
+          setError(
+            "Cette invitation a expiré. Veuillez contacter votre administrateur.",
+          );
           return;
         }
 
@@ -101,7 +116,9 @@ export default function InvitePage() {
         setTenant(tenantRes.data);
       } catch (err) {
         console.error("Erreur lors de la récupération de l'invitation:", err);
-        setError("Invitation introuvable ou expirée. Veuillez vérifier le lien.");
+        setError(
+          "Invitation introuvable ou expirée. Veuillez vérifier le lien.",
+        );
       } finally {
         setLoading(false);
       }
@@ -154,13 +171,14 @@ export default function InvitePage() {
           lastName: formData.lastName.trim(),
           password: formData.password,
         },
-        token ?? ""
+        token ?? "",
       );
 
       setSuccess(true);
       toast({
         title: "Compte créé avec succès !",
-        description: "Votre invitation a été acceptée. Redirection vers la connexion...",
+        description:
+          "Votre invitation a été acceptée. Redirection vers la connexion...",
         variant: "success",
         duration: 3000,
       });
@@ -171,26 +189,27 @@ export default function InvitePage() {
       console.error("Erreur lors de l'acceptation de l'invitation:", err);
       setError(
         err?.response?.data?.message ||
-        "Impossible d'accepter l'invitation. Veuillez réessayer."
+          "Impossible d'accepter l'invitation. Veuillez réessayer.",
       );
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleInputChange = (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: e.target.value
-    }));
-
-    if (formErrors[field]) {
-      setFormErrors(prev => ({
+  const handleInputChange =
+    (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData((prev) => ({
         ...prev,
-        [field]: undefined
+        [field]: e.target.value,
       }));
-    }
-  };
+
+      if (formErrors[field]) {
+        setFormErrors((prev) => ({
+          ...prev,
+          [field]: undefined,
+        }));
+      }
+    };
 
   if (loading) {
     return (
@@ -230,10 +249,7 @@ export default function InvitePage() {
           <p className="text-sm text-red-600 dark:text-red-400 mb-6 max-w-md">
             {error}
           </p>
-          <Button
-            onClick={() => router.push("/login")}
-            variant="secondary"
-          >
+          <Button onClick={() => router.push("/login")} variant="secondary">
             Retour à la connexion
           </Button>
         </motion.div>
@@ -293,7 +309,12 @@ export default function InvitePage() {
                 <div className="absolute bottom-[9%] right-[9%] size-1 rounded-full bg-blue-200 dark:bg-blue-800" />
 
                 <div className="rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 p-3 shadow-md">
-                  <Image src={logo} alt="InayaBridge Logo" width={28} height={28} />
+                  <Image
+                    src={logo}
+                    alt="InayaBridge Logo"
+                    width={28}
+                    height={28}
+                  />
                 </div>
               </motion.div>
             </div>
@@ -316,7 +337,10 @@ export default function InvitePage() {
             <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
               <Clock className="h-4 w-4" />
               <span>
-                Expire le : {invitation ? new Date(invitation.expiresAt).toLocaleString('fr-FR') : ''}
+                Expire le :{" "}
+                {invitation
+                  ? new Date(invitation.expiresAt).toLocaleString("fr-FR")
+                  : ""}
               </span>
             </div>
           </motion.div>
@@ -341,7 +365,10 @@ export default function InvitePage() {
                 {/* Name Fields */}
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <Label htmlFor="firstName" className="font-medium text-gray-700 dark:text-gray-300">
+                    <Label
+                      htmlFor="firstName"
+                      className="font-medium text-gray-700 dark:text-gray-300"
+                    >
                       Prénom *
                     </Label>
                     <Input
@@ -351,8 +378,8 @@ export default function InvitePage() {
                       autoComplete="given-name"
                       placeholder="Votre prénom"
                       value={formData.firstName}
-                      onChange={handleInputChange('firstName')}
-                      className={`mt-2 ${formErrors.firstName ? 'border-red-500 focus:border-red-500' : ''}`}
+                      onChange={handleInputChange("firstName")}
+                      className={`mt-2 ${formErrors.firstName ? "border-red-500 focus:border-red-500" : ""}`}
                       required
                     />
                     <AnimatePresence>
@@ -370,7 +397,10 @@ export default function InvitePage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="lastName" className="font-medium text-gray-700 dark:text-gray-300">
+                    <Label
+                      htmlFor="lastName"
+                      className="font-medium text-gray-700 dark:text-gray-300"
+                    >
                       Nom *
                     </Label>
                     <Input
@@ -380,8 +410,8 @@ export default function InvitePage() {
                       autoComplete="family-name"
                       placeholder="Votre nom"
                       value={formData.lastName}
-                      onChange={handleInputChange('lastName')}
-                      className={`mt-2 ${formErrors.lastName ? 'border-red-500 focus:border-red-500' : ''}`}
+                      onChange={handleInputChange("lastName")}
+                      className={`mt-2 ${formErrors.lastName ? "border-red-500 focus:border-red-500" : ""}`}
                       required
                     />
                     <AnimatePresence>
@@ -401,7 +431,10 @@ export default function InvitePage() {
 
                 {/* Password Fields */}
                 <div>
-                  <Label htmlFor="password" className="font-medium text-gray-700 dark:text-gray-300">
+                  <Label
+                    htmlFor="password"
+                    className="font-medium text-gray-700 dark:text-gray-300"
+                  >
                     Mot de passe *
                   </Label>
                   <div className="relative">
@@ -413,8 +446,8 @@ export default function InvitePage() {
                       autoComplete="new-password"
                       placeholder="Minimum 8 caractères"
                       value={formData.password}
-                      onChange={handleInputChange('password')}
-                      className={`mt-2 pl-10 ${formErrors.password ? 'border-red-500 focus:border-red-500' : ''}`}
+                      onChange={handleInputChange("password")}
+                      className={`mt-2 pl-10 ${formErrors.password ? "border-red-500 focus:border-red-500" : ""}`}
                       required
                     />
                   </div>
@@ -433,7 +466,10 @@ export default function InvitePage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="confirmPassword" className="font-medium text-gray-700 dark:text-gray-300">
+                  <Label
+                    htmlFor="confirmPassword"
+                    className="font-medium text-gray-700 dark:text-gray-300"
+                  >
                     Confirmer le mot de passe *
                   </Label>
                   <div className="relative">
@@ -445,8 +481,8 @@ export default function InvitePage() {
                       autoComplete="new-password"
                       placeholder="Confirmez votre mot de passe"
                       value={formData.confirmPassword}
-                      onChange={handleInputChange('confirmPassword')}
-                      className={`mt-2 pl-10 ${formErrors.confirmPassword ? 'border-red-500 focus:border-red-500' : ''}`}
+                      onChange={handleInputChange("confirmPassword")}
+                      className={`mt-2 pl-10 ${formErrors.confirmPassword ? "border-red-500 focus:border-red-500" : ""}`}
                       required
                     />
                   </div>
@@ -509,7 +545,8 @@ export default function InvitePage() {
           transition={{ delay: 0.8, duration: 0.5 }}
           className="text-center text-xs text-gray-500 mt-8"
         >
-          En créant votre compte, vous acceptez nos conditions d&apos;utilisation
+          En créant votre compte, vous acceptez nos conditions
+          d&apos;utilisation
         </motion.p>
       </div>
     </div>

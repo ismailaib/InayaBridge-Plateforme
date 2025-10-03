@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { AreaChart } from "@/components/AreaChart"
-import { Card } from "@/components/Card"
-import { CategoryBar } from "@/components/CategoryBar"
-import { Tooltip } from "@/components/Tooltip"
-import { Info } from "lucide-react"
+import { AreaChart } from "@/components/AreaChart";
+import { Card } from "@/components/Card";
+import { CategoryBar } from "@/components/CategoryBar";
+import { Tooltip } from "@/components/Tooltip";
+import { Info } from "lucide-react";
 
 const data = [
   { date: "19-09-2025", "Rendez-vous": 0, diagnostics: 0 },
@@ -18,7 +18,7 @@ const data = [
   { date: "27-09-2025", "Rendez-vous": 58, diagnostics: 22 },
   { date: "28-09-2025", "Rendez-vous": 60, diagnostics: 24 },
   { date: "29-09-2025", "Rendez-vous": 65, diagnostics: 25 },
-]
+];
 
 export default function Example() {
   return (
@@ -139,7 +139,7 @@ export default function Example() {
             colors={["blue", "blue"]}
             fill="solid"
             valueFormatter={(v) => `${v}`}
-            onValueChange={() => { }}
+            onValueChange={() => {}}
             tickGap={15}
             className="hidden sm:block"
           />
@@ -150,7 +150,7 @@ export default function Example() {
             colors={["blue", "blue"]}
             fill="solid"
             valueFormatter={(v) => `${v}`}
-            onValueChange={() => { }}
+            onValueChange={() => {}}
             showYAxis={false}
             startEndOnly={true}
             tickGap={15}
@@ -159,5 +159,5 @@ export default function Example() {
         </div>
       </Card>
     </>
-  )
+  );
 }

@@ -1,11 +1,13 @@
 "use client";
 
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import { useChatStore } from "@/store/ChatStore";
 import { motion } from "framer-motion";
 import { Check, Copy, MessageSquareOff } from "lucide-react";
+
 import { useEffect, useRef, useState } from "react";
+
 import MessageContent from "./MessageContent";
-import { useTranslations } from "@/lib/i18n/useTranslations";
 
 const UI = () => {
   const { messages, isLoading } = useChatStore();

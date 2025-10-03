@@ -1,46 +1,55 @@
-"use client"
+"use client";
 
-import { Input } from '@/components/Input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/Select'
-import { Search } from 'lucide-react'
-import React, { useEffect, useRef, useState } from 'react'
-import { getDoctorPatients, Patient } from '../api/patients'
-import Details from './components/Details'
-import TimeLine from './components/TimeLine'
+import { Input } from "@/components/Input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/Select";
+import { Search } from "lucide-react";
+
+import React, { useEffect, useRef, useState } from "react";
+
+import { Patient, getDoctorPatients } from "../api/patients";
+import Details from "./components/Details";
+import TimeLine from "./components/TimeLine";
 
 const PatientRecordPage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState<string>('')
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null)
-  const [selectOpen, setSelectOpen] = useState<boolean>(false)
-  const [filteredPatients, setFilteredPatients] = useState<Patient[]>([])
-  const [patients, setPatients] = useState<Patient[]>([])
-  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [selectOpen, setSelectOpen] = useState<boolean>(false);
+  const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const searchInputRef = useRef<HTMLInputElement>(null)
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const refetchPatients = React.useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const { data } = await getDoctorPatients()
-      setPatients(data)
+      const { data } = await getDoctorPatients();
+      setPatients(data);
 
       // keep the current selection fresh
       if (selectedPatient) {
-        const fresh = data.find(p => p.id === selectedPatient.id)
-        setSelectedPatient(fresh ?? null)
+        const fresh = data.find((p) => p.id === selectedPatient.id);
+        setSelectedPatient(fresh ?? null);
       }
     } catch (err) {
-      console.error('Failed to refetch patients', err)
+      console.error("Failed to refetch patients", err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [selectedPatient])
-
+  }, [selectedPatient]);
 
   useEffect(() => {
     setLoading(true);
     getDoctorPatients()
-      .then((res) => { setPatients(res.data); })
+      .then((res) => {
+        setPatients(res.data);
+      })
       .catch((err) => {
         console.error("Failed to fetch patients", err);
       })
@@ -49,51 +58,53 @@ const PatientRecordPage: React.FC = () => {
 
   useEffect(() => {
     if (!searchQuery.trim()) {
-      setFilteredPatients(patients.slice(0, 10))
-      return
+      setFilteredPatients(patients.slice(0, 10));
+      return;
     }
-    const query = searchQuery.toLowerCase()
+    const query = searchQuery.toLowerCase();
     const filtered = patients.filter(
       (patient) =>
         patient?.first_name?.toLowerCase().includes(query) ||
-        patient?.last_name?.toLowerCase().includes(query)
-    )
-    setFilteredPatients(filtered)
-  }, [searchQuery, patients])
+        patient?.last_name?.toLowerCase().includes(query),
+    );
+    setFilteredPatients(filtered);
+  }, [searchQuery, patients]);
 
   const handlePatientSelect = (patientId: string): void => {
-    const patient = patients.find((p) => String(p.id) === patientId)
-    if (patient) setSelectedPatient(patient)
-    setSelectOpen(false)
-  }
+    const patient = patients.find((p) => String(p.id) === patientId);
+    if (patient) setSelectedPatient(patient);
+    setSelectOpen(false);
+  };
 
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setSearchQuery(e.target.value)
+  const handleSearchInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    setSearchQuery(e.target.value);
     setTimeout(() => {
-      searchInputRef.current?.focus()
-    }, 0)
-  }
+      searchInputRef.current?.focus();
+    }, 0);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      e.stopPropagation()
+      e.stopPropagation();
     }
-  }
+  };
 
   const handleInputClick = (e: React.MouseEvent<HTMLInputElement>): void => {
-    e.stopPropagation()
-  }
+    e.stopPropagation();
+  };
 
   const handleSelectItemClick = (patientId: string): void => {
-    handlePatientSelect(patientId)
-  }
+    handlePatientSelect(patientId);
+  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -141,7 +152,11 @@ const PatientRecordPage: React.FC = () => {
                     <SelectItem
                       key={patient.id}
                       className="cursor-pointer px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={() => handleSelectItemClick(String(patient?.id?.toString())) ?? ""}
+                      onClick={() =>
+                        handleSelectItemClick(
+                          String(patient?.id?.toString()),
+                        ) ?? ""
+                      }
                       value={patient?.id?.toString() ?? ""}
                     >
                       {patient.first_name} {patient.last_name}
@@ -178,7 +193,7 @@ const PatientRecordPage: React.FC = () => {
 
       {/* <Documents patient={selectedPatient!} /> */}
     </div>
-  )
-}
+  );
+};
 
-export default PatientRecordPage
+export default PatientRecordPage;

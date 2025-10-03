@@ -1,23 +1,23 @@
-"use client"
+"use client";
 
-import { useSortable } from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
-import { GripVertical } from "lucide-react"
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical } from "lucide-react";
 
 export default function SortableItem({
   id,
   children,
 }: {
-  id: string
-  children: React.ReactNode
+  id: string;
+  children: React.ReactNode;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id })
+    useSortable({ id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-  }
+  };
 
   return (
     <div
@@ -34,5 +34,5 @@ export default function SortableItem({
       </button>
       {children}
     </div>
-  )
+  );
 }

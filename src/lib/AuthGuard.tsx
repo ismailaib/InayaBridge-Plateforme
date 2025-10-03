@@ -1,18 +1,21 @@
-"use client"
+"use client";
 
-import { useRouter } from "next/navigation"
-import { ReactNode, useEffect } from "react"
-import { useAuth } from "./auth-context"
+import { ReactNode, useEffect } from "react";
+
+import { useRouter } from "next/navigation";
+
+import { useAuth } from "./auth-context";
 
 export default function AuthGuard({ children }: { children: ReactNode }) {
-  const { token, loading } = useAuth()
-  const router = useRouter()
+  const { token, loading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !token && window.location.pathname !== "/signup") router.replace("/login")
-  }, [loading, token, router])
+    if (!loading && !token && window.location.pathname !== "/signup")
+      router.replace("/login");
+  }, [loading, token, router]);
 
-  if (loading || !token) return null
+  if (loading || !token) return null;
 
-  return <>{children}</>
+  return <>{children}</>;
 }

@@ -1,9 +1,8 @@
 // Tremor ProgressBar [v0.0.3]
+import { cx } from "@/lib/utils";
+import { type VariantProps, tv } from "tailwind-variants";
 
-import React from "react"
-import { tv, type VariantProps } from "tailwind-variants"
-
-import { cx } from "@/lib/utils"
+import React from "react";
 
 const progressBarVariants = tv({
   slots: {
@@ -37,15 +36,15 @@ const progressBarVariants = tv({
   defaultVariants: {
     variant: "default",
   },
-})
+});
 
 interface ProgressBarProps
   extends React.HTMLProps<HTMLDivElement>,
-  VariantProps<typeof progressBarVariants> {
-  value?: number
-  max?: number
-  showAnimation?: boolean
-  label?: string
+    VariantProps<typeof progressBarVariants> {
+  value?: number;
+  max?: number;
+  showAnimation?: boolean;
+  label?: string;
 }
 
 const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
@@ -61,8 +60,8 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
     }: ProgressBarProps,
     forwardedRef,
   ) => {
-    const safeValue = Math.min(max, Math.max(value, 0))
-    const { background, bar } = progressBarVariants({ variant })
+    const safeValue = Math.min(max, Math.max(value, 0));
+    const { background, bar } = progressBarVariants({ variant });
     return (
       <div
         ref={forwardedRef}
@@ -85,7 +84,7 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
               "h-full flex-col rounded-full",
               bar(),
               showAnimation &&
-              "transform-gpu transition-all duration-300 ease-in-out",
+                "transform-gpu transition-all duration-300 ease-in-out",
             )}
             style={{
               width: max ? `${(safeValue / max) * 100}%` : `${safeValue}%`,
@@ -105,10 +104,10 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
           </span>
         ) : null}
       </div>
-    )
+    );
   },
-)
+);
 
-ProgressBar.displayName = "ProgressBar"
+ProgressBar.displayName = "ProgressBar";
 
-export { ProgressBar, progressBarVariants, type ProgressBarProps }
+export { ProgressBar, progressBarVariants, type ProgressBarProps };

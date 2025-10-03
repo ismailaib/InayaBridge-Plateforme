@@ -1,10 +1,6 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from "react"
-import { RiCloseLine } from "@remixicon/react"
-import { UserRoundMinus } from "lucide-react"
-
-import { Button } from "@/components/Button"
+import { Button } from "@/components/Button";
 import {
   Dialog,
   DialogClose,
@@ -14,15 +10,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/Dialog"
-import { Input } from "@/components/Input"
-import { Label } from "@/components/Label"
+} from "@/components/Dialog";
+import { Input } from "@/components/Input";
+import { Label } from "@/components/Label";
+import { RiCloseLine } from "@remixicon/react";
+import { UserRoundMinus } from "lucide-react";
 
-import { deletePatient } from "../../api/patients"
+import React, { useEffect, useState } from "react";
+
+import { deletePatient } from "../../api/patients";
 
 interface DeletePatientModalProps {
-  patientId: number
-  onSuccess?: () => void
+  patientId: number;
+  onSuccess?: () => void;
 }
 
 export default function DeletePatientModal({
@@ -30,36 +30,36 @@ export default function DeletePatientModal({
   onSuccess,
 }: DeletePatientModalProps) {
   /* ─────────── state ─────────── */
-  const [code, setCode] = useState("")           // code affiché
-  const [userInput, setUserInput] = useState("") // saisi par user
-  const [submitting, setSubmitting] = useState(false)
-  const [open, setOpen] = useState(false)
+  const [code, setCode] = useState(""); // code affiché
+  const [userInput, setUserInput] = useState(""); // saisi par user
+  const [submitting, setSubmitting] = useState(false);
+  const [open, setOpen] = useState(false);
 
   /* ─────────── génère un nouveau code à chaque ouverture ─────────── */
   useEffect(() => {
     if (open) {
-      const newCode = Math.floor(100000 + Math.random() * 900000).toString()
-      setCode(newCode)
-      setUserInput("")
+      const newCode = Math.floor(100000 + Math.random() * 900000).toString();
+      setCode(newCode);
+      setUserInput("");
     }
-  }, [open])
+  }, [open]);
 
   /* ─────────── submit ─────────── */
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (userInput !== code) return // code incorrect → on ne fait rien
+    e.preventDefault();
+    if (userInput !== code) return; // code incorrect → on ne fait rien
 
-    setSubmitting(true)
+    setSubmitting(true);
     try {
-      await deletePatient(patientId)
-      onSuccess?.()
-      setOpen(false)
+      await deletePatient(patientId);
+      onSuccess?.();
+      setOpen(false);
     } catch (err) {
-      console.error("Erreur de suppression", err)
+      console.error("Erreur de suppression", err);
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
 
   /* ─────────── UI ─────────── */
   return (
@@ -135,5 +135,5 @@ export default function DeletePatientModal({
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

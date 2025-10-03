@@ -1,11 +1,10 @@
-import ThemeSwitch from "@/components/ThemeSwitch"
-import { AuthProvider } from "@/lib/auth-context"
-
+import ThemeSwitch from "@/components/ThemeSwitch";
+import { AuthProvider } from "@/lib/auth-context";
 
 export default function SignupLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <div className="flex h-screen flex-col items-center justify-center">
@@ -14,9 +13,7 @@ export default function SignupLayout({
           <ThemeSwitch />
         </div>
       </div>
-      <AuthProvider>
-        {children}
-      </AuthProvider>
+      <AuthProvider>{children}</AuthProvider>
     </div>
-  )
+  );
 }

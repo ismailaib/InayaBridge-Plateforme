@@ -4,8 +4,10 @@ import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { RiPlayCircleFill } from "@remixicon/react";
 import { motion } from "framer-motion";
+
 import Image from "next/image";
 import Link from "next/link";
+
 import { Button } from "../Button";
 
 const statKeys = ["users", "support", "satisfaction"] as const;
@@ -39,7 +41,9 @@ export default function Hero() {
             className={`max-w-xl ${isRTL ? "text-right" : "text-left"}`}
           >
             {/* Small badge */}
-            <div className={`mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100/70 px-4 py-1.5 text-sm font-semibold text-blue-800 shadow-sm dark:bg-blue-900/40 dark:text-blue-200 ${isRTL ? "flex-row-reverse" : ""}`}>
+            <div
+              className={`mb-6 inline-flex items-center gap-2 rounded-full bg-blue-100/70 px-4 py-1.5 text-sm font-semibold text-blue-800 shadow-sm dark:bg-blue-900/40 dark:text-blue-200 ${isRTL ? "flex-row-reverse" : ""}`}
+            >
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-500"></span>
@@ -56,9 +60,13 @@ export default function Hero() {
               {t("titleLine2")}
             </h1>
 
-            <p className="mt-6 text-lg text-gray-700 dark:text-gray-300">{t("description")}</p>
+            <p className="mt-6 text-lg text-gray-700 dark:text-gray-300">
+              {t("description")}
+            </p>
 
-            <div className={`mt-10 flex flex-col gap-4 sm:flex-row ${isRTL ? "sm:flex-row-reverse justify-end" : ""}`}>
+            <div
+              className={`mt-10 flex flex-col gap-4 sm:flex-row ${isRTL ? "sm:flex-row-reverse justify-end" : ""}`}
+            >
               <Button
                 asChild
                 className="h-12 rounded-lg bg-blue-600 px-6 text-base font-medium text-white shadow-lg shadow-blue-500/20 transition-all duration-300 hover:bg-blue-700 dark:shadow-blue-900/30"
@@ -69,12 +77,19 @@ export default function Hero() {
               <Button
                 asChild
                 variant="light"
-                className={`h-12 gap-2 rounded-lg border border-gray-200 bg-white px-6 text-base font-medium text-gray-800 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 group ${isRTL ? "flex-row-reverse" : ""
-                  }`}
+                className={`h-12 gap-2 rounded-lg border border-gray-200 bg-white px-6 text-base font-medium text-gray-800 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 group ${
+                  isRTL ? "flex-row-reverse" : ""
+                }`}
               >
-                <Link href="https://www.youtube.com/watch?v=QRZ_l7cVzzU" target="_blank">
+                <Link
+                  href="https://www.youtube.com/watch?v=QRZ_l7cVzzU"
+                  target="_blank"
+                >
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-50 transition-all group-hover:bg-blue-100 dark:bg-gray-700 dark:group-hover:bg-gray-600">
-                    <RiPlayCircleFill aria-hidden="true" className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                    <RiPlayCircleFill
+                      aria-hidden="true"
+                      className="h-4 w-4 text-blue-600 dark:text-blue-400"
+                    />
                   </span>
                   {t("videoCta")}
                 </Link>
@@ -82,11 +97,17 @@ export default function Hero() {
             </div>
 
             {/* Social proof or stats */}
-            <div className={`mt-12 grid grid-cols-3 gap-4 border-t border-gray-200 pt-6 dark:border-gray-800 ${isRTL ? "text-right" : "text-left"}`}>
+            <div
+              className={`mt-12 grid grid-cols-3 gap-4 border-t border-gray-200 pt-6 dark:border-gray-800 ${isRTL ? "text-right" : "text-left"}`}
+            >
               {stats.map(({ key, value, label }) => (
                 <div key={key}>
-                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{value}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{label}</p>
+                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                    {value}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {label}
+                  </p>
                 </div>
               ))}
             </div>
@@ -119,10 +140,13 @@ export default function Hero() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.6 }}
-                className={`absolute -left-12 top-12 z-20 select-none rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800 animate-float ${isRTL ? "left-auto right-12" : ""
-                  }`}
+                className={`absolute -left-12 top-12 z-20 select-none rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800 animate-float ${
+                  isRTL ? "left-auto right-12" : ""
+                }`}
               >
-                <div className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse text-right" : ""}`}>
+                <div
+                  className={`flex items-center gap-3 ${isRTL ? "flex-row-reverse text-right" : ""}`}
+                >
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -131,12 +155,21 @@ export default function Hero() {
                       viewBox="0 0 24 24"
                       stroke="currentColor"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                   </div>
                   <div className={`${isRTL ? "text-right" : "text-left"}`}>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">{t("floating.confirmed.title")}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{t("floating.confirmed.subtitle")}</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-100">
+                      {t("floating.confirmed.title")}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {t("floating.confirmed.subtitle")}
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -145,10 +178,13 @@ export default function Hero() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.8, duration: 0.6 }}
-                className={`absolute -right-12 bottom-24 z-20 select-none rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800 animate-float ${isRTL ? "right-auto left-12" : ""
-                  }`}
+                className={`absolute -right-12 bottom-24 z-20 select-none rounded-lg bg-white p-4 shadow-lg dark:bg-gray-800 animate-float ${
+                  isRTL ? "right-auto left-12" : ""
+                }`}
               >
-                <div className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse text-right" : ""}`}>
+                <div
+                  className={`flex items-center gap-2 ${isRTL ? "flex-row-reverse text-right" : ""}`}
+                >
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -157,12 +193,21 @@ export default function Hero() {
                       viewBox="0 0 24 24"
                       stroke="currentColor"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                   </div>
                   <div className={`${isRTL ? "text-right" : "text-left"}`}>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">{t("floating.fast.title")}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{t("floating.fast.subtitle")}</p>
+                    <p className="font-medium text-gray-900 dark:text-gray-100">
+                      {t("floating.fast.title")}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {t("floating.fast.subtitle")}
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -176,4 +221,3 @@ export default function Hero() {
     </section>
   );
 }
-

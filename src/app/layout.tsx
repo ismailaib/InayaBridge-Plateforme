@@ -1,17 +1,24 @@
+import {
+  type Locale,
+  defaultLocale,
+  getDirection,
+  isLocale,
+} from "@/lib/i18n/i18n";
+
 import type { Metadata } from "next";
 import { Inter, Tajawal } from "next/font/google";
+import { cookies, headers } from "next/headers";
+
 import "./globals.css";
 import { siteConfig } from "./siteConfig";
-import { headers, cookies } from "next/headers";
-import { defaultLocale, getDirection, isLocale, type Locale } from "@/lib/i18n/i18n";
 
-export const inter = Inter({
+const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
 });
 
-export const tajawal = Tajawal({
+const tajawal = Tajawal({
   weight: ["400", "700"],
   subsets: ["arabic"],
   display: "swap",
@@ -63,7 +70,8 @@ function extractLocaleFromPath(pathname: string | null): Locale | undefined {
 
 function resolveLocale(): Locale {
   const headerList = headers();
-  const pathname = headerList.get("x-pathname") ?? headerList.get("next-url") ?? null;
+  const pathname =
+    headerList.get("x-pathname") ?? headerList.get("next-url") ?? null;
   const cookieLocale = cookies().get("NEXT_LOCALE")?.value;
 
   const pathnameLocale = extractLocaleFromPath(pathname);
@@ -97,4 +105,3 @@ export default function RootLayout({
     </html>
   );
 }
-

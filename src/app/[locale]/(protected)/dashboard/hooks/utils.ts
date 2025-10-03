@@ -1,4 +1,5 @@
 import { toast } from "@/lib/useToast";
+
 import { EMAIL_REGEX } from "./constants";
 
 export const validateEmail = (email: string) => {
@@ -7,7 +8,11 @@ export const validateEmail = (email: string) => {
   return null;
 };
 
-export const formatDate = (dateString: string, locale?: string, fallback?: string) => {
+export const formatDate = (
+  dateString: string,
+  locale?: string,
+  fallback?: string,
+) => {
   try {
     return new Date(dateString).toLocaleDateString(locale);
   } catch {

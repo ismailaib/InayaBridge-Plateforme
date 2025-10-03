@@ -1,9 +1,8 @@
 // Tremor RadioGroup [v0.0.2]
+import { cx, focusRing } from "@/lib/utils";
+import * as RadioGroupPrimitives from "@radix-ui/react-radio-group";
 
-import * as RadioGroupPrimitives from "@radix-ui/react-radio-group"
-import React from "react"
-
-import { cx, focusRing } from "@/lib/utils"
+import React from "react";
 
 const RadioGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitives.Root>,
@@ -16,10 +15,10 @@ const RadioGroup = React.forwardRef<
       tremor-id="tremor-raw"
       {...props}
     />
-  )
-})
+  );
+});
 
-RadioGroup.displayName = "RadioGroup"
+RadioGroup.displayName = "RadioGroup";
 
 const RadioGroupIndicator = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitives.Indicator>,
@@ -42,10 +41,10 @@ const RadioGroupIndicator = React.forwardRef<
         )}
       />
     </RadioGroupPrimitives.Indicator>
-  )
-})
+  );
+});
 
-RadioGroupIndicator.displayName = "RadioGroupIndicator"
+RadioGroupIndicator.displayName = "RadioGroupIndicator";
 
 const RadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitives.Item>,
@@ -81,10 +80,9 @@ const RadioGroupItem = React.forwardRef<
         <RadioGroupIndicator />
       </div>
     </RadioGroupPrimitives.Item>
-  )
-})
+  );
+});
 
-RadioGroupItem.displayName = "RadioGroupItem"
+RadioGroupItem.displayName = "RadioGroupItem";
 
-export { RadioGroup, RadioGroupItem }
-
+export { RadioGroup, RadioGroupItem };

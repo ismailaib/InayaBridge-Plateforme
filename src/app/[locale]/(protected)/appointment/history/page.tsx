@@ -1,13 +1,15 @@
-"use client"
+"use client";
 
-import React from "react"
-import Filter from "./components/Filter"
-import { Button } from "@/components/Button"
-import { HardDriveDownload } from "lucide-react"
-import { useTranslations } from "@/lib/i18n/useTranslations"
+import { Button } from "@/components/Button";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { HardDriveDownload } from "lucide-react";
+
+import React from "react";
+
+import Filter from "./components/Filter";
 
 const Page = () => {
-  const t = useTranslations("appointments.history")
+  const t = useTranslations("appointments.history");
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -27,7 +29,7 @@ const Page = () => {
       </div>
       <Filter />
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

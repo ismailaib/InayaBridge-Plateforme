@@ -1,3 +1,5 @@
+import { Card } from "@/components/Card";
+import { ProgressBar } from "@/components/ProgressBar";
 import {
   RiCloseCircleLine,
   RiDeleteBin7Line,
@@ -5,14 +7,11 @@ import {
   RiFileLine,
   RiFilePdf2Line,
   RiFileTextLine,
-} from '@remixicon/react';
-
-import { Card } from '@/components/Card';
-import { ProgressBar } from '@/components/ProgressBar';
+} from "@remixicon/react";
 
 export default function Example() {
   return (
-    <Card className='mt-6'>
+    <Card className="mt-6">
       <div className="w-full">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
           File Upload

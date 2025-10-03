@@ -1,22 +1,23 @@
-"use client"
+"use client";
 
-import { RiCheckLine, RiFileCopy2Line } from "@remixicon/react"
-import React from "react"
+import { RiCheckLine, RiFileCopy2Line } from "@remixicon/react";
+
+import React from "react";
 
 export default function CopyToClipboard({ code }: { code: string }) {
-  const [copied, setCopied] = React.useState(false)
+  const [copied, setCopied] = React.useState(false);
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(code)
-      setCopied(true)
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
     } catch (error) {
-      console.error("Error copying to clipboard", error)
+      console.error("Error copying to clipboard", error);
     } finally {
       setTimeout(() => {
-        setCopied(false)
-      }, 1500)
+        setCopied(false);
+      }, 1500);
     }
-  }
+  };
 
   return (
     <button
@@ -29,5 +30,5 @@ export default function CopyToClipboard({ code }: { code: string }) {
         <RiCheckLine aria-hidden="true" className="size-5 text-white" />
       )}
     </button>
-  )
+  );
 }

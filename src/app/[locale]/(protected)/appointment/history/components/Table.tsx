@@ -1,15 +1,3 @@
-import React from 'react';
-import { RiArrowLeftSLine, RiArrowRightSLine } from '@remixicon/react';
-import {
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  RowData,
-  useReactTable,
-} from '@tanstack/react-table';
-
-import { cx } from '@/lib/utils';
-
 import {
   Table,
   TableBody,
@@ -18,60 +6,69 @@ import {
   TableHeaderCell,
   TableRoot,
   TableRow,
-} from '@/components/Table';
-import {useTranslations} from '@/lib/i18n/useTranslations';
+} from "@/components/Table";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
+import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
+import {
+  RowData,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+import React from "react";
 
 const appointments = [
   {
-    patient: 'Youssef El Amrani',
-    status: 'confirmé',
-    date: '2025-05-28',
-    time: '10:00',
-    duration: '30 min',
-    type: 'Consultation',
-    lastUpdated: '2025-05-25 14:30',
+    patient: "Youssef El Amrani",
+    status: "confirmé",
+    date: "2025-05-28",
+    time: "10:00",
+    duration: "30 min",
+    type: "Consultation",
+    lastUpdated: "2025-05-25 14:30",
   },
   {
-    patient: 'Fatima Zahra',
-    status: 'en attente',
-    date: '2025-05-28',
-    time: '11:00',
-    duration: '45 min',
-    type: 'Suivi',
-    lastUpdated: '2025-05-25 13:45',
+    patient: "Fatima Zahra",
+    status: "en attente",
+    date: "2025-05-28",
+    time: "11:00",
+    duration: "45 min",
+    type: "Suivi",
+    lastUpdated: "2025-05-25 13:45",
   },
   {
-    patient: 'Hassan Yassine',
-    status: 'annulé',
-    date: '2025-05-27',
-    time: '09:30',
-    duration: '20 min',
-    type: 'Urgence',
-    lastUpdated: '2025-05-25 10:15',
+    patient: "Hassan Yassine",
+    status: "annulé",
+    date: "2025-05-27",
+    time: "09:30",
+    duration: "20 min",
+    type: "Urgence",
+    lastUpdated: "2025-05-25 10:15",
   },
   {
-    patient: 'Nadia Kabbaj',
-    status: 'confirmé',
-    date: '2025-05-29',
-    time: '15:00',
-    duration: '30 min',
-    type: 'Consultation',
-    lastUpdated: '2025-05-25 16:00',
+    patient: "Nadia Kabbaj",
+    status: "confirmé",
+    date: "2025-05-29",
+    time: "15:00",
+    duration: "30 min",
+    type: "Consultation",
+    lastUpdated: "2025-05-25 16:00",
   },
   {
-    patient: 'Mohamed Idrissi',
-    status: 'confirmé',
-    date: '2025-05-30',
-    time: '08:45',
-    duration: '25 min',
-    type: 'Suivi',
-    lastUpdated: '2025-05-25 12:00',
+    patient: "Mohamed Idrissi",
+    status: "confirmé",
+    date: "2025-05-30",
+    time: "08:45",
+    duration: "25 min",
+    type: "Suivi",
+    lastUpdated: "2025-05-25 12:00",
   },
 ];
 
-
-
-declare module '@tanstack/react-table' {
+declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
     align: string;
   }
@@ -107,24 +104,24 @@ const NumberButton = ({
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
-  position?: 'left' | 'right';
+  position?: "left" | "right";
 }) => {
   return (
     <button
       type="button"
       className={cx(
-        'min-w-[30px] border-b-2 p-2 text-sm text-gray-900 dark:text-gray-50',
+        "min-w-[30px] border-b-2 p-2 text-sm text-gray-900 dark:text-gray-50",
         active
-          ? 'border-blue-500 font-semibold dark:border-blue-500'
-          : 'border-transparent hover:border-gray-300 hover:dark:border-gray-800',
-        position === 'left'
-          ? 'rounded-l-md'
-          : position === 'right'
-            ? 'rounded-r-md'
-            : '',
+          ? "border-blue-500 font-semibold dark:border-blue-500"
+          : "border-transparent hover:border-gray-300 hover:dark:border-gray-800",
+        position === "left"
+          ? "rounded-l-md"
+          : position === "right"
+            ? "rounded-r-md"
+            : "",
       )}
       onClick={onClick}
-      aria-current={active ? 'page' : undefined}
+      aria-current={active ? "page" : undefined}
     >
       {children}
     </button>
@@ -155,9 +152,9 @@ const MobileButton = ({
 export default function Example() {
   const pageSize = 8;
 
-    const t = useTranslations("appointments.history.table")
+  const t = useTranslations("appointments.history.table");
 
-const appointmentsColumns = [
+  const appointmentsColumns = [
     {
       header: t("patient"),
       accessorKey: "patient",
@@ -193,7 +190,7 @@ const appointmentsColumns = [
       accessorKey: "lastUpdated",
       meta: { align: "text-right" },
     },
-  ]
+  ];
 
   const data = React.useMemo(
     // multiply dummy data to better demonstrate pagination over several pages
@@ -406,13 +403,13 @@ const appointmentsColumns = [
           </TextButton>
         </div>
         <p className="text-sm tabular-nums text-gray-500 dark:text-gray-500 sm:hidden">
-          Page of{' '}
+          Page of{" "}
           <span className="font-medium text-gray-900 dark:text-gray-50">{`${
             table.getState().pagination.pageIndex + 1
-          }`}</span>{' '}
+          }`}</span>{" "}
           of
           <span className="font-medium text-gray-900 dark:text-gray-50">
-            {' '}
+            {" "}
             {`${table.getPageCount()}`}
           </span>
         </p>

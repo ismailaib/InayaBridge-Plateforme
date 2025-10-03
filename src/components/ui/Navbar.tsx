@@ -1,20 +1,29 @@
 "use client";
 
 import { makeLinks } from "@/app/siteConfig";
-import { locales, type Locale } from "@/lib/i18n/i18n";
-import useScroll from "@/lib/use-scroll";
-import { useTranslations } from "@/lib/i18n/useTranslations";
 import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
+import { type Locale, locales } from "@/lib/i18n/i18n";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import useScroll from "@/lib/use-scroll";
 import { cx } from "@/lib/utils";
 import { RiCloseLine, RiMenuLine } from "@remixicon/react";
+import { Languages } from "lucide-react";
+
+import React from "react";
+
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+
 import { DatabaseLogo } from "../../../public/DatabaseLogo";
 import { DatabaseLogoArabic } from "../../../public/DatabaseLogoArabic";
 import { Button } from "../Button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../Select";
-import { Languages } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../Select";
 
 export function Navigation() {
   const scrolled = useScroll(15);
@@ -43,7 +52,7 @@ export function Navigation() {
 
   const languageOptions = React.useMemo(
     () => locales.map((code) => ({ code, label: tNav(`languages.${code}`) })),
-    [tNav]
+    [tNav],
   );
 
   const handleLocaleChange = React.useCallback(
@@ -70,7 +79,7 @@ export function Navigation() {
       setOpen(false);
       router.push(url, { scroll: false });
     },
-    [locale, pathname, router, searchParams]
+    [locale, pathname, router, searchParams],
   );
 
   const LanguageSelect = ({
@@ -79,11 +88,15 @@ export function Navigation() {
     wrapperClassName?: string;
   }) => (
     <div className={cx("relative", wrapperClassName)}>
-      <Select value={locale} onValueChange={(value) => handleLocaleChange(value as Locale)}>
+      <Select
+        value={locale}
+        onValueChange={(value) => handleLocaleChange(value as Locale)}
+      >
         <SelectTrigger className="min-w-[6.5rem]">
-          <SelectValue >
+          <SelectValue>
             <div className="flex flex-row items-center gap-2">
-              <Languages width={18}/>{languageOptions.find(({ code }) => code === locale)?.label}
+              <Languages width={18} />
+              {languageOptions.find(({ code }) => code === locale)?.label}
             </div>
           </SelectValue>
         </SelectTrigger>
@@ -105,7 +118,7 @@ export function Navigation() {
         open ? "h-52" : "h-16",
         scrolled || open
           ? "backdrop-blur-nav max-w-4xl border-gray-100 bg-white/80 shadow-xl shadow-black/5 dark:border-white/15 dark:bg-black/70"
-          : "bg-white/0 dark:bg-gray-950/0"
+          : "bg-white/0 dark:bg-gray-950/0",
       )}
     >
       <div className="w-full md:my-auto">
@@ -119,13 +132,22 @@ export function Navigation() {
           </Link>
           <nav className="hidden md:absolute md:left-1/2 md:top-1/2 md:block md:-translate-x-1/2 md:-translate-y-1/2 md:transform">
             <div className="flex items-center gap-10 font-medium">
-              <Link className="px-2 py-1 text-gray-900 dark:text-gray-50" href={links.about}>
+              <Link
+                className="px-2 py-1 text-gray-900 dark:text-gray-50"
+                href={links.about}
+              >
                 {tNav("about")}
               </Link>
-              <Link className="px-2 py-1 text-gray-900 dark:text-gray-50" href={links.pricing}>
+              <Link
+                className="px-2 py-1 text-gray-900 dark:text-gray-50"
+                href={links.pricing}
+              >
                 {tNav("pricing")}
               </Link>
-              <Link className="px-2 py-1 text-gray-900 dark:text-gray-50" href={links.changelog}>
+              <Link
+                className="px-2 py-1 text-gray-900 dark:text-gray-50"
+                href={links.changelog}
+              >
                 {tNav("changelog")}
               </Link>
             </div>
@@ -143,7 +165,11 @@ export function Navigation() {
             <Link href={links.login}>
               <Button>{tNav("login")}</Button>
             </Link>
-            <Button onClick={() => setOpen(!open)} variant="light" className="aspect-square p-2">
+            <Button
+              onClick={() => setOpen(!open)}
+              variant="light"
+              className="aspect-square p-2"
+            >
               {open ? (
                 <RiCloseLine aria-hidden="true" className="size-5" />
               ) : (
@@ -155,7 +181,7 @@ export function Navigation() {
         <nav
           className={cx(
             "my-6 flex text-lg ease-in-out will-change-transform md:hidden",
-            open ? "" : "hidden"
+            open ? "" : "hidden",
           )}
         >
           <ul className="space-y-4 font-medium">

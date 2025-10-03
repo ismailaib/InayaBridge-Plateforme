@@ -1,6 +1,7 @@
 ﻿import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { defaultLocale, locales, isLocale, type Locale } from "./lib/i18n/i18n";
+
+import { type Locale, defaultLocale, isLocale, locales } from "./lib/i18n/i18n";
 
 function extractLocaleFromPath(pathname: string): Locale | undefined {
   const segment = pathname.split("/").filter(Boolean)[0];
@@ -11,7 +12,8 @@ export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   const pathnameIsMissingLocale = locales.every(
-    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+    (locale) =>
+      !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
   );
 
   if (pathnameIsMissingLocale) {
@@ -43,7 +45,10 @@ function getPreferredLocale(request: NextRequest): Locale {
 
   const acceptLanguage = request.headers.get("accept-language");
   if (acceptLanguage) {
-    const preferredLocale = acceptLanguage.split(",")[0]?.split("-")[0]?.toLowerCase();
+    const preferredLocale = acceptLanguage
+      .split(",")[0]
+      ?.split("-")[0]
+      ?.toLowerCase();
     if (preferredLocale && isLocale(preferredLocale)) {
       return preferredLocale as Locale;
     }

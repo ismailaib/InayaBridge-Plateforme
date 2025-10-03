@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
-import { cx } from "@/lib/utils"
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
 import {
   eachDayOfInterval,
   endOfWeek,
@@ -8,35 +9,39 @@ import {
   isSameDay,
   isToday,
   startOfWeek,
-} from "date-fns"
-import { fr, enUS, arSA } from "date-fns/locale"
-import { CalendarAppointment } from "./types"
-import { AppointmentChip } from "./AppointmentChip"
-import { parseTime } from "./time"
-import { useTranslations } from "@/lib/i18n/useTranslations"
+} from "date-fns";
+import { arSA, enUS, fr } from "date-fns/locale";
+
+import { AppointmentChip } from "./AppointmentChip";
+import { parseTime } from "./time";
+import { CalendarAppointment } from "./types";
 
 type WeekViewProps = {
-  currentDate: Date
-  appointments: CalendarAppointment[]
-  onSelectAppointment: (appointment: CalendarAppointment) => void
-}
+  currentDate: Date;
+  appointments: CalendarAppointment[];
+  onSelectAppointment: (appointment: CalendarAppointment) => void;
+};
 
-const BUSINESS_HOURS = Array.from({ length: 10 }, (_, index) => index + 9)
+const BUSINESS_HOURS = Array.from({ length: 10 }, (_, index) => index + 9);
 
-export function WeekView({ currentDate, appointments, onSelectAppointment }: WeekViewProps) {
-  const t = useTranslations("appointments.calendar.weekView")
+export function WeekView({
+  currentDate,
+  appointments,
+  onSelectAppointment,
+}: WeekViewProps) {
+  const t = useTranslations("appointments.calendar.weekView");
 
   // set correct locale dynamically
-  const locale = t("locale") === "ar" ? arSA : t("locale") === "fr" ? fr : enUS
+  const locale = t("locale") === "ar" ? arSA : t("locale") === "fr" ? fr : enUS;
 
-  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 })
-  const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 })
-  const days = eachDayOfInterval({ start: weekStart, end: weekEnd })
+  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
+  const days = eachDayOfInterval({ start: weekStart, end: weekEnd });
 
   const visibleAppointments = appointments.filter((appointment) => {
-    const appointmentDate = new Date(appointment.date)
-    return appointmentDate >= weekStart && appointmentDate <= weekEnd
-  })
+    const appointmentDate = new Date(appointment.date);
+    return appointmentDate >= weekStart && appointmentDate <= weekEnd;
+  });
 
   return (
     <div className="overflow-x-auto">
@@ -44,7 +49,9 @@ export function WeekView({ currentDate, appointments, onSelectAppointment }: Wee
         {/* Header row: days */}
         <div className="grid grid-cols-8 border-b border-gray-200 dark:border-gray-800">
           <div className="border-r border-gray-200 py-2 pl-4 dark:border-gray-800">
-            <div className="text-xs text-gray-500 dark:text-gray-400">{t("timeLabel")}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              {t("timeLabel")}
+            </div>
           </div>
           {days.map((day) => (
             <div
@@ -72,7 +79,11 @@ export function WeekView({ currentDate, appointments, onSelectAppointment }: Wee
         {/* Time slots grid */}
         <div className="relative">
           {BUSINESS_HOURS.map((hour) => (
-            <div key={hour} className="grid grid-cols-8" style={{ minHeight: "64px" }}>
+            <div
+              key={hour}
+              className="grid grid-cols-8"
+              style={{ minHeight: "64px" }}
+            >
               <div className="border-r border-gray-200 py-4 pr-2 text-right text-xs text-gray-500 dark:border-gray-800 dark:text-gray-400">
                 {hour.toString().padStart(2, "0")}:00
               </div>
@@ -87,13 +98,13 @@ export function WeekView({ currentDate, appointments, onSelectAppointment }: Wee
                 >
                   {visibleAppointments
                     .filter((appointment) => {
-                      const appointmentDate = new Date(appointment.date)
-                      const start = parseTime(appointment.startTime)
+                      const appointmentDate = new Date(appointment.date);
+                      const start = parseTime(appointment.startTime);
                       return (
                         !!start &&
                         isSameDay(appointmentDate, day) &&
                         start.hours === hour
-                      )
+                      );
                     })
                     .map((appointment) => (
                       <AppointmentChip
@@ -109,5 +120,5 @@ export function WeekView({ currentDate, appointments, onSelectAppointment }: Wee
         </div>
       </div>
     </div>
-  )
+  );
 }

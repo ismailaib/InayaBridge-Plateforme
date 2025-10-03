@@ -1,28 +1,27 @@
-import { Button } from "@/components/Button"
+import { Button } from "@/components/Button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/Dialog"
-import { cx } from "@/lib/utils"
-import type { CalendarAppointment } from "./types"
-import { deleteAppointment, updateAppointment } from "../api/appointment"
+} from "@/components/Dialog";
+import { cx } from "@/lib/utils";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+import { Calendar1, Clock, Edit2, Phone, Save, User, X } from "lucide-react";
 
-import {
-  format,
-} from "date-fns"
-import { fr } from "date-fns/locale"
-import { Calendar1, Clock, Edit2, Phone, Save, User, X } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
+
+import { deleteAppointment, updateAppointment } from "../api/appointment";
+import type { CalendarAppointment } from "./types";
 
 type AppointmentDetailsProps = {
-  appointment: CalendarAppointment | null
-  isOpen: boolean
-  onClose: () => void
-  onAppointmentUpdated?: (updatedAppointment: CalendarAppointment) => void
-  onAppointmentDeleted?: (appointmentId: string) => void
-}
+  appointment: CalendarAppointment | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onAppointmentUpdated?: (updatedAppointment: CalendarAppointment) => void;
+  onAppointmentDeleted?: (appointmentId: string) => void;
+};
 
 export const AppointmentDetails = ({
   appointment,
@@ -32,27 +31,27 @@ export const AppointmentDetails = ({
   onAppointmentDeleted,
 }: AppointmentDetailsProps) => {
   const formatDateForInput = (value?: string) => {
-    if (!value) return ""
-    const parsed = new Date(value)
-    return Number.isNaN(parsed.getTime()) ? "" : format(parsed, "yyyy-MM-dd")
-  }
+    if (!value) return "";
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? "" : format(parsed, "yyyy-MM-dd");
+  };
 
   const getValidDate = (value?: string) => {
-    if (!value) return null
-    const parsed = new Date(value)
-    return Number.isNaN(parsed.getTime()) ? null : parsed
-  }
+    if (!value) return null;
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  };
 
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [isUpdating, setIsUpdating] = useState(false)
-  const [editingField, setEditingField] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [editingField, setEditingField] = useState<string | null>(null);
   const [tempValues, setTempValues] = useState({
     date: formatDateForInput(appointment?.date),
     notes: appointment?.notes ?? "",
     confirmed: appointment?.confirmed ?? false,
     startTime: appointment?.startTime ?? "",
     endTime: appointment?.endTime ?? "",
-  })
+  });
 
   useEffect(() => {
     setTempValues({
@@ -61,70 +60,70 @@ export const AppointmentDetails = ({
       confirmed: appointment?.confirmed ?? false,
       startTime: appointment?.startTime ?? "",
       endTime: appointment?.endTime ?? "",
-    })
-  }, [appointment])
+    });
+  }, [appointment]);
 
-  if (!appointment) return null
+  if (!appointment) return null;
 
-  const appointmentDate = getValidDate(appointment.date)
-  const appointmentBirthDate = getValidDate(appointment.date_of_birth)
+  const appointmentDate = getValidDate(appointment.date);
+  const appointmentBirthDate = getValidDate(appointment.date_of_birth);
 
   const handleDelete = async () => {
-    if (!appointment.id) return
+    if (!appointment.id) return;
 
-    setIsDeleting(true)
+    setIsDeleting(true);
     try {
-      await deleteAppointment(appointment.id)
-      onAppointmentDeleted?.(appointment.id)
-      onClose()
+      await deleteAppointment(appointment.id);
+      onAppointmentDeleted?.(appointment.id);
+      onClose();
     } catch (error) {
-      console.error("Erreur lors de la suppression:", error)
+      console.error("Erreur lors de la suppression:", error);
       // You might want to show a toast notification here
     } finally {
-      setIsDeleting(false)
+      setIsDeleting(false);
     }
-  }
+  };
 
   const formatTimeToHi = (time: string) => {
     // Convert time to H:i format (e.g., "14:30" or "9:15")
-    if (!time) return time
+    if (!time) return time;
 
     // Handle different input formats
-    let cleanTime = time.trim()
+    let cleanTime = time.trim();
 
     // If it's already in H:i or HH:MM format
-    if (cleanTime.includes(':')) {
-      const [hours, minutes] = cleanTime.split(':')
-      const h = parseInt(hours, 10)
-      const m = parseInt(minutes, 10)
+    if (cleanTime.includes(":")) {
+      const [hours, minutes] = cleanTime.split(":");
+      const h = parseInt(hours, 10);
+      const m = parseInt(minutes, 10);
 
       // Validate time values
       if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
-        return time // Return original if invalid
+        return time; // Return original if invalid
       }
 
-      return `${h}:${m.toString().padStart(2, '0')}`
+      return `${h}:${m.toString().padStart(2, "0")}`;
     }
 
-    return time
-  }
+    return time;
+  };
 
   const convertToTimeInput = (time: string) => {
     // Convert H:i format to HH:MM for HTML time input
-    if (!time || !time.includes(':')) return time
+    if (!time || !time.includes(":")) return time;
 
-    const [hours, minutes] = time.split(':')
-    const h = parseInt(hours, 10)
-    const m = parseInt(minutes, 10)
+    const [hours, minutes] = time.split(":");
+    const h = parseInt(hours, 10);
+    const m = parseInt(minutes, 10);
 
-    if (isNaN(h) || isNaN(m)) return time
+    if (isNaN(h) || isNaN(m)) return time;
 
-    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`
-  }
+    return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
+  };
 
   const handleStatusToggle = async () => {
-    const newStatus = !appointment.confirmed
-    setIsUpdating(true)
+    const newStatus = !appointment.confirmed;
+    setIsUpdating(true);
 
     try {
       const payload = {
@@ -134,97 +133,108 @@ export const AppointmentDetails = ({
         status: newStatus ? "confirmed" : "pending",
         consultationType: appointment.type as "local" | "video" | "in-person",
         motif: appointment.notes || "",
-        endTime: formatTimeToHi(appointment.endTime)
-      }
+        endTime: formatTimeToHi(appointment.endTime),
+      };
 
-      await updateAppointment(appointment.id, payload)
+      await updateAppointment(appointment.id, payload);
 
       const updatedAppointment = {
         ...appointment,
-        confirmed: newStatus
-      }
+        confirmed: newStatus,
+      };
 
-      onAppointmentUpdated?.(updatedAppointment)
-      onClose()
+      onAppointmentUpdated?.(updatedAppointment);
+      onClose();
     } catch (error) {
-      console.error("Erreur lors de la mise à jour du statut:", error)
+      console.error("Erreur lors de la mise à jour du statut:", error);
     } finally {
-      setIsUpdating(false)
+      setIsUpdating(false);
     }
-  }
+  };
 
   const handleFieldUpdate = async (field: string) => {
-    setIsUpdating(true)
+    setIsUpdating(true);
 
     try {
-      let updatedData: CalendarAppointment = { ...appointment }
+      let updatedData: CalendarAppointment = { ...appointment };
 
-      if (field === 'date') {
-        updatedData.date = tempValues.date
-      } else if (field === 'notes') {
-        updatedData.notes = tempValues.notes
-      } else if (field === 'startTime') {
-        updatedData.startTime = tempValues.startTime
-      } else if (field === 'endTime') {
-        updatedData.endTime = tempValues.endTime
-      } else if (field === 'times') {
-        updatedData.startTime = tempValues.startTime
-        updatedData.endTime = tempValues.endTime
+      if (field === "date") {
+        updatedData.date = tempValues.date;
+      } else if (field === "notes") {
+        updatedData.notes = tempValues.notes;
+      } else if (field === "startTime") {
+        updatedData.startTime = tempValues.startTime;
+      } else if (field === "endTime") {
+        updatedData.endTime = tempValues.endTime;
+      } else if (field === "times") {
+        updatedData.startTime = tempValues.startTime;
+        updatedData.endTime = tempValues.endTime;
       }
 
       const payload = {
         patientId: parseInt(appointment.id, 10),
-        date: field === 'date' ? tempValues.date : (formatDateForInput(appointment.date) || tempValues.date),
-        startTime: formatTimeToHi(field === 'startTime' || field === 'times' ? tempValues.startTime : appointment.startTime),
+        date:
+          field === "date"
+            ? tempValues.date
+            : formatDateForInput(appointment.date) || tempValues.date,
+        startTime: formatTimeToHi(
+          field === "startTime" || field === "times"
+            ? tempValues.startTime
+            : appointment.startTime,
+        ),
         status: appointment.confirmed ? "confirmed" : "pending",
         consultationType: appointment.type as "local" | "video" | "in-person",
-        motif: field === 'notes' ? tempValues.notes : (appointment.notes || ""),
-        endTime: formatTimeToHi(field === 'endTime' || field === 'times' ? tempValues.endTime : appointment.endTime)
-      }
+        motif: field === "notes" ? tempValues.notes : appointment.notes || "",
+        endTime: formatTimeToHi(
+          field === "endTime" || field === "times"
+            ? tempValues.endTime
+            : appointment.endTime,
+        ),
+      };
 
-      await updateAppointment(appointment.id, payload)
-      onAppointmentUpdated?.(updatedData)
-      setEditingField(null)
-      onClose()
+      await updateAppointment(appointment.id, payload);
+      onAppointmentUpdated?.(updatedData);
+      setEditingField(null);
+      onClose();
     } catch (error) {
-      console.error("Erreur lors de la mise à jour:", error)
+      console.error("Erreur lors de la mise à jour:", error);
       // You might want to show error message to user
     } finally {
-      setIsUpdating(false)
+      setIsUpdating(false);
     }
-  }
+  };
 
   const handleCancelEdit = (field: string) => {
-    setEditingField(null)
+    setEditingField(null);
     // Reset temp values to original
-    if (field === 'date') {
-      setTempValues(prev => ({
+    if (field === "date") {
+      setTempValues((prev) => ({
         ...prev,
-        date: formatDateForInput(appointment?.date)
-      }))
-    } else if (field === 'notes') {
-      setTempValues(prev => ({
+        date: formatDateForInput(appointment?.date),
+      }));
+    } else if (field === "notes") {
+      setTempValues((prev) => ({
         ...prev,
-        notes: appointment?.notes || ""
-      }))
-    } else if (field === 'startTime') {
-      setTempValues(prev => ({
-        ...prev,
-        startTime: appointment?.startTime || ""
-      }))
-    } else if (field === 'endTime') {
-      setTempValues(prev => ({
-        ...prev,
-        endTime: appointment?.endTime || ""
-      }))
-    } else if (field === 'times') {
-      setTempValues(prev => ({
+        notes: appointment?.notes || "",
+      }));
+    } else if (field === "startTime") {
+      setTempValues((prev) => ({
         ...prev,
         startTime: appointment?.startTime || "",
-        endTime: appointment?.endTime || ""
-      }))
+      }));
+    } else if (field === "endTime") {
+      setTempValues((prev) => ({
+        ...prev,
+        endTime: appointment?.endTime || "",
+      }));
+    } else if (field === "times") {
+      setTempValues((prev) => ({
+        ...prev,
+        startTime: appointment?.startTime || "",
+        endTime: appointment?.endTime || "",
+      }));
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={() => onClose()}>
@@ -270,28 +280,37 @@ export const AppointmentDetails = ({
                     : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
                 )}
               >
-                {isUpdating ? "..." : (appointment.confirmed ? "Confirmé" : "À confirmer")}
+                {isUpdating
+                  ? "..."
+                  : appointment.confirmed
+                    ? "Confirmé"
+                    : "À confirmer"}
               </button>
             </div>
 
             <div className="mt-2 flex items-center gap-2">
-              {editingField === 'date' ? (
+              {editingField === "date" ? (
                 <div className="flex items-center gap-2">
                   <input
                     type="date"
                     value={tempValues.date}
-                    onChange={(e) => setTempValues(prev => ({ ...prev, date: e.target.value }))}
+                    onChange={(e) =>
+                      setTempValues((prev) => ({
+                        ...prev,
+                        date: e.target.value,
+                      }))
+                    }
                     className="rounded border px-2 py-1 text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
                   />
                   <button
-                    onClick={() => handleFieldUpdate('date')}
+                    onClick={() => handleFieldUpdate("date")}
                     disabled={isUpdating}
                     className="p-1 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"
                   >
                     <Save className="h-4 w-4" />
                   </button>
                   <button
-                    onClick={() => handleCancelEdit('date')}
+                    onClick={() => handleCancelEdit("date")}
                     className="p-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
                   >
                     <X className="h-4 w-4" />
@@ -301,11 +320,13 @@ export const AppointmentDetails = ({
                 <div className="flex items-center gap-2">
                   <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">
                     {appointmentDate
-                      ? format(appointmentDate, "EEEE d MMMM yyyy", { locale: fr })
+                      ? format(appointmentDate, "EEEE d MMMM yyyy", {
+                          locale: fr,
+                        })
                       : "--"}
                   </h3>
                   <button
-                    onClick={() => setEditingField('date')}
+                    onClick={() => setEditingField("date")}
                     className="p-1 text-gray-500 hover:text-gray-700"
                   >
                     <Edit2 className="h-4 w-4" />
@@ -337,9 +358,9 @@ export const AppointmentDetails = ({
                 <h4 className="font-medium text-gray-900 dark:text-gray-50">
                   Horaires
                 </h4>
-                {editingField !== 'times' && (
+                {editingField !== "times" && (
                   <button
-                    onClick={() => setEditingField('times')}
+                    onClick={() => setEditingField("times")}
                     className="p-1 text-gray-500 hover:text-gray-700"
                   >
                     <Edit2 className="h-4 w-4" />
@@ -347,7 +368,7 @@ export const AppointmentDetails = ({
                 )}
               </div>
 
-              {editingField === 'times' ? (
+              {editingField === "times" ? (
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300 w-16">
@@ -356,7 +377,12 @@ export const AppointmentDetails = ({
                     <input
                       type="time"
                       value={convertToTimeInput(tempValues.startTime)}
-                      onChange={(e) => setTempValues(prev => ({ ...prev, startTime: e.target.value }))}
+                      onChange={(e) =>
+                        setTempValues((prev) => ({
+                          ...prev,
+                          startTime: e.target.value,
+                        }))
+                      }
                       className="rounded border px-2 py-1 text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
                     />
                   </div>
@@ -367,13 +393,18 @@ export const AppointmentDetails = ({
                     <input
                       type="time"
                       value={convertToTimeInput(tempValues.endTime)}
-                      onChange={(e) => setTempValues(prev => ({ ...prev, endTime: e.target.value }))}
+                      onChange={(e) =>
+                        setTempValues((prev) => ({
+                          ...prev,
+                          endTime: e.target.value,
+                        }))
+                      }
                       className="rounded border px-2 py-1 text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
                     />
                   </div>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => handleFieldUpdate('times')}
+                      onClick={() => handleFieldUpdate("times")}
                       disabled={isUpdating}
                       className="flex items-center gap-1 px-2 py-1 text-xs bg-green-100 text-green-800 rounded hover:bg-green-200"
                     >
@@ -381,7 +412,7 @@ export const AppointmentDetails = ({
                       Sauvegarder
                     </button>
                     <button
-                      onClick={() => handleCancelEdit('times')}
+                      onClick={() => handleCancelEdit("times")}
                       className="flex items-center gap-1 px-2 py-1 text-xs bg-red-100 text-red-800 rounded hover:bg-red-200"
                     >
                       <X className="h-3 w-3" />
@@ -416,9 +447,9 @@ export const AppointmentDetails = ({
               <h4 className="font-medium text-gray-900 dark:text-gray-50">
                 Notes
               </h4>
-              {editingField !== 'notes' && (
+              {editingField !== "notes" && (
                 <button
-                  onClick={() => setEditingField('notes')}
+                  onClick={() => setEditingField("notes")}
                   className="p-1 text-gray-500 hover:text-gray-700"
                 >
                   <Edit2 className="h-4 w-4" />
@@ -426,17 +457,22 @@ export const AppointmentDetails = ({
               )}
             </div>
 
-            {editingField === 'notes' ? (
+            {editingField === "notes" ? (
               <div className="space-y-2">
                 <textarea
                   value={tempValues.notes}
-                  onChange={(e) => setTempValues(prev => ({ ...prev, notes: e.target.value }))}
+                  onChange={(e) =>
+                    setTempValues((prev) => ({
+                      ...prev,
+                      notes: e.target.value,
+                    }))
+                  }
                   className="w-full rounded border px-2 py-1 text-sm min-h-[60px] bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
                   placeholder="Ajouter des notes..."
                 />
                 <div className="flex gap-2">
                   <button
-                    onClick={() => handleFieldUpdate('notes')}
+                    onClick={() => handleFieldUpdate("notes")}
                     disabled={isUpdating}
                     className="flex items-center gap-1 px-2 py-1 text-xs bg-green-100 text-green-800 rounded hover:bg-green-200 dark:bg-green-900 dark:text-green-200 dark:hover:bg-green-800"
                   >
@@ -444,7 +480,7 @@ export const AppointmentDetails = ({
                     Sauvegarder
                   </button>
                   <button
-                    onClick={() => handleCancelEdit('notes')}
+                    onClick={() => handleCancelEdit("notes")}
                     className="flex items-center gap-1 px-2 py-1 text-xs bg-red-100 text-red-800 rounded hover:bg-red-200 dark:bg-red-900 dark:text-red-200 dark:hover:bg-red-800"
                   >
                     <X className="h-3 w-3" />
@@ -474,5 +510,5 @@ export const AppointmentDetails = ({
         </div>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

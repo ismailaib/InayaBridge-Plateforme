@@ -1,13 +1,16 @@
-"use client"
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import React from "react"
-import { Badge } from "../Badge"
+"use client";
+
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+
+import React from "react";
+
+import { Badge } from "../Badge";
 
 export default function Features() {
-  const t = useTranslations("features")
-  const { locale } = useTranslationsContext()
-  const isRTL = locale === "ar"
+  const t = useTranslations("features");
+  const { locale } = useTranslationsContext();
+  const isRTL = locale === "ar";
 
   const stats = [
     {
@@ -22,7 +25,7 @@ export default function Features() {
       name: t("stats.concurrentUsers.name"),
       value: t("stats.concurrentUsers.value"),
     },
-  ]
+  ];
 
   return (
     <section
@@ -55,5 +58,5 @@ export default function Features() {
         ))}
       </dl>
     </section>
-  )
+  );
 }

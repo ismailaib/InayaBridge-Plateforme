@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
 import { getInvitations } from "@/api/invitations";
-import { toast } from "@/lib/useToast";
 import useTranslations from "@/lib/i18n/useTranslations";
+import { toast } from "@/lib/useToast";
+
+import { useCallback, useEffect, useState } from "react";
+
 import { Member } from "./types";
 
 export const useMembers = (tenantId: string) => {

@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from "react"
-import { useRouter, usePathname } from "next/navigation"
-import { Button } from "@/components/Button"
+import { Button } from "@/components/Button";
+import { Card } from "@/components/Card";
+import { Checkbox } from "@/components/Checkbox";
 import {
   Dialog,
   DialogContent,
@@ -10,72 +10,77 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/Dialog"
-import { MonitorCog } from "lucide-react"
-import { Checkbox } from "@/components/Checkbox"
-import { Label } from "@/components/Label"
-import { Switch } from "@/components/Switch"
-import { Card } from "@/components/Card"
-import { Divider } from "@/components/Divider"
+} from "@/components/Dialog";
+import { Divider } from "@/components/Divider";
+import { Label } from "@/components/Label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/Select"
-import { useTranslations } from "@/lib/i18n/useTranslations"
+} from "@/components/Select";
+import { Switch } from "@/components/Switch";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { MonitorCog } from "lucide-react";
+
+import { useEffect, useState } from "react";
+
+import { usePathname, useRouter } from "next/navigation";
 
 export const DashboardModal = () => {
-  const t = useTranslations("dashboard.dashboardSettings")
-  const router = useRouter()
-  const pathname = usePathname()
-  const initialLocale = pathname.split("/")[1] || "fr"
+  const t = useTranslations("dashboard.dashboardSettings");
+  const router = useRouter();
+  const pathname = usePathname();
+  const initialLocale = pathname.split("/")[1] || "fr";
 
   const moduleList = Object.entries(t.raw("modulesList") || {}).map(
-    ([key, label]) => ({ key, label: label as string })
-  )
+    ([key, label]) => ({ key, label: label as string }),
+  );
 
   const [settings, setSettings] = useState(
-    Object.fromEntries(moduleList.map(({ key }) => [key, true]))
-  )
+    Object.fromEntries(moduleList.map(({ key }) => [key, true])),
+  );
 
   const [otherSettings, setOtherSettings] = useState({
     notifications: true,
     compactMode: false,
     specialty: "généraliste",
     language: initialLocale,
-  })
+  });
 
   useEffect(() => {
-    const currentLocale = pathname.split("/")[1]
+    const currentLocale = pathname.split("/")[1];
     if (currentLocale && currentLocale !== otherSettings.language) {
-      setOtherSettings((prev) => ({ ...prev, language: currentLocale }))
+      setOtherSettings((prev) => ({ ...prev, language: currentLocale }));
     }
-  }, [pathname])
+  }, [pathname]);
 
   const toggleModule = (key: string) =>
-    setSettings((prev) => ({ ...prev, [key]: !prev[key] }))
+    setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
 
   const updateSelect = (key: keyof typeof otherSettings, value: string) => {
-    setOtherSettings((prev) => ({ ...prev, [key]: value }))
+    setOtherSettings((prev) => ({ ...prev, [key]: value }));
     if (key === "language") {
-      const parts = pathname.split("/")
-      parts[1] = value
-      const newPath = parts.join("/") || `/${value}/dashboard`
-      router.push(newPath)
+      const parts = pathname.split("/");
+      parts[1] = value;
+      const newPath = parts.join("/") || `/${value}/dashboard`;
+      router.push(newPath);
     }
-  }
+  };
 
   const toggleSwitch = (key: keyof typeof otherSettings) =>
-    setOtherSettings((prev) => ({ ...prev, [key]: !prev[key] }))
+    setOtherSettings((prev) => ({ ...prev, [key]: !prev[key] }));
 
   return (
     <div className="flex justify-center">
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="ghost" className="py-1.5">
-            <MonitorCog width={18} className="text-slate-800 dark:text-gray-200" />
+            <MonitorCog
+              width={18}
+              className="text-slate-800 dark:text-gray-200"
+            />
           </Button>
         </DialogTrigger>
         <DialogContent className="w-full max-w-3xl">
@@ -135,7 +140,9 @@ export const DashboardModal = () => {
                     </SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-gray-400 mt-1">{t("specialtyNote")}</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  {t("specialtyNote")}
+                </p>
               </div>
 
               <div className="space-y-2">
@@ -179,5 +186,5 @@ export const DashboardModal = () => {
         </DialogContent>
       </Dialog>
     </div>
-  )
-}
+  );
+};

@@ -1,4 +1,4 @@
-import { create } from "zustand"
+import { create } from "zustand";
 
 type UserStore = {
   user: any;
@@ -12,4 +12,4 @@ export const useUserStore = create<UserStore>((set, get) => ({
   setUser: (user: any) => set({ user }),
   clearUser: () => set({ user: null }),
   getUser: () => get().user,
-}))
+}));

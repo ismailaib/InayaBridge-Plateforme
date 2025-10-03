@@ -1,9 +1,10 @@
-import { useAnimations, useGLTF } from "@react-three/drei"
-import { useFrame } from "@react-three/fiber"
-import { button, useControls } from "leva"
-import React, { useEffect, useRef, useState } from "react"
-import { useChatStore } from "@/store/ChatStore"
-import * as THREE from "three"
+import { useChatStore } from "@/store/ChatStore";
+import { useAnimations, useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { button, useControls } from "leva";
+import * as THREE from "three";
+
+import React, { useEffect, useRef, useState } from "react";
 
 const corresponding = {
   A: "viseme_PP",
@@ -15,15 +16,15 @@ const corresponding = {
   G: "viseme_FF",
   H: "viseme_TH",
   X: "viseme_PP",
-}
+};
 
-let setupMode = true
+let setupMode = true;
 
 export function Avatar(props) {
-  const { nodes, materials, scene } = useGLTF("/models/doctor1.glb")
-  const messages = useChatStore((state) => state.messages)
+  const { nodes, materials, scene } = useGLTF("/models/doctor1.glb");
+  const messages = useChatStore((state) => state.messages);
 
-  const [lipsync, setLipsync] = useState()
+  const [lipsync, setLipsync] = useState();
 
   const facialExpressions = {
     default: {},
@@ -119,137 +120,136 @@ export function Avatar(props) {
       mouthPressLeft: 0.6099999999999992,
       mouthPressRight: 0.4099999999999997,
     },
-  }
+  };
 
-  const { animations } = useGLTF("/models/animations3.glb")
+  const { animations } = useGLTF("/models/animations3.glb");
 
-  const group = useRef()
-  const { actions, mixer } = useAnimations(animations, group)
+  const group = useRef();
+  const { actions, mixer } = useAnimations(animations, group);
   const [animation, setAnimation] = useState(
     animations.find((a) => a.name === "Idle") ? "Idle" : animations[0].name,
-  )
+  );
 
   useEffect(() => {
     if (!(messages.length > 1)) {
-      setAnimation("Idle")
-      return
+      setAnimation("Idle");
+      return;
     }
 
-    const lastmessage = messages[messages.length - 1]
+    const lastmessage = messages[messages.length - 1];
 
-    setAnimation(lastmessage.animation || animation)
-    setFacialExpression(lastmessage.facialExpression || "default")
-    setLipsync(lastmessage.lipsync)
+    setAnimation(lastmessage.animation || animation);
+    setFacialExpression(lastmessage.facialExpression || "default");
+    setLipsync(lastmessage.lipsync);
 
-    console.log("mouth ", lastmessage.lipsync)
+    console.log("mouth ", lastmessage.lipsync);
 
     if (lastmessage.audio) {
-      const audio = new Audio("data:audio/mp3;base64," + lastmessage.audio)
-      audio.play()
-      setAudio(audio)
+      const audio = new Audio("data:audio/mp3;base64," + lastmessage.audio);
+      audio.play();
+      setAudio(audio);
     }
-  }, [messages])
+  }, [messages]);
 
   useEffect(() => {
-    if (!animation || animation == undefined) return
+    if (!animation || animation == undefined) return;
 
     actions[animation]
       .reset()
       .fadeIn(mixer.stats.actions.inUse === 0 ? 0 : 0.5)
-      .play()
-    return () => actions[animation]?.fadeOut(0.5)
-  }, [animation])
+      .play();
+    return () => actions[animation]?.fadeOut(0.5);
+  }, [animation]);
 
   const lerpMorphTarget = (target, value, speed = 0.1) => {
     scene.traverse((child) => {
       if (child.isSkinnedMesh && child.morphTargetDictionary) {
-        const index = child.morphTargetDictionary[target]
+        const index = child.morphTargetDictionary[target];
         if (
           index === undefined ||
           child.morphTargetInfluences[index] === undefined
         ) {
-          return
+          return;
         }
         child.morphTargetInfluences[index] = THREE.MathUtils.lerp(
           child.morphTargetInfluences[index],
           value,
           speed,
-        )
+        );
 
         if (!setupMode) {
           try {
             set({
               [target]: value,
-            })
+            });
           } catch (e) {}
         }
       }
-    })
-  }
+    });
+  };
 
-  const [blink, setBlink] = useState(false)
-  const [winkLeft, setWinkLeft] = useState(false)
-  const [winkRight, setWinkRight] = useState(false)
-  const [facialExpression, setFacialExpression] = useState("")
-  const [audio, setAudio] = useState()
+  const [blink, setBlink] = useState(false);
+  const [winkLeft, setWinkLeft] = useState(false);
+  const [winkRight, setWinkRight] = useState(false);
+  const [facialExpression, setFacialExpression] = useState("");
+  const [audio, setAudio] = useState();
 
   useFrame(() => {
     !setupMode &&
       Object.keys(nodes.EyeLeft.morphTargetDictionary).forEach((key) => {
-        const mapping = facialExpressions[facialExpression]
+        const mapping = facialExpressions[facialExpression];
         if (key === "eyeBlinkLeft" || key === "eyeBlinkRight") {
-          return
+          return;
         }
         if (mapping && mapping[key]) {
-          lerpMorphTarget(key, mapping[key], 0.1)
+          lerpMorphTarget(key, mapping[key], 0.1);
         } else {
-          lerpMorphTarget(key, 0, 0.1)
+          lerpMorphTarget(key, 0, 0.1);
         }
-      })
+      });
 
-    lerpMorphTarget("eyeBlinkLeft", blink || winkLeft ? 1 : 0, 0.5)
-    lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5)
+    lerpMorphTarget("eyeBlinkLeft", blink || winkLeft ? 1 : 0, 0.5);
+    lerpMorphTarget("eyeBlinkRight", blink || winkRight ? 1 : 0, 0.5);
 
-    const appliedMorphTargets = []
+    const appliedMorphTargets = [];
 
-   const mouthCues = Array.isArray(lipsync)
-  ? lipsync
-  : lipsync?.mouthCues || []
+    const mouthCues = Array.isArray(lipsync)
+      ? lipsync
+      : lipsync?.mouthCues || [];
 
-if (audio && mouthCues.length > 0) {
-  const currentAudioTime = audio.currentTime
+    if (audio && mouthCues.length > 0) {
+      const currentAudioTime = audio.currentTime;
 
-  for (let i = 0; i < mouthCues.length; i++) {
-    const cue = mouthCues[i]
-    if (currentAudioTime >= cue.start && currentAudioTime <= cue.end) {
-      const morphTarget = corresponding[cue.value]
-      if (morphTarget) {
-        appliedMorphTargets.push(morphTarget)
-        lerpMorphTarget(morphTarget, 1, 0.2)
+      for (let i = 0; i < mouthCues.length; i++) {
+        const cue = mouthCues[i];
+        if (currentAudioTime >= cue.start && currentAudioTime <= cue.end) {
+          const morphTarget = corresponding[cue.value];
+          if (morphTarget) {
+            appliedMorphTargets.push(morphTarget);
+            lerpMorphTarget(morphTarget, 1, 0.2);
+          }
+          break;
+        }
       }
-      break
     }
-  }
-}
-
 
     Object.values(corresponding).forEach((value) => {
       if (appliedMorphTargets.includes(value)) {
-        return
+        return;
       }
-      lerpMorphTarget(value, 0, 0.1)
-    })
-  })
+      lerpMorphTarget(value, 0, 0.1);
+    });
+  });
 
   useControls("FacialExpressions", {
     chat: button(() => chat()),
     winkLeft: button(() => {
-      setWinkLeft(true)
-      setTimeout(() => setWinkLeft(false), 300)
+      setWinkLeft(true);
+      setTimeout(() => setWinkLeft(false), 300);
     }),
     winkRight: button(() => {
-      setWinkRight(true)
-      setTimeout(() => setWinkRight(false), 300)
+      setWinkRight(true);
+      setTimeout(() => setWinkRight(false), 300);
     }),
     animation: {
       value: animation,
@@ -261,28 +261,28 @@ if (audio && mouthCues.length > 0) {
       onChange: (value) => setFacialExpression(value),
     },
     enableSetupMode: button(() => {
-      setupMode = true
+      setupMode = true;
     }),
     disableSetupMode: button(() => {
-      setupMode = false
+      setupMode = false;
     }),
     logMorphTargetValues: button(() => {
-      const emotionValues = {}
+      const emotionValues = {};
       Object.keys(nodes.EyeLeft.morphTargetDictionary).forEach((key) => {
         if (key === "eyeBlinkLeft" || key === "eyeBlinkRight") {
-          return
+          return;
         }
         const value =
           nodes.EyeLeft.morphTargetInfluences[
             nodes.EyeLeft.morphTargetDictionary[key]
-          ]
+          ];
         if (value > 0.01) {
-          emotionValues[key] = value
+          emotionValues[key] = value;
         }
-      })
-      console.log(JSON.stringify(emotionValues, null, 2))
+      });
+      console.log(JSON.stringify(emotionValues, null, 2));
     }),
-  })
+  });
 
   const [, set] = useControls("MorphTarget", () =>
     Object.assign(
@@ -298,32 +298,32 @@ if (audio && mouthCues.length > 0) {
             max: 1,
             onChange: (val) => {
               if (setupMode) {
-                lerpMorphTarget(key, val, 1)
+                lerpMorphTarget(key, val, 1);
               }
             },
           },
-        }
+        };
       }),
     ),
-  )
+  );
 
   useEffect(() => {
-    let blinkTimeout
+    let blinkTimeout;
     const nextBlink = () => {
       blinkTimeout = setTimeout(
         () => {
-          setBlink(true)
+          setBlink(true);
           setTimeout(() => {
-            setBlink(false)
-            nextBlink()
-          }, 200)
+            setBlink(false);
+            nextBlink();
+          }, 200);
         },
         THREE.MathUtils.randInt(1000, 5000),
-      )
-    }
-    nextBlink()
-    return () => clearTimeout(blinkTimeout)
-  }, [])
+      );
+    };
+    nextBlink();
+    return () => clearTimeout(blinkTimeout);
+  }, []);
 
   return (
     <group {...props} dispose={null}>
@@ -416,7 +416,7 @@ if (audio && mouthCues.length > 0) {
         morphTargetInfluences={nodes.Wolf3D_Body.morphTargetInfluences}
       />
     </group>
-  )
+  );
 }
 
-useGLTF.preload("/models/animations3.glb")
+useGLTF.preload("/models/animations3.glb");

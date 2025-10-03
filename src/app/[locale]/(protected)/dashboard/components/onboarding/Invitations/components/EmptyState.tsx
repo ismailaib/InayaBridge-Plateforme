@@ -1,6 +1,7 @@
-import React from "react";
-import { UserRoundX } from "lucide-react";
 import useTranslations from "@/lib/i18n/useTranslations";
+import { UserRoundX } from "lucide-react";
+
+import React from "react";
 
 export const EmptyState: React.FC = () => {
   const t = useTranslations("dashboard.invitations");

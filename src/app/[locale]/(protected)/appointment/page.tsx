@@ -1,14 +1,17 @@
-"use client"
+"use client";
 
-import React from "react"
-import CalendarView from "./components/CalendarView"
-import { Button } from "@/components/Button"
-import { Plus } from "lucide-react"
-import Link from "next/link"
-import { useTranslations } from "@/lib/i18n/useTranslations"
+import { Button } from "@/components/Button";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { Plus } from "lucide-react";
+
+import React from "react";
+
+import Link from "next/link";
+
+import CalendarView from "./components/CalendarView";
 
 const Page = () => {
-  const t = useTranslations("appointments.page")
+  const t = useTranslations("appointments.page");
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -34,7 +37,7 @@ const Page = () => {
         <CalendarView />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

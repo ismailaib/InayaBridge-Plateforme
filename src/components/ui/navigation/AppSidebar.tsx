@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Divider } from "@/components/Divider"
-import { Input } from "@/components/Input"
+import { Divider } from "@/components/Divider";
+import { Input } from "@/components/Input";
 import {
   Sidebar,
   SidebarContent,
@@ -14,11 +14,11 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarSubLink,
-} from "@/components/Sidebar"
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import { cx, focusRing } from "@/lib/utils"
-import { RiArrowDownSFill } from "@remixicon/react"
+} from "@/components/Sidebar";
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx, focusRing } from "@/lib/utils";
+import { RiArrowDownSFill } from "@remixicon/react";
 import {
   BarChart3,
   Bot,
@@ -32,29 +32,32 @@ import {
   Settings,
   UserCircle,
   Video,
-} from "lucide-react"
-import Image from "next/image"
-import { usePathname } from "next/navigation"
-import * as React from "react"
-import { UserProfile } from "./UserProfile"
+} from "lucide-react";
+
+import * as React from "react";
+
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+
+import { UserProfile } from "./UserProfile";
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname()
-  const t = useTranslations("sidebar")
+  const pathname = usePathname();
+  const t = useTranslations("sidebar");
   const { locale } = useTranslationsContext();
-  const isPatient = pathname.startsWith("/patient/")
+  const isPatient = pathname.startsWith("/patient/");
 
   const doctornavigation = [
     { name: t("doctor.home"), icon: LayoutDashboard, root: "dashboard" },
     { name: t("doctor.messages"), icon: MessagesSquare, root: "chat" },
     { name: t("doctor.agent"), icon: Bot, root: "ai" },
-  ] as const
+  ] as const;
 
   const patientnavigation = [
     { name: t("patient.home"), icon: LayoutDashboard, root: "dashboard" },
     { name: t("patient.messages"), icon: MessagesSquare, root: "chat" },
     { name: t("patient.followup"), icon: Heart, root: "suivi" },
-  ] as const
+  ] as const;
 
   const doctornavigation2 = [
     {
@@ -64,9 +67,18 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       active: false,
       children: [
         { name: t("doctor.appointmentsChildren.all"), root: "/appointment" },
-        { name: t("doctor.appointmentsChildren.create"), root: "/appointment/create" },
-        { name: t("doctor.appointmentsChildren.waiting"), root: "/appointment/waitingroom" },
-        { name: t("doctor.appointmentsChildren.history"), root: "/appointment/history" },
+        {
+          name: t("doctor.appointmentsChildren.create"),
+          root: "/appointment/create",
+        },
+        {
+          name: t("doctor.appointmentsChildren.waiting"),
+          root: "/appointment/waitingroom",
+        },
+        {
+          name: t("doctor.appointmentsChildren.history"),
+          root: "/appointment/history",
+        },
       ],
     },
     {
@@ -75,8 +87,14 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       root: "/mes-patients",
       active: false,
       children: [
-        { name: t("doctor.patientsChildren.management"), root: "/mes-patients/search" },
-        { name: t("doctor.patientsChildren.record"), root: "/mes-patients/root" },
+        {
+          name: t("doctor.patientsChildren.management"),
+          root: "/mes-patients/search",
+        },
+        {
+          name: t("doctor.patientsChildren.record"),
+          root: "/mes-patients/root",
+        },
       ],
     },
     {
@@ -140,7 +158,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         { name: t("doctor.cabinetChildren.room"), root: "#" },
       ],
     },
-  ] as const
+  ] as const;
 
   const patientnavigation2 = [
     {
@@ -149,9 +167,18 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       root: "/patient/appointment",
       active: false,
       children: [
-        { name: t("patient.appointmentsChildren.book"), root: "/patient/appointment/book" },
-        { name: t("patient.appointmentsChildren.list"), root: "/patient/appointment/list" },
-        { name: t("patient.appointmentsChildren.history"), root: "/patient/appointment/history" },
+        {
+          name: t("patient.appointmentsChildren.book"),
+          root: "/patient/appointment/book",
+        },
+        {
+          name: t("patient.appointmentsChildren.list"),
+          root: "/patient/appointment/list",
+        },
+        {
+          name: t("patient.appointmentsChildren.history"),
+          root: "/patient/appointment/history",
+        },
       ],
     },
     {
@@ -160,10 +187,22 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       root: "/patient/dossier",
       active: false,
       children: [
-        { name: t("patient.dossierChildren.info"), root: "/patient/dossier/info" },
-        { name: t("patient.dossierChildren.prescriptions"), root: "/patient/dossier/prescriptions" },
-        { name: t("patient.dossierChildren.results"), root: "/patient/dossier/results" },
-        { name: t("patient.dossierChildren.documents"), root: "/patient/dossier/documents" },
+        {
+          name: t("patient.dossierChildren.info"),
+          root: "/patient/dossier/info",
+        },
+        {
+          name: t("patient.dossierChildren.prescriptions"),
+          root: "/patient/dossier/prescriptions",
+        },
+        {
+          name: t("patient.dossierChildren.results"),
+          root: "/patient/dossier/results",
+        },
+        {
+          name: t("patient.dossierChildren.documents"),
+          root: "/patient/dossier/documents",
+        },
       ],
     },
     {
@@ -172,9 +211,18 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       root: "/patient/teleconsultation",
       active: false,
       children: [
-        { name: t("patient.teleconsultationChildren.join"), root: "/patient/teleconsultation/join" },
-        { name: t("patient.teleconsultationChildren.history"), root: "/patient/teleconsultation/history" },
-        { name: t("patient.teleconsultationChildren.test"), root: "/patient/teleconsultation/test" },
+        {
+          name: t("patient.teleconsultationChildren.join"),
+          root: "/patient/teleconsultation/join",
+        },
+        {
+          name: t("patient.teleconsultationChildren.history"),
+          root: "/patient/teleconsultation/history",
+        },
+        {
+          name: t("patient.teleconsultationChildren.test"),
+          root: "/patient/teleconsultation/test",
+        },
       ],
     },
     {
@@ -183,23 +231,39 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       root: "/patient/settings",
       active: false,
       children: [
-        { name: t("patient.settingsChildren.profile"), root: "/patient/settings/profile" },
-        { name: t("patient.settingsChildren.preferences"), root: "/patient/settings/preferences" },
-        { name: t("patient.settingsChildren.security"), root: "/patient/settings/security" },
-        { name: t("patient.settingsChildren.notifications"), root: "/patient/settings/notifications" },
+        {
+          name: t("patient.settingsChildren.profile"),
+          root: "/patient/settings/profile",
+        },
+        {
+          name: t("patient.settingsChildren.preferences"),
+          root: "/patient/settings/preferences",
+        },
+        {
+          name: t("patient.settingsChildren.security"),
+          root: "/patient/settings/security",
+        },
+        {
+          name: t("patient.settingsChildren.notifications"),
+          root: "/patient/settings/notifications",
+        },
       ],
     },
-  ] as const
+  ] as const;
 
-  const primaryNavigation = isPatient ? patientnavigation : doctornavigation
-  const secondaryNavigation = isPatient ? patientnavigation2 : doctornavigation2
+  const primaryNavigation = isPatient ? patientnavigation : doctornavigation;
+  const secondaryNavigation = isPatient
+    ? patientnavigation2
+    : doctornavigation2;
 
-  const [openMenus, setOpenMenus] = React.useState<string[]>([secondaryNavigation[0].name])
+  const [openMenus, setOpenMenus] = React.useState<string[]>([
+    secondaryNavigation[0].name,
+  ]);
 
   const toggleMenu = (name: string) =>
     setOpenMenus((prev) =>
       prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name],
-    )
+    );
 
   const generateHref = (root: string) => {
     if (!root || root.startsWith("#") || root.startsWith("http")) return root;
@@ -272,7 +336,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {secondaryNavigation.map((item) => {
-                const isOpen = openMenus.includes(item.name)
+                const isOpen = openMenus.includes(item.name);
                 return (
                   <SidebarMenuItem key={item.name}>
                     <button
@@ -317,7 +381,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
                       </SidebarMenuSub>
                     )}
                   </SidebarMenuItem>
-                )
+                );
               })}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -329,6 +393,5 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <UserProfile />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
-

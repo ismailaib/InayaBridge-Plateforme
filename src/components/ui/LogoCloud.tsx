@@ -1,6 +1,5 @@
-"use client"
+"use client";
 
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { cx } from "@/lib/utils";
 import { RiArrowRightUpLine } from "@remixicon/react";
@@ -70,12 +69,10 @@ const data = [
     bgColor: "bg-orange-100 dark:bg-orange-500/20",
     href: "#",
   },
-]
+];
 
 export default function LogoCloud() {
   const t = useTranslations("joinus");
-  const { locale } = useTranslationsContext();
-  const isRTL = locale === "ar";
   return (
     <section
       id="logo cloud"
@@ -125,5 +122,5 @@ export default function LogoCloud() {
         ))}
       </div>
     </section>
-  )
+  );
 }

@@ -2,13 +2,15 @@
 
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 import { useChatStore } from "@/store/ChatStore";
 import { Canvas } from "@react-three/fiber";
 import { Mic, MicOff, Send } from "lucide-react";
+
 import { useEffect, useState } from "react";
+
 import { Experience } from "./components/Experience";
 import UI from "./components/UI";
-import { useTranslations } from "@/lib/i18n/useTranslations";
 
 export default function Page() {
   const t = useTranslations("chat.chat.page");
@@ -88,7 +90,11 @@ export default function Page() {
         }`}
         style={{ transitionProperty: "opacity, transform" }}
       >
-        <Canvas shadows camera={{ position: [0, 0, 1], fov: 40 }} className="w-full h-full">
+        <Canvas
+          shadows
+          camera={{ position: [0, 0, 1], fov: 40 }}
+          className="w-full h-full"
+        >
           <Experience />
         </Canvas>
       </div>
@@ -111,10 +117,17 @@ export default function Page() {
             variant={isRecording ? "destructive" : "secondary"}
             className={isRecording ? "animate-pulse" : ""}
           >
-            {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+            {isRecording ? (
+              <MicOff className="h-4 w-4" />
+            ) : (
+              <Mic className="h-4 w-4" />
+            )}
           </Button>
 
-          <Button onClick={handleSend} disabled={chatLoading || !inputValue.trim()}>
+          <Button
+            onClick={handleSend}
+            disabled={chatLoading || !inputValue.trim()}
+          >
             <Send className="h-4 w-4" />
           </Button>
         </div>

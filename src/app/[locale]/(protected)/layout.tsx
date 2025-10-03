@@ -1,17 +1,18 @@
-import { cookies } from "next/headers"
-import { SidebarProvider } from "@/components/Sidebar"
-import { AppSidebar } from "@/components/ui/navigation/AppSidebar"
-import Header from "@/components/ui/navigation/Header"
-import { AuthProvider } from "@/lib/auth-context"
-import AuthGuard from "@/lib/AuthGuard"
-import { ThemeProvider } from "next-themes"
+import { SidebarProvider } from "@/components/Sidebar";
+import { AppSidebar } from "@/components/ui/navigation/AppSidebar";
+import Header from "@/components/ui/navigation/Header";
+import AuthGuard from "@/lib/AuthGuard";
+import { AuthProvider } from "@/lib/auth-context";
+
+import { ThemeProvider } from "next-themes";
+import { cookies } from "next/headers";
 
 export default function PrivateLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const isSidebarOpen = cookies().get("sidebar:state")?.value === "true"
+  const isSidebarOpen = cookies().get("sidebar:state")?.value === "true";
 
   return (
     <ThemeProvider attribute="class" disableTransitionOnChange>
@@ -27,5 +28,5 @@ export default function PrivateLayout({
         </AuthGuard>
       </AuthProvider>
     </ThemeProvider>
-  )
+  );
 }

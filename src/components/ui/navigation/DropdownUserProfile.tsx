@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   DropdownMenu,
@@ -13,50 +13,54 @@ import {
   DropdownMenuSubMenuContent,
   DropdownMenuSubMenuTrigger,
   DropdownMenuTrigger,
-} from "@/components/DropdownMenu"
-import { useAuth } from "@/lib/auth-context"
-import { ArrowUpRight, Monitor, Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
-import * as React from "react"
-import { useTranslations } from "@/lib/i18n/useTranslations"
+} from "@/components/DropdownMenu";
+import { useAuth } from "@/lib/auth-context";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { ArrowUpRight, Monitor, Moon, Sun } from "lucide-react";
+
+import * as React from "react";
+
+import { useTheme } from "next-themes";
 
 export type DropdownUserProfileProps = {
-  children: React.ReactNode
-  align?: "center" | "start" | "end"
-}
+  children: React.ReactNode;
+  align?: "center" | "start" | "end";
+};
 
 export function DropdownUserProfile({
   children,
   align = "start",
 }: DropdownUserProfileProps) {
-  const [mounted, setMounted] = React.useState(false)
-  const { theme, setTheme } = useTheme()
-  const { logout } = useAuth()
-  const t = useTranslations("common")
+  const [mounted, setMounted] = React.useState(false);
+  const { theme, setTheme } = useTheme();
+  const { logout } = useAuth();
+  const t = useTranslations("common");
 
   React.useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
-  const [localUser, setLocalUser] = React.useState<{ email: string } | null>(null)
+  const [localUser, setLocalUser] = React.useState<{ email: string } | null>(
+    null,
+  );
 
   React.useEffect(() => {
-    setMounted(true)
-    const storedUser = localStorage.getItem("user")
+    setMounted(true);
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       try {
-        setLocalUser(JSON.parse(storedUser))
+        setLocalUser(JSON.parse(storedUser));
       } catch {
-        setLocalUser(null)
+        setLocalUser(null);
       }
     }
-  }, [])
+  }, []);
 
   if (!mounted) {
-    return null
+    return null;
   }
 
-  const userEmail = localUser?.email || "ismailaitbouhmad@gmail.com"
+  const userEmail = localUser?.email || "ismailaitbouhmad@gmail.com";
 
   return (
     <DropdownMenu>
@@ -75,7 +79,7 @@ export function DropdownUserProfile({
               <DropdownMenuRadioGroup
                 value={theme}
                 onValueChange={(value) => {
-                  setTheme(value)
+                  setTheme(value);
                 }}
               >
                 <DropdownMenuRadioItem value="light" iconType="check">
@@ -118,7 +122,7 @@ export function DropdownUserProfile({
           <DropdownMenuItem>
             <button
               onClick={() => {
-                logout()
+                logout();
               }}
               className="w-full text-left"
             >
@@ -128,5 +132,5 @@ export function DropdownUserProfile({
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

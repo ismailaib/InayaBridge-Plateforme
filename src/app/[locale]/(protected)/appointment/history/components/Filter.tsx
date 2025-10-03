@@ -1,35 +1,35 @@
-"use client"
+"use client";
 
-import {
-  RiMapPinLine,
-  RiMastercardLine,
-  RiPhoneLine,
-  RiVideoLine,
-  RiVisaFill,
-} from "@remixicon/react"
-
-import { cx } from "@/lib/utils"
-import { DateRangePicker } from "@/components/DatePicker"
-import { Label } from "@/components/Label"
+import { DateRangePicker } from "@/components/DatePicker";
+import { Label } from "@/components/Label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/Select"
-import Table from "./Table"
-import { useTranslations } from "@/lib/i18n/useTranslations"
+} from "@/components/Select";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
+import {
+  RiMapPinLine,
+  RiMastercardLine,
+  RiPhoneLine,
+  RiVideoLine,
+  RiVisaFill,
+} from "@remixicon/react";
+
+import Table from "./Table";
 
 export default function Filter() {
-  const t = useTranslations("appointments.history.filters")
+  const t = useTranslations("appointments.history.filters");
 
   const countries = [
     { value: "all", label: t("allTypes"), icon: null },
     { value: "video", label: t("video"), icon: RiVideoLine },
     { value: "phone", label: t("phone"), icon: RiPhoneLine },
     { value: "physical", label: t("inPerson"), icon: RiMapPinLine },
-  ]
+  ];
 
   const status = [
     { value: "all", label: t("all"), disabled: false },
@@ -53,7 +53,7 @@ export default function Filter() {
       label: t("absent"),
       color: "bg-violet-500 dark:bg-violet-500",
     },
-  ]
+  ];
 
   const payment = [
     { value: "all", label: t("all"), disabled: false },
@@ -69,7 +69,7 @@ export default function Filter() {
       disabled: false,
       icon: RiMastercardLine,
     },
-  ]
+  ];
 
   return (
     <div className="relative">
@@ -96,7 +96,11 @@ export default function Filter() {
               {t("type")}
             </Label>
             <Select defaultValue="all">
-              <SelectTrigger id="country_1" name="country_1" className="mt-2 sm:w-full">
+              <SelectTrigger
+                id="country_1"
+                name="country_1"
+                className="mt-2 sm:w-full"
+              >
                 <SelectValue placeholder={t("select")} />
               </SelectTrigger>
               <SelectContent>
@@ -115,7 +119,11 @@ export default function Filter() {
               {t("status")}
             </Label>
             <Select defaultValue="all">
-              <SelectTrigger id="status_1" name="status_1" className="mt-2 sm:w-full">
+              <SelectTrigger
+                id="status_1"
+                name="status_1"
+                className="mt-2 sm:w-full"
+              >
                 <SelectValue placeholder={t("select")} />
               </SelectTrigger>
               <SelectContent>
@@ -143,12 +151,20 @@ export default function Filter() {
               {t("paymentStatus")}
             </Label>
             <Select defaultValue="all">
-              <SelectTrigger id="payment_method" name="payment_method" className="mt-2 sm:w-full">
+              <SelectTrigger
+                id="payment_method"
+                name="payment_method"
+                className="mt-2 sm:w-full"
+              >
                 <SelectValue placeholder={t("select")} />
               </SelectTrigger>
               <SelectContent>
                 {payment.map((item) => (
-                  <SelectItem key={item.value} value={item.value} disabled={item.disabled}>
+                  <SelectItem
+                    key={item.value}
+                    value={item.value}
+                    disabled={item.disabled}
+                  >
                     <div className="flex items-center gap-x-2">
                       {item.label}
                     </div>
@@ -161,5 +177,5 @@ export default function Filter() {
         <Table />
       </div>
     </div>
-  )
+  );
 }

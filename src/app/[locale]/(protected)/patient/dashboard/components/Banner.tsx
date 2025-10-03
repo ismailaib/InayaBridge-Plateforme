@@ -1,33 +1,33 @@
-import { Button } from '@/components/Button';
-import { Card } from '@/components/Card';
+import { Button } from "@/components/Button";
+import { Card } from "@/components/Card";
 
 const data = [
   {
     step: 1,
-    title: 'Compléter les informations professionnelles',
+    title: "Compléter les informations professionnelles",
     description:
-      'Ajoutez votre spécialité, votre numéro d’ordre et votre adresse professionnelle.',
-    buttonText: 'Compléter le profil',
+      "Ajoutez votre spécialité, votre numéro d’ordre et votre adresse professionnelle.",
+    buttonText: "Compléter le profil",
     disabled: false,
-    tooltipText: '',
+    tooltipText: "",
   },
   {
     step: 2,
-    title: 'Ajouter vos disponibilités',
+    title: "Ajouter vos disponibilités",
     description:
-      'Indiquez vos jours et heures de consultation pour permettre la prise de rendez-vous.',
-    buttonText: 'Configurer mes horaires',
+      "Indiquez vos jours et heures de consultation pour permettre la prise de rendez-vous.",
+    buttonText: "Configurer mes horaires",
     disabled: true,
-    tooltipText: 'Complétez d’abord votre profil',
+    tooltipText: "Complétez d’abord votre profil",
   },
   {
     step: 3,
-    title: 'Activer votre compte',
+    title: "Activer votre compte",
     description:
-      'Une fois les informations complètes, vous pouvez accéder au tableau de bord.',
-    buttonText: 'Activer mon compte',
+      "Une fois les informations complètes, vous pouvez accéder au tableau de bord.",
+    buttonText: "Activer mon compte",
     disabled: true,
-    tooltipText: 'Ajoutez vos disponibilités d’abord',
+    tooltipText: "Ajoutez vos disponibilités d’abord",
   },
 ];
 
@@ -39,7 +39,8 @@ export default function DoctorOnboarding() {
           Finalisez votre inscription
         </h3>
         <p className="mt-2 text-sm/6 text-gray-500 dark:text-gray-500">
-          Pour accéder pleinement au tableau de bord, veuillez compléter les étapes suivantes.
+          Pour accéder pleinement au tableau de bord, veuillez compléter les
+          étapes suivantes.
         </p>
         <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {data.map((item) => (

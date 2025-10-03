@@ -1,25 +1,25 @@
-import api from "@/lib/api"
+import api from "@/lib/api";
 
 export interface workspaceCreation {
-  name: string
-  description: string
-  ownerId: string
-  tenantTypeId: string
-  isPrivate: boolean
+  name: string;
+  description: string;
+  ownerId: string;
+  tenantTypeId: string;
+  isPrivate: boolean;
 }
 
 export interface RegisterDoctor {
-  tenantId: string
-  userId: string
-  specialty: string
-  licenseNumber: string
+  tenantId: string;
+  userId: string;
+  specialty: string;
+  licenseNumber: string;
 }
 
 /* ========== API helpers ========== */
 export const onboardingStatus = (id: string) =>
-  api.get(`/onboarding/${id}/status`)
+  api.get(`/onboarding/${id}/status`);
 
-export const workspaceStatus = () => api.get(`/tenant-types`)
+export const workspaceStatus = () => api.get(`/tenant-types`);
 
 export const workspaceCreation = (payload: workspaceCreation) =>
   api.post(`/tenants`, {
@@ -28,6 +28,6 @@ export const workspaceCreation = (payload: workspaceCreation) =>
     ownerId: payload.ownerId,
     tenantTypeId: payload.tenantTypeId,
     isPrivate: payload.isPrivate,
-  })
+  });
 
-  export const getTenant = (id: string) => api.get(`/tenants/${id}`)
+export const getTenant = (id: string) => api.get(`/tenants/${id}`);

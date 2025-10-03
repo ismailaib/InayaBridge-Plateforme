@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/Button"
+import { Button } from "@/components/Button";
 import {
   Drawer,
   DrawerBody,
@@ -11,11 +11,11 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/Drawer"
-import { useTranslations } from "@/lib/i18n/useTranslations"
+} from "@/components/Drawer";
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 export const Conditions = () => {
-  const t = useTranslations("common")
+  const t = useTranslations("common");
 
   return (
     <div className="flex justify-center">
@@ -65,5 +65,5 @@ export const Conditions = () => {
         </DrawerContent>
       </Drawer>
     </div>
-  )
-}
+  );
+};

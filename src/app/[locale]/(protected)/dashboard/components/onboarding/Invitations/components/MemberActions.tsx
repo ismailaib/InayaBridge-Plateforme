@@ -1,10 +1,12 @@
-import React, { useRef, useEffect } from "react";
-import { Member } from "../../../../hooks/types";
-import { Button } from "@/components/Button";
-import { Link2Off, RefreshCcw } from "lucide-react";
 import { cancelInvitation, recentInvitation } from "@/api/invitations";
-import { showToast } from "../../../../hooks/utils";
+import { Button } from "@/components/Button";
 import useTranslations from "@/lib/i18n/useTranslations";
+import { Link2Off, RefreshCcw } from "lucide-react";
+
+import React, { useEffect, useRef } from "react";
+
+import { Member } from "../../../../hooks/types";
+import { showToast } from "../../../../hooks/utils";
 
 export const MemberActions: React.FC<{
   member: Member;
@@ -67,26 +69,46 @@ export const MemberActions: React.FC<{
   const handleCancelInvitation = async () => {
     try {
       await cancelInvitation(member.id, tenantId);
-      showToast("success", t("toasts.successTitle"), t("toasts.invitationCancelled"));
+      showToast(
+        "success",
+        t("toasts.successTitle"),
+        t("toasts.invitationCancelled"),
+      );
       onDelete(member.id);
     } catch (error) {
       console.error("Error cancelling invitation:", error);
-      showToast("error", t("toasts.errorTitle"), t("toasts.invitationCancelError"));
+      showToast(
+        "error",
+        t("toasts.errorTitle"),
+        t("toasts.invitationCancelError"),
+      );
     }
   };
 
   const handleRecentInvitation = async () => {
     try {
       if (member.status !== "PENDING") {
-        showToast("error", t("toasts.errorTitle"), t("errors.invitationNotPending"));
+        showToast(
+          "error",
+          t("toasts.errorTitle"),
+          t("errors.invitationNotPending"),
+        );
         return;
       }
       await recentInvitation(member.id, tenantId);
-      showToast("success", t("toasts.successTitle"), t("toasts.invitationResent"));
+      showToast(
+        "success",
+        t("toasts.successTitle"),
+        t("toasts.invitationResent"),
+      );
       onRecentInvitation(member.id);
     } catch (error) {
       console.error("Error sending invitation:", error);
-      showToast("error", t("toasts.errorTitle"), t("toasts.invitationResendError"));
+      showToast(
+        "error",
+        t("toasts.errorTitle"),
+        t("toasts.invitationResendError"),
+      );
     }
   };
 
@@ -97,11 +119,19 @@ export const MemberActions: React.FC<{
         className="flex flex-row items-center gap-4 overflow-x-auto touch-pan-x select-none cursor-grab pb-2"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        <Button variant="secondary" className="flex-shrink-0 whitespace-nowrap" onClick={handleCancelInvitation}>
+        <Button
+          variant="secondary"
+          className="flex-shrink-0 whitespace-nowrap"
+          onClick={handleCancelInvitation}
+        >
           <Link2Off width={18} className="mr-2" />
           {t("actions.delete")}
         </Button>
-        <Button variant="secondary" className="flex-shrink-0 whitespace-nowrap" onClick={handleRecentInvitation}>
+        <Button
+          variant="secondary"
+          className="flex-shrink-0 whitespace-nowrap"
+          onClick={handleRecentInvitation}
+        >
           <RefreshCcw width={18} className="mr-2" />
           {t("actions.resend")}
         </Button>

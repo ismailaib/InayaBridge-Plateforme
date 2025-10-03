@@ -1,10 +1,10 @@
-import ThemeSwitch from "@/components/ThemeSwitch"
-import { AuthProvider } from "@/lib/auth-context"
+import ThemeSwitch from "@/components/ThemeSwitch";
+import { AuthProvider } from "@/lib/auth-context";
 
 export default function LoginLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <>
@@ -14,10 +14,8 @@ export default function LoginLayout({
         </div>
       </div>
       <AuthProvider>
-        <div className="min-h-screen">
-          {children}
-        </div>
+        <div className="min-h-screen">{children}</div>
       </AuthProvider>
     </>
-  )
+  );
 }

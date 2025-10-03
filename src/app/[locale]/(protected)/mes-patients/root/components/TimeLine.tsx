@@ -1,21 +1,30 @@
 "use client";
 
+import { Button } from "@/components/Button";
+import { Card } from "@/components/Card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/Tabs";
+import axios from "@/lib/axios";
+import { cx } from "@/lib/utils";
 import {
   RiAddLine,
   RiCheckLine,
   RiCloseLine,
   RiDeleteBin6Line,
   RiSaveLine,
-} from '@remixicon/react';
-import { useState } from 'react';
+} from "@remixicon/react";
+import jsPDF from "jspdf";
+import {
+  Activity,
+  AlertTriangle,
+  FileCheck2,
+  Heart,
+  Phone,
+  Pill,
+  Shield,
+  User,
+} from "lucide-react";
 
-import { Button } from '@/components/Button';
-import { Card } from '@/components/Card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs';
-import axios from '@/lib/axios';
-import { cx } from '@/lib/utils';
-import jsPDF from 'jspdf';
-import { Activity, AlertTriangle, FileCheck2, Heart, Phone, Pill, Shield, User } from 'lucide-react';
+import { useState } from "react";
 
 interface Patient {
   id?: number;
@@ -25,7 +34,7 @@ interface Patient {
   address?: string;
   email?: string;
   date_of_birth?: string;
-  gender?: 'male' | 'female' | string;
+  gender?: "male" | "female" | string;
   cin?: string;
   medical_history?: {
     allergies?: string[];
@@ -46,32 +55,40 @@ interface Patient {
 
 interface MedicalHistoryEntry {
   id: string;
-  category: 'allergies' | 'past_conditions' | 'chronic_illnesses' | 'current_medications';
+  category:
+    | "allergies"
+    | "past_conditions"
+    | "chronic_illnesses"
+    | "current_medications";
   title: string;
   description: string;
-  type: 'allergy' | 'condition' | 'chronic' | 'medication';
+  type: "allergy" | "condition" | "chronic" | "medication";
 }
 
 const PatientHistorySidebar = ({
   patient,
   onPatientUpdate,
-  onSuccess
+  onSuccess,
 }: {
   patient: Patient | null;
   onPatientUpdate?: (updatedPatient: Patient) => void;
-  onSuccess?: () => void
+  onSuccess?: () => void;
 }) => {
   const [isAddingEntry, setIsAddingEntry] = useState(false);
   const [newEntry, setNewEntry] = useState<{
-    category: 'allergies' | 'past_conditions' | 'chronic_illnesses' | 'current_medications';
+    category:
+      | "allergies"
+      | "past_conditions"
+      | "chronic_illnesses"
+      | "current_medications";
     title: string;
     description: string;
     dosage?: string;
   }>({
-    category: 'allergies',
-    title: '',
-    description: '',
-    dosage: ''
+    category: "allergies",
+    title: "",
+    description: "",
+    dosage: "",
   });
 
   if (!patient) {
@@ -94,31 +111,31 @@ const PatientHistorySidebar = ({
 
     // Header
     doc.setFontSize(18);
-    doc.setFont('helvetica', 'bold');
-    doc.text('PATIENT MEDICAL REPORT', margin, yPosition);
+    doc.setFont("helvetica", "bold");
+    doc.text("PATIENT MEDICAL REPORT", margin, yPosition);
     yPosition += lineHeight * 2;
 
     // Patient Information Section
     doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('PERSONAL INFORMATION', margin, yPosition);
+    doc.setFont("helvetica", "bold");
+    doc.text("PERSONAL INFORMATION", margin, yPosition);
     yPosition += lineHeight;
 
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
 
     const personalInfo = [
-      `Full name: ${patient.first_name || ''} ${patient.last_name || ''}`,
-      `CIN: ${patient.cin || 'N/A'}`,
-      `Date of birth: ${patient.date_of_birth || 'N/A'}`,
-      `Gender: ${patient.gender === 'male' ? 'Male' : patient.gender === 'female' ? 'Female' : patient.gender || 'N/A'}`,
-      `Blood type: ${patient.blood_type || 'N/A'}`,
-      `Phone: ${patient.phone_number || 'N/A'}`,
-      `Email: ${patient.email || 'N/A'}`,
-      `Address: ${patient.address || 'N/A'}`
+      `Full name: ${patient.first_name || ""} ${patient.last_name || ""}`,
+      `CIN: ${patient.cin || "N/A"}`,
+      `Date of birth: ${patient.date_of_birth || "N/A"}`,
+      `Gender: ${patient.gender === "male" ? "Male" : patient.gender === "female" ? "Female" : patient.gender || "N/A"}`,
+      `Blood type: ${patient.blood_type || "N/A"}`,
+      `Phone: ${patient.phone_number || "N/A"}`,
+      `Email: ${patient.email || "N/A"}`,
+      `Address: ${patient.address || "N/A"}`,
     ];
 
-    personalInfo.forEach(info => {
+    personalInfo.forEach((info) => {
       doc.text(info, margin, yPosition);
       yPosition += lineHeight;
     });
@@ -127,67 +144,84 @@ const PatientHistorySidebar = ({
     if (patient.contact_urgence) {
       yPosition += lineHeight;
       doc.setFontSize(12);
-      doc.setFont('helvetica', 'bold');
-      doc.text('EMERGENCY CONTACT', margin, yPosition);
+      doc.setFont("helvetica", "bold");
+      doc.text("EMERGENCY CONTACT", margin, yPosition);
       yPosition += lineHeight;
 
       doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
-      doc.text(`Relationship: ${patient.contact_urgence.relation}`, margin, yPosition);
+      doc.setFont("helvetica", "normal");
+      doc.text(
+        `Relationship: ${patient.contact_urgence.relation}`,
+        margin,
+        yPosition,
+      );
       yPosition += lineHeight;
-      doc.text(`Phone: ${patient.contact_urgence.phone_number}`, margin, yPosition);
+      doc.text(
+        `Phone: ${patient.contact_urgence.phone_number}`,
+        margin,
+        yPosition,
+      );
       yPosition += lineHeight * 1.5;
     }
 
     // Medical History
     if (medicalHistory) {
       doc.setFontSize(12);
-      doc.setFont('helvetica', 'bold');
-      doc.text('MEDICAL HISTORY', margin, yPosition);
+      doc.setFont("helvetica", "bold");
+      doc.text("MEDICAL HISTORY", margin, yPosition);
       yPosition += lineHeight;
 
       doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
+      doc.setFont("helvetica", "normal");
 
       if (medicalHistory.allergies && medicalHistory.allergies.length > 0) {
-        doc.setFont('helvetica', 'bold');
-        doc.text('Allergies:', margin, yPosition);
-        doc.setFont('helvetica', 'normal');
+        doc.setFont("helvetica", "bold");
+        doc.text("Allergies:", margin, yPosition);
+        doc.setFont("helvetica", "normal");
         yPosition += lineHeight;
-        medicalHistory.allergies.forEach(allergy => {
+        medicalHistory.allergies.forEach((allergy) => {
           doc.text(`- ${allergy}`, margin + 5, yPosition);
           yPosition += lineHeight;
         });
       }
 
-      if (medicalHistory.past_conditions && medicalHistory.past_conditions.length > 0) {
-        doc.setFont('helvetica', 'bold');
-        doc.text('Past medical conditions:', margin, yPosition);
-        doc.setFont('helvetica', 'normal');
+      if (
+        medicalHistory.past_conditions &&
+        medicalHistory.past_conditions.length > 0
+      ) {
+        doc.setFont("helvetica", "bold");
+        doc.text("Past medical conditions:", margin, yPosition);
+        doc.setFont("helvetica", "normal");
         yPosition += lineHeight;
-        medicalHistory.past_conditions.forEach(condition => {
+        medicalHistory.past_conditions.forEach((condition) => {
           doc.text(`- ${condition}`, margin + 5, yPosition);
           yPosition += lineHeight;
         });
       }
 
-      if (medicalHistory.current_medications && medicalHistory.current_medications.length > 0) {
-        doc.setFont('helvetica', 'bold');
-        doc.text('Current medications:', margin, yPosition);
-        doc.setFont('helvetica', 'normal');
+      if (
+        medicalHistory.current_medications &&
+        medicalHistory.current_medications.length > 0
+      ) {
+        doc.setFont("helvetica", "bold");
+        doc.text("Current medications:", margin, yPosition);
+        doc.setFont("helvetica", "normal");
         yPosition += lineHeight;
-        medicalHistory.current_medications.forEach(med => {
+        medicalHistory.current_medications.forEach((med) => {
           doc.text(`- ${med.name} - ${med.dosage}`, margin + 5, yPosition);
           yPosition += lineHeight;
         });
       }
 
-      if (medicalHistory.chronic_illnesses && medicalHistory.chronic_illnesses.length > 0) {
-        doc.setFont('helvetica', 'bold');
-        doc.text('Chronic conditions:', margin, yPosition);
-        doc.setFont('helvetica', 'normal');
+      if (
+        medicalHistory.chronic_illnesses &&
+        medicalHistory.chronic_illnesses.length > 0
+      ) {
+        doc.setFont("helvetica", "bold");
+        doc.text("Chronic conditions:", margin, yPosition);
+        doc.setFont("helvetica", "normal");
         yPosition += lineHeight;
-        medicalHistory.chronic_illnesses.forEach(illness => {
+        medicalHistory.chronic_illnesses.forEach((illness) => {
           doc.text(`- ${illness}`, margin + 5, yPosition);
           yPosition += lineHeight;
         });
@@ -198,13 +232,13 @@ const PatientHistorySidebar = ({
     if (patient.documents && patient.documents.length > 0) {
       yPosition += lineHeight;
       doc.setFontSize(12);
-      doc.setFont('helvetica', 'bold');
-      doc.text('DOCUMENTS', margin, yPosition);
+      doc.setFont("helvetica", "bold");
+      doc.text("DOCUMENTS", margin, yPosition);
       yPosition += lineHeight;
 
       doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
-      patient.documents.forEach(doc_item => {
+      doc.setFont("helvetica", "normal");
+      patient.documents.forEach((doc_item) => {
         doc.text(`- ${doc_item.type}`, margin, yPosition);
         yPosition += lineHeight;
       });
@@ -215,11 +249,21 @@ const PatientHistorySidebar = ({
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(8);
-      doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 40, doc.internal.pageSize.height - 10);
-      doc.text(`Generated on ${new Date().toLocaleDateString('fr-FR')}`, margin, doc.internal.pageSize.height - 10);
+      doc.text(
+        `Page ${i} of ${pageCount}`,
+        doc.internal.pageSize.width - 40,
+        doc.internal.pageSize.height - 10,
+      );
+      doc.text(
+        `Generated on ${new Date().toLocaleDateString("fr-FR")}`,
+        margin,
+        doc.internal.pageSize.height - 10,
+      );
     }
 
-    doc.save(`medical_report_${patient.last_name || 'inconnu'}_${new Date().toISOString().split('T')[0]}.pdf`);
+    doc.save(
+      `medical_report_${patient.last_name || "inconnu"}_${new Date().toISOString().split("T")[0]}.pdf`,
+    );
   };
 
   const handleAddMedicalEntry = async () => {
@@ -228,33 +272,50 @@ const PatientHistorySidebar = ({
     const updatedMedicalHistory = { ...medicalHistory };
 
     switch (newEntry.category) {
-      case 'allergies':
-        updatedMedicalHistory.allergies = [...(updatedMedicalHistory.allergies || []), newEntry.title];
+      case "allergies":
+        updatedMedicalHistory.allergies = [
+          ...(updatedMedicalHistory.allergies || []),
+          newEntry.title,
+        ];
         break;
-      case 'past_conditions':
-        updatedMedicalHistory.past_conditions = [...(updatedMedicalHistory.past_conditions || []), newEntry.title];
+      case "past_conditions":
+        updatedMedicalHistory.past_conditions = [
+          ...(updatedMedicalHistory.past_conditions || []),
+          newEntry.title,
+        ];
         break;
-      case 'chronic_illnesses':
-        updatedMedicalHistory.chronic_illnesses = [...(updatedMedicalHistory.chronic_illnesses || []), newEntry.title];
+      case "chronic_illnesses":
+        updatedMedicalHistory.chronic_illnesses = [
+          ...(updatedMedicalHistory.chronic_illnesses || []),
+          newEntry.title,
+        ];
         break;
-      case 'current_medications':
+      case "current_medications":
         updatedMedicalHistory.current_medications = [
           ...(updatedMedicalHistory.current_medications || []),
-          { name: newEntry.title, dosage: newEntry.dosage || 'Not specified' }
+          { name: newEntry.title, dosage: newEntry.dosage || "Not specified" },
         ];
         break;
     }
 
-    const updatedPatient = { ...patient, medical_history: updatedMedicalHistory };
+    const updatedPatient = {
+      ...patient,
+      medical_history: updatedMedicalHistory,
+    };
 
     try {
       await axios.put(`/patientsDoctor/${patient.id}`, updatedPatient);
       onPatientUpdate?.(updatedPatient);
-      setNewEntry({ category: 'allergies', title: '', description: '', dosage: '' });
+      setNewEntry({
+        category: "allergies",
+        title: "",
+        description: "",
+        dosage: "",
+      });
       setIsAddingEntry(false);
-      onSuccess?.()
+      onSuccess?.();
     } catch (error) {
-      console.error('Error adding medical entry:', error);
+      console.error("Error adding medical entry:", error);
     }
   };
 
@@ -264,28 +325,39 @@ const PatientHistorySidebar = ({
     const updatedMedicalHistory = { ...medicalHistory };
 
     switch (category) {
-      case 'allergies':
-        updatedMedicalHistory.allergies = updatedMedicalHistory.allergies?.filter((_, i) => i !== index);
+      case "allergies":
+        updatedMedicalHistory.allergies =
+          updatedMedicalHistory.allergies?.filter((_, i) => i !== index);
         break;
-      case 'past_conditions':
-        updatedMedicalHistory.past_conditions = updatedMedicalHistory.past_conditions?.filter((_, i) => i !== index);
+      case "past_conditions":
+        updatedMedicalHistory.past_conditions =
+          updatedMedicalHistory.past_conditions?.filter((_, i) => i !== index);
         break;
-      case 'chronic_illnesses':
-        updatedMedicalHistory.chronic_illnesses = updatedMedicalHistory.chronic_illnesses?.filter((_, i) => i !== index);
+      case "chronic_illnesses":
+        updatedMedicalHistory.chronic_illnesses =
+          updatedMedicalHistory.chronic_illnesses?.filter(
+            (_, i) => i !== index,
+          );
         break;
-      case 'current_medications':
-        updatedMedicalHistory.current_medications = updatedMedicalHistory.current_medications?.filter((_, i) => i !== index);
+      case "current_medications":
+        updatedMedicalHistory.current_medications =
+          updatedMedicalHistory.current_medications?.filter(
+            (_, i) => i !== index,
+          );
         break;
     }
 
-    const updatedPatient = { ...patient, medical_history: updatedMedicalHistory };
+    const updatedPatient = {
+      ...patient,
+      medical_history: updatedMedicalHistory,
+    };
 
     try {
       await axios.put(`/patientsDoctor/${patient.id}`, updatedPatient);
       onPatientUpdate?.(updatedPatient);
-      onSuccess?.()
+      onSuccess?.();
     } catch (error) {
-      console.error('Error deleting medical entry:', error);
+      console.error("Error deleting medical entry:", error);
     }
   };
 
@@ -296,10 +368,10 @@ const PatientHistorySidebar = ({
     medicalHistory.allergies?.forEach((allergy, index) => {
       timelineEntries.push({
         id: `allergy-${index}`,
-        category: 'allergies',
+        category: "allergies",
         title: allergy,
-        description: 'Known allergy',
-        type: 'allergy'
+        description: "Known allergy",
+        type: "allergy",
       });
     });
 
@@ -307,10 +379,10 @@ const PatientHistorySidebar = ({
     medicalHistory.past_conditions?.forEach((condition, index) => {
       timelineEntries.push({
         id: `past-${index}`,
-        category: 'past_conditions',
+        category: "past_conditions",
         title: condition,
-        description: 'Past condition',
-        type: 'condition'
+        description: "Past condition",
+        type: "condition",
       });
     });
 
@@ -318,10 +390,10 @@ const PatientHistorySidebar = ({
     medicalHistory.chronic_illnesses?.forEach((illness, index) => {
       timelineEntries.push({
         id: `chronic-${index}`,
-        category: 'chronic_illnesses',
+        category: "chronic_illnesses",
         title: illness,
-        description: 'Chronic condition',
-        type: 'chronic'
+        description: "Chronic condition",
+        type: "chronic",
       });
     });
 
@@ -329,10 +401,10 @@ const PatientHistorySidebar = ({
     medicalHistory.current_medications?.forEach((med, index) => {
       timelineEntries.push({
         id: `medication-${index}`,
-        category: 'current_medications',
+        category: "current_medications",
         title: med.name,
         description: `Dosage: ${med.dosage}`,
-        type: 'medication'
+        type: "medication",
       });
     });
 
@@ -341,13 +413,13 @@ const PatientHistorySidebar = ({
 
   const getEntryIcon = (type: string) => {
     switch (type) {
-      case 'allergy':
+      case "allergy":
         return <AlertTriangle className="size-5 text-red-500" />;
-      case 'condition':
+      case "condition":
         return <RiCheckLine className="size-5 text-blue-500" />;
-      case 'chronic':
+      case "chronic":
         return <Activity className="size-5 text-orange-500" />;
-      case 'medication':
+      case "medication":
         return <Pill className="size-5 text-blue-500" />;
       default:
         return <RiCheckLine className="size-5 text-gray-500" />;
@@ -356,16 +428,16 @@ const PatientHistorySidebar = ({
 
   const getEntryColor = (type: string) => {
     switch (type) {
-      case 'allergy':
-        return 'text-red-600 dark:text-red-400';
-      case 'condition':
-        return 'text-blue-600 dark:text-blue-400';
-      case 'chronic':
-        return 'text-orange-600 dark:text-orange-400';
-      case 'medication':
-        return 'text-blue-600 dark:text-blue-400';
+      case "allergy":
+        return "text-red-600 dark:text-red-400";
+      case "condition":
+        return "text-blue-600 dark:text-blue-400";
+      case "chronic":
+        return "text-orange-600 dark:text-orange-400";
+      case "medication":
+        return "text-blue-600 dark:text-blue-400";
       default:
-        return 'text-gray-600 dark:text-gray-400';
+        return "text-gray-600 dark:text-gray-400";
     }
   };
 
@@ -373,25 +445,25 @@ const PatientHistorySidebar = ({
 
   const getPatientInfo = () => [
     {
-      label: 'Personal information',
-      value: 'Complete',
-      icon: <User className="size-4 text-blue-500" />
+      label: "Personal information",
+      value: "Complete",
+      icon: <User className="size-4 text-blue-500" />,
     },
     {
-      label: 'Emergency contact',
-      value: patient.contact_urgence ? 'Configured' : 'Not configured',
-      icon: <Phone className="size-4 text-blue-500" />
+      label: "Emergency contact",
+      value: patient.contact_urgence ? "Configured" : "Not configured",
+      icon: <Phone className="size-4 text-blue-500" />,
     },
     {
-      label: 'Blood type',
-      value: patient.blood_type || 'Not specified',
-      icon: <Heart className="size-4 text-red-500" />
+      label: "Blood type",
+      value: patient.blood_type || "Not specified",
+      icon: <Heart className="size-4 text-red-500" />,
     },
     {
-      label: 'Documents',
+      label: "Documents",
       value: `${patient.documents?.length || 0} document(s)`,
-      icon: <Shield className="size-4 text-purple-500" />
-    }
+      icon: <Shield className="size-4 text-purple-500" />,
+    },
   ];
 
   return (
@@ -439,34 +511,51 @@ const PatientHistorySidebar = ({
                 <div className="space-y-3">
                   <select
                     value={newEntry.category}
-                    onChange={(e) => setNewEntry({ ...newEntry, category: e.target.value as any })}
+                    onChange={(e) =>
+                      setNewEntry({
+                        ...newEntry,
+                        category: e.target.value as any,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm dark:border-gray-600 dark:bg-gray-800"
                   >
                     <option value="allergies">Allergy</option>
                     <option value="past_conditions">Past condition</option>
                     <option value="chronic_illnesses">Chronic condition</option>
-                    <option value="current_medications">Current medication</option>
+                    <option value="current_medications">
+                      Current medication
+                    </option>
                   </select>
                   <input
                     type="text"
-                    placeholder={newEntry.category === 'current_medications' ? 'Medication name' : 'Title'}
+                    placeholder={
+                      newEntry.category === "current_medications"
+                        ? "Medication name"
+                        : "Title"
+                    }
                     value={newEntry.title}
-                    onChange={(e) => setNewEntry({ ...newEntry, title: e.target.value })}
+                    onChange={(e) =>
+                      setNewEntry({ ...newEntry, title: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm dark:border-gray-600 dark:bg-gray-800"
                   />
-                  {newEntry.category === 'current_medications' && (
+                  {newEntry.category === "current_medications" && (
                     <input
                       type="text"
                       placeholder="Dosage (e.g., 2 tablets per day)"
                       value={newEntry.dosage}
-                      onChange={(e) => setNewEntry({ ...newEntry, dosage: e.target.value })}
+                      onChange={(e) =>
+                        setNewEntry({ ...newEntry, dosage: e.target.value })
+                      }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm dark:border-gray-600 dark:bg-gray-800"
                     />
                   )}
                   <textarea
                     placeholder="Description (optional)"
                     value={newEntry.description}
-                    onChange={(e) => setNewEntry({ ...newEntry, description: e.target.value })}
+                    onChange={(e) =>
+                      setNewEntry({ ...newEntry, description: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm h-16 dark:border-gray-600 dark:bg-gray-800"
                   />
                   <div className="flex gap-2">
@@ -477,9 +566,13 @@ const PatientHistorySidebar = ({
                     <Button
                       onClick={() => {
                         setIsAddingEntry(false);
-                        setNewEntry({ category: 'allergies', title: '', description: '', dosage: '' });
+                        setNewEntry({
+                          category: "allergies",
+                          title: "",
+                          description: "",
+                          dosage: "",
+                        });
                       }}
-
                       variant="secondary"
                       className="h-8"
                     >
@@ -493,13 +586,15 @@ const PatientHistorySidebar = ({
 
             <ul role="list" className="mt-6 space-y-6">
               {timelineEntries.map((entry, entryIndex) => {
-                const categoryIndex = entry.id.split('-')[1];
+                const categoryIndex = entry.id.split("-")[1];
                 return (
                   <li key={entry.id} className="relative flex gap-x-3">
                     <div
                       className={cx(
-                        entryIndex === timelineEntries.length - 1 ? 'h-6' : '-bottom-6',
-                        'absolute left-0 top-0 flex w-6 justify-center',
+                        entryIndex === timelineEntries.length - 1
+                          ? "h-6"
+                          : "-bottom-6",
+                        "absolute left-0 top-0 flex w-6 justify-center",
                       )}
                     >
                       <span
@@ -514,15 +609,21 @@ const PatientHistorySidebar = ({
                       <div className="flex-1">
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className={cx(
-                              "mt-0.5 text-sm font-medium",
-                              getEntryColor(entry.type)
-                            )}>
+                            <p
+                              className={cx(
+                                "mt-0.5 text-sm font-medium",
+                                getEntryColor(entry.type),
+                              )}
+                            >
                               {entry.title}
                               <span className="ml-2 text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                                {entry.type === 'allergy' ? 'Allergy' :
-                                  entry.type === 'condition' ? 'Past condition' :
-                                    entry.type === 'chronic' ? 'Chronic' : 'Medication'}
+                                {entry.type === "allergy"
+                                  ? "Allergy"
+                                  : entry.type === "condition"
+                                    ? "Past condition"
+                                    : entry.type === "chronic"
+                                      ? "Chronic"
+                                      : "Medication"}
                               </span>
                             </p>
                             <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
@@ -531,8 +632,12 @@ const PatientHistorySidebar = ({
                           </div>
                           <div className="flex gap-1 ml-2">
                             <Button
-                              onClick={() => handleDeleteMedicalEntry(entry.category, parseInt(categoryIndex))}
-
+                              onClick={() =>
+                                handleDeleteMedicalEntry(
+                                  entry.category,
+                                  parseInt(categoryIndex),
+                                )
+                              }
                               variant="ghost"
                               className="h-6 w-6 p-0 text-red-500 hover:text-red-600"
                             >
@@ -553,7 +658,11 @@ const PatientHistorySidebar = ({
               </p>
             )}
 
-            <Button onClick={handleGeneratePDF} className="mt-6 h-10 w-full" variant="secondary">
+            <Button
+              onClick={handleGeneratePDF}
+              className="mt-6 h-10 w-full"
+              variant="secondary"
+            >
               <FileCheck2 className="mr-2 size-5" />
               Generate Medical Report
             </Button>
@@ -566,12 +675,17 @@ const PatientHistorySidebar = ({
             </h4>
             <ul className="mt-3 divide-y divide-gray-200 rounded-md bg-gray-50 text-sm text-gray-500 dark:divide-gray-700 dark:bg-gray-800 dark:text-gray-400">
               {getPatientInfo().map((item) => (
-                <li key={item.label} className="flex h-14 items-center justify-between px-4">
+                <li
+                  key={item.label}
+                  className="flex h-14 items-center justify-between px-4"
+                >
                   <div className="flex items-center gap-2">
                     {item.icon}
                     <span>{item.label}</span>
                   </div>
-                  <span className="font-medium text-gray-900 dark:text-gray-50">{item.value}</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-50">
+                    {item.value}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -581,55 +695,63 @@ const PatientHistorySidebar = ({
               Medical Summary
             </h4>
             <div className="mt-3 space-y-3">
-              {medicalHistory.allergies && medicalHistory.allergies.length > 0 && (
-                <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-md">
-                  <h5 className="text-sm font-medium text-red-800 dark:text-red-400 flex items-center gap-2">
-                    <AlertTriangle className="size-4" />
-                    Allergies ({medicalHistory.allergies.length})
-                  </h5>
-                  <p className="text-sm text-red-600 dark:text-red-300">
-                    {medicalHistory.allergies.join(', ')}
-                  </p>
-                </div>
-              )}
-
-              {medicalHistory.current_medications && medicalHistory.current_medications.length > 0 && (
-                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
-                  <h5 className="text-sm font-medium text-blue-800 dark:text-blue-400 flex items-center gap-2">
-                    <Pill className="size-4" />
-                    Current Medications ({medicalHistory.current_medications.length})
-                  </h5>
-                  <div className="text-sm text-blue-600 dark:text-blue-300">
-                    {medicalHistory.current_medications.map((med, idx) => (
-                      <div key={idx}>{med.name} - {med.dosage}</div>
-                    ))}
+              {medicalHistory.allergies &&
+                medicalHistory.allergies.length > 0 && (
+                  <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-md">
+                    <h5 className="text-sm font-medium text-red-800 dark:text-red-400 flex items-center gap-2">
+                      <AlertTriangle className="size-4" />
+                      Allergies ({medicalHistory.allergies.length})
+                    </h5>
+                    <p className="text-sm text-red-600 dark:text-red-300">
+                      {medicalHistory.allergies.join(", ")}
+                    </p>
                   </div>
-                </div>
-              )}
+                )}
 
-              {medicalHistory.past_conditions && medicalHistory.past_conditions.length > 0 && (
-                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
-                  <h5 className="text-sm font-medium text-blue-800 dark:text-blue-400 flex items-center gap-2">
-                    <Activity className="size-4" />
-                    Past Conditions ({medicalHistory.past_conditions.length})
-                  </h5>
-                  <p className="text-sm text-blue-600 dark:text-blue-300">
-                    {medicalHistory.past_conditions.join(', ')}
-                  </p>
-                </div>
-              )}
+              {medicalHistory.current_medications &&
+                medicalHistory.current_medications.length > 0 && (
+                  <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
+                    <h5 className="text-sm font-medium text-blue-800 dark:text-blue-400 flex items-center gap-2">
+                      <Pill className="size-4" />
+                      Current Medications (
+                      {medicalHistory.current_medications.length})
+                    </h5>
+                    <div className="text-sm text-blue-600 dark:text-blue-300">
+                      {medicalHistory.current_medications.map((med, idx) => (
+                        <div key={idx}>
+                          {med.name} - {med.dosage}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
-              {medicalHistory.chronic_illnesses && medicalHistory.chronic_illnesses.length > 0 && (
-                <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-md">
-                  <h5 className="text-sm font-medium text-orange-800 dark:text-orange-400 flex items-center gap-2">
-                    <Heart className="size-4" />
-                    Chronic Conditions ({medicalHistory.chronic_illnesses.length})
-                  </h5>
-                  <p className="text-sm text-orange-600 dark:text-orange-300">
-                    {medicalHistory.chronic_illnesses.join(', ')}
-                  </p>
-                </div>
-              )}
+              {medicalHistory.past_conditions &&
+                medicalHistory.past_conditions.length > 0 && (
+                  <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
+                    <h5 className="text-sm font-medium text-blue-800 dark:text-blue-400 flex items-center gap-2">
+                      <Activity className="size-4" />
+                      Past Conditions ({medicalHistory.past_conditions.length})
+                    </h5>
+                    <p className="text-sm text-blue-600 dark:text-blue-300">
+                      {medicalHistory.past_conditions.join(", ")}
+                    </p>
+                  </div>
+                )}
+
+              {medicalHistory.chronic_illnesses &&
+                medicalHistory.chronic_illnesses.length > 0 && (
+                  <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-md">
+                    <h5 className="text-sm font-medium text-orange-800 dark:text-orange-400 flex items-center gap-2">
+                      <Heart className="size-4" />
+                      Chronic Conditions (
+                      {medicalHistory.chronic_illnesses.length})
+                    </h5>
+                    <p className="text-sm text-orange-600 dark:text-orange-300">
+                      {medicalHistory.chronic_illnesses.join(", ")}
+                    </p>
+                  </div>
+                )}
             </div>
           </TabsContent>
         </Tabs>

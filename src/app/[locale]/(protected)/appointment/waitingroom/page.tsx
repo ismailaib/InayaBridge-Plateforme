@@ -1,12 +1,14 @@
-"use client"
+"use client";
 
-import React from "react"
-import CardsView from "./components/CardsView"
-import TransfertDrawer from "./components/TransfertDrawer"
-import { useTranslations } from "@/lib/i18n/useTranslations"
+import { useTranslations } from "@/lib/i18n/useTranslations";
+
+import React from "react";
+
+import CardsView from "./components/CardsView";
+import TransfertDrawer from "./components/TransfertDrawer";
 
 const Page = () => {
-  const t = useTranslations("appointments.waitingRoom.page")
+  const t = useTranslations("appointments.waitingRoom.page");
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -26,7 +28,7 @@ const Page = () => {
 
       <CardsView />
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

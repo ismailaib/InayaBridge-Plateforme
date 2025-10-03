@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Button } from '@/components/Button'
+import { Button } from "@/components/Button";
 import {
   Drawer,
   DrawerBody,
@@ -10,16 +10,18 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger
-} from '@/components/Drawer'
-import { ClipboardMinus, GitPullRequestCreateArrow } from 'lucide-react'
-import Link from 'next/link'
-import React from 'react'
-import { useTranslations } from "@/lib/i18n/useTranslations"
+  DrawerTrigger,
+} from "@/components/Drawer";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { ClipboardMinus, GitPullRequestCreateArrow } from "lucide-react";
+
+import React from "react";
+
+import Link from "next/link";
 
 const TransfertDrawer = () => {
-  const t = useTranslations("appointments.waitingRoom.drawer")
-  const hasAppointmentsToday = false // logique à remplacer par de la data
+  const t = useTranslations("appointments.waitingRoom.drawer");
+  const hasAppointmentsToday = false; // logique à remplacer par de la data
 
   return (
     <div>
@@ -37,12 +39,16 @@ const TransfertDrawer = () => {
           <DrawerBody>
             {!hasAppointmentsToday ? (
               <div className="flex flex-col gap-2 text-center space-y-4 h-full justify-center items-center">
-                <ClipboardMinus width={128} height={128} className='text-gray-300'/>
+                <ClipboardMinus
+                  width={128}
+                  height={128}
+                  className="text-gray-300"
+                />
                 <p className="text-sm text-muted-foreground">
                   {t("noAppointments")}
                 </p>
                 <Link href="/appointment/create">
-                  <Button className='flex flex-row gap-2'>
+                  <Button className="flex flex-row gap-2">
                     <GitPullRequestCreateArrow /> {t("createAppointment")}
                   </Button>
                 </Link>
@@ -67,7 +73,7 @@ const TransfertDrawer = () => {
         </DrawerContent>
       </Drawer>
     </div>
-  )
-}
+  );
+};
 
-export default TransfertDrawer
+export default TransfertDrawer;

@@ -1,15 +1,22 @@
 // 'use client';
-
 // Add this custom Color to your chartUtils.ts file
-
 // darkGray: {
 //   bg: 'bg-gray-800 dark:bg-gray-200',
 //   stroke: 'stroke-gray-800 dark:stroke-gray-200',
 //   fill: 'fill-gray-800 dark:fill-gray-200',
 //   text: 'text-gray-800 dark:text-gray-200',
 // },
-import { RiArrowLeftSLine, RiArrowRightSLine } from '@remixicon/react';
-import React from 'react';
+import {
+  AvailableChartColors,
+  AvailableChartColorsKeys,
+  constructCategoryColors,
+  getColorClassName,
+  getYAxisDomain,
+  hasOnlyOneValueForKey,
+} from "@/lib/chartUtils";
+import { useOnWindowResize } from "@/lib/useOnWindowResize";
+import { cx } from "@/lib/utils";
+import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
 import {
   Area,
   CartesianGrid,
@@ -22,19 +29,10 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
-import { AxisDomain } from 'recharts/types/util/types';
+} from "recharts";
+import { AxisDomain } from "recharts/types/util/types";
 
-import {
-  AvailableChartColors,
-  AvailableChartColorsKeys,
-  constructCategoryColors,
-  getColorClassName,
-  getYAxisDomain,
-  hasOnlyOneValueForKey,
-} from '@/lib/chartUtils';
-import { useOnWindowResize } from '@/lib/useOnWindowResize';
-import { cx } from '@/lib/utils';
+import React from "react";
 
 // Custom Tremor copy-and-paste AreaChart [v0.3.0]
 
@@ -58,10 +56,10 @@ const LegendItem = ({
     <li
       className={cx(
         // base
-        'group inline-flex flex-nowrap items-center gap-1.5 whitespace-nowrap rounded px-2 py-1 transition',
+        "group inline-flex flex-nowrap items-center gap-1.5 whitespace-nowrap rounded px-2 py-1 transition",
         hasOnValueChange
-          ? 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800'
-          : 'cursor-default',
+          ? "cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+          : "cursor-default",
       )}
       onClick={(e) => {
         e.stopPropagation();
@@ -70,21 +68,21 @@ const LegendItem = ({
     >
       <span
         className={cx(
-          'h-[3px] w-3.5 shrink-0 rounded-full',
-          getColorClassName(color, 'bg'),
-          activeLegend && activeLegend !== name ? 'opacity-40' : 'opacity-100',
+          "h-[3px] w-3.5 shrink-0 rounded-full",
+          getColorClassName(color, "bg"),
+          activeLegend && activeLegend !== name ? "opacity-40" : "opacity-100",
         )}
         aria-hidden={true}
       />
       <p
         className={cx(
           // base
-          'truncate whitespace-nowrap text-xs',
+          "truncate whitespace-nowrap text-xs",
           // text color
-          'text-gray-700 dark:text-gray-300',
+          "text-gray-700 dark:text-gray-300",
           hasOnValueChange &&
-          'group-hover:text-gray-900 dark:group-hover:text-gray-50',
-          activeLegend && activeLegend !== name ? 'opacity-40' : 'opacity-100',
+            "group-hover:text-gray-900 dark:group-hover:text-gray-50",
+          activeLegend && activeLegend !== name ? "opacity-40" : "opacity-100",
         )}
       >
         {name}
@@ -127,10 +125,10 @@ const ScrollButton = ({ icon, onClick, disabled }: ScrollButtonProps) => {
       type="button"
       className={cx(
         // base
-        'group inline-flex size-5 items-center truncate rounded transition',
+        "group inline-flex size-5 items-center truncate rounded transition",
         disabled
-          ? 'cursor-not-allowed text-gray-400 dark:text-gray-600'
-          : 'cursor-pointer text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-50',
+          ? "cursor-not-allowed text-gray-400 dark:text-gray-600"
+          : "cursor-pointer text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-50",
       )}
       disabled={disabled}
       onClick={(e) => {
@@ -192,7 +190,7 @@ const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
   }, [setHasScroll]);
 
   const scrollToTest = React.useCallback(
-    (direction: 'left' | 'right') => {
+    (direction: "left" | "right") => {
       const element = scrollableRef?.current;
       const scrollButtons = scrollButtonsRef?.current;
       const scrollButtonsWith = scrollButtons?.clientWidth ?? 0;
@@ -201,10 +199,10 @@ const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
       if (element && enableLegendSlider) {
         element.scrollTo({
           left:
-            direction === 'left'
+            direction === "left"
               ? element.scrollLeft - width + scrollButtonsWith
               : element.scrollLeft + width - scrollButtonsWith,
-          behavior: 'smooth',
+          behavior: "smooth",
         });
         setTimeout(() => {
           checkScroll();
@@ -216,10 +214,10 @@ const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
 
   React.useEffect(() => {
     const keyDownHandler = (key: string) => {
-      if (key === 'ArrowLeft') {
-        scrollToTest('left');
-      } else if (key === 'ArrowRight') {
-        scrollToTest('right');
+      if (key === "ArrowLeft") {
+        scrollToTest("left");
+      } else if (key === "ArrowRight") {
+        scrollToTest("right");
       }
     };
     if (isKeyDowned) {
@@ -235,7 +233,7 @@ const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
 
   const keyDown = (e: KeyboardEvent) => {
     e.stopPropagation();
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
       e.preventDefault();
       setIsKeyDowned(e.key);
     }
@@ -249,32 +247,32 @@ const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
     const scrollable = scrollableRef?.current;
     if (enableLegendSlider) {
       checkScroll();
-      scrollable?.addEventListener('keydown', keyDown);
-      scrollable?.addEventListener('keyup', keyUp);
+      scrollable?.addEventListener("keydown", keyDown);
+      scrollable?.addEventListener("keyup", keyUp);
     }
 
     return () => {
-      scrollable?.removeEventListener('keydown', keyDown);
-      scrollable?.removeEventListener('keyup', keyUp);
+      scrollable?.removeEventListener("keydown", keyDown);
+      scrollable?.removeEventListener("keyup", keyUp);
     };
   }, [checkScroll, enableLegendSlider]);
 
   return (
     <ol
       ref={ref}
-      className={cx('relative overflow-hidden', className)}
+      className={cx("relative overflow-hidden", className)}
       {...other}
     >
       <div
         ref={scrollableRef}
         tabIndex={0}
         className={cx(
-          'flex h-full',
+          "flex h-full",
           enableLegendSlider
             ? hasScroll?.right || hasScroll?.left
-              ? 'snap-mandatory items-center overflow-auto pl-4 pr-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
-              : ''
-            : 'flex-wrap',
+              ? "snap-mandatory items-center overflow-auto pl-4 pr-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              : ""
+            : "flex-wrap",
         )}
       >
         {categories.map((category, index) => (
@@ -292,16 +290,16 @@ const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
           <div
             className={cx(
               // base
-              'absolute bottom-0 right-0 top-0 flex h-full items-center justify-center pr-1',
+              "absolute bottom-0 right-0 top-0 flex h-full items-center justify-center pr-1",
               // background color
-              'bg-white dark:bg-gray-950',
+              "bg-white dark:bg-gray-950",
             )}
           >
             <ScrollButton
               icon={RiArrowLeftSLine}
               onClick={() => {
                 setIsKeyDowned(null);
-                scrollToTest('left');
+                scrollToTest("left");
               }}
               disabled={!hasScroll?.left}
             />
@@ -309,7 +307,7 @@ const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
               icon={RiArrowRightSLine}
               onClick={() => {
                 setIsKeyDowned(null);
-                scrollToTest('right');
+                scrollToTest("right");
               }}
               disabled={!hasScroll?.right}
             />
@@ -320,7 +318,7 @@ const Legend = React.forwardRef<HTMLOListElement, LegendProps>((props, ref) => {
   );
 });
 
-Legend.displayName = 'Legend';
+Legend.displayName = "Legend";
 
 const ChartLegend = (
   { payload }: any,
@@ -329,7 +327,7 @@ const ChartLegend = (
   activeLegend: string | undefined,
   onClick?: (category: string, color: string) => void,
   enableLegendSlider?: boolean,
-  legendPosition?: 'left' | 'center' | 'right',
+  legendPosition?: "left" | "center" | "right",
   yAxisWidth?: number,
 ) => {
   const legendRef = React.useRef<HTMLDivElement>(null);
@@ -340,20 +338,20 @@ const ChartLegend = (
     setLegendHeight(calculateHeight(legendRef.current?.clientHeight));
   });
 
-  const legendPayload = payload.filter((item: any) => item.type !== 'none');
+  const legendPayload = payload.filter((item: any) => item.type !== "none");
 
   const paddingLeft =
-    legendPosition === 'left' && yAxisWidth ? yAxisWidth - 8 : 0;
+    legendPosition === "left" && yAxisWidth ? yAxisWidth - 8 : 0;
 
   return (
     <div
       ref={legendRef}
       style={{ paddingLeft: paddingLeft }}
       className={cx(
-        'flex items-center',
-        { 'justify-center': legendPosition === 'center' },
-        { 'justify-start': legendPosition === 'left' },
-        { 'justify-end': legendPosition === 'right' },
+        "flex items-center",
+        { "justify-center": legendPosition === "center" },
+        { "justify-start": legendPosition === "left" },
+        { "justify-end": legendPosition === "right" },
       )}
     >
       <Legend
@@ -371,7 +369,7 @@ const ChartLegend = (
 
 //#region Tooltip
 
-type TooltipProps = Pick<ChartTooltipProps, 'active' | 'payload' | 'label'>;
+type TooltipProps = Pick<ChartTooltipProps, "active" | "payload" | "label">;
 
 type PayloadItem = {
   category: string;
@@ -400,26 +398,26 @@ const ChartTooltip = ({
       <div
         className={cx(
           // base
-          'rounded-md border text-sm shadow-md',
+          "rounded-md border text-sm shadow-md",
           // border color
-          'border-gray-200 dark:border-gray-800',
+          "border-gray-200 dark:border-gray-800",
           // background color
-          'bg-white dark:bg-gray-950',
+          "bg-white dark:bg-gray-950",
         )}
       >
-        <div className={cx('border-b border-inherit px-4 py-2')}>
+        <div className={cx("border-b border-inherit px-4 py-2")}>
           <p
             className={cx(
               // base
-              'font-medium',
+              "font-medium",
               // text color
-              'text-gray-900 dark:text-gray-50',
+              "text-gray-900 dark:text-gray-50",
             )}
           >
             {label}
           </p>
         </div>
-        <div className={cx('space-y-1 px-4 py-2')}>
+        <div className={cx("space-y-1 px-4 py-2")}>
           {payload.map(({ value, category, color }, index) => (
             <div
               key={`id-${index}`}
@@ -429,16 +427,16 @@ const ChartTooltip = ({
                 <span
                   aria-hidden="true"
                   className={cx(
-                    'h-[3px] w-3.5 shrink-0 rounded-full',
-                    getColorClassName(color, 'bg'),
+                    "h-[3px] w-3.5 shrink-0 rounded-full",
+                    getColorClassName(color, "bg"),
                   )}
                 />
                 <p
                   className={cx(
                     // base
-                    'whitespace-nowrap text-right',
+                    "whitespace-nowrap text-right",
                     // text color
-                    'text-gray-700 dark:text-gray-300',
+                    "text-gray-700 dark:text-gray-300",
                   )}
                 >
                   {category}
@@ -447,9 +445,9 @@ const ChartTooltip = ({
               <p
                 className={cx(
                   // base
-                  'whitespace-nowrap text-right font-medium tabular-nums',
+                  "whitespace-nowrap text-right font-medium tabular-nums",
                   // text color
-                  'text-gray-900 dark:text-gray-50',
+                  "text-gray-900 dark:text-gray-50",
                 )}
               >
                 {valueFormatter(value)}
@@ -471,7 +469,7 @@ interface ActiveDot {
 }
 
 type BaseEventProps = {
-  eventType: 'dot' | 'category';
+  eventType: "dot" | "category";
   categoryClicked: string;
   [key: string]: number | string;
 };
@@ -489,7 +487,7 @@ interface AreaChartProps extends React.HTMLAttributes<HTMLDivElement> {
   showYAxis?: boolean;
   showGridLines?: boolean;
   yAxisWidth?: number;
-  intervalType?: 'preserveStartEnd' | 'equidistantPreserveStart';
+  intervalType?: "preserveStartEnd" | "equidistantPreserveStart";
   showTooltip?: boolean;
   showLegend?: boolean;
   autoMinValue?: boolean;
@@ -502,8 +500,8 @@ interface AreaChartProps extends React.HTMLAttributes<HTMLDivElement> {
   connectNulls?: boolean;
   xAxisLabel?: string;
   yAxisLabel?: string;
-  type?: 'default' | 'stacked' | 'percent';
-  legendPosition?: 'left' | 'center' | 'right';
+  type?: "default" | "stacked" | "percent";
+  legendPosition?: "left" | "center" | "right";
   tooltipCallback?: (tooltipCallbackContent: TooltipProps) => void;
   customTooltip?: React.ComponentType<TooltipProps>;
 }
@@ -521,7 +519,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       showYAxis = true,
       showGridLines = true,
       yAxisWidth = 56,
-      intervalType = 'equidistantPreserveStart',
+      intervalType = "equidistantPreserveStart",
       showTooltip = true,
       showLegend = true,
       autoMinValue = false,
@@ -535,8 +533,8 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       tickGap = 5,
       xAxisLabel,
       yAxisLabel,
-      type = 'default',
-      legendPosition = 'right',
+      type = "default",
+      legendPosition = "right",
       tooltipCallback,
       customTooltip,
       ...other
@@ -555,7 +553,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
 
     const yAxisDomain = getYAxisDomain(autoMinValue, minValue, maxValue);
     const hasOnValueChange = !!onValueChange;
-    const stacked = type === 'stacked' || type === 'percent';
+    const stacked = type === "stacked" || type === "percent";
 
     const prevActiveRef = React.useRef<boolean | undefined>(undefined);
     const prevLabelRef = React.useRef<string | undefined>(undefined);
@@ -571,8 +569,8 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
     }) => {
       const stopOpacity =
         activeDot || (activeLegend && activeLegend !== category)
-          ? 'opacity-[30%]'
-          : '';
+          ? "opacity-[30%]"
+          : "";
 
       return (
         <pattern
@@ -583,71 +581,71 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
         >
           <path
             d="M-106 110L22 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M-98 110L30 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M-90 110L38 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M-82 110L46 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M-74 110L54 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M-66 110L62 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M-58 110L70 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M-50 110L78 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M-42 110L86 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M-34 110L94 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M-26 110L102 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M-18 110L110 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M-10 110L118 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M-2 110L126 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M6 110L134 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M14 110L142 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
           <path
             d="M22 110L150 -18"
-            className={cx('stroke-gray-300 dark:stroke-gray-700', stopOpacity)}
+            className={cx("stroke-gray-300 dark:stroke-gray-700", stopOpacity)}
           />
         </pattern>
       );
@@ -678,7 +676,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
           dataKey: itemData.dataKey,
         });
         onValueChange?.({
-          eventType: 'dot',
+          eventType: "dot",
           categoryClicked: itemData.dataKey,
           ...itemData.payload,
         });
@@ -698,7 +696,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       } else {
         setActiveLegend(dataKey);
         onValueChange?.({
-          eventType: 'category',
+          eventType: "category",
           categoryClicked: dataKey,
         });
       }
@@ -706,17 +704,17 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
     }
 
     return (
-      <div ref={ref} className={cx('h-80 w-full', className)} {...other}>
+      <div ref={ref} className={cx("h-80 w-full", className)} {...other}>
         <ResponsiveContainer>
           <RechartsAreaChart
             data={data}
             onClick={
               hasOnValueChange && (activeLegend || activeDot)
                 ? () => {
-                  setActiveDot(undefined);
-                  setActiveLegend(undefined);
-                  onValueChange?.(null);
-                }
+                    setActiveDot(undefined);
+                    setActiveLegend(undefined);
+                    onValueChange?.(null);
+                  }
                 : undefined
             }
             margin={{
@@ -725,11 +723,11 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               right: yAxisLabel ? 5 : undefined,
               top: 15,
             }}
-            stackOffset={type === 'percent' ? 'expand' : undefined}
+            stackOffset={type === "percent" ? "expand" : undefined}
           >
             {showGridLines ? (
               <CartesianGrid
-                className={cx('stroke-gray-200 stroke-1 dark:stroke-gray-800')}
+                className={cx("stroke-gray-200 stroke-1 dark:stroke-gray-800")}
                 horizontal={true}
                 vertical={false}
               />
@@ -738,8 +736,8 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               padding={{ left: paddingValue, right: paddingValue }}
               hide={!showXAxis}
               dataKey={index}
-              interval={startEndOnly ? 'preserveStartEnd' : intervalType}
-              tick={{ transform: 'translate(0, 6)' }}
+              interval={startEndOnly ? "preserveStartEnd" : intervalType}
+              tick={{ transform: "translate(0, 6)" }}
               ticks={
                 startEndOnly
                   ? [data[0][index], data[data.length - 1][index]]
@@ -749,9 +747,9 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               stroke=""
               className={cx(
                 // base
-                'text-xs',
+                "text-xs",
                 // text fill
-                'fill-gray-500 dark:fill-gray-500',
+                "fill-gray-500 dark:fill-gray-500",
               )}
               tickLine={false}
               axisLine={false}
@@ -775,24 +773,24 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               type="number"
               tickSize={8}
               domain={yAxisDomain as AxisDomain}
-              tick={{ transform: 'translate(-6, 0)' }}
+              tick={{ transform: "translate(-6, 0)" }}
               fill=""
               stroke=""
               className={cx(
                 // base
-                'text-xs',
+                "text-xs",
                 // text fill
-                'fill-gray-500 stroke-gray-800 dark:fill-gray-500 dark:stroke-gray-300',
+                "fill-gray-500 stroke-gray-800 dark:fill-gray-500 dark:stroke-gray-300",
               )}
               tickFormatter={
-                type === 'percent' ? valueToPercent : valueFormatter
+                type === "percent" ? valueToPercent : valueFormatter
               }
               allowDecimals={allowDecimals}
             >
               {yAxisLabel && (
                 <Label
                   position="insideLeft"
-                  style={{ textAnchor: 'middle' }}
+                  style={{ textAnchor: "middle" }}
                   angle={-90}
                   offset={-15}
                   className="fill-gray-800 text-sm font-medium dark:fill-gray-200"
@@ -802,24 +800,24 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               )}
             </YAxis>
             <Tooltip
-              wrapperStyle={{ outline: 'none' }}
+              wrapperStyle={{ outline: "none" }}
               isAnimationActive={true}
               animationDuration={100}
-              cursor={{ stroke: '#d1d5db', strokeWidth: 1 }}
+              cursor={{ stroke: "#d1d5db", strokeWidth: 1 }}
               offset={20}
               position={{ y: 0 }}
               content={({ active, payload, label }) => {
-                const cleanPayload: TooltipProps['payload'] = payload
+                const cleanPayload: TooltipProps["payload"] = payload
                   ? payload.map((item: any) => ({
-                    category: item.dataKey,
-                    value: item.value,
-                    index: item.payload[index],
-                    color: categoryColors.get(
-                      item.dataKey,
-                    ) as AvailableChartColorsKeys,
-                    type: item.type,
-                    payload: item.payload,
-                  }))
+                      category: item.dataKey,
+                      value: item.value,
+                      index: item.payload[index],
+                      color: categoryColors.get(
+                        item.dataKey,
+                      ) as AvailableChartColorsKeys,
+                      type: item.type,
+                      payload: item.payload,
+                    }))
                   : [];
 
                 if (
@@ -863,7 +861,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                     activeLegend,
                     hasOnValueChange
                       ? (clickedLegendItem: string) =>
-                        onCategoryClick(clickedLegendItem)
+                          onCategoryClick(clickedLegendItem)
                       : undefined,
                     enableLegendSlider,
                     legendPosition,
@@ -888,7 +886,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                         categoryColors.get(
                           category,
                         ) as AvailableChartColorsKeys,
-                        'stroke',
+                        "stroke",
                       ),
                     )}
                     strokeOpacity={
@@ -909,13 +907,13 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                       return (
                         <Dot
                           className={cx(
-                            'stroke-white dark:stroke-gray-950',
-                            onValueChange ? 'cursor-pointer' : '',
+                            "stroke-white dark:stroke-gray-950",
+                            onValueChange ? "cursor-pointer" : "",
                             getColorClassName(
                               categoryColors.get(
                                 dataKey,
                               ) as AvailableChartColorsKeys,
-                              'fill',
+                              "fill",
                             ),
                           )}
                           cx={cxCoord}
@@ -963,13 +961,13 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                             strokeLinejoin={strokeLinejoin}
                             strokeWidth={strokeWidth}
                             className={cx(
-                              'stroke-white dark:stroke-gray-950',
-                              onValueChange ? 'cursor-pointer' : '',
+                              "stroke-white dark:stroke-gray-950",
+                              onValueChange ? "cursor-pointer" : "",
                               getColorClassName(
                                 categoryColors.get(
                                   dataKey,
                                 ) as AvailableChartColorsKeys,
-                                'fill',
+                                "fill",
                               ),
                             )}
                           />
@@ -987,7 +985,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                     strokeLinecap="round"
                     isAnimationActive={false}
                     connectNulls={connectNulls}
-                    stackId={stacked ? 'stack' : undefined}
+                    stackId={stacked ? "stack" : undefined}
                     fill="url(#raster)"
                   />
                 </React.Fragment>
@@ -996,26 +994,26 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
             {/* hidden lines to increase clickable target area */}
             {onValueChange
               ? categories.map((category) => (
-                <Line
-                  className={cx('cursor-pointer')}
-                  strokeOpacity={0}
-                  key={category}
-                  name={category}
-                  type="linear"
-                  dataKey={category}
-                  stroke="transparent"
-                  fill="transparent"
-                  legendType="none"
-                  tooltipType="none"
-                  strokeWidth={12}
-                  connectNulls={connectNulls}
-                  onClick={(props: any, event) => {
-                    event.stopPropagation();
-                    const { name } = props;
-                    onCategoryClick(name);
-                  }}
-                />
-              ))
+                  <Line
+                    className={cx("cursor-pointer")}
+                    strokeOpacity={0}
+                    key={category}
+                    name={category}
+                    type="linear"
+                    dataKey={category}
+                    stroke="transparent"
+                    fill="transparent"
+                    legendType="none"
+                    tooltipType="none"
+                    strokeWidth={12}
+                    connectNulls={connectNulls}
+                    onClick={(props: any, event) => {
+                      event.stopPropagation();
+                      const { name } = props;
+                      onCategoryClick(name);
+                    }}
+                  />
+                ))
               : null}
           </RechartsAreaChart>
         </ResponsiveContainer>
@@ -1024,64 +1022,64 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
   },
 );
 
-AreaChart.displayName = 'AreaChart';
+AreaChart.displayName = "AreaChart";
 
 const data = [
   // array-start
   {
-    date: '2010',
+    date: "2010",
     AUM: 341,
   },
   {
-    date: '2011',
+    date: "2011",
     AUM: 312,
   },
   {
-    date: '2012',
+    date: "2012",
     AUM: 350,
   },
   {
-    date: '2013',
+    date: "2013",
     AUM: 381,
   },
   {
-    date: '2014',
+    date: "2014",
     AUM: 287,
   },
   {
-    date: '2015',
+    date: "2015",
     AUM: 394,
   },
   {
-    date: '2016',
+    date: "2016",
     AUM: 437,
   },
   {
-    date: '2017',
+    date: "2017",
     AUM: 463,
   },
   {
-    date: '2018',
+    date: "2018",
     AUM: 482,
   },
   {
-    date: '2019',
+    date: "2019",
     AUM: 501,
   },
   {
-    date: '2020',
+    date: "2020",
     AUM: 372,
   },
   {
-    date: '2021',
+    date: "2021",
     AUM: 422,
   },
   {
-    date: '2022',
+    date: "2022",
     AUM: 443,
   },
   {
-    date: '2023',
+    date: "2023",
     AUM: 461,
   },
   // array-end
@@ -1091,7 +1089,7 @@ const calculateTotalAUM = (data: any[]) =>
   data.reduce((total, item) => total + item.AUM, 0);
 
 const currencyFormatter = (number: number) =>
-  '$' + Intl.NumberFormat('us').format(number).toString() + 'M';
+  "$" + Intl.NumberFormat("us").format(number).toString() + "M";
 
 export default function Example() {
   const totalAUM = React.useMemo(() => calculateTotalAUM(data), [data]);
@@ -1102,8 +1100,8 @@ export default function Example() {
           Assets under management
         </h1>
         <p className="mt-1 text-sm/6 text-gray-500 dark:text-gray-500">
-          With{' '}
-          <span className="font-semibold">{currencyFormatter(totalAUM)}</span>{' '}
+          With{" "}
+          <span className="font-semibold">{currencyFormatter(totalAUM)}</span>{" "}
           million in assets under management as of 31 December 2023, Friends
           Group provides an innovative range client solutions to institutional
           investors.
@@ -1111,21 +1109,21 @@ export default function Example() {
         <AreaChart
           data={data}
           index="date"
-          categories={['AUM']}
+          categories={["AUM"]}
           showLegend={false}
           yAxisWidth={56}
-          colors={['blue']}
+          colors={["blue"]}
           valueFormatter={currencyFormatter}
           className="mt-10 hidden h-72 sm:block"
         />
         <AreaChart
           data={data}
           index="date"
-          categories={['AUM']}
+          categories={["AUM"]}
           showLegend={false}
           showYAxis={false}
           startEndOnly={true}
-          colors={['blue']}
+          colors={["blue"]}
           valueFormatter={currencyFormatter}
           className="mt-6 h-72 sm:hidden"
         />

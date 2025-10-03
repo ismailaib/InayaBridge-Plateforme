@@ -1,7 +1,8 @@
-"use client"
+"use client";
 
-import React, { useState } from "react"
-import { Button } from "@/components/Button"
+import { Button } from "@/components/Button";
+import { Card } from "@/components/Card";
+import { Checkbox } from "@/components/Checkbox";
 import {
   Dialog,
   DialogClose,
@@ -11,20 +12,20 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/Dialog"
-import { MonitorCog } from "lucide-react"
-import { Checkbox } from "@/components/Checkbox"
-import { Label } from "@/components/Label"
-import { Switch } from "@/components/Switch"
-import { Card } from "@/components/Card"
-import { Divider } from "@/components/Divider"
+} from "@/components/Dialog";
+import { Divider } from "@/components/Divider";
+import { Label } from "@/components/Label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/Select"
+} from "@/components/Select";
+import { Switch } from "@/components/Switch";
+import { MonitorCog } from "lucide-react";
+
+import React, { useState } from "react";
 
 const moduleList = [
   { key: "showDiagnostics", label: "Diagnostics" },
@@ -37,35 +38,38 @@ const moduleList = [
   { key: "showAppointments", label: "Planning des rendez-vous" },
   { key: "showLabResults", label: "Résultats de laboratoire" },
   { key: "showPrescriptions", label: "Ordonnances" },
-]
+];
 
 export const DashboardModal = () => {
   const [settings, setSettings] = useState(
-    Object.fromEntries(moduleList.map(({ key }) => [key, true]))
-  )
+    Object.fromEntries(moduleList.map(({ key }) => [key, true])),
+  );
 
   const [otherSettings, setOtherSettings] = useState({
     notifications: true,
     compactMode: false,
     specialty: "généraliste",
     language: "fr",
-  })
+  });
 
   const toggleModule = (key: string) =>
-    setSettings((prev) => ({ ...prev, [key]: !prev[key] }))
+    setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
 
   const updateSelect = (key: keyof typeof otherSettings, value: string) =>
-    setOtherSettings((prev) => ({ ...prev, [key]: value }))
+    setOtherSettings((prev) => ({ ...prev, [key]: value }));
 
   const toggleSwitch = (key: keyof typeof otherSettings) =>
-    setOtherSettings((prev) => ({ ...prev, [key]: !prev[key] }))
+    setOtherSettings((prev) => ({ ...prev, [key]: !prev[key] }));
 
   return (
     <div className="flex justify-center">
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="ghost" className="py-1.5">
-            <MonitorCog width={18} className="text-slate-800 dark:text-gray-200" />
+            <MonitorCog
+              width={18}
+              className="text-slate-800 dark:text-gray-200"
+            />
           </Button>
         </DialogTrigger>
         <DialogContent className="w-full max-w-3xl">
@@ -112,7 +116,9 @@ export const DashboardModal = () => {
                     <SelectValue placeholder="Votre spécialité" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="généraliste">Médecin généraliste</SelectItem>
+                    <SelectItem value="généraliste">
+                      Médecin généraliste
+                    </SelectItem>
                     <SelectItem value="cardiologue">Cardiologue</SelectItem>
                     <SelectItem value="pédiatre">Pédiatre</SelectItem>
                     <SelectItem value="dentiste">Dentiste</SelectItem>
@@ -173,5 +179,5 @@ export const DashboardModal = () => {
         </DialogContent>
       </Dialog>
     </div>
-  )
-}
+  );
+};

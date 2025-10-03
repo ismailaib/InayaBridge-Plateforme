@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { Card } from "@/components/Card"
-import { Divider } from "@/components/Divider"
-import { ProgressCircle } from "@/components/ProgressCircle"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/Tabs"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import { cx } from "@/lib/utils"
-import { RiTimeLine } from "@remixicon/react"
+import { Card } from "@/components/Card";
+import { Divider } from "@/components/Divider";
+import { ProgressCircle } from "@/components/ProgressCircle";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/Tabs";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
+import { RiTimeLine } from "@remixicon/react";
 import {
   ClipboardPlus,
   FileText,
   MonitorDot,
   SquareActivity,
-} from "lucide-react"
+} from "lucide-react";
 
 export default function PatientTracking() {
-  const t = useTranslations("dashboard.patientTracking")
+  const t = useTranslations("dashboard.patientTracking");
 
   const data = [
     {
@@ -102,7 +102,7 @@ export default function PatientTracking() {
         },
       ],
     },
-  ]
+  ];
 
   const statusColor = {
     [t("statuses.consultation")]:
@@ -111,7 +111,7 @@ export default function PatientTracking() {
       "bg-orange-50 text-orange-700 ring-orange-600/20 dark:bg-orange-400/10 dark:text-orange-400 dark:ring-orange-400/20",
     [t("statuses.videoCall")]:
       "bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/20",
-  }
+  };
 
   return (
     <Card className="mt-6 bg-gray-50 p-0 dark:bg-gray-900">
@@ -225,5 +225,5 @@ export default function PatientTracking() {
         </ul>
       </Tabs>
     </Card>
-  )
+  );
 }

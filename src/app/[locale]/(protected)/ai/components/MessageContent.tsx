@@ -1,13 +1,14 @@
-"use client"
+"use client";
 
-import ReactMarkdown from "react-markdown"
-import rehypeRaw from "rehype-raw"
-import remarkGfm from "remark-gfm"
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
+
+import ReactMarkdown from "react-markdown";
 
 type Props = {
-  content: string
-  className?: string
-}
+  content: string;
+  className?: string;
+};
 
 export default function MessageContent({ content }: Props) {
   return (
@@ -15,7 +16,14 @@ export default function MessageContent({ content }: Props) {
       remarkPlugins={[remarkGfm]}
       rehypePlugins={[rehypeRaw]}
       components={{
-        code({ inline, children, ...props }: { inline?: boolean; children?: React.ReactNode } & React.HTMLAttributes<HTMLElement>) {
+        code({
+          inline,
+          children,
+          ...props
+        }: {
+          inline?: boolean;
+          children?: React.ReactNode;
+        } & React.HTMLAttributes<HTMLElement>) {
           if (inline) {
             return (
               <code
@@ -24,7 +32,7 @@ export default function MessageContent({ content }: Props) {
               >
                 {children}
               </code>
-            )
+            );
           }
           return (
             <pre
@@ -33,7 +41,7 @@ export default function MessageContent({ content }: Props) {
             >
               <code>{children}</code>
             </pre>
-          )
+          );
         },
         a({ children, ...props }) {
           return (
@@ -45,18 +53,18 @@ export default function MessageContent({ content }: Props) {
             >
               {children}
             </a>
-          )
+          );
         },
         strong({ children, ...props }) {
           return (
             <strong {...props} className="font-semibold">
               {children}
             </strong>
-          )
+          );
         },
       }}
     >
       {content}
     </ReactMarkdown>
-  )
+  );
 }

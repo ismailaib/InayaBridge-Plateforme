@@ -1,22 +1,34 @@
-"use client"
+"use client";
 
-import { registerDoctor, registerDoctorProfile, registerPatient } from "@/api/profile"
-import { Conditions } from "@/app/Conditions"
-import { Politique } from "@/app/Politique"
-import { Button } from "@/components/Button"
-import { Input } from "@/components/Input"
-import { Label } from "@/components/Label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
-import { useAuth } from "@/lib/auth-context"
-import { toast } from "@/lib/useToast"
-import useTranslations from "@/lib/i18n/useTranslations"
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
-import confetti from "canvas-confetti"
-import Link from "next/link"
-import { useMemo, useState } from "react"
+import {
+  registerDoctor,
+  registerDoctorProfile,
+  registerPatient,
+} from "@/api/profile";
+import { Conditions } from "@/app/Conditions";
+import { Politique } from "@/app/Politique";
+import { Button } from "@/components/Button";
+import { Input } from "@/components/Input";
+import { Label } from "@/components/Label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/Select";
+import { useAuth } from "@/lib/auth-context";
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
+import useTranslations from "@/lib/i18n/useTranslations";
+import { toast } from "@/lib/useToast";
+import confetti from "canvas-confetti";
+
+import { useMemo, useState } from "react";
+
+import Link from "next/link";
 
 interface ValidationErrors {
-  [key: string]: string
+  [key: string]: string;
 }
 
 export default function StepSharedFields({
@@ -25,93 +37,95 @@ export default function StepSharedFields({
   additionalFields,
   onSuccess,
 }: {
-  accountType: "doctor" | "patient"
-  speciality?: string
-  additionalFields?: React.ReactNode
-  onSuccess?: () => void
+  accountType: "doctor" | "patient";
+  speciality?: string;
+  additionalFields?: React.ReactNode;
+  onSuccess?: () => void;
 }) {
-  const { login } = useAuth()
-  const t = useTranslations("signup.shared")
-  const { locale } = useTranslationsContext()
-  const [loading, setLoading] = useState(false)
-  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({})
-  const [gender, setGender] = useState<string>("")
+  const { login } = useAuth();
+  const t = useTranslations("signup.shared");
+  const { locale } = useTranslationsContext();
+  const [loading, setLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
+    {},
+  );
+  const [gender, setGender] = useState<string>("");
 
   const validationMessages = useMemo(
     () => t.raw<Record<string, string>>("validation") ?? {},
-    [t]
-  )
+    [t],
+  );
   const backendMessages = useMemo(
     () => t.raw<Record<string, string>>("backendErrors") ?? {},
-    [t]
-  )
+    [t],
+  );
   const apiMessages = useMemo(
     () => t.raw<Record<string, string>>("apiErrors") ?? {},
-    [t]
-  )
+    [t],
+  );
   const genderOptions = useMemo(() => {
-    const raw = t.raw<Record<string, string>>("fields.gender.options") ?? {}
-    return Object.entries(raw).map(([value, label]) => ({ value, label }))
-  }, [t])
+    const raw = t.raw<Record<string, string>>("fields.gender.options") ?? {};
+    return Object.entries(raw).map(([value, label]) => ({ value, label }));
+  }, [t]);
 
   /* --------------------- Frontend Validation --------------------- */
   const validateForm = (formData: FormData): ValidationErrors => {
-    const errors: ValidationErrors = {}
-    const data = Object.fromEntries(formData)
+    const errors: ValidationErrors = {};
+    const data = Object.fromEntries(formData);
 
     if (!data.firstName || (data.firstName as string).trim().length < 2) {
-      errors.firstName = validationMessages.firstName ?? ""
+      errors.firstName = validationMessages.firstName ?? "";
     }
 
     if (!data.lastName || (data.lastName as string).trim().length < 2) {
-      errors.lastName = validationMessages.lastName ?? ""
+      errors.lastName = validationMessages.lastName ?? "";
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!data.email || !emailRegex.test(data.email as string)) {
-      errors.email = validationMessages.email ?? ""
+      errors.email = validationMessages.email ?? "";
     }
 
-    const phoneRegex = /^(?:\+212|0)[0-9]{9}$/
+    const phoneRegex = /^(?:\+212|0)[0-9]{9}$/;
     if (!data.phone || !phoneRegex.test(data.phone as string)) {
-      errors.phone = validationMessages.phone ?? ""
+      errors.phone = validationMessages.phone ?? "";
     }
 
     if (!data.adress || (data.adress as string).trim().length < 5) {
-      errors.adress = validationMessages.address ?? ""
+      errors.adress = validationMessages.address ?? "";
     }
 
     if (!data.password || (data.password as string).length < 8) {
-      errors.password = validationMessages.password ?? ""
+      errors.password = validationMessages.password ?? "";
     }
 
     if (data.password !== data.confirmPassword) {
-      errors.confirmPassword = validationMessages.confirmPassword ?? ""
+      errors.confirmPassword = validationMessages.confirmPassword ?? "";
     }
 
     if (accountType === "patient") {
       if (!data.gender) {
-        errors.gender = validationMessages.gender ?? ""
+        errors.gender = validationMessages.gender ?? "";
       }
 
-      const cinRegex = /^[A-Z]{1,2}[0-9]{6}$/
+      const cinRegex = /^[A-Z]{1,2}[0-9]{6}$/;
       if (!data.cin || !cinRegex.test(data.cin as string)) {
-        errors.cin = validationMessages.cin ?? ""
+        errors.cin = validationMessages.cin ?? "";
       }
     }
 
-    return errors
-  }
+    return errors;
+  };
 
   /* --------------------- Error Message Handling --------------------- */
   const getErrorMessage = (error: any): string => {
     if (error?.details) {
-      const firstField = Object.keys(error.details)[0]
-      const translated = backendMessages[firstField]
-      if (translated) return translated
-      const firstError = error.details[firstField]
-      if (typeof firstError === "string") return firstError
-      return apiMessages.default ?? ""
+      const firstField = Object.keys(error.details)[0];
+      const translated = backendMessages[firstField];
+      if (translated) return translated;
+      const firstError = error.details[firstField];
+      if (typeof firstError === "string") return firstError;
+      return apiMessages.default ?? "";
     }
 
     if (error?.message) {
@@ -121,46 +135,46 @@ export default function StepSharedFields({
         "CIN already exists": "cinExists",
         "Invalid phone number": "invalidPhone",
         "Validation Failed": "validationFailed",
-      }
+      };
 
-      const translationKey = apiErrorMap[error.message]
+      const translationKey = apiErrorMap[error.message];
       if (translationKey && apiMessages[translationKey]) {
-        return apiMessages[translationKey]
+        return apiMessages[translationKey];
       }
 
-      return error.message
+      return error.message;
     }
 
-    return apiMessages.default ?? ""
-  }
+    return apiMessages.default ?? "";
+  };
 
   /* --------------------- submit --------------------- */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const form = e.currentTarget
-    const formData = new FormData(form)
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
-    setValidationErrors({})
+    setValidationErrors({});
 
-    const errors = validateForm(formData)
+    const errors = validateForm(formData);
     if (Object.keys(errors).length > 0) {
-      setValidationErrors(errors)
-      const firstError = Object.values(errors).find(Boolean)
+      setValidationErrors(errors);
+      const firstError = Object.values(errors).find(Boolean);
       if (firstError) {
         toast({
           title: t("toast.validationTitle"),
           description: firstError,
           variant: "error",
           duration: 4000,
-        })
+        });
       }
-      return
+      return;
     }
 
-    const fd = Object.fromEntries(formData)
+    const fd = Object.fromEntries(formData);
 
     try {
-      setLoading(true)
+      setLoading(true);
 
       if (accountType === "doctor") {
         const payload = {
@@ -173,21 +187,21 @@ export default function StepSharedFields({
           dateOfBirth: fd.dateOfBirth as string,
           speciality: speciality ?? "General",
           status: "PENDING_VERIFICATION" as string,
-        }
+        };
 
-        const { data } = await registerDoctor(payload)
+        const { data } = await registerDoctor(payload);
 
         const profile = {
           tenantId: "",
           userId: data.user.id,
           licenseNumber: "",
           specialty: speciality ?? "General",
-        }
+        };
 
-        await registerDoctorProfile(profile)
-        login({ token: data.token, user: data.user })
-        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } })
-        onSuccess?.()
+        await registerDoctorProfile(profile);
+        login({ token: data.token, user: data.user });
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+        onSuccess?.();
       } else {
         const payload = {
           firstName: fd.firstName as string,
@@ -199,33 +213,35 @@ export default function StepSharedFields({
           dateOfBirth: fd.dateOfBirth as string,
           gender: fd.gender as "male" | "female",
           cin: fd.cin as string,
-        }
+        };
 
-        const { data } = await registerPatient(payload)
-        login({ token: data.token, user: data.user })
-        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } })
-        onSuccess?.()
+        const { data } = await registerPatient(payload);
+        login({ token: data.token, user: data.user });
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+        onSuccess?.();
       }
     } catch (err: any) {
-      const errorMessage = getErrorMessage(err?.response?.data || err)
+      const errorMessage = getErrorMessage(err?.response?.data || err);
 
       toast({
         title: t("toast.registrationErrorTitle"),
         description: errorMessage,
         variant: "error",
         duration: 5000,
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleExternalSubmit = () => {
-    const form = document.querySelector("form")
+    const form = document.querySelector("form");
     if (form) {
-      form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }))
+      form.dispatchEvent(
+        new Event("submit", { cancelable: true, bubbles: true }),
+      );
     }
-  }
+  };
 
   /* ----------------------- UI ----------------------- */
   return (
@@ -244,7 +260,9 @@ export default function StepSharedFields({
                 className={validationErrors.firstName ? "border-red-500" : ""}
               />
               {validationErrors.firstName && (
-                <p className="text-xs text-red-500">{validationErrors.firstName}</p>
+                <p className="text-xs text-red-500">
+                  {validationErrors.firstName}
+                </p>
               )}
             </div>
             <div className="space-y-2">
@@ -258,7 +276,9 @@ export default function StepSharedFields({
                 className={validationErrors.lastName ? "border-red-500" : ""}
               />
               {validationErrors.lastName && (
-                <p className="text-xs text-red-500">{validationErrors.lastName}</p>
+                <p className="text-xs text-red-500">
+                  {validationErrors.lastName}
+                </p>
               )}
             </div>
           </div>
@@ -317,20 +337,33 @@ export default function StepSharedFields({
               <>
                 <div className="space-y-2">
                   <Label htmlFor="gender">{t("fields.gender.label")}</Label>
-                  <Select value={gender} onValueChange={setGender} name="gender">
-                    <SelectTrigger className={`mx-auto h-10 ${validationErrors.gender ? "border-red-500" : ""}`}>
-                      <SelectValue placeholder={t("fields.gender.placeholder")} aria-label={gender} />
+                  <Select
+                    value={gender}
+                    onValueChange={setGender}
+                    name="gender"
+                  >
+                    <SelectTrigger
+                      className={`mx-auto h-10 ${validationErrors.gender ? "border-red-500" : ""}`}
+                    >
+                      <SelectValue
+                        placeholder={t("fields.gender.placeholder")}
+                        aria-label={gender}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {genderOptions.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
-                          <span className="flex items-center gap-x-2">{item.label}</span>
+                          <span className="flex items-center gap-x-2">
+                            {item.label}
+                          </span>
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                   {validationErrors.gender && (
-                    <p className="text-xs text-red-500">{validationErrors.gender}</p>
+                    <p className="text-xs text-red-500">
+                      {validationErrors.gender}
+                    </p>
                   )}
                 </div>
 
@@ -345,9 +378,13 @@ export default function StepSharedFields({
                     className={validationErrors.cin ? "border-red-500" : ""}
                   />
                   {validationErrors.cin && (
-                    <p className="text-xs text-red-500">{validationErrors.cin}</p>
+                    <p className="text-xs text-red-500">
+                      {validationErrors.cin}
+                    </p>
                   )}
-                  <p className="text-xs text-gray-500">{t("fields.cin.helper")}</p>
+                  <p className="text-xs text-gray-500">
+                    {t("fields.cin.helper")}
+                  </p>
                 </div>
               </>
             )}
@@ -366,11 +403,15 @@ export default function StepSharedFields({
                 className={validationErrors.password ? "border-red-500" : ""}
               />
               {validationErrors.password && (
-                <p className="text-xs text-red-500">{validationErrors.password}</p>
+                <p className="text-xs text-red-500">
+                  {validationErrors.password}
+                </p>
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">{t("fields.confirmPassword.label")}</Label>
+              <Label htmlFor="confirmPassword">
+                {t("fields.confirmPassword.label")}
+              </Label>
               <Input
                 id="confirmPassword"
                 name="confirmPassword"
@@ -378,15 +419,21 @@ export default function StepSharedFields({
                 minLength={8}
                 required
                 placeholder={t("fields.confirmPassword.placeholder")}
-                className={validationErrors.confirmPassword ? "border-red-500" : ""}
+                className={
+                  validationErrors.confirmPassword ? "border-red-500" : ""
+                }
               />
               {validationErrors.confirmPassword && (
-                <p className="text-xs text-red-500">{validationErrors.confirmPassword}</p>
+                <p className="text-xs text-red-500">
+                  {validationErrors.confirmPassword}
+                </p>
               )}
             </div>
           </div>
 
-          {additionalFields && <div className="space-y-4">{additionalFields}</div>}
+          {additionalFields && (
+            <div className="space-y-4">{additionalFields}</div>
+          )}
 
           <div className="pt-2">
             <p className="flex flex-wrap items-center gap-1 text-xs text-gray-500">
@@ -418,5 +465,5 @@ export default function StepSharedFields({
         </Button>
       </div>
     </div>
-  )
+  );
 }

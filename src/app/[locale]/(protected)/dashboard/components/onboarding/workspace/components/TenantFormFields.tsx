@@ -1,21 +1,20 @@
-"use client"
+"use client";
 
-import { Input } from "@/components/Input"
-import { Label } from "@/components/Label"
-import { RadioCardGroup, RadioCardItem } from "@/components/RadioCardGroup"
-import useTranslations from "@/lib/i18n/useTranslations"
-import { cx } from "@/lib/utils"
-import React from "react"
-import { StatusItem, TenantFormData } from "../types/tenant"
+import { Input } from "@/components/Input";
+import { Label } from "@/components/Label";
+import { RadioCardGroup, RadioCardItem } from "@/components/RadioCardGroup";
+import useTranslations from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
+
+import React from "react";
+
+import { StatusItem, TenantFormData } from "../types/tenant";
 
 interface TenantFormFieldsProps {
-  formData: TenantFormData
-  status: StatusItem[]
-  isLoading: boolean
-  onFieldChange: (
-    field: keyof TenantFormData,
-    value: string | boolean,
-  ) => void
+  formData: TenantFormData;
+  status: StatusItem[];
+  isLoading: boolean;
+  onFieldChange: (field: keyof TenantFormData, value: string | boolean) => void;
 }
 
 export const TenantFormFields: React.FC<TenantFormFieldsProps> = ({
@@ -24,7 +23,7 @@ export const TenantFormFields: React.FC<TenantFormFieldsProps> = ({
   isLoading,
   onFieldChange,
 }) => {
-  const t = useTranslations("dashboard.tenantForm")
+  const t = useTranslations("dashboard.tenantForm");
 
   return (
     <>
@@ -85,5 +84,5 @@ export const TenantFormFields: React.FC<TenantFormFieldsProps> = ({
         </RadioCardGroup>
       </div>
     </>
-  )
-}
+  );
+};

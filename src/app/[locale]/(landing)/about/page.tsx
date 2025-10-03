@@ -1,19 +1,24 @@
-"use client"
-import { Badge } from "@/components/Badge"
-import { Button } from "@/components/Button"
-import Benefits from "@/components/ui/Benefits"
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import { cx } from "@/lib/utils"
-import Balancer from "react-wrap-balancer"
+"use client";
+
+import { Badge } from "@/components/Badge";
+import { Button } from "@/components/Button";
+import Benefits from "@/components/ui/Benefits";
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
+
+import Balancer from "react-wrap-balancer";
 
 export default function About() {
-  const t = useTranslations("about")
-  const { locale } = useTranslationsContext()
-  const isRTL = locale === "ar"
+  const t = useTranslations("about");
+  const { locale } = useTranslationsContext();
+  const isRTL = locale === "ar";
 
   return (
-    <div className="mt-36 flex flex-col overflow-hidden px-3" dir={isRTL ? "rtl" : "ltr"}>
+    <div
+      className="mt-36 flex flex-col overflow-hidden px-3"
+      dir={isRTL ? "rtl" : "ltr"}
+    >
       <section
         aria-labelledby="about-overview"
         className="animate-slide-up-fade"
@@ -60,5 +65,5 @@ export default function About() {
         </Button>
       </section>
     </div>
-  )
+  );
 }

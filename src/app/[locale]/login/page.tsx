@@ -5,7 +5,6 @@ import { Conditions } from "@/app/Conditions";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
-import { extractApiError } from "@/helpers/extractApiError";
 import { useAuth } from "@/lib/auth-context";
 import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
 import { useTranslations } from "@/lib/i18n/useTranslations";
@@ -13,10 +12,13 @@ import { useToast } from "@/lib/useToast";
 import { useUserStore } from "@/store/useAuthStore";
 import { RiArrowRightSLine } from "@remixicon/react";
 import { motion } from "framer-motion";
+
+import { useEffect, useState } from "react";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+
 import logo from "../../icon-logo.png";
 
 export default function LoginPage() {
@@ -82,7 +84,10 @@ export default function LoginPage() {
   };
 
   if (!mounted || authLoading) {
-    console.log("[LoginPage] Showing loading skeleton", { mounted, authLoading });
+    console.log("[LoginPage] Showing loading skeleton", {
+      mounted,
+      authLoading,
+    });
     return (
       <div className="grid min-h-screen w-full grid-cols-1 overflow-hidden lg:grid-cols-2">
         <div className="flex h-screen flex-col items-center justify-center px-4 sm:px-6 lg:px-12">
@@ -113,14 +118,27 @@ export default function LoginPage() {
               className="relative w-fit rounded-xl bg-gray-50 p-4 shadow-md shadow-black/10 ring-1 ring-black/10 dark:bg-gray-900 dark:ring-gray-800"
             >
               <div className="w-fit rounded-lg bg-gradient-to-b from-[#3b82f6dc] to-[#3b82f6] p-3 ring-1 ring-white/25">
-                <Image src={logo} alt="InayaBridge Logo" width={24} height={24} />
+                <Image
+                  src={logo}
+                  alt="InayaBridge Logo"
+                  width={24}
+                  height={24}
+                />
               </div>
             </motion.div>
           </div>
 
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t("title")}</h1>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{t("subtitle")}</p>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {t("title")}
+            </h1>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+              {t("subtitle")}
+            </p>
           </motion.div>
 
           <form className="space-y-5 text-start" onSubmit={handleSubmit}>
@@ -189,7 +207,9 @@ export default function LoginPage() {
         <div className="flex w-full flex-1 items-center justify-center">
           <div className="max-w-md">
             <div>
-              <h2 className="font-mono text-sm text-gray-700 dark:text-gray-300">{t("aside.updateTitle")}</h2>
+              <h2 className="font-mono text-sm text-gray-700 dark:text-gray-300">
+                {t("aside.updateTitle")}
+              </h2>
               <p className="mt-2 text-xl font-semibold text-gray-900 dark:text-gray-50">
                 {t("aside.updateDescription")}
               </p>
@@ -197,7 +217,9 @@ export default function LoginPage() {
 
             <div className="relative mt-6 h-64 max-w-[450px] overflow-hidden rounded-xl bg-gradient-to-br from-[#3b82f6]/80 to-[#3b82f6]/20 p-6 shadow-lg shadow-black/10">
               <div className="flex h-full flex-col justify-between text-white">
-                <p className="text-2xl font-semibold">{t("aside.releaseName")}</p>
+                <p className="text-2xl font-semibold">
+                  {t("aside.releaseName")}
+                </p>
                 <p className="text-lg">{t("aside.releaseYear")}</p>
               </div>
             </div>
@@ -207,7 +229,10 @@ export default function LoginPage() {
               className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-[#3b82f6] hover:underline hover:underline-offset-4"
             >
               {t("aside.discover")}
-              <RiArrowRightSLine className="size-5 shrink-0" aria-hidden="true" />
+              <RiArrowRightSLine
+                className="size-5 shrink-0"
+                aria-hidden="true"
+              />
             </Link>
           </div>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useContext, useMemo, type ReactNode } from "react";
+import { type ReactNode, createContext, useContext, useMemo } from "react";
+
 import type { Messages } from "./getMessages";
 import type { Locale } from "./i18n";
 import { defaultLocale } from "./i18n";
@@ -10,7 +11,9 @@ type TranslationsContextValue = {
   messages: Messages;
 };
 
-const TranslationsContext = createContext<TranslationsContextValue | null>(null);
+const TranslationsContext = createContext<TranslationsContextValue | null>(
+  null,
+);
 
 export function TranslationsProvider({
   children,
@@ -26,10 +29,14 @@ export function TranslationsProvider({
       locale,
       messages,
     }),
-    [locale, messages]
+    [locale, messages],
   );
 
-  return <TranslationsContext.Provider value={value}>{children}</TranslationsContext.Provider>;
+  return (
+    <TranslationsContext.Provider value={value}>
+      {children}
+    </TranslationsContext.Provider>
+  );
 }
 
 export function useTranslationsContext() {

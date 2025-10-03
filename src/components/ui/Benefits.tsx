@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useTranslations } from "@/lib/i18n/useTranslations"
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 export default function Benefits() {
-  const t = useTranslations("benefits")
-  
+  const t = useTranslations("benefits");
+
   // Access each benefit individually by index
   const benefits = [
     { title: t("items.0.title"), description: t("items.0.description") },
@@ -15,7 +15,7 @@ export default function Benefits() {
     { title: t("items.5.title"), description: t("items.5.description") },
     { title: t("items.6.title"), description: t("items.6.description") },
     { title: t("items.7.title"), description: t("items.7.description") },
-  ]
+  ];
 
   return (
     <section aria-labelledby="benefits-title" className="mx-auto mt-44">
@@ -38,5 +38,5 @@ export default function Benefits() {
         ))}
       </dl>
     </section>
-  )
+  );
 }

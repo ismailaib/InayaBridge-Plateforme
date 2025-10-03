@@ -1,19 +1,17 @@
-"use client"
+"use client";
 
-import { AreaChart } from "@/components/AreaChart"
-import { Card } from "@/components/Card"
-import { CategoryBar } from "@/components/CategoryBar"
-import { Tooltip } from "@/components/Tooltip"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import { Info } from "lucide-react"
+import { AreaChart } from "@/components/AreaChart";
+import { Card } from "@/components/Card";
+import { CategoryBar } from "@/components/CategoryBar";
+import { Tooltip } from "@/components/Tooltip";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { Info } from "lucide-react";
 
 export default function DashboardStats() {
+  const t = useTranslations("dashboard.dashboardStats");
 
-
-  const t = useTranslations("dashboard.dashboardStats")
-
-  const category1 = t("categories.1")
-  const category2 = t("categories.2")
+  const category1 = t("categories.1");
+  const category2 = t("categories.2");
 
   const data = [
     { date: "19-09-2025", [category1]: 0, [category2]: 0 },
@@ -27,8 +25,7 @@ export default function DashboardStats() {
     { date: "27-09-2025", [category1]: 58, [category2]: 22 },
     { date: "28-09-2025", [category1]: 60, [category2]: 24 },
     { date: "29-09-2025", [category1]: 65, [category2]: 25 },
-  ]
-
+  ];
 
   return (
     <>
@@ -139,7 +136,7 @@ export default function DashboardStats() {
             colors={["blue", "amber"]}
             fill="solid"
             valueFormatter={(v) => `${v}`}
-            onValueChange={() => { }}
+            onValueChange={() => {}}
             tickGap={15}
             className="hidden sm:block"
           />
@@ -150,7 +147,7 @@ export default function DashboardStats() {
             colors={["blue", "amber"]}
             fill="solid"
             valueFormatter={(v) => `${v}`}
-            onValueChange={() => { }}
+            onValueChange={() => {}}
             showYAxis={false}
             startEndOnly={true}
             tickGap={15}
@@ -159,5 +156,5 @@ export default function DashboardStats() {
         </div>
       </Card>
     </>
-  )
+  );
 }

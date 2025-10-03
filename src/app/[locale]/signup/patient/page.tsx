@@ -1,18 +1,23 @@
-"use client"
+"use client";
 
-import { DatePickerBirthDateExample } from "@/components/DateBirth"
-import { Input } from "@/components/Input"
-import { Label } from "@/components/Label"
-import useTranslations from "@/lib/i18n/useTranslations"
-import { AnimatePresence, motion } from "framer-motion"
-import Image from "next/image"
-import React from "react"
-import logo from "../../../icon-logo.png"
-import StepSharedFields from "../components/StepSharedFields"
+import { DatePickerBirthDateExample } from "@/components/DateBirth";
+import { Input } from "@/components/Input";
+import { Label } from "@/components/Label";
+import useTranslations from "@/lib/i18n/useTranslations";
+import { AnimatePresence, motion } from "framer-motion";
+
+import React from "react";
+
+import Image from "next/image";
+
+import logo from "../../../icon-logo.png";
+import StepSharedFields from "../components/StepSharedFields";
 
 export default function PatientWelcomePage() {
-  const t = useTranslations("signup.patient")
-  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(undefined)
+  const t = useTranslations("signup.patient");
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(
+    undefined,
+  );
 
   return (
     <div className="grid min-h-screen w-full grid-cols-1 overflow-hidden lg:grid-cols-2">
@@ -77,13 +82,22 @@ export default function PatientWelcomePage() {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="dob" className="font-medium">{t("additionalFields.dateOfBirth")}</Label>
+                          <Label htmlFor="dob" className="font-medium">
+                            {t("additionalFields.dateOfBirth")}
+                          </Label>
                           <div className="mt-2">
-                            <DatePickerBirthDateExample value={selectedDate} onChange={setSelectedDate} />
+                            <DatePickerBirthDateExample
+                              value={selectedDate}
+                              onChange={setSelectedDate}
+                            />
                             <input
                               type="hidden"
                               name="dateOfBirth"
-                              value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
+                              value={
+                                selectedDate
+                                  ? selectedDate.toISOString().split("T")[0]
+                                  : ""
+                              }
                               tabIndex={-1}
                               aria-hidden="true"
                             />
@@ -117,9 +131,7 @@ export default function PatientWelcomePage() {
               <h2 className="text-2xl font-semibold leading-9 text-white">
                 {t("aside.title")}
               </h2>
-              <p className="mt-4 text-white">
-                {t("aside.description")}
-              </p>
+              <p className="mt-4 text-white">{t("aside.description")}</p>
             </motion.div>
 
             <motion.div
@@ -158,5 +170,5 @@ export default function PatientWelcomePage() {
         </div>
       </motion.aside>
     </div>
-  )
+  );
 }

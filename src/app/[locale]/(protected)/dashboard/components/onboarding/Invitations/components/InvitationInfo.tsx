@@ -1,6 +1,7 @@
-import React from "react";
-import { Mail } from "lucide-react";
 import useTranslations from "@/lib/i18n/useTranslations";
+import { Mail } from "lucide-react";
+
+import React from "react";
 
 export const InvitationInfo: React.FC = () => {
   const t = useTranslations("dashboard.invitations");

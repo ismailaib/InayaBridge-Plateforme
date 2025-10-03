@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { RiTimeLine } from "@remixicon/react"
-import type { ComponentType } from "react"
-
-import { Card } from "@/components/Card"
-import { Divider } from "@/components/Divider"
-import { ProgressCircle } from "@/components/ProgressCircle"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/Tabs"
-import { cx } from "@/lib/utils"
-import { useTranslations } from "@/lib/i18n/useTranslations"
+import { Card } from "@/components/Card";
+import { Divider } from "@/components/Divider";
+import { ProgressCircle } from "@/components/ProgressCircle";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/Tabs";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
+import { RiTimeLine } from "@remixicon/react";
 import {
   ClipboardPlus,
   FileText,
   MonitorDot,
   SquareActivity,
-} from "lucide-react"
+} from "lucide-react";
 
-type StatusKey = "consultation" | "waitingRoom" | "videoCall"
+import type { ComponentType } from "react";
+
+type StatusKey = "consultation" | "waitingRoom" | "videoCall";
 type MotifKey =
   | "postOp"
   | "vertigo"
@@ -24,35 +24,40 @@ type MotifKey =
   | "bloodTest"
   | "anxiety"
   | "scanner"
-  | "diabetes"
-type RemarkKey = "inProgress" | "arrived" | "waiting" | "scheduled" | "toConfirm"
+  | "diabetes";
+type RemarkKey =
+  | "inProgress"
+  | "arrived"
+  | "waiting"
+  | "scheduled"
+  | "toConfirm";
 
 type LocationInfo =
   | { key: "mainOffice" | "roomA" | "roomB" }
-  | { key: "teleconsultation"; time: string }
+  | { key: "teleconsultation"; time: string };
 
 type UpdatedInfo =
   | { type: "minutesAgo"; count: number }
-  | { type: "scheduledAt"; time: string }
+  | { type: "scheduledAt"; time: string };
 
-type IconComponent = ComponentType<{ className?: string }>
+type IconComponent = ComponentType<{ className?: string }>;
 
 type Dossier = {
-  patient: string
-  motifKey: MotifKey
-  location: LocationInfo
-  remarkKey: RemarkKey
-  progressCurrent: number
-  progressTotal: number
-  updated: UpdatedInfo
-}
+  patient: string;
+  motifKey: MotifKey;
+  location: LocationInfo;
+  remarkKey: RemarkKey;
+  progressCurrent: number;
+  progressTotal: number;
+  updated: UpdatedInfo;
+};
 
 type Category = {
-  status: StatusKey
-  icon: IconComponent
-  iconColor: string
-  dossiers: Dossier[]
-}
+  status: StatusKey;
+  icon: IconComponent;
+  iconColor: string;
+  dossiers: Dossier[];
+};
 
 const STATUS_BADGE_STYLES: Record<StatusKey, string> = {
   consultation:
@@ -61,7 +66,7 @@ const STATUS_BADGE_STYLES: Record<StatusKey, string> = {
     "bg-orange-50 text-orange-700 ring-orange-600/20 dark:bg-orange-400/10 dark:text-orange-400 dark:ring-orange-400/20",
   videoCall:
     "bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/20",
-}
+};
 
 const PATIENT_TRACKING_DATA: Category[] = [
   {
@@ -148,18 +153,18 @@ const PATIENT_TRACKING_DATA: Category[] = [
       },
     ],
   },
-]
+];
 
 const getLocationLabel = (
   t: ReturnType<typeof useTranslations>,
   location: LocationInfo,
 ) => {
   if (location.key === "teleconsultation") {
-    return t("locations.teleconsultation", { time: location.time })
+    return t("locations.teleconsultation", { time: location.time });
   }
 
-  return t(`locations.${location.key}`)
-}
+  return t(`locations.${location.key}`);
+};
 
 const getUpdatedLabel = (
   t: ReturnType<typeof useTranslations>,
@@ -168,14 +173,14 @@ const getUpdatedLabel = (
   if (updated.type === "minutesAgo") {
     return t("updated", {
       time: t("updatedTimes.minutesAgo", { count: updated.count }),
-    })
+    });
   }
 
-  return t("scheduled", { time: updated.time })
-}
+  return t("scheduled", { time: updated.time });
+};
 
 export default function PatientTracking() {
-  const t = useTranslations("dashboard.patientTracking")
+  const t = useTranslations("dashboard.patientTracking");
 
   return (
     <Card className="mt-6 bg-gray-50 p-0 dark:bg-gray-900">
@@ -190,7 +195,7 @@ export default function PatientTracking() {
       <Tabs defaultValue={PATIENT_TRACKING_DATA[0]?.status ?? "consultation"}>
         <TabsList className="bg-gray-50 px-6 dark:bg-gray-900">
           {PATIENT_TRACKING_DATA.map((category) => {
-            const Icon = category.icon
+            const Icon = category.icon;
             return (
               <TabsTrigger
                 key={category.status}
@@ -210,7 +215,7 @@ export default function PatientTracking() {
                   </span>
                 </div>
               </TabsTrigger>
-            )
+            );
           })}
         </TabsList>
         <ul role="list" className="rounded-b-md bg-white dark:bg-gray-950">
@@ -267,7 +272,11 @@ export default function PatientTracking() {
                       <div className="block sm:flex sm:items-center sm:justify-between sm:space-x-2">
                         <div className="flex items-center space-x-2">
                           <ProgressCircle
-                            value={(dossier.progressCurrent / dossier.progressTotal) * 100}
+                            value={
+                              (dossier.progressCurrent /
+                                dossier.progressTotal) *
+                              100
+                            }
                             radius={9}
                             strokeWidth={3.5}
                           />
@@ -299,5 +308,5 @@ export default function PatientTracking() {
         </ul>
       </Tabs>
     </Card>
-  )
+  );
 }

@@ -1,25 +1,24 @@
-﻿"use client"
+﻿"use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import invariant from "tiny-invariant"
-
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
+import { attachClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge";
+import { getReorderDestinationIndex } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index";
+import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import {
   draggable,
   dropTargetForElements,
   monitorForElements,
-} from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
-import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"
-import { attachClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge"
-import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder"
-import { getReorderDestinationIndex } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index"
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder";
+import { ClockFading, MonitorDot, SquareActivity } from "lucide-react";
+import invariant from "tiny-invariant";
 
-import { cx } from "@/lib/utils"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import { ClockFading, MonitorDot, SquareActivity } from "lucide-react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 /* ---------- Types ---------- */
 
-type StatusKey = "consultation" | "waitingRoom" | "video"
+type StatusKey = "consultation" | "waitingRoom" | "video";
 type MotifKey =
   | "postOpFollowUp"
   | "vertigo"
@@ -27,54 +26,55 @@ type MotifKey =
   | "bloodTest"
   | "anxiety"
   | "scanResults"
-  | "diabetesControl"
+  | "diabetesControl";
 type RemarkKey =
   | "inProgress"
   | "arrived"
   | "waiting"
   | "scheduled"
-  | "toConfirm"
+  | "toConfirm";
 
 type LocationInfo =
   | { key: "mainOffice" | "roomA" | "roomB" }
-  | { key: "teleconsultation"; time: string }
+  | { key: "teleconsultation"; time: string };
 
 type UpdatedInfo =
   | { type: "minutesAgo"; count: number }
-  | { type: "scheduledAt"; time: string }
+  | { type: "scheduledAt"; time: string };
 
-type IconComponent = (props: { className?: string }) => JSX.Element
+//@ts-ignore
+type IconComponent = (props: { className?: string }) => JSX.Element;
 
 type BasePatient = {
-  id: string
-  name: string
-  motifKey: MotifKey
-  location: LocationInfo
-  remarkKey: RemarkKey
-  progressCurrent: number
-  progressTotal: number
-  updated: UpdatedInfo
-}
+  id: string;
+  name: string;
+  motifKey: MotifKey;
+  location: LocationInfo;
+  remarkKey: RemarkKey;
+  progressCurrent: number;
+  progressTotal: number;
+  updated: UpdatedInfo;
+};
 
 type Patient = {
-  id: string
-  patient: string
-  motif: string
-  lieu: string
-  remarque: string
-  progressionActuelle: number
-  progressionTotale: number
-  misAJour: string
-}
+  id: string;
+  patient: string;
+  motif: string;
+  lieu: string;
+  remarque: string;
+  progressionActuelle: number;
+  progressionTotale: number;
+  misAJour: string;
+};
 
-type DataState = Record<StatusKey, Patient[]>
+type DataState = Record<StatusKey, Patient[]>;
 
 type ColumnConfig = {
-  status: StatusKey
-  icon: IconComponent
-  iconColor: string
-  patients: BasePatient[]
-}
+  status: StatusKey;
+  icon: IconComponent;
+  iconColor: string;
+  patients: BasePatient[];
+};
 
 const STATUS_BADGE_STYLES: Record<StatusKey, string> = {
   consultation:
@@ -83,7 +83,7 @@ const STATUS_BADGE_STYLES: Record<StatusKey, string> = {
     "bg-orange-50 text-orange-700 ring-orange-600/20 dark:bg-orange-400/10 dark:text-orange-400 dark:ring-orange-400/20",
   video:
     "bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/20",
-}
+};
 
 const COLUMNS: ColumnConfig[] = [
   {
@@ -177,29 +177,29 @@ const COLUMNS: ColumnConfig[] = [
       },
     ],
   },
-]
+];
 
 const getLocationLabel = (
   t: ReturnType<typeof useTranslations>,
   location: LocationInfo,
 ) => {
   if (location.key === "teleconsultation") {
-    return t("locations.teleconsultation", { time: location.time })
+    return t("locations.teleconsultation", { time: location.time });
   }
 
-  return t(`locations.${location.key}`)
-}
+  return t(`locations.${location.key}`);
+};
 
 const getUpdatedLabel = (
   t: ReturnType<typeof useTranslations>,
   updated: UpdatedInfo,
 ) => {
   if (updated.type === "minutesAgo") {
-    return t("updatedTimes.minutesAgo", { count: updated.count })
+    return t("updatedTimes.minutesAgo", { count: updated.count });
   }
 
-  return t("scheduled", { time: updated.time })
-}
+  return t("scheduled", { time: updated.time });
+};
 
 const toLocalizedPatient = (
   patient: BasePatient,
@@ -213,7 +213,7 @@ const toLocalizedPatient = (
   progressionActuelle: patient.progressCurrent,
   progressionTotale: patient.progressTotal,
   misAJour: getUpdatedLabel(t, patient.updated),
-})
+});
 
 /* ---------- Patient card ---------- */
 function PatientCard({
@@ -221,16 +221,16 @@ function PatientCard({
   statusKey,
   statusLabel,
 }: {
-  patient: Patient
-  statusKey: StatusKey
-  statusLabel: string
+  patient: Patient;
+  statusKey: StatusKey;
+  statusLabel: string;
 }) {
-  const ref = useRef<HTMLDivElement | null>(null)
-  const [dragging, setDragging] = useState(false)
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
-    const el = ref.current
-    invariant(el)
+    const el = ref.current;
+    invariant(el);
 
     return combine(
       draggable({
@@ -248,11 +248,11 @@ function PatientCard({
           ),
         getIsSticky: () => true,
       }),
-    )
-  }, [patient.id])
+    );
+  }, [patient.id]);
 
   const progress =
-    (patient.progressionActuelle / patient.progressionTotale) * 100
+    (patient.progressionActuelle / patient.progressionTotale) * 100;
 
   return (
     <div
@@ -299,7 +299,7 @@ function PatientCard({
         />
       </div>
     </div>
-  )
+  );
 }
 
 /* ---------- Column / Section ---------- */
@@ -312,21 +312,23 @@ function Section({
   iconColor,
   items,
 }: {
-  id: StatusKey
-  title: string
-  statusKey: StatusKey
-  statusLabel: string
-  icon: IconComponent
-  iconColor: string
-  items: Patient[]
+  id: StatusKey;
+  title: string;
+  statusKey: StatusKey;
+  statusLabel: string;
+  icon: IconComponent;
+  iconColor: string;
+  items: Patient[];
 }) {
-  const ref = useRef<HTMLDivElement | null>(null)
-  const [highlight, setHighlight] = useState(false)
-  const sectionTranslations = useTranslations("appointments.waitingRoom.section")
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [highlight, setHighlight] = useState(false);
+  const sectionTranslations = useTranslations(
+    "appointments.waitingRoom.section",
+  );
 
   useEffect(() => {
-    const el = ref.current
-    invariant(el)
+    const el = ref.current;
+    invariant(el);
 
     return dropTargetForElements({
       element: el,
@@ -335,8 +337,8 @@ function Section({
       onDragEnter: () => setHighlight(true),
       onDragLeave: () => setHighlight(false),
       onDrop: () => setHighlight(false),
-    })
-  }, [id])
+    });
+  }, [id]);
 
   return (
     <div
@@ -369,25 +371,28 @@ function Section({
         />
       ))}
     </div>
-  )
+  );
 }
 
 /* ---------- Main board ---------- */
 export default function CardsView() {
-  const t = useTranslations("appointments.waitingRoom.patientTracking")
+  const t = useTranslations("appointments.waitingRoom.patientTracking");
 
   const localizedInitialData = useMemo<DataState>(() => {
-    return COLUMNS.reduce((acc, column) => {
-      acc[column.status] = column.patients.map((patient) =>
-        toLocalizedPatient(patient, t),
-      )
-      return acc
-    }, {
-      consultation: [],
-      waitingRoom: [],
-      video: [],
-    } as DataState)
-  }, [t])
+    return COLUMNS.reduce(
+      (acc, column) => {
+        acc[column.status] = column.patients.map((patient) =>
+          toLocalizedPatient(patient, t),
+        );
+        return acc;
+      },
+      {
+        consultation: [],
+        waitingRoom: [],
+        video: [],
+      } as DataState,
+    );
+  }, [t]);
 
   const statusLabels = useMemo(
     () => ({
@@ -396,13 +401,13 @@ export default function CardsView() {
       video: t("statuses.video"),
     }),
     [t],
-  )
+  );
 
-  const [data, setData] = useState<DataState>(localizedInitialData)
+  const [data, setData] = useState<DataState>(localizedInitialData);
 
   useEffect(() => {
-    setData(localizedInitialData)
-  }, [localizedInitialData])
+    setData(localizedInitialData);
+  }, [localizedInitialData]);
 
   const reorderCard = useCallback(
     (columnId: StatusKey, startIndex: number, finishIndex: number) => {
@@ -410,11 +415,11 @@ export default function CardsView() {
         list: data[columnId],
         startIndex,
         finishIndex,
-      })
-      setData((prev) => ({ ...prev, [columnId]: updated }))
+      });
+      setData((prev) => ({ ...prev, [columnId]: updated }));
     },
     [data],
-  )
+  );
 
   const moveCard = useCallback(
     ({
@@ -423,53 +428,53 @@ export default function CardsView() {
       destinationColumn,
       destinationIndex,
     }: {
-      cardId: string
-      sourceColumn: StatusKey
-      destinationColumn: StatusKey
-      destinationIndex: number
+      cardId: string;
+      sourceColumn: StatusKey;
+      destinationColumn: StatusKey;
+      destinationIndex: number;
     }) => {
-      const card = data[sourceColumn].find((c) => c.id === cardId)
-      if (!card) return
+      const card = data[sourceColumn].find((c) => c.id === cardId);
+      if (!card) return;
 
       setData((prev) => {
-        const newSource = prev[sourceColumn].filter((c) => c.id !== cardId)
-        const newDestination = Array.from(prev[destinationColumn])
-        newDestination.splice(destinationIndex, 0, card)
+        const newSource = prev[sourceColumn].filter((c) => c.id !== cardId);
+        const newDestination = Array.from(prev[destinationColumn]);
+        newDestination.splice(destinationIndex, 0, card);
         return {
           ...prev,
           [sourceColumn]: newSource,
           [destinationColumn]: newDestination,
-        }
-      })
+        };
+      });
     },
     [data],
-  )
+  );
 
   useEffect(() => {
     return monitorForElements({
       onDrop: ({ source, location }) => {
-        if (!location.current.dropTargets.length) return
+        if (!location.current.dropTargets.length) return;
 
-        const draggedId = source.data.id as string
+        const draggedId = source.data.id as string;
 
-        let sourceColumnId: StatusKey | null = null
+        let sourceColumnId: StatusKey | null = null;
         for (const column of Object.keys(data) as StatusKey[]) {
           if (data[column].some((item) => item.id === draggedId)) {
-            sourceColumnId = column
-            break
+            sourceColumnId = column;
+            break;
           }
         }
 
-        if (!sourceColumnId) return
+        if (!sourceColumnId) return;
 
         const startIndex = data[sourceColumnId].findIndex(
           (patient) => patient.id === draggedId,
-        )
+        );
 
         if (location.current.dropTargets.length === 1) {
-          const [destColumnTarget] = location.current.dropTargets
+          const [destColumnTarget] = location.current.dropTargets;
           const destinationColumnId = destColumnTarget.data
-            .columnId as StatusKey
+            .columnId as StatusKey;
 
           if (sourceColumnId === destinationColumnId) {
             const finishIndex = getReorderDestinationIndex({
@@ -477,42 +482,42 @@ export default function CardsView() {
               indexOfTarget: data[sourceColumnId].length - 1,
               closestEdgeOfTarget: null,
               axis: "vertical",
-            })
-            reorderCard(sourceColumnId, startIndex, finishIndex)
+            });
+            reorderCard(sourceColumnId, startIndex, finishIndex);
           } else {
             moveCard({
               cardId: draggedId,
               sourceColumn: sourceColumnId,
               destinationColumn: destinationColumnId,
               destinationIndex: data[destinationColumnId].length,
-            })
+            });
           }
-          return
+          return;
         }
 
-        const [cardTarget, columnTarget] = location.current.dropTargets
-        const destinationColumnId = columnTarget.data.columnId as StatusKey
-        const { closestEdge } = cardTarget.data
+        const [cardTarget, columnTarget] = location.current.dropTargets;
+        const destinationColumnId = columnTarget.data.columnId as StatusKey;
+        const { closestEdge } = cardTarget.data;
         const indexOfTarget = data[destinationColumnId].findIndex(
           (patient) => patient.id === cardTarget.data.id,
-        )
+        );
 
         const finishIndex =
-          closestEdge === "bottom" ? indexOfTarget + 1 : indexOfTarget
+          closestEdge === "bottom" ? indexOfTarget + 1 : indexOfTarget;
 
         if (sourceColumnId === destinationColumnId) {
-          reorderCard(destinationColumnId, startIndex, finishIndex)
+          reorderCard(destinationColumnId, startIndex, finishIndex);
         } else {
           moveCard({
             cardId: draggedId,
             sourceColumn: sourceColumnId,
             destinationColumn: destinationColumnId,
             destinationIndex: finishIndex,
-          })
+          });
         }
       },
-    })
-  }, [data, reorderCard, moveCard])
+    });
+  }, [data, reorderCard, moveCard]);
 
   return (
     <div className="mt-6">
@@ -533,5 +538,5 @@ export default function CardsView() {
         </div>
       </div>
     </div>
-  )
+  );
 }

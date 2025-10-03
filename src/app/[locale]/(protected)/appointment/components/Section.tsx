@@ -1,25 +1,27 @@
-"use client"
+"use client";
 
-import { Draggable, Droppable } from "react-beautiful-dnd"
-import { PatientCard } from "./PatientCard"
-import { ArrowRight } from "lucide-react"
-import { cx } from "@/lib/utils"
-import { useTranslations } from "@/lib/i18n/useTranslations"
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
+
+import { Draggable, Droppable } from "react-beautiful-dnd";
+
+import { PatientCard } from "./PatientCard";
 
 interface Patient {
-  patient: string
-  motif: string
-  lieu: string
-  remarque: string
-  progressionActuelle: number
-  progressionTotale: number
-  misAJour: string
+  patient: string;
+  motif: string;
+  lieu: string;
+  remarque: string;
+  progressionActuelle: number;
+  progressionTotale: number;
+  misAJour: string;
 }
 
 interface DataState {
-  consultation: Patient[]
-  salleAttente: Patient[]
-  visioconference: Patient[]
+  consultation: Patient[];
+  salleAttente: Patient[];
+  visioconference: Patient[];
 }
 
 export const Section = ({
@@ -29,16 +31,13 @@ export const Section = ({
   droppableId,
   status,
 }: {
-  title: string
-  icon: React.ComponentType<{ className?: string; size?: number }>
-  items: Patient[]
-  droppableId: keyof DataState
-  status:
-    | "En consultation"
-    | "Salle d'attente"
-    | "Rendez-vous visioconférence"
+  title: string;
+  icon: React.ComponentType<{ className?: string; size?: number }>;
+  items: Patient[];
+  droppableId: keyof DataState;
+  status: "En consultation" | "Salle d'attente" | "Rendez-vous visioconférence";
 }) => {
-  const t = useTranslations("waitingRoom.section")
+  const t = useTranslations("waitingRoom.section");
 
   return (
     <div>
@@ -101,5 +100,5 @@ export const Section = ({
         )}
       </Droppable>
     </div>
-  )
-}
+  );
+};

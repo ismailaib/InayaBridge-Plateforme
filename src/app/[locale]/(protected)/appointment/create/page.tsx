@@ -1,28 +1,30 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/Button";
+import { DatePicker } from "@/components/DatePicker";
 import { Divider } from "@/components/Divider";
 import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/Select";
-import { DatePicker } from "@/components/DatePicker";
 import {
   RadioCardGroup,
   RadioCardIndicator,
   RadioCardItem,
 } from "@/components/RadioCardGroup";
-import { Search } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/Select";
 import { Switch } from "@/components/Switch";
-import { createAppointment } from "../api/appointment";
-import { getDoctorPatients, Patient } from "../../mes-patients/api/patients";
 import { useTranslations } from "@/lib/i18n/useTranslations";
+import { Search } from "lucide-react";
+
+import React, { useEffect, useRef, useState } from "react";
+
+import { Patient, getDoctorPatients } from "../../mes-patients/api/patients";
+import { createAppointment } from "../api/appointment";
 
 export default function RendezVousForm() {
   const t = useTranslations("appointments.form");
@@ -40,7 +42,9 @@ export default function RendezVousForm() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
-  const [selectedPatientId, setSelectedPatientId] = useState<number | null>(null);
+  const [selectedPatientId, setSelectedPatientId] = useState<number | null>(
+    null,
+  );
   const [value, setValue] = useState<Date | undefined>(undefined);
   const [selectOpen, setSelectOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -61,7 +65,7 @@ export default function RendezVousForm() {
     const filtered = patients.filter(
       (p) =>
         p?.first_name?.toLowerCase().includes(query) ||
-        p?.last_name?.toLowerCase().includes(query)
+        p?.last_name?.toLowerCase().includes(query),
     );
     setFilteredPatients(filtered);
   }, [searchQuery, patients]);
@@ -87,7 +91,13 @@ export default function RendezVousForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedPatientId || !value || !motif || !locationValue || cost === undefined) {
+    if (
+      !selectedPatientId ||
+      !value ||
+      !motif ||
+      !locationValue ||
+      cost === undefined
+    ) {
       alert(t("alerts.fillAllFields"));
       return;
     }
@@ -96,8 +106,8 @@ export default function RendezVousForm() {
       locationValue === "1"
         ? "local"
         : locationValue === "2"
-        ? "in-person"
-        : "video";
+          ? "in-person"
+          : "video";
 
     const payload = {
       patientId: selectedPatientId,
@@ -137,7 +147,11 @@ export default function RendezVousForm() {
             </Label>
             <div className="relative mt-2">
               <Select
-                value={selectedPatientId !== null ? String(selectedPatientId) : undefined}
+                value={
+                  selectedPatientId !== null
+                    ? String(selectedPatientId)
+                    : undefined
+                }
                 onValueChange={handlePatientSelect}
                 open={selectOpen}
                 onOpenChange={setSelectOpen}
@@ -254,7 +268,9 @@ export default function RendezVousForm() {
                 <div className="flex items-start gap-3">
                   <RadioCardIndicator className="mt-1" />
                   <div>
-                    <span className="sm:text-sm">{t("location.office.title")}</span>
+                    <span className="sm:text-sm">
+                      {t("location.office.title")}
+                    </span>
                     <p className="mt-1 text-xs text-gray-500">
                       {t("location.office.desc")}
                     </p>
@@ -265,7 +281,9 @@ export default function RendezVousForm() {
                 <div className="flex items-start gap-3">
                   <RadioCardIndicator className="mt-1" />
                   <div>
-                    <span className="sm:text-sm">{t("location.home.title")}</span>
+                    <span className="sm:text-sm">
+                      {t("location.home.title")}
+                    </span>
                     <p className="mt-1 text-xs text-gray-500">
                       {t("location.home.desc")}
                     </p>
@@ -276,7 +294,9 @@ export default function RendezVousForm() {
                 <div className="flex items-start gap-3">
                   <RadioCardIndicator className="mt-1" />
                   <div>
-                    <span className="sm:text-sm">{t("location.video.title")}</span>
+                    <span className="sm:text-sm">
+                      {t("location.video.title")}
+                    </span>
                     <p className="mt-1 text-xs text-gray-500">
                       {t("location.video.desc")}
                     </p>

@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { Card } from "@/components/Card"
-import { Tooltip } from "@/components/Tooltip"
-import useTranslations from "@/lib/i18n/useTranslations"
-import { BookmarkX, CheckCheck, Info, Pin } from "lucide-react"
+import { Card } from "@/components/Card";
+import { Tooltip } from "@/components/Tooltip";
+import useTranslations from "@/lib/i18n/useTranslations";
+import { BookmarkX, CheckCheck, Info, Pin } from "lucide-react";
 
 const alertDates = [
   "20-04-2025 21:21",
   "20-04-2025 18:24",
   "20-04-2025 15:50",
   "20-04-2025 12:20",
-] as const
+] as const;
 
 type KpiKey =
   | "todayAppointments"
@@ -18,7 +18,7 @@ type KpiKey =
   | "finishedConsultations"
   | "newPatients"
   | "videoConsultations"
-  | "csatScore"
+  | "csatScore";
 
 const KPI_VALUES: Record<KpiKey, string> = {
   todayAppointments: "24",
@@ -27,15 +27,15 @@ const KPI_VALUES: Record<KpiKey, string> = {
   newPatients: "42",
   videoConsultations: "16",
   csatScore: "4.6 / 5",
-}
+};
 
 const KPI_COLUMNS: KpiKey[][] = [
   ["todayAppointments", "waitingPatients", "finishedConsultations"],
   ["newPatients", "videoConsultations", "csatScore"],
-]
+];
 
 export default function DoctorKPIBlock() {
-  const t = useTranslations("dashboard.kpis")
+  const t = useTranslations("dashboard.kpis");
 
   const kpiData = KPI_COLUMNS.map((column) =>
     column.map((key) => ({
@@ -43,13 +43,13 @@ export default function DoctorKPIBlock() {
       title: t(`cards.${key}.title`),
       value: KPI_VALUES[key],
       tooltip: t(`cards.${key}.tooltip`),
-    }))
-  )
+    })),
+  );
 
   const topMedicalAlerts = alertDates.map((date, index) => ({
     date,
     closed: index >= 2,
-  }))
+  }));
 
   return (
     <div className="mt-4 grid grid-cols-1 gap-5 lg:grid-cols-8">
@@ -120,12 +120,21 @@ export default function DoctorKPIBlock() {
 
               {closed ? (
                 <Tooltip content={t("alerts.actions.closed")} showArrow={false}>
-                  <CheckCheck width={18} className="cursor-pointer text-blue-500" />
+                  <CheckCheck
+                    width={18}
+                    className="cursor-pointer text-blue-500"
+                  />
                 </Tooltip>
               ) : (
                 <div className="items-top flex justify-end gap-2">
-                  <Tooltip content={t("alerts.actions.close")} showArrow={false}>
-                    <BookmarkX width={18} className="cursor-pointer text-red-500" />
+                  <Tooltip
+                    content={t("alerts.actions.close")}
+                    showArrow={false}
+                  >
+                    <BookmarkX
+                      width={18}
+                      className="cursor-pointer text-red-500"
+                    />
                   </Tooltip>
                   <Tooltip content={t("alerts.actions.pin")} showArrow={false}>
                     <Pin width={18} className="cursor-pointer text-blue-500" />
@@ -137,5 +146,5 @@ export default function DoctorKPIBlock() {
         </ol>
       </Card>
     </div>
-  )
+  );
 }

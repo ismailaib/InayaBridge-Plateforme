@@ -1,12 +1,13 @@
-"use client"
+"use client";
 
-import Balancer from "react-wrap-balancer"
-import useTranslations from "@/lib/i18n/useTranslations"
+import useTranslations from "@/lib/i18n/useTranslations";
+
+import Balancer from "react-wrap-balancer";
 
 export default function Layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const t = useTranslations("changelog")
+  const t = useTranslations("changelog");
 
   return (
     <main
@@ -26,5 +27,5 @@ export default function Layout({
       </div>
       <div className="mt-28">{children}</div>
     </main>
-  )
+  );
 }

@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { Card } from "@/components/Card"
-import { MapPinCheck } from "lucide-react"
-import React from "react"
+import { Card } from "@/components/Card";
+import { MapPinCheck } from "lucide-react";
+
+import React from "react";
 
 export default function Dashboard() {
-
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <header>
@@ -26,17 +26,15 @@ export default function Dashboard() {
 
           <div className="mt-4 flex flex-col gap-2 sm:mt-0 sm:flex-row sm:items-end">
             <div>
-              <Card className="py-2 px-4 flex flex-row gap-2"><MapPinCheck /> Agadir ,Souss Massa</Card>
+              <Card className="py-2 px-4 flex flex-row gap-2">
+                <MapPinCheck /> Agadir ,Souss Massa
+              </Card>
             </div>
-            
           </div>
         </div>
       </header>
 
-
-      <main>
-   
-      </main>
+      <main></main>
     </div>
-  )
+  );
 }

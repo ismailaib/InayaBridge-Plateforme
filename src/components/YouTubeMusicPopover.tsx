@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Button } from '@/components/Button';
-import { Card } from '@/components/Card';
-import { Badge } from '@/components/Badge';
-import { Music, Play, Pause, Volume2, X } from 'lucide-react';
+import { Badge } from "@/components/Badge";
+import { Button } from "@/components/Button";
+import { Card } from "@/components/Card";
+import { Music, Pause, Play, Volume2, X } from "lucide-react";
+
+import React, { useEffect, useRef, useState } from "react";
 
 declare global {
   interface Window {
@@ -30,9 +31,11 @@ interface MusicState {
   error: string | null;
 }
 
-const YouTubeMusicPopover: React.FC<YouTubeMusicPopoverProps> = ({ className = '' }) => {
+const YouTubeMusicPopover: React.FC<YouTubeMusicPopoverProps> = ({
+  className = "",
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [youtubeUrl, setYoutubeUrl] = useState("");
   const [musicState, setMusicState] = useState<MusicState>({
     isPlaying: false,
     currentVideo: null,
@@ -46,15 +49,16 @@ const YouTubeMusicPopover: React.FC<YouTubeMusicPopoverProps> = ({ className = '
   const containerRef = useRef<HTMLDivElement>(null);
 
   const extractVideoId = (url: string): string | null => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
     return match && match[2].length === 11 ? match[2] : null;
   };
 
   useEffect(() => {
     if (!window.YT) {
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
       document.body.appendChild(tag);
     }
   }, []);
@@ -68,23 +72,29 @@ const YouTubeMusicPopover: React.FC<YouTubeMusicPopoverProps> = ({ className = '
     }
 
     playerRef.current = new window.YT.Player(playerRefContainer.current, {
-      height: '0',
-      width: '0',
+      height: "0",
+      width: "0",
       videoId,
-      playerVars: { autoplay: 0, controls: 0, modestbranding: 1, playsinline: 1 },
+      playerVars: {
+        autoplay: 0,
+        controls: 0,
+        modestbranding: 1,
+        playsinline: 1,
+      },
       events: {
-        onReady: () => setMusicState(prev => ({ ...prev, isLoading: false })),
+        onReady: () => setMusicState((prev) => ({ ...prev, isLoading: false })),
         onStateChange: (event: any) => {
-          setMusicState(prev => ({
+          setMusicState((prev) => ({
             ...prev,
             isPlaying: event.data === window.YT.PlayerState.PLAYING,
           }));
         },
-        onError: () => setMusicState(prev => ({
-          ...prev,
-          error: 'Failed to load video',
-          isLoading: false,
-        })),
+        onError: () =>
+          setMusicState((prev) => ({
+            ...prev,
+            error: "Failed to load video",
+            isLoading: false,
+          })),
       },
     });
   };
@@ -93,11 +103,11 @@ const YouTubeMusicPopover: React.FC<YouTubeMusicPopoverProps> = ({ className = '
     e.preventDefault();
     const videoId = extractVideoId(youtubeUrl);
     if (!videoId) {
-      setMusicState(prev => ({ ...prev, error: 'Invalid YouTube URL' }));
+      setMusicState((prev) => ({ ...prev, error: "Invalid YouTube URL" }));
       return;
     }
 
-    setMusicState(prev => ({
+    setMusicState((prev) => ({
       ...prev,
       isLoading: true,
       error: null,
@@ -106,13 +116,13 @@ const YouTubeMusicPopover: React.FC<YouTubeMusicPopoverProps> = ({ className = '
 
     try {
       const response = await fetch(
-        `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`
+        `https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`,
       );
       const data = await response.json();
 
-      setMusicState(prev => ({
+      setMusicState((prev) => ({
         ...prev,
-        videoTitle: data.title || 'Unknown Title',
+        videoTitle: data.title || "Unknown Title",
         isLoading: false,
       }));
 
@@ -122,9 +132,9 @@ const YouTubeMusicPopover: React.FC<YouTubeMusicPopoverProps> = ({ className = '
         window.onYouTubeIframeAPIReady = () => initializePlayer(videoId);
       }
     } catch {
-      setMusicState(prev => ({
+      setMusicState((prev) => ({
         ...prev,
-        error: 'Failed to load video information',
+        error: "Failed to load video information",
         isLoading: false,
       }));
     }
@@ -132,7 +142,9 @@ const YouTubeMusicPopover: React.FC<YouTubeMusicPopoverProps> = ({ className = '
 
   const togglePlayback = () => {
     if (!playerRef.current) return;
-    musicState.isPlaying ? playerRef.current.pauseVideo() : playerRef.current.playVideo();
+    musicState.isPlaying
+      ? playerRef.current.pauseVideo()
+      : playerRef.current.playVideo();
   };
 
   const stopMusic = () => {
@@ -144,18 +156,22 @@ const YouTubeMusicPopover: React.FC<YouTubeMusicPopoverProps> = ({ className = '
       isLoading: false,
       error: null,
     });
-    setYoutubeUrl('');
+    setYoutubeUrl("");
   };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [isOpen]);
 
@@ -166,9 +182,15 @@ const YouTubeMusicPopover: React.FC<YouTubeMusicPopoverProps> = ({ className = '
         onClick={() => setIsOpen(!isOpen)}
         className="relative hover:scale-105 transition-transform duration-200"
       >
-        <Music className={`h-4 w-4 ${musicState.isPlaying ? 'text-blue-500 animate-pulse' : ''}`} />
+        <Music
+          className={`h-4 w-4 ${musicState.isPlaying ? "text-blue-500 animate-pulse" : ""}`}
+        />
         <span className="ml-1">Music</span>
-        {musicState.isPlaying && <Badge className="ml-2 bg-blue-100 text-blue-600 animate-pulse">Playing</Badge>}
+        {musicState.isPlaying && (
+          <Badge className="ml-2 bg-blue-100 text-blue-600 animate-pulse">
+            Playing
+          </Badge>
+        )}
       </Button>
 
       {isOpen && (
@@ -178,7 +200,11 @@ const YouTubeMusicPopover: React.FC<YouTubeMusicPopoverProps> = ({ className = '
               <Volume2 className="h-5 w-5 text-blue-500" />
               <h2 className="font-semibold text-gray-900">Music Player</h2>
             </div>
-            <Button variant="light" onClick={() => setIsOpen(false)} className="p-1 hover:bg-gray-100 rounded-md">
+            <Button
+              variant="light"
+              onClick={() => setIsOpen(false)}
+              className="p-1 hover:bg-gray-100 rounded-md"
+            >
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -187,14 +213,31 @@ const YouTubeMusicPopover: React.FC<YouTubeMusicPopoverProps> = ({ className = '
             <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
               <div className="flex justify-between items-center">
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-blue-900 truncate">{musicState.videoTitle || 'Loading...'}</div>
-                  <div className="text-xs text-blue-600">{musicState.isPlaying ? 'Now Playing' : 'Paused'}</div>
+                  <div className="text-sm font-medium text-blue-900 truncate">
+                    {musicState.videoTitle || "Loading..."}
+                  </div>
+                  <div className="text-xs text-blue-600">
+                    {musicState.isPlaying ? "Now Playing" : "Paused"}
+                  </div>
                 </div>
                 <div className="space-x-1 ml-2">
-                  <Button variant="light" onClick={togglePlayback} disabled={musicState.isLoading} className="p-2 hover:bg-blue-100 rounded-md">
-                    {musicState.isPlaying ? <Pause className="h-4 w-4 text-blue-600" /> : <Play className="h-4 w-4 text-blue-600" />}
+                  <Button
+                    variant="light"
+                    onClick={togglePlayback}
+                    disabled={musicState.isLoading}
+                    className="p-2 hover:bg-blue-100 rounded-md"
+                  >
+                    {musicState.isPlaying ? (
+                      <Pause className="h-4 w-4 text-blue-600" />
+                    ) : (
+                      <Play className="h-4 w-4 text-blue-600" />
+                    )}
                   </Button>
-                  <Button variant="light" onClick={stopMusic} className="p-2 hover:bg-red-100 rounded-md">
+                  <Button
+                    variant="light"
+                    onClick={stopMusic}
+                    className="p-2 hover:bg-red-100 rounded-md"
+                  >
                     <X className="h-4 w-4 text-red-600" />
                   </Button>
                 </div>
@@ -215,11 +258,13 @@ const YouTubeMusicPopover: React.FC<YouTubeMusicPopoverProps> = ({ className = '
               className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105"
               disabled={!youtubeUrl.trim() || musicState.isLoading}
             >
-              {musicState.isLoading ? 'Loading...' : 'Play Music'}
+              {musicState.isLoading ? "Loading..." : "Play Music"}
             </Button>
           </form>
 
-          {musicState.error && <p className="text-xs text-red-500 mt-2">{musicState.error}</p>}
+          {musicState.error && (
+            <p className="text-xs text-red-500 mt-2">{musicState.error}</p>
+          )}
         </Card>
       )}
 

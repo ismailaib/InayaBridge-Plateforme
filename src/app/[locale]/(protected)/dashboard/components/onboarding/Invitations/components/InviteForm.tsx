@@ -1,10 +1,16 @@
-import { sendInvitation, SendInvitation } from "@/api/invitations";
+import { SendInvitation, sendInvitation } from "@/api/invitations";
 import { Button } from "@/components/Button";
-import { DialogDescription, DialogHeader, DialogTitle } from "@/components/Dialog";
+import {
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/Dialog";
 import { Input } from "@/components/Input";
 import useTranslations from "@/lib/i18n/useTranslations";
 import { UserRoundPlus } from "lucide-react";
+
 import React, { useCallback, useState } from "react";
+
 import { TOAST_MESSAGE_KEYS } from "../../../../hooks/constants";
 import { showToast, validateEmail } from "../../../../hooks/utils";
 
@@ -26,7 +32,11 @@ const loadStoredUser = () => {
   }
 };
 
-export const InviteForm: React.FC<InviteFormProps> = ({ tenantId, onSuccess, onInviteSent }) => {
+export const InviteForm: React.FC<InviteFormProps> = ({
+  tenantId,
+  onSuccess,
+  onInviteSent,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [storedUser] = useState(() => loadStoredUser());
@@ -53,7 +63,11 @@ export const InviteForm: React.FC<InviteFormProps> = ({ tenantId, onSuccess, onI
       }
 
       if (!tenantId) {
-        showToast("error", t("toasts.errorTitle"), t(TOAST_MESSAGE_KEYS.TENANT_ERROR));
+        showToast(
+          "error",
+          t("toasts.errorTitle"),
+          t(TOAST_MESSAGE_KEYS.TENANT_ERROR),
+        );
         return;
       }
 
@@ -65,23 +79,29 @@ export const InviteForm: React.FC<InviteFormProps> = ({ tenantId, onSuccess, onI
 
       setIsLoading(true);
       try {
-        await sendInvitation(tenantId, { email: email.trim() } as SendInvitation);
+        await sendInvitation(tenantId, {
+          email: email.trim(),
+        } as SendInvitation);
         showToast(
           "success",
           t("toasts.successTitle"),
-          t(TOAST_MESSAGE_KEYS.INVITATION_SUCCESS, { email: email.trim() })
+          t(TOAST_MESSAGE_KEYS.INVITATION_SUCCESS, { email: email.trim() }),
         );
         setEmail("");
         onSuccess();
         onInviteSent();
       } catch (error) {
         console.error("Error sending invitation:", error);
-        showToast("error", t("toasts.errorTitle"), t(TOAST_MESSAGE_KEYS.INVITATION_ERROR));
+        showToast(
+          "error",
+          t("toasts.errorTitle"),
+          t(TOAST_MESSAGE_KEYS.INVITATION_ERROR),
+        );
       } finally {
         setIsLoading(false);
       }
     },
-    [storedUser, tenantId, email, onSuccess, onInviteSent, t]
+    [storedUser, tenantId, email, onSuccess, onInviteSent, t],
   );
 
   if (!hasUser) {
@@ -97,7 +117,9 @@ export const InviteForm: React.FC<InviteFormProps> = ({ tenantId, onSuccess, onI
           </DialogDescription>
         </DialogHeader>
         <div className="mt-6 flex w-full items-center space-x-2">
-          <Input className="flex-1" placeholder={t("form.loadingPlaceholder")}
+          <Input
+            className="flex-1"
+            placeholder={t("form.loadingPlaceholder")}
             type="email"
             disabled
           />
@@ -131,7 +153,11 @@ export const InviteForm: React.FC<InviteFormProps> = ({ tenantId, onSuccess, onI
           disabled={isLoading || !tenantId}
           required
         />
-        <Button onClick={handleSubmit} disabled={isLoading} className="shrink-0">
+        <Button
+          onClick={handleSubmit}
+          disabled={isLoading}
+          className="shrink-0"
+        >
           {isLoading ? t("form.submitting") : t("form.submit")}
         </Button>
       </div>

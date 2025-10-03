@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import { Card } from "@/components/Card"
-import { Divider } from "@/components/Divider"
-import { ProgressCircle } from "@/components/ProgressCircle"
-import { cx } from "@/lib/utils"
-import { ClipboardPlus, FileText } from "lucide-react"
-import { useTranslations } from "@/lib/i18n/useTranslations"
+import { Card } from "@/components/Card";
+import { Divider } from "@/components/Divider";
+import { ProgressCircle } from "@/components/ProgressCircle";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
+import { ClipboardPlus, FileText } from "lucide-react";
 
 interface Patient {
-  patient: string
-  motif: string
-  lieu: string
-  remarque: string
-  progressionActuelle: number
-  progressionTotale: number
-  misAJour: string
+  patient: string;
+  motif: string;
+  lieu: string;
+  remarque: string;
+  progressionActuelle: number;
+  progressionTotale: number;
+  misAJour: string;
 }
 
 const statusColor = {
@@ -24,16 +24,16 @@ const statusColor = {
     "bg-orange-50 text-orange-700 ring-orange-600/20 dark:bg-orange-400/10 dark:text-orange-400 dark:ring-orange-400/20",
   "Rendez-vous visioconférence":
     "bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/20",
-}
+};
 
 export const PatientCard = ({
   dossier,
   status,
 }: {
-  dossier: Patient
-  status: keyof typeof statusColor
+  dossier: Patient;
+  status: keyof typeof statusColor;
 }) => {
-  const t = useTranslations("waitingRoom.card")
+  const t = useTranslations("waitingRoom.card");
 
   return (
     <Card asChild className="dark:border-gray-800">
@@ -91,5 +91,5 @@ export const PatientCard = ({
         </div>
       </div>
     </Card>
-  )
-}
+  );
+};

@@ -1,50 +1,52 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { Button } from "@/components/Button";
+import { Input } from "@/components/Input";
 import {
   RadioCardGroup,
   RadioCardIndicator,
   RadioCardItem,
-} from "@/components/RadioCard"
-import { Input } from "@/components/Input"
-import { Button } from "@/components/Button"
-import Link from "next/link"
-import useTranslations from "@/lib/i18n/useTranslations"
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
+} from "@/components/RadioCard";
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
+import useTranslations from "@/lib/i18n/useTranslations";
+
+import { useState } from "react";
+
+import Link from "next/link";
 
 type SpecialityOption = {
-  id: string
-  label: string
-}
+  id: string;
+  label: string;
+};
 
 export default function StepDoctorSpecialisation({
   selected,
   onContinue,
   onSuccess,
 }: {
-  selected?: string
-  onContinue: (spec: string) => void
-  onSuccess?: () => void
+  selected?: string;
+  onContinue: (spec: string) => void;
+  onSuccess?: () => void;
 }) {
-  const t = useTranslations("signup.doctor.specialisation")
-  const { locale } = useTranslationsContext()
-  const options = t.raw<SpecialityOption[]>("options") ?? []
-  const otherOption = options.find((option) => option.id === "other")
+  const t = useTranslations("signup.doctor.specialisation");
+  const { locale } = useTranslationsContext();
+  const options = t.raw<SpecialityOption[]>("options") ?? [];
+  const otherOption = options.find((option) => option.id === "other");
 
-  const defaultChoice = selected ?? (options[0]?.label ?? "")
-  const [choice, setChoice] = useState(defaultChoice)
-  const [other, setOther] = useState("")
+  const defaultChoice = selected ?? options[0]?.label ?? "";
+  const [choice, setChoice] = useState(defaultChoice);
+  const [other, setOther] = useState("");
 
-  const isOtherSelected = otherOption && choice === otherOption.label
-  const current = isOtherSelected ? other : choice
-  const valid = current.trim().length > 0
+  const isOtherSelected = otherOption && choice === otherOption.label;
+  const current = isOtherSelected ? other : choice;
+  const valid = current.trim().length > 0;
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!valid) return
-    onContinue(current.trim())
-    onSuccess?.()
-  }
+    e.preventDefault();
+    if (!valid) return;
+    onContinue(current.trim());
+    onSuccess?.();
+  };
 
   return (
     <div className="flex h-full flex-col justify-between">
@@ -68,10 +70,7 @@ export default function StepDoctorSpecialisation({
 
           {isOtherSelected && (
             <div className="mt-6">
-              <label
-                htmlFor="other"
-                className="mb-1 block text-sm font-medium"
-              >
+              <label htmlFor="other" className="mb-1 block text-sm font-medium">
                 {t("otherFieldLabel")}
               </label>
               <Input
@@ -102,5 +101,5 @@ export default function StepDoctorSpecialisation({
         </div>
       </form>
     </div>
-  )
+  );
 }

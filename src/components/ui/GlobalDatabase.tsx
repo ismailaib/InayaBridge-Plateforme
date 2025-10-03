@@ -1,12 +1,14 @@
-"use client"
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import { FunctionComponent } from "react"
+"use client";
+
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+
+import { FunctionComponent } from "react";
 
 export const GlobalDatabase: FunctionComponent = () => {
-  const t = useTranslations("globaldatabase")
-  const { locale } = useTranslationsContext()
-  const isRTL = locale === "ar"
+  const t = useTranslations("globaldatabase");
+  const { locale } = useTranslationsContext();
+  const isRTL = locale === "ar";
 
   const features = [
     {
@@ -21,7 +23,7 @@ export const GlobalDatabase: FunctionComponent = () => {
       name: t("features.step3.title"),
       description: t("features.step3.description"),
     },
-  ]
+  ];
 
   return (
     <div className="px-3 hidden md:block">
@@ -62,5 +64,5 @@ export const GlobalDatabase: FunctionComponent = () => {
         </div>
       </section>
     </div>
-  )
-}
+  );
+};

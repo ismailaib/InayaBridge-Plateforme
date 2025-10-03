@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useToast } from "@/lib/useToast"
+import { useToast } from "@/lib/useToast";
 
-import { Toast, ToastProvider, ToastViewport } from "./Toast"
+import { Toast, ToastProvider, ToastViewport } from "./Toast";
 
 const Toaster = () => {
-  const { toasts } = useToast()
+  const { toasts } = useToast();
 
   return (
     <ToastProvider swipeDirection="right">
@@ -16,7 +16,7 @@ const Toaster = () => {
       </div>
       <ToastViewport />
     </ToastProvider>
-  )
-}
+  );
+};
 
-export { Toaster }
+export { Toaster };

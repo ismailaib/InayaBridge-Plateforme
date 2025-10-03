@@ -1,24 +1,21 @@
-"use client"
+"use client";
 
+import { BarChart } from "@/components/BarChart";
+import { Card } from "@/components/Card";
+import { CategoryBar } from "@/components/CategoryBar";
+import { Divider } from "@/components/Divider";
+import { Tooltip } from "@/components/Tooltip";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
 import {
   RiCheckDoubleFill,
   RiFileHistoryFill,
   RiTestTubeFill,
-} from "@remixicon/react"
-
-import { BarChart } from "@/components/BarChart"
-import { Card } from "@/components/Card"
-import { CategoryBar } from "@/components/CategoryBar"
-import { Divider } from "@/components/Divider"
-import { Tooltip } from "@/components/Tooltip"
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import { cx } from "@/lib/utils"
-import { Info } from "lucide-react"
+} from "@remixicon/react";
+import { Info } from "lucide-react";
 
 export default function DoctorAnalyticsSection() {
-  const t = useTranslations("dashboard.doctorAnalytics")
-  const { locale } = useTranslationsContext()
+  const t = useTranslations("dashboard.doctorAnalytics");
   const data = [
     {
       name: t("items.followUp"),
@@ -48,7 +45,7 @@ export default function DoctorAnalyticsSection() {
       iconColor: "text-blue-500 dark:text-blue-500",
       tooltip: t("tooltips.validated"),
     },
-  ]
+  ];
 
   return (
     <>
@@ -66,15 +63,25 @@ export default function DoctorAnalyticsSection() {
 
         <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-2">
           <div>
-            <CategoryBar values={[12, 48]} colors={["cyan", "blue"]} showLabels={false} />
+            <CategoryBar
+              values={[12, 48]}
+              colors={["cyan", "blue"]}
+              showLabels={false}
+            />
             <p className="mt-2 text-sm text-gray-900 dark:text-gray-50">
-              <span className="font-semibold">12</span> {t("overview.followUpPlanned")}
+              <span className="font-semibold">12</span>{" "}
+              {t("overview.followUpPlanned")}
             </p>
           </div>
           <div>
-            <CategoryBar values={[9, 31]} colors={["cyan", "blue"]} showLabels={false} />
+            <CategoryBar
+              values={[9, 31]}
+              colors={["cyan", "blue"]}
+              showLabels={false}
+            />
             <p className="mt-2 text-sm text-gray-900 dark:text-gray-50">
-              <span className="font-semibold">9</span> {t("overview.pendingDiagnostics")}
+              <span className="font-semibold">9</span>{" "}
+              {t("overview.pendingDiagnostics")}
             </p>
           </div>
         </div>
@@ -114,7 +121,12 @@ export default function DoctorAnalyticsSection() {
             </Tooltip>
           </div>
           <p className="mt-4 text-sm/6 text-gray-500 dark:text-gray-500">
-            {t("summary.text", { total: 60, pending: 9, validated: 31, followups: 12 })}
+            {t("summary.text", {
+              total: 60,
+              pending: 9,
+              validated: 31,
+              followups: 12,
+            })}
           </p>
         </div>
 
@@ -148,5 +160,5 @@ export default function DoctorAnalyticsSection() {
         </div>
       </div>
     </>
-  )
+  );
 }

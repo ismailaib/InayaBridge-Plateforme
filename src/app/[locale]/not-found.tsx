@@ -1,16 +1,18 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/Button"
-import { ArrowAnimated } from "@/components/ui/ArrowAnimated"
-import Link from "next/link"
-import { useParams } from "next/navigation"
-import { makeLinks, siteConfig } from "../siteConfig"
-import { DatabaseLogo } from "../../../public/DatabaseLogo"
+import { Button } from "@/components/Button";
+import { ArrowAnimated } from "@/components/ui/ArrowAnimated";
+
+import Link from "next/link";
+import { useParams } from "next/navigation";
+
+import { DatabaseLogo } from "../../../public/DatabaseLogo";
+import { makeLinks, siteConfig } from "../siteConfig";
 
 export default function NotFound() {
-  const { locale } = useParams() as { locale?: "en" | "fr" | "ar" }
+  const { locale } = useParams() as { locale?: "en" | "fr" | "ar" };
 
-  const links = makeLinks(locale)
+  const links = makeLinks(locale);
 
   const messages = {
     en: {
@@ -28,9 +30,9 @@ export default function NotFound() {
       description: "عذراً، لم نتمكن من العثور على الصفحة التي تبحث عنها.",
       goHome: "العودة إلى الصفحة الرئيسية",
     },
-  }
+  };
 
-  const t = messages[locale ?? "en"]
+  const t = messages[locale ?? "en"];
 
   return (
     <div className="flex h-screen flex-col items-center justify-center text-center">
@@ -56,5 +58,5 @@ export default function NotFound() {
         </Link>
       </Button>
     </div>
-  )
+  );
 }

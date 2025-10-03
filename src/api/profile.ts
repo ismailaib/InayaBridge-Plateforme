@@ -11,10 +11,10 @@ export interface UserAsDoctor {
 }
 
 export interface RegisterDoctor {
-  tenantId?: string,
-  userId: string,
-  specialty?: string,
-  licenseNumber?: string
+  tenantId?: string;
+  userId: string;
+  specialty?: string;
+  licenseNumber?: string;
 }
 
 export interface UserAsProfile {
@@ -31,20 +31,22 @@ export interface UserAsProfile {
 
 /* ========== API helpers ========== */
 
-export const getUserProfile = (userId : string) =>
-  api.get(`/users/${userId}/full-info`) ;
+export const getUserProfile = (userId: string) =>
+  api.get(`/users/${userId}/full-info`);
 
 export const registerDoctor = (payload: UserAsDoctor) =>
-  api.post("/users", { ...payload, role: "DOCTOR" }) ; 
+  api.post("/users", { ...payload, role: "DOCTOR" });
 
-export const getDoctorProfile = (userId : string) =>
-  api.get(`/doctor-profiles/by-user/${userId}`) ; 
+export const getDoctorProfile = (userId: string) =>
+  api.get(`/doctor-profiles/by-user/${userId}`);
 
 export const registerDoctorProfile = (payload: RegisterDoctor) =>
-  api.post("/doctor-profiles", { ...payload }) ; 
+  api.post("/doctor-profiles", { ...payload });
 
-export const updateDoctorProfile = (payload: RegisterDoctor ,doctorid : string) =>
-  api.put(`/doctor-profiles/${doctorid}`, { ...payload }) ; 
+export const updateDoctorProfile = (
+  payload: RegisterDoctor,
+  doctorid: string,
+) => api.put(`/doctor-profiles/${doctorid}`, { ...payload });
 
 export const registerPatient = (payload: UserAsProfile) =>
   api.post("/users", { ...payload, role: "PATIENT" });

@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
 import useTranslations from "@/lib/i18n/useTranslations";
+
 import {
   Accordion,
   AccordionContent,
@@ -9,10 +10,10 @@ import {
 } from "../Accordion";
 
 export function Faqs() {
-  const t = useTranslations("faqs")
+  const t = useTranslations("faqs");
 
   // get localized items
-  const items = t.raw<{ q: string; a: string }[]>("items") || []
+  const items = t.raw<{ q: string; a: string }[]>("items") || [];
 
   return (
     <section className="mt-20 sm:mt-36" aria-labelledby="faq-title">
@@ -53,5 +54,5 @@ export function Faqs() {
         </div>
       </div>
     </section>
-  )
+  );
 }

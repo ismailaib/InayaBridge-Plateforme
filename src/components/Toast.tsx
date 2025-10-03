@@ -1,19 +1,18 @@
 // Tremor Toast [v1.0.0]
-
-import * as ToastPrimitives from "@radix-ui/react-toast"
+import { cx } from "@/lib/utils";
+import * as ToastPrimitives from "@radix-ui/react-toast";
 import {
   RiCheckboxCircleFill,
   RiCloseCircleFill,
   RiErrorWarningFill,
   RiInformationFill,
   RiLoader2Fill,
-} from "@remixicon/react"
-import React from "react"
+} from "@remixicon/react";
 
-import { cx } from "@/lib/utils"
+import React from "react";
 
-const ToastProvider = ToastPrimitives.Provider
-ToastProvider.displayName = "ToastProvider"
+const ToastProvider = ToastPrimitives.Provider;
+ToastProvider.displayName = "ToastProvider";
 
 const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,
@@ -27,23 +26,23 @@ const ToastViewport = React.forwardRef<
     )}
     {...props}
   />
-))
+));
 
-ToastViewport.displayName = "ToastViewport"
+ToastViewport.displayName = "ToastViewport";
 
 interface ActionProps {
-  label: string
-  altText: string
-  onClick: () => void | Promise<void>
+  label: string;
+  altText: string;
+  onClick: () => void | Promise<void>;
 }
 
 interface ToastProps
   extends React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> {
-  variant?: "info" | "success" | "warning" | "error" | "loading"
-  title?: string
-  description?: string
-  action?: ActionProps
-  disableDismiss?: boolean
+  variant?: "info" | "success" | "warning" | "error" | "loading";
+  title?: string;
+  description?: string;
+  action?: ActionProps;
+  disableDismiss?: boolean;
 }
 
 const Toast = React.forwardRef<
@@ -62,7 +61,7 @@ const Toast = React.forwardRef<
     }: ToastProps,
     forwardedRef,
   ) => {
-    let Icon: React.ReactNode
+    let Icon: React.ReactNode;
 
     switch (variant) {
       case "success":
@@ -71,40 +70,40 @@ const Toast = React.forwardRef<
             className="size-5 shrink-0 text-blue-600 dark:text-blue-500"
             aria-hidden="true"
           />
-        )
-        break
+        );
+        break;
       case "warning":
         Icon = (
           <RiErrorWarningFill
             className="size-5 shrink-0 text-amber-500 dark:text-amber-500"
             aria-hidden="true"
           />
-        )
-        break
+        );
+        break;
       case "error":
         Icon = (
           <RiCloseCircleFill
             className="size-5 shrink-0 text-red-600 dark:text-red-500"
             aria-hidden="true"
           />
-        )
-        break
+        );
+        break;
       case "loading":
         Icon = (
           <RiLoader2Fill
             className="size-5 shrink-0 animate-spin text-gray-600 dark:text-gray-500"
             aria-hidden="true"
           />
-        )
-        break
+        );
+        break;
       default:
         Icon = (
           <RiInformationFill
             className="size-5 shrink-0 text-blue-500 dark:text-blue-500"
             aria-hidden="true"
           />
-        )
-        break
+        );
+        break;
     }
 
     return (
@@ -170,8 +169,8 @@ const Toast = React.forwardRef<
                   },
                 )}
                 onClick={(event) => {
-                  event.preventDefault()
-                  action.onClick()
+                  event.preventDefault();
+                  action.onClick();
                 }}
                 type="button"
               >
@@ -200,17 +199,17 @@ const Toast = React.forwardRef<
           )}
         </div>
       </ToastPrimitives.Root>
-    )
+    );
   },
-)
-Toast.displayName = "Toast"
+);
+Toast.displayName = "Toast";
 
-type ToastActionElement = ActionProps
+type ToastActionElement = ActionProps;
 
 export {
   Toast,
   ToastProvider,
   ToastViewport,
   type ToastActionElement,
-  type ToastProps
-}
+  type ToastProps,
+};

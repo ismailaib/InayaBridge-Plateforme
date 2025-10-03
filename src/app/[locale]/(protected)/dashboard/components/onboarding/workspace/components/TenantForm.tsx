@@ -1,23 +1,25 @@
-"use client"
+"use client";
 
-import React, { useState } from "react"
-import { Button } from "@/components/Button"
+import { getUserProfile } from "@/api/profile";
+import { Button } from "@/components/Button";
 import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/Dialog"
-import { TenantFormFields } from "./TenantFormFields"
-import { TenantPrivacySettings } from "./TenantPrivacySettings"
-import { StatusItem, TenantFormData } from "../types/tenant"
-import { getUserProfile } from "@/api/profile"
-import { useUserStore } from "@/store/useAuthStore"
-import useTranslations from "@/lib/i18n/useTranslations"
+} from "@/components/Dialog";
+import useTranslations from "@/lib/i18n/useTranslations";
+import { useUserStore } from "@/store/useAuthStore";
+
+import React, { useState } from "react";
+
+import { StatusItem, TenantFormData } from "../types/tenant";
+import { TenantFormFields } from "./TenantFormFields";
+import { TenantPrivacySettings } from "./TenantPrivacySettings";
 
 interface TenantFormProps {
-  status: StatusItem[]
-  isLoading: boolean
-  onSubmit: (formData: TenantFormData) => Promise<void>
+  status: StatusItem[];
+  isLoading: boolean;
+  onSubmit: (formData: TenantFormData) => Promise<void>;
 }
 
 const initialFormData: TenantFormData = {
@@ -25,21 +27,21 @@ const initialFormData: TenantFormData = {
   description: "",
   tenantTypeId: "",
   isPrivate: false,
-}
+};
 
 export const TenantForm: React.FC<TenantFormProps> = ({
   status,
   isLoading,
   onSubmit,
 }) => {
-  const t = useTranslations("dashboard.tenantForm")
+  const t = useTranslations("dashboard.tenantForm");
 
   const [formData, setFormData] = useState<TenantFormData>(() => ({
     ...initialFormData,
     tenantTypeId: status.length > 0 ? status[0].id : "",
-  }))
+  }));
 
-  const setUser = useUserStore((state) => state.setUser)
+  const setUser = useUserStore((state) => state.setUser);
 
   const handleFieldChange = (
     field: keyof TenantFormData,
@@ -48,37 +50,37 @@ export const TenantForm: React.FC<TenantFormProps> = ({
     setFormData((prev: any) => ({
       ...prev,
       [field]: value,
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!formData.name.trim() || !formData.tenantTypeId) {
-      return
+      return;
     }
 
-    await onSubmit(formData)
+    await onSubmit(formData);
 
-    const storedUser = localStorage.getItem("user")
-    const parsed = JSON.parse(storedUser ?? "")
+    const storedUser = localStorage.getItem("user");
+    const parsed = JSON.parse(storedUser ?? "");
 
     if (!storedUser) {
-      console.error("No userId found in local storage")
-      return
+      console.error("No userId found in local storage");
+      return;
     }
 
-    const { data: fullUserInfo } = await getUserProfile(parsed.id)
-    setUser(fullUserInfo)
-    localStorage.setItem("user", JSON.stringify(fullUserInfo))
+    const { data: fullUserInfo } = await getUserProfile(parsed.id);
+    setUser(fullUserInfo);
+    localStorage.setItem("user", JSON.stringify(fullUserInfo));
 
     setFormData({
       ...initialFormData,
       tenantTypeId: status.length > 0 ? status[0].id : "",
-    })
-  }
+    });
+  };
 
-  const isFormValid = formData.name.trim() && formData.tenantTypeId
+  const isFormValid = formData.name.trim() && formData.tenantTypeId;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 ">
@@ -112,5 +114,5 @@ export const TenantForm: React.FC<TenantFormProps> = ({
         onChange={(checked) => handleFieldChange("isPrivate", checked)}
       />
     </form>
-  )
-}
+  );
+};

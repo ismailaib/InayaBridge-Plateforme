@@ -1,14 +1,17 @@
-"use client"
-import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import Balancer from "react-wrap-balancer"
-import { Button } from "../Button"
-import { Input } from "../Input"
+"use client";
+
+import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+
+import Balancer from "react-wrap-balancer";
+
+import { Button } from "../Button";
+import { Input } from "../Input";
 
 export default function Cta() {
-  const t = useTranslations("cta")
-  const { locale } = useTranslationsContext()
-  const isRTL = locale === "ar"
+  const t = useTranslations("cta");
+  const { locale } = useTranslationsContext();
+  const isRTL = locale === "ar";
 
   return (
     <section
@@ -84,5 +87,5 @@ export default function Cta() {
         </div>
       </div>
     </section>
-  )
+  );
 }

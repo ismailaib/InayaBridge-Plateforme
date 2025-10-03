@@ -1,15 +1,19 @@
 import { readFile } from "fs/promises";
 import path from "path";
+
 import type { Locale } from "./i18n";
 
 export type Messages = Record<string, unknown>;
 
-export async function getMessages(locale: Locale, namespace: string): Promise<Messages> {
+export async function getMessages(
+  locale: Locale,
+  namespace: string,
+): Promise<Messages> {
   const filePath = path.join(
     process.cwd(),
     "src/app/messages",
     locale,
-    `${namespace}.json`
+    `${namespace}.json`,
   );
 
   try {

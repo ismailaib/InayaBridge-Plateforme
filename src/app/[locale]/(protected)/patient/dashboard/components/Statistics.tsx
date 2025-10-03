@@ -1,19 +1,17 @@
-"use client"
+"use client";
 
+import { BarChart } from "@/components/BarChart";
+import { Card } from "@/components/Card";
+import { CategoryBar } from "@/components/CategoryBar";
+import { Divider } from "@/components/Divider";
+import { Tooltip } from "@/components/Tooltip";
+import { cx } from "@/lib/utils";
 import {
   RiCheckDoubleFill,
   RiFileHistoryFill,
   RiTestTubeFill,
-} from "@remixicon/react"
-
-import { cx } from "@/lib/utils"
-
-import { BarChart } from "@/components/BarChart"
-import { Card } from "@/components/Card"
-import { CategoryBar } from "@/components/CategoryBar"
-import { Divider } from "@/components/Divider"
-import { Tooltip } from "@/components/Tooltip"
-import { Info } from "lucide-react"
+} from "@remixicon/react";
+import { Info } from "lucide-react";
 
 const data = [
   {
@@ -21,7 +19,8 @@ const data = [
     value: 12,
     icon: RiFileHistoryFill,
     iconColor: "text-indigo-500 dark:text-indigo-500",
-    tooltip: "Nombre de consultations prévues pour assurer le suivi médical des patients existants.",
+    tooltip:
+      "Nombre de consultations prévues pour assurer le suivi médical des patients existants.",
   },
   {
     name: "Consultations clôturées",
@@ -35,7 +34,8 @@ const data = [
     value: 9,
     icon: RiTestTubeFill,
     iconColor: "text-indigo-500 dark:text-indigo-500",
-    tooltip: "Cas médicaux pour lesquels un diagnostic est encore en cours d'évaluation.",
+    tooltip:
+      "Cas médicaux pour lesquels un diagnostic est encore en cours d'évaluation.",
   },
   {
     name: "Diagnostics validés",
@@ -44,7 +44,7 @@ const data = [
     iconColor: "text-blue-500 dark:text-blue-500",
     tooltip: "Cas médicaux ayant reçu un diagnostic confirmé.",
   },
-]
+];
 
 export default function DoctorAnalyticsSection() {
   return (
@@ -54,7 +54,10 @@ export default function DoctorAnalyticsSection() {
           <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">
             Vue d&apos;ensemble
           </h3>
-          <Tooltip content="Statistiques globales des activités." showArrow={false}>
+          <Tooltip
+            content="Statistiques globales des activités."
+            showArrow={false}
+          >
             <span className="text-sm text-gray-500 dark:text-gray-400">
               <Info width={18} />
             </span>
@@ -63,15 +66,25 @@ export default function DoctorAnalyticsSection() {
 
         <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-2">
           <div>
-            <CategoryBar values={[12, 48]} colors={["cyan", "blue"]} showLabels={false} />
+            <CategoryBar
+              values={[12, 48]}
+              colors={["cyan", "blue"]}
+              showLabels={false}
+            />
             <p className="mt-2 text-sm text-gray-900 dark:text-gray-50">
-              <span className="font-semibold">12</span> consultations de suivi programmées
+              <span className="font-semibold">12</span> consultations de suivi
+              programmées
             </p>
           </div>
           <div>
-            <CategoryBar values={[9, 31]} colors={["cyan", "blue"]} showLabels={false} />
+            <CategoryBar
+              values={[9, 31]}
+              colors={["cyan", "blue"]}
+              showLabels={false}
+            />
             <p className="mt-2 text-sm text-gray-900 dark:text-gray-50">
-              <span className="font-semibold">9</span> diagnostics en attente d’évaluation
+              <span className="font-semibold">9</span> diagnostics en attente
+              d’évaluation
             </p>
           </div>
         </div>
@@ -165,5 +178,5 @@ export default function DoctorAnalyticsSection() {
         </div>
       </div>
     </>
-  )
+  );
 }

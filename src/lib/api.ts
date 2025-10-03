@@ -11,10 +11,10 @@ const api = axios.create({
 
 api.interceptors.response.use(
   (res: any) => res,
-  (err: { response: { data: any; }; message: any; }) => {
+  (err: { response: { data: any }; message: any }) => {
     console.error("API error:", err.response?.data || err.message);
     return Promise.reject(err);
-  }
+  },
 );
 
 export default api;

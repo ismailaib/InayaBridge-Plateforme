@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/Button"
-import { DatePicker } from "@/components/DatePicker"
+import { Button } from "@/components/Button";
+import { DatePicker } from "@/components/DatePicker";
 import {
   Dialog,
   DialogClose,
@@ -11,40 +11,42 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/Dialog"
-import { Input } from "@/components/Input"
-import { Label } from "@/components/Label"
+} from "@/components/Dialog";
+import { Input } from "@/components/Input";
+import { Label } from "@/components/Label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/Select"
-import { RiCloseLine } from "@remixicon/react"
-import { format } from "date-fns"
-import { UserRoundPlus } from "lucide-react"
-import React, { useState } from "react"
-import { createPatient } from "../../api/patients"
+} from "@/components/Select";
+import { RiCloseLine } from "@remixicon/react";
+import { format } from "date-fns";
+import { UserRoundPlus } from "lucide-react";
+
+import React, { useState } from "react";
+
+import { createPatient } from "../../api/patients";
 
 interface AddPatientModalProps {
-  onSuccess?: () => void
+  onSuccess?: () => void;
 }
 
 export default function AddPatientModal({ onSuccess }: AddPatientModalProps) {
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [gender, setGender] = useState("male")
-  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>()
-  const [cin, setCin] = useState("")
-  const [phone, setPhone] = useState("")
-  const [email, setEmail] = useState("")
-  const [adress, setAdress] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [gender, setGender] = useState("male");
+  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>();
+  const [cin, setCin] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [adress, setAdress] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!dateOfBirth) return alert("Date de naissance requise.")
+    e.preventDefault();
+    if (!dateOfBirth) return alert("Date de naissance requise.");
 
     const payload = {
       first_name: firstName,
@@ -55,32 +57,34 @@ export default function AddPatientModal({ onSuccess }: AddPatientModalProps) {
       date_of_birth: format(dateOfBirth, "yyyy-MM-dd"),
       gender,
       cin,
-    }
+    };
 
     try {
-      setLoading(true)
-      await createPatient(payload)
-      if (onSuccess) onSuccess()
+      setLoading(true);
+      await createPatient(payload);
+      if (onSuccess) onSuccess();
       // Close the modal after success
-      const dialog = document.querySelector('[role="dialog"]') as HTMLElement | null
+      const dialog = document.querySelector(
+        '[role="dialog"]',
+      ) as HTMLElement | null;
       if (dialog) {
-        const closeBtn = dialog.querySelector('button[type="button"]')
-        if (closeBtn) (closeBtn as HTMLButtonElement).click()
+        const closeBtn = dialog.querySelector('button[type="button"]');
+        if (closeBtn) (closeBtn as HTMLButtonElement).click();
       }
     } catch (err) {
-      console.error("Erreur création patient:", err)
+      console.error("Erreur création patient:", err);
     } finally {
-      setLoading(false)
-      setLoading(false)
+      setLoading(false);
+      setLoading(false);
     }
-  }
+  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -249,5 +253,5 @@ export default function AddPatientModal({ onSuccess }: AddPatientModalProps) {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

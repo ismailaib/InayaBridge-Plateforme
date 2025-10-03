@@ -1,7 +1,9 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/Button"
-import type { ElementType } from "react"
+import { Button } from "@/components/Button";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { endOfWeek, format, startOfWeek } from "date-fns";
+import { arSA, enUS, fr } from "date-fns/locale";
 import {
   Calendar as CalendarIcon,
   Calendar as CalendarViewIcon,
@@ -9,20 +11,20 @@ import {
   ChevronRight,
   LayoutGrid,
   List,
-} from "lucide-react"
-import { format, startOfWeek, endOfWeek } from "date-fns"
-import { useTranslations } from "@/lib/i18n/useTranslations"
-import { CalendarViewType } from "./types"
-import { enUS, fr, arSA } from "date-fns/locale"
+} from "lucide-react";
+
+import type { ElementType } from "react";
+
+import { CalendarViewType } from "./types";
 
 type CalendarHeaderProps = {
-  currentDate: Date
-  view: CalendarViewType
-  onPrevious: () => void
-  onNext: () => void
-  onToday: () => void
-  onViewChange: (view: CalendarViewType) => void
-}
+  currentDate: Date;
+  view: CalendarViewType;
+  onPrevious: () => void;
+  onNext: () => void;
+  onToday: () => void;
+  onViewChange: (view: CalendarViewType) => void;
+};
 
 export function CalendarHeader({
   currentDate,
@@ -32,35 +34,41 @@ export function CalendarHeader({
   onToday,
   onViewChange,
 }: CalendarHeaderProps) {
-  const t = useTranslations("appointments.calendar")
+  const t = useTranslations("appointments.calendar");
 
   const renderTitle = () => {
-    const locale = t("locale") === "ar" ? arSA : t("locale") === "fr" ? fr : enUS
+    const locale =
+      t("locale") === "ar" ? arSA : t("locale") === "fr" ? fr : enUS;
 
     switch (view) {
       case "month":
-        return format(currentDate, "MMMM yyyy", { locale })
+        return format(currentDate, "MMMM yyyy", { locale });
       case "week":
         return (
           <>
-            {format(startOfWeek(currentDate, { weekStartsOn: 1 }), "d MMM", { locale })} -{" "}
-            {format(endOfWeek(currentDate, { weekStartsOn: 1 }), "d MMM yyyy", { locale })}
+            {format(startOfWeek(currentDate, { weekStartsOn: 1 }), "d MMM", {
+              locale,
+            })}{" "}
+            -{" "}
+            {format(endOfWeek(currentDate, { weekStartsOn: 1 }), "d MMM yyyy", {
+              locale,
+            })}
           </>
-        )
+        );
       case "day":
-        return format(currentDate, "EEEE d MMMM yyyy", { locale })
+        return format(currentDate, "EEEE d MMMM yyyy", { locale });
       case "list":
       default:
-        return t("views.list")
+        return t("views.list");
     }
-  }
+  };
 
   const viewButtons: { value: CalendarViewType; icon: ElementType }[] = [
     { value: "month", icon: CalendarViewIcon },
     { value: "week", icon: LayoutGrid },
     { value: "day", icon: CalendarIcon },
     { value: "list", icon: List },
-  ]
+  ];
 
   return (
     <div className="mb-6 flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
@@ -82,8 +90,8 @@ export function CalendarHeader({
                 index === 0
                   ? "rounded-l-md rounded-r-none"
                   : index === viewButtons.length - 1
-                  ? "rounded-l-none rounded-r-md"
-                  : "rounded-none border-l-0 border-r-0"
+                    ? "rounded-l-none rounded-r-md"
+                    : "rounded-none border-l-0 border-r-0"
               }
             >
               <Icon className="mr-1 h-4 w-4" />
@@ -96,14 +104,22 @@ export function CalendarHeader({
           {t("today")}
         </Button>
         <div className="flex">
-          <Button onClick={onPrevious} variant="secondary" className="rounded-r-none">
+          <Button
+            onClick={onPrevious}
+            variant="secondary"
+            className="rounded-r-none"
+          >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <Button onClick={onNext} variant="secondary" className="rounded-l-none border-l-0">
+          <Button
+            onClick={onNext}
+            variant="secondary"
+            className="rounded-l-none border-l-0"
+          >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
       </div>
     </div>
-  )
+  );
 }

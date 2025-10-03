@@ -13,11 +13,13 @@ import {
   UserCheck,
   Users,
 } from "lucide-react";
+
 import React, { useState } from "react";
+
 import { updatePatient } from "../../api/patients";
 
 interface Patient {
-  id: number,
+  id: number;
   first_name: string;
   last_name: string;
   date_of_birth?: string;
@@ -67,7 +69,11 @@ interface SectionHeaderProps {
   badge?: React.ReactNode;
 }
 
-const SectionHeader: React.FC<SectionHeaderProps> = ({ icon: Icon, title, badge }) => (
+const SectionHeader: React.FC<SectionHeaderProps> = ({
+  icon: Icon,
+  title,
+  badge,
+}) => (
   <div className="flex items-center justify-between mb-4">
     <div className="flex items-center gap-2">
       <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -131,7 +137,11 @@ const Details: React.FC<{ patient: Patient | null }> = ({ patient }) => {
             label="Full name"
             value={`${patient.first_name} ${patient.last_name}`}
           />
-          <InfoItem icon={Calendar} label="Date of birth" value={patient.date_of_birth} />
+          <InfoItem
+            icon={Calendar}
+            label="Date of birth"
+            value={patient.date_of_birth}
+          />
           <InfoItem icon={CreditCard} label="CIN" value={patient.cin} />
           <InfoItem icon={Users} label="Gender" value={patient.gender} />
           <div className="md:col-span-2 relative">
@@ -154,7 +164,7 @@ const Details: React.FC<{ patient: Patient | null }> = ({ patient }) => {
                     }}
                   />
                 ) : (
-                  bloodType ?? "N/A"
+                  (bloodType ?? "N/A")
                 )
               }
             />
@@ -199,7 +209,10 @@ const Details: React.FC<{ patient: Patient | null }> = ({ patient }) => {
                       placeholder="Phone"
                       value={emergency.phone_number}
                       onChange={(e) =>
-                        setEmergency({ ...emergency, phone_number: e.target.value })
+                        setEmergency({
+                          ...emergency,
+                          phone_number: e.target.value,
+                        })
                       }
                       onBlur={async () => {
                         setEditingEmergency(false);

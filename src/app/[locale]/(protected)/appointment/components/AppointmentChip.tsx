@@ -1,14 +1,18 @@
-"use client"
+"use client";
 
-import { cx } from "@/lib/utils"
-import { CalendarAppointment } from "./types"
+import { cx } from "@/lib/utils";
+
+import { CalendarAppointment } from "./types";
 
 type AppointmentChipProps = {
-  appointment: CalendarAppointment
-  onSelect: (appointment: CalendarAppointment) => void
-}
+  appointment: CalendarAppointment;
+  onSelect: (appointment: CalendarAppointment) => void;
+};
 
-export function AppointmentChip({ appointment, onSelect }: AppointmentChipProps) {
+export function AppointmentChip({
+  appointment,
+  onSelect,
+}: AppointmentChipProps) {
   return (
     <button
       key={appointment.id}
@@ -25,5 +29,5 @@ export function AppointmentChip({ appointment, onSelect }: AppointmentChipProps)
         {appointment.patient}
       </span>
     </button>
-  )
+  );
 }

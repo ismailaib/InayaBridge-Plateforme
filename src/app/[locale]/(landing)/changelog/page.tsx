@@ -1,9 +1,11 @@
-"use client"
+"use client";
 
-import React from "react"
-import Image from "next/image"
-import { ChangelogEntry } from "@/components/mdx"
-import useTranslations from "@/lib/i18n/useTranslations"
+import { ChangelogEntry } from "@/components/mdx";
+import useTranslations from "@/lib/i18n/useTranslations";
+
+import React from "react";
+
+import Image from "next/image";
 
 const ChangelogImage = ({ src, alt }: { src: string; alt?: string }) => (
   <Image
@@ -14,13 +16,13 @@ const ChangelogImage = ({ src, alt }: { src: string; alt?: string }) => (
     width={800}
     height={400}
   />
-)
+);
 
 export default function InayaBridgeChangelogV100() {
-  const t = useTranslations("changelog.v1_0_0")
+  const t = useTranslations("changelog.v1_0_0");
 
   // Features come from translation JSON (array of objects)
-  const features = t.raw<{ label: string; desc: string }[]>("features") ?? []
+  const features = t.raw<{ label: string; desc: string }[]>("features") ?? [];
 
   return (
     <ChangelogEntry version="v1.0.0" date={t("date")}>
@@ -55,5 +57,5 @@ export default function InayaBridgeChangelogV100() {
         {t("orContact")}
       </p>
     </ChangelogEntry>
-  )
+  );
 }
