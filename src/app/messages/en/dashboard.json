@@ -38,6 +38,10 @@
         "title": "Set up your organization",
         "description": "Create or join an organization."
       },
+      "profileVerification": {
+        "title": "Verify your Email",
+        "description": "Check your inbox and click the verification link."
+      },
       "invitationsSchedule": {
         "title": "Invite your colleagues",
         "description": "Add other doctors or staff members."
@@ -51,6 +55,30 @@
       "title": "Congratulations! All steps are completed.",
       "subtitle": "You can now fully access your dashboard."
     }
+  },
+  "verification": {
+    "title": "Email Verification",
+    "description": "To ensure the security of your account, please verify your email address by entering the code we sent you.",
+    "openDialog": "Verify your email",
+    "codeLabel": "Verification code",
+    "codePlaceholder": "Enter the code sent to your email",
+    "verifyButton": "Verify",
+    "verifying": "Verifying...",
+    "sendingCode": "Sending verification code...",
+    "loading": "Preparing verification...",
+    "resendButton": "Resend Code",
+    "resending": "Resending...",
+    "resendIn": "Resend in",
+    "successTitle": "Email Verified!",
+    "successMessage": "Your email has been successfully verified.",
+    "errorUserEmailMissing": "User email not found. Please log in again.",
+    "errorUserDataMissing": "User data not found. Please log in again.",
+    "errorSendFailed": "Failed to send verification code. Please try again.",
+    "errorResendFailed": "Failed to resend verification code. Please try again.",
+    "errorInvalidCode": "Invalid verification code. Please try again.",
+    "errorTooManyRequests": "A verification email was already sent recently. Please wait before trying again.",
+    "dialogTitle": "Verify Your Email",
+    "dialogDescription": "We’ve sent a verification code to your email. Please enter it below to continue."
   },
   "tenantForm": {
     "title": "Set up your facility",
@@ -137,6 +165,11 @@
     "capacityTitle": "Capacity",
     "featuresTitle": "Features",
     "recommended": "Recommended",
+    "selectPlan": "Select this plan",
+    "confirmPlan": "Confirm plan",
+    "saving": "Confirming...",
+    "successTitle": "Plan selected successfully!",
+    "successMessage": "Your Plan has been successfully selected.",
     "plans": [
       {
         "id": "essential",

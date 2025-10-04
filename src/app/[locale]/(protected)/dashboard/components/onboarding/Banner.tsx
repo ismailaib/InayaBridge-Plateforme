@@ -6,11 +6,11 @@ import useTranslations from "@/lib/i18n/useTranslations";
 
 import { useCallback, useEffect, useState } from "react";
 
-import InviteMembers from "./Invitations/InviteMembers";
 import Pricing from "./pricing/Pricing";
 import Workspace from "./workspace/Workspace";
+import Verification from "./verification/page";
 
-type StepKey = "tenantProfile" | "invitationsSchedule" | "accountActivation";
+type StepKey = "tenantProfile" | "profileVerification" | "accountActivation";
 
 type Step = {
   step: number;
@@ -27,7 +27,7 @@ export default function DoctorOnboarding() {
   const [steps, setSteps] = useState<Step[]>([]);
   const [_, setStatus] = useState<Record<StepKey, boolean>>({
     tenantProfile: false,
-    invitationsSchedule: false,
+    profileVerification: false,
     accountActivation: false,
   });
   const [loading, setLoading] = useState(true);
@@ -51,9 +51,9 @@ export default function DoctorOnboarding() {
       const statusData = res.data;
 
       const statusMapping: Record<StepKey, boolean> = {
+        profileVerification: Boolean(statusData.profileVerificationCompleted),
         tenantProfile: Boolean(statusData.tenantProfileCompleted),
-        invitationsSchedule: Boolean(statusData.invitationsScheduleCompleted),
-        accountActivation: Boolean(statusData.accountActivationCompleted),
+        accountActivation: Boolean(statusData.tenantSubscriptionCompleted),
       };
 
       setStatus(statusMapping);
@@ -61,23 +61,21 @@ export default function DoctorOnboarding() {
       const processedSteps: Step[] = [
         {
           step: 1,
+          key: "profileVerification",
+          title: t("steps.profileVerification.title"),
+          description: t("steps.profileVerification.description"),
+          buttonText: <Verification onSuccess={() => fetchOnboardingStatus()} />,
+          completed: statusMapping.profileVerification,
+          disabled: false,
+        },
+        {
+          step: 2,
           key: "tenantProfile",
           title: t("steps.tenantProfile.title"),
           description: t("steps.tenantProfile.description"),
           buttonText: <Workspace onSuccess={() => fetchOnboardingStatus()} />,
           completed: statusMapping.tenantProfile,
           disabled: false,
-        },
-        {
-          step: 2,
-          key: "invitationsSchedule",
-          title: t("steps.invitationsSchedule.title"),
-          description: t("steps.invitationsSchedule.description"),
-          buttonText: (
-            <InviteMembers onSuccess={() => fetchOnboardingStatus()} />
-          ),
-          completed: statusMapping.invitationsSchedule,
-          disabled: !statusMapping.tenantProfile,
         },
         {
           step: 3,
@@ -188,7 +186,7 @@ export default function DoctorOnboarding() {
                 </svg>
               </div>
             </div>
-            <div className="ml-3">
+            <div className="mx-3">
               <p className="text-sm font-medium text-blue-800 dark:text-blue-300">
                 {t("allDone.title")}
               </p>

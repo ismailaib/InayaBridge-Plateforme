@@ -15,6 +15,12 @@ export interface RegisterDoctor {
   licenseNumber: string;
 }
 
+export interface UpdateTenantPlanPayload {
+  tenantId: string;
+  subscriptionPlan: "ESSENTIAL" | "PLUS" | "PRO";
+}
+
+
 /* ========== API helpers ========== */
 export const onboardingStatus = (id: string) =>
   api.get(`/onboarding/${id}/status`);
@@ -31,3 +37,8 @@ export const workspaceCreation = (payload: workspaceCreation) =>
   });
 
 export const getTenant = (id: string) => api.get(`/tenants/${id}`);
+
+export const updateTenantPlan = (payload: UpdateTenantPlanPayload) =>
+  api.put(`/tenants/${payload.tenantId}/subscription`, {
+    subscriptionPlan: payload.subscriptionPlan,
+  });

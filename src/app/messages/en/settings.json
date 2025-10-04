@@ -1,0 +1,84 @@
+{
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your personal details, workspace governance and notifications.",
+    "tabs": {
+      "account": "Account details",
+      "workspaces": "Workspaces",
+      "billing": "Billing"
+    },
+    "emailSection": {
+      "title": "Email",
+      "description": "Update your email address associated with this workspace.",
+      "label": "Update email address",
+      "placeholder": "john@company.com",
+      "button": "Update email"
+    },
+    "passwordSection": {
+      "title": "Password",
+      "description": "Update your password associated with this workspace.",
+      "currentLabel": "Current password",
+      "newLabel": "New password",
+      "placeholder": "password",
+      "button": "Update password"
+    }
+  },
+  "workspace": {
+    "title": "Workspace Configuration",
+    "description": "Manage your clinic or workspace details and subscription settings.",
+    "tenantName": "Workspace Name",
+    "tenantDescription": "Description",
+    "tenantOwner": "Owner Email",
+    "privacy": "Privacy",
+    "subscriptionPlan": "Subscription Plan",
+    "selectPlan": "Select a plan",
+    "save": "Save changes",
+    "saving": "Saving...",
+    "private": "Private",
+    "public": "Public",
+    "plans": {
+      "essential": "Essential",
+      "plus": "Plus",
+      "pro": "Pro"
+    }
+  },
+  "preferences": {
+    "title": "Preferences",
+    "description": "Manage how the app looks, notifies you, and displays information.",
+
+    "language": {
+      "title": "Language",
+      "description": "Select your preferred language for the interface."
+    },
+
+    "theme": {
+      "title": "Theme",
+      "description": "Choose your preferred appearance.",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System Default"
+    },
+
+    "notifications": {
+      "title": "Notifications",
+      "description": "Choose when you want to receive alerts.",
+      "appointments": "Appointments",
+      "messages": "Messages",
+      "system": "System updates",
+      "billing": "Billing reminders"
+    },
+
+    "privacy": {
+      "title": "Privacy",
+      "description": "Control who can see your profile and workspace information.",
+      "publicProfile": "Public profile"
+    },
+
+    "timezone": {
+      "title": "Timezone",
+      "description": "Set your preferred timezone for appointments."
+    },
+
+    "save": "Save Preferences"
+  }
+}

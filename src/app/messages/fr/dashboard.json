@@ -38,6 +38,10 @@
         "title": "Configurer votre établissement",
         "description": "Créez ou rejoignez un établissement."
       },
+      "profileVerification": {
+        "title": "Vérifier votre email",
+        "description": "Assurez la sécurité de votre compte en vérifiant votre adresse email."
+      },
       "invitationsSchedule": {
         "title": "Inviter vos collègues",
         "description": "Ajoutez d'autres médecins ou collaborateurs."
@@ -67,66 +71,29 @@
       "description": "Les patients ne pourront pas trouver cet établissement dans la liste publique."
     }
   },
-  "invitations": {
-    "openDialog": "Inviter des collègues",
-    "currentMembers": "Membres actuels de l'établissement",
-    "form": {
-      "title": "Inviter des membres",
-      "description": "Ajoutez de nouveaux membres à votre établissement. Veuillez respecter les politiques de votre organisation lors de l'ajout de personnes externes.",
-      "placeholder": "Saisir l'adresse e-mail...",
-      "submit": "Inviter",
-      "submitting": "Envoi...",
-      "loadingDescription": "Chargement des informations utilisateur...",
-      "loadingPlaceholder": "Chargement...",
-      "loadingButton": "Chargement..."
-    },
-    "info": {
-      "title": "Invitation par e-mail",
-      "description": "Les personnes invitées recevront un e-mail avec un lien pour rejoindre votre établissement."
-    },
-    "emptyState": {
-      "title": "Aucun membre dans cet établissement",
-      "subtitle": "Commencez par inviter vos collègues !"
-    },
-    "details": {
-      "sentAt": "Date d'envoi",
-      "expiresAt": "Date d'expiration",
-      "acceptedAt": "Date d'acceptation",
-      "invalidDate": "Date invalide"
-    },
-    "actions": {
-      "delete": "Supprimer l'invitation",
-      "resend": "Renvoyer l'invitation"
-    },
-    "status": {
-      "declined": "Refusé",
-      "accepted": "Accepté",
-      "pending": "En attente",
-      "expired": "Expiré",
-      "unknown": "Inconnu"
-    },
-    "errors": {
-      "userMissing": "Utilisateur non connecté. Veuillez vous reconnecter.",
-      "userIncomplete": "Informations utilisateur incomplètes. Veuillez vous reconnecter.",
-      "selfInvitation": "Il n'est pas possible de s'inviter soi-même :)",
-      "invitationNotPending": "L'invitation n'est pas en attente."
-    },
-    "validation": {
-      "emailRequired": "Veuillez saisir une adresse e-mail !",
-      "emailInvalid": "Veuillez saisir une adresse e-mail valide !"
-    },
-    "toasts": {
-      "successTitle": "Succès",
-      "errorTitle": "Erreur",
-      "invitationSuccess": "Une invitation a été envoyée à {email} !",
-      "invitationError": "Une erreur est survenue lors de l'envoi de l'invitation.",
-      "fetchError": "Impossible de récupérer la liste des membres.",
-      "tenantError": "Impossible de récupérer les informations de l'établissement.",
-      "invitationCancelled": "Invitation annulée avec succès.",
-      "invitationCancelError": "Impossible d'annuler l'invitation.",
-      "invitationResent": "Invitation renvoyée avec succès.",
-      "invitationResendError": "Impossible de renvoyer l'invitation."
-    }
+  "verification": {
+    "title": "Vérification de l'email",
+    "description": "Pour assurer la sécurité de votre compte, veuillez vérifier votre adresse email en entrant le code que nous vous avons envoyé.",
+    "openDialog": "Vérifier votre email",
+    "codeLabel": "Code de vérification",
+    "codePlaceholder": "Entrez le code reçu par email",
+    "verifyButton": "Vérifier",
+    "verifying": "Vérification...",
+    "sendingCode": "Envoi du code de vérification...",
+    "loading": "Préparation de la vérification...",
+    "resendButton": "Renvoyer le code",
+    "resending": "Renvoi...",
+    "resendIn": "Renvoyer dans",
+    "successTitle": "Succès !",
+    "successMessage": "Votre email a été vérifié avec succès.",
+    "errorUserEmailMissing": "Adresse email introuvable. Veuillez vous reconnecter.",
+    "errorUserDataMissing": "Données utilisateur introuvables. Veuillez vous reconnecter.",
+    "errorSendFailed": "Échec de l’envoi du code. Veuillez réessayer.",
+    "errorResendFailed": "Échec du renvoi du code. Veuillez réessayer.",
+    "errorInvalidCode": "Code de vérification invalide. Veuillez réessayer.",
+    "errorTooManyRequests": "Un email de vérification a déjà été envoyé récemment. Veuillez patienter avant de réessayer.",
+    "dialogTitle": "Vérifiez votre email",
+    "dialogDescription": "Nous avons envoyé un code de vérification à votre adresse email. Entrez-le ci-dessous pour continuer."
   },
   "pricing": {
     "openDialog": "Choisir un plan d'abonnement",
@@ -137,6 +104,11 @@
     "capacityTitle": "Capacités",
     "featuresTitle": "Fonctionnalités",
     "recommended": "Recommandé",
+    "selectPlan": "Sélectionner ce plan",
+    "confirmPlan": "Confirmer le plan",
+    "saving": "Confirmation...",
+    "successTitle": "Succès !",
+    "successMessage": "Votre plan a été sélectionné avec succès.",
     "plans": [
       {
         "id": "essential",
@@ -418,5 +390,4 @@
       "minutesAgo": "il y a {{count}} min"
     }
   }
-
 }

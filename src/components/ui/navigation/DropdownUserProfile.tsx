@@ -16,11 +16,12 @@ import {
 } from "@/components/DropdownMenu";
 import { useAuth } from "@/lib/auth-context";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { ArrowUpRight, Monitor, Moon, Sun } from "lucide-react";
+import { ArrowUpRight, Bolt, LogOut, Monitor, Moon, Sun } from "lucide-react";
 
 import * as React from "react";
 
 import { useTheme } from "next-themes";
+import Link from "next/link";
 
 export type DropdownUserProfileProps = {
   children: React.ReactNode;
@@ -102,15 +103,15 @@ export function DropdownUserProfile({
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="[html[lang=ar]_&]:flex-row-reverse">
             {t("profile.changelog")}
             <ArrowUpRight className="mb-1 ml-1 size-3 shrink-0 text-gray-500 dark:text-gray-500" />
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="[html[lang=ar]_&]:flex-row-reverse">
             {t("profile.docs")}
             <ArrowUpRight className="mb-1 ml-1 size-3 shrink-0 text-gray-500" />
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem className="[html[lang=ar]_&]:flex-row-reverse">
             {t("profile.community")}
             <ArrowUpRight className="mb-1 ml-1 size-3 shrink-0 text-gray-500" />
           </DropdownMenuItem>
@@ -120,13 +121,18 @@ export function DropdownUserProfile({
 
         <DropdownMenuGroup>
           <DropdownMenuItem>
+            <Link href="/settings" className="w-full text-left flex flex-row items-center gap-2 [html[lang=ar]_&]:flex-row-reverse">
+              <Bolt width={14} />{t("profile.settings")}
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
             <button
               onClick={() => {
                 logout();
               }}
-              className="w-full text-left"
+              className="w-full text-left flex flex-row items-center gap-2 [html[lang=ar]_&]:flex-row-reverse"
             >
-              {t("profile.logout")}
+              <LogOut width={14} />{t("profile.logout")}
             </button>
           </DropdownMenuItem>
         </DropdownMenuGroup>

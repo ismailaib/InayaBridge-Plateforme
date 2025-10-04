@@ -1,0 +1,86 @@
+{
+  "settings": {
+    "title": "Paramètres",
+    "description": "Gérez vos informations personnelles, la gouvernance de votre espace de travail et vos notifications.",
+    "tabs": {
+      "account": "Détails du compte",
+      "workspaces": "Espaces de travail",
+      "disponibility": "Disponibilité",
+      "pereferences": "Préférences",
+      "billing": "Facturation"
+    },
+    "emailSection": {
+      "title": "Adresse e-mail",
+      "description": "Mettez à jour l’adresse e-mail associée à cet espace de travail.",
+      "label": "Mettre à jour l’adresse e-mail",
+      "placeholder": "john@entreprise.com",
+      "button": "Mettre à jour l’e-mail"
+    },
+    "passwordSection": {
+      "title": "Mot de passe",
+      "description": "Mettez à jour le mot de passe associé à cet espace de travail.",
+      "currentLabel": "Mot de passe actuel",
+      "newLabel": "Nouveau mot de passe",
+      "placeholder": "mot de passe",
+      "button": "Mettre à jour le mot de passe"
+    }
+  },
+  "workspace": {
+    "title": "Configuration de l’espace de travail",
+    "description": "Gérez les informations de votre clinique ou espace et votre abonnement.",
+    "tenantName": "Nom de l’espace",
+    "tenantDescription": "Description",
+    "tenantOwner": "Email du propriétaire",
+    "privacy": "Confidentialité",
+    "subscriptionPlan": "Plan d’abonnement",
+    "selectPlan": "Choisir un plan",
+    "save": "Enregistrer les modifications",
+    "saving": "Enregistrement...",
+    "private": "Privé",
+    "public": "Public",
+    "plans": {
+      "essential": "Essentiel",
+      "plus": "Plus",
+      "pro": "Pro"
+    }
+  },
+  "preferences": {
+    "title": "Préférences",
+    "description": "Gérez l’apparence de l’application, les notifications et les informations affichées.",
+
+    "language": {
+      "title": "Langue",
+      "description": "Choisissez votre langue préférée pour l’interface."
+    },
+
+    "theme": {
+      "title": "Thème",
+      "description": "Choisissez l’apparence que vous préférez.",
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Système par défaut"
+    },
+
+    "notifications": {
+      "title": "Notifications",
+      "description": "Choisissez quand vous souhaitez recevoir des alertes.",
+      "appointments": "Rendez-vous",
+      "messages": "Messages",
+      "system": "Mises à jour du système",
+      "billing": "Rappels de facturation"
+    },
+
+    "privacy": {
+      "title": "Confidentialité",
+      "description": "Contrôlez qui peut voir votre profil et les informations de votre espace de travail.",
+      "publicProfile": "Profil public"
+    },
+
+    "timezone": {
+      "title": "Fuseau horaire",
+      "description": "Définissez votre fuseau horaire préféré pour les rendez-vous."
+    },
+
+    "save": "Enregistrer les préférences"
+  }
+}
