@@ -9,6 +9,8 @@ import { Button } from '@/components/Button';
 import useTranslations from '@/lib/i18n/useTranslations';
 import { useTranslationsContext } from '@/lib/i18n/TranslationsProvider';
 import { getDirection } from '@/lib/i18n/i18n';
+import { Divide } from 'lucide-react';
+import { Divider } from '@/components/Divider';
 
 const Pereferences = () => {
   const t = useTranslations('settings.preferences');
@@ -33,11 +35,16 @@ const Pereferences = () => {
   };
 
   return (
-    <div dir={dir} className="p-4 sm:p-6 lg:p-8">
-      <h1 className="text-lg font-bold text-gray-900 dark:text-gray-50">{t('title') || 'Preferences'}</h1>
-      <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-        {t('description') || 'Manage how the app looks, notifies you, and displays information.'}
-      </p>
+    <div dir={dir} className="pt-4">
+
+      <div className='pt-4'>
+        <h2 className="font-semibold text-gray-900 dark:text-gray-50">
+          {t('title') || 'Preferences'}
+        </h2>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
+          {t('description') || 'Manage how the app looks, notifies you, and displays information.'}
+        </p>
+      </div>
 
       <Card className="mt-8 space-y-8">
         {/* Language & Locale */}
@@ -86,17 +93,22 @@ const Pereferences = () => {
           </p>
           <div className="mt-4 space-y-3">
             {Object.entries(notifications).map(([key, value]) => (
-              <div key={key} className="flex items-center justify-between">
-                <span className="capitalize text-gray-800 dark:text-gray-100">{key}</span>
-                <Switch
-                  checked={value}
-                  onCheckedChange={(v) =>
-                    setNotifications((prev) => ({ ...prev, [key]: v }))
-                  }
-                />
-              </div>
+               <div key={key} >
+                 <div className="flex items-center justify-between">
+                  <span className="capitalize text-gray-800 dark:text-gray-100">{key}</span>
+                  <Switch
+                    checked={value}
+                    onCheckedChange={(v) =>
+                      setNotifications((prev) => ({ ...prev, [key]: v }))
+                    }
+                  />
+                </div>
+                <Divider />
+               </div>
+
             ))}
           </div>
+            
         </section>
 
         {/* Privacy */}
@@ -109,6 +121,7 @@ const Pereferences = () => {
             <span>{t('privacy.publicProfile') || 'Public profile'}</span>
             <Switch checked={publicProfile} onCheckedChange={setPublicProfile} />
           </div>
+
         </section>
 
         {/* Timezone */}

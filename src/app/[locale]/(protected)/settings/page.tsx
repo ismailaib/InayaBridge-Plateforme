@@ -5,11 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs';
 import { getDirection } from '@/lib/i18n/i18n';
 import { useTranslationsContext } from '@/lib/i18n/TranslationsProvider';
 import useTranslations from '@/lib/i18n/useTranslations';
-import Account from './components/Account';
-import Workspaces from './components/Workspaces';
-import Disponibility from './components/Disponibility';
-import Pereferences from './components/Pereferences';
-import Billing from './components/Billing';
+import Account from './pages/Account';
+import Workspaces from './pages/Workspaces';
+import Disponibility from './pages/Disponibility';
+import Pereferences from './pages/Pereferences';
+import Billing from './pages/Billing';
 
 
 export default function Settings() {
@@ -38,7 +38,7 @@ export default function Settings() {
                         {t('tabs.disponibility')}
                     </TabsTrigger>
                     <TabsTrigger value="tab4" className="inline-flex gap-2">
-                        {t('tabs.pereferences')}
+                        {t('tabs.preferences')}
                     </TabsTrigger>
                     <TabsTrigger value="tab5" className="inline-flex gap-2">
                         {t('tabs.billing')}

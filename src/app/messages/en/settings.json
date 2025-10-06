@@ -1,28 +1,97 @@
 {
   "settings": {
     "title": "Settings",
-    "description": "Manage your personal details, workspace governance and notifications.",
+    "description": "Manage your personal information, workspace preferences, and notifications.",
+    "Account": {
+      "title": "Account Details",
+      "description": "Manage your personal information and login credentials."
+    },
     "tabs": {
-      "account": "Account details",
+      "account": "Account Details",
       "workspaces": "Workspaces",
-      "billing": "Billing"
+      "billing": "Billing",
+      "disponibility": "Availability",
+      "preferences": "Preferences"
+    },
+    "personalInfo": {
+      "title": "Personal Information",
+      "description": "Update your personal and contact information.",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "cin": "National ID Number",
+      "phone": "Phone Number",
+      "address": "Address",
+      "gender": "Gender",
+      "speciality": "Specialty",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastNamePlaceholder": "Enter your last name",
+      "cinPlaceholder": "Enter your national ID number",
+      "phonePlaceholder": "Enter your phone number",
+      "addressPlaceholder": "Enter your address",
+      "genderPlaceholder": "Select gender",
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "button": "Update Personal Information",
+      "resetbutton": "Reset Changes",
+      "successTitle": "Information Updated Successfully",
+      "successDescription": "Your personal information has been successfully updated.",
+      "errorTitle": "Update Failed",
+      "errorDescription": "An error occurred while updating your information. Please try again."
+    },
+    "profileImage": {
+      "title": "Profile Picture",
+      "description": "Upload a profile picture to personalize your account.",
+      "button": "Upload Picture",
+      "successTitle": "Picture Uploaded Successfully",
+      "successDescription": "Your profile picture has been updated successfully.",
+      "errorTitle": "Upload Failed",
+      "errorDescription": "An error occurred while uploading your picture. Please try again."
     },
     "emailSection": {
       "title": "Email",
-      "description": "Update your email address associated with this workspace.",
-      "label": "Update email address",
+      "description": "Update the email address associated with this workspace.",
+      "label": "Update Email Address",
       "placeholder": "john@company.com",
-      "button": "Update email"
+      "button": "Update Email"
     },
     "passwordSection": {
       "title": "Password",
-      "description": "Update your password associated with this workspace.",
-      "currentLabel": "Current password",
-      "newLabel": "New password",
-      "placeholder": "password",
-      "button": "Update password"
+      "description": "Update your account password securely.",
+      "currentLabel": "Current Password",
+      "newLabel": "New Password",
+      "placeholder": "Enter password",
+      "button": "Update Password",
+      "successTitle": "Password Changed Successfully",
+      "successDescription": "Your password has been updated successfully.",
+      "errorTitle": "Password Change Failed",
+      "errorDescription": "An error occurred while changing your password. Please try again."
+    },
+    "cases": {
+      "error": "An unexpected error occurred.",
+      "success": "Action completed successfully.",
+      "firstnameempty": "First name cannot be empty.",
+      "lastnameempty": "Last name cannot be empty.",
+      "namelenght": "Name must be between 3 and 50 characters.",
+      "nameletter": "Name must contain only letters.",
+      "emailvalid": "Email address must be valid.",
+      "emailempty": "Email address cannot be empty.",
+      "phonevalid": "Phone number must follow the format +212 followed by 9 digits.",
+      "phoneempty": "Phone number cannot be empty.",
+      "addresslenght": "Address must be between 0 and 120 characters.",
+      "genderempty": "Gender must be selected.",
+      "specialtlenght": "Specialty must be between 1 and 80 characters.",
+      "licenseNumberlenght": "License number must be between 3 and 50 characters.",
+      "passwordmatch": "Passwords must match.",
+      "passwordlenght": "Password must be at least 8 characters long.",
+      "currentpasswordempty": "Current password cannot be empty.",
+      "newpasswordempty": "New password cannot be empty.",
+      "strongpassword": "Password must include at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character.",
+      "imageinvalide": "Please upload a valid JPG or PNG image smaller than 10 MB.",
+      "imagebig": "Image must be smaller than 10 MB."
     }
   },
+
   "workspace": {
     "title": "Workspace Configuration",
     "description": "Manage your clinic or workspace details and subscription settings.",

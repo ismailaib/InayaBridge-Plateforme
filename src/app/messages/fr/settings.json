@@ -1,13 +1,52 @@
 {
   "settings": {
     "title": "Paramètres",
-    "description": "Gérez vos informations personnelles, la gouvernance de votre espace de travail et vos notifications.",
+    "description": "Gérez vos informations personnelles, vos préférences d’espace de travail et vos notifications.",
+    "Account": {
+      "title": "Détails du compte",
+      "description": "Gérez vos informations personnelles et vos identifiants de connexion."
+    },
     "tabs": {
       "account": "Détails du compte",
       "workspaces": "Espaces de travail",
+      "billing": "Facturation",
       "disponibility": "Disponibilité",
-      "pereferences": "Préférences",
-      "billing": "Facturation"
+      "preferences": "Préférences"
+    },
+    "personalInfo": {
+      "title": "Informations personnelles",
+      "description": "Mettez à jour vos informations personnelles et vos coordonnées.",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "cin": "Numéro de CIN",
+      "phone": "Numéro de téléphone",
+      "address": "Adresse",
+      "gender": "Sexe",
+      "speciality": "Spécialité",
+      "firstNamePlaceholder": "Entrez votre prénom",
+      "lastNamePlaceholder": "Entrez votre nom",
+      "cinPlaceholder": "Entrez votre numéro de CIN",
+      "phonePlaceholder": "Entrez votre numéro de téléphone",
+      "addressPlaceholder": "Entrez votre adresse",
+      "genderPlaceholder": "Sélectionnez le sexe",
+      "male": "Homme",
+      "female": "Femme",
+      "other": "Autre",
+      "button": "Mettre à jour les informations personnelles",
+      "resetbutton": "Réinitialiser les modifications",
+      "successTitle": "Informations mises à jour avec succès",
+      "successDescription": "Vos informations personnelles ont été mises à jour avec succès.",
+      "errorTitle": "Échec de la mise à jour",
+      "errorDescription": "Une erreur s’est produite lors de la mise à jour de vos informations. Veuillez réessayer."
+    },
+    "profileImage": {
+      "title": "Photo de profil",
+      "description": "Téléchargez une photo de profil pour personnaliser votre compte.",
+      "button": "Télécharger une image",
+      "successTitle": "Photo téléchargée avec succès",
+      "successDescription": "Votre photo de profil a été mise à jour avec succès.",
+      "errorTitle": "Échec du téléchargement",
+      "errorDescription": "Une erreur s’est produite lors du téléchargement de votre image. Veuillez réessayer."
     },
     "emailSection": {
       "title": "Adresse e-mail",
@@ -18,11 +57,38 @@
     },
     "passwordSection": {
       "title": "Mot de passe",
-      "description": "Mettez à jour le mot de passe associé à cet espace de travail.",
+      "description": "Modifiez votre mot de passe en toute sécurité.",
       "currentLabel": "Mot de passe actuel",
       "newLabel": "Nouveau mot de passe",
-      "placeholder": "mot de passe",
-      "button": "Mettre à jour le mot de passe"
+      "placeholder": "Mot de passe",
+      "button": "Mettre à jour le mot de passe",
+      "successTitle": "Mot de passe modifié avec succès",
+      "successDescription": "Votre mot de passe a été mis à jour avec succès.",
+      "errorTitle": "Échec du changement de mot de passe",
+      "errorDescription": "Une erreur s’est produite lors du changement du mot de passe. Veuillez réessayer."
+    },
+    "cases": {
+      "error": "Une erreur inattendue s’est produite.",
+      "success": "Action effectuée avec succès.",
+      "firstnameempty": "Le prénom ne peut pas être vide.",
+      "lastnameempty": "Le nom ne peut pas être vide.",
+      "namelenght": "Le nom doit contenir entre 3 et 50 caractères.",
+      "nameletter": "Le nom ne doit contenir que des lettres.",
+      "emailvalid": "L’adresse e-mail doit être valide.",
+      "emailempty": "L’adresse e-mail ne peut pas être vide.",
+      "phonevalid": "Le numéro de téléphone doit être au format +212 suivi de 9 chiffres.",
+      "phoneempty": "Le numéro de téléphone ne peut pas être vide.",
+      "addresslenght": "L’adresse doit contenir entre 0 et 120 caractères.",
+      "genderempty": "Le sexe doit être sélectionné.",
+      "specialtlenght": "La spécialité doit contenir entre 1 et 80 caractères.",
+      "licenseNumberlenght": "Le numéro de licence doit contenir entre 3 et 50 caractères.",
+      "passwordmatch": "Les mots de passe doivent correspondre.",
+      "passwordlenght": "Le mot de passe doit contenir au moins 8 caractères.",
+      "currentpasswordempty": "Le mot de passe actuel ne peut pas être vide.",
+      "newpasswordempty": "Le nouveau mot de passe ne peut pas être vide.",
+      "strongpassword": "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.",
+      "imageinvalide": "Veuillez télécharger une image JPG ou PNG valide de moins de 10 Mo.",
+      "imagebig": "L’image doit être inférieure à 10 Mo."
     }
   },
   "workspace": {

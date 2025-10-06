@@ -67,12 +67,7 @@ export default function Workspaces() {
 
   if (loading) {
     return (
-      <Card>
-        <div className="animate-pulse space-y-4">
-          <div className="h-5 w-1/3 bg-gray-200 dark:bg-gray-800 rounded" />
-          <div className="h-3 w-2/3 bg-gray-200 dark:bg-gray-800 rounded" />
-        </div>
-      </Card>
+      <div></div>
     );
   }
 
@@ -87,7 +82,7 @@ export default function Workspaces() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <Card className="mt-6 space-y-8">
         {/* Tenant Info */}
         <div>
           <Label className="font-medium">{t('tenantName')}</Label>
@@ -156,7 +151,7 @@ export default function Workspaces() {
             </Button>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }
