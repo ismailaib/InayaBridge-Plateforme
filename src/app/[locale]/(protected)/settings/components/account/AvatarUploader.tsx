@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { useTranslationsContext } from "@/lib/i18n/TranslationsProvider";
 import { getDirection } from "@/lib/i18n/i18n";
+import { ImagePlus } from "lucide-react";
 
 export const AvatarUploader = ({
   formData,
@@ -64,9 +65,10 @@ export const AvatarUploader = ({
       <Button
         onClick={onTriggerUpload}
         variant="secondary"
-        className="mt-3"
+        className="mt-3 flex flex-row items-center gap-2"
         disabled={uploading}
       >
+        <ImagePlus width={18}/>
         {uploading ? "Uploading..." : t("profileImage.button") || "Change Photo"}
       </Button>
     </div>

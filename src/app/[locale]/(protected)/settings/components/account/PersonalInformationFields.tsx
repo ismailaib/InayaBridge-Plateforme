@@ -27,7 +27,7 @@ export function PersonalInformationFields({
     return (
         <div>
             <h4 className="flex flex-row gap-2 items-center text-sm font-semibold text-gray-900 dark:text-gray-50 mb-4">
-               <FileUser /> Personal Information
+               <FileUser /> {t("Account.title")}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                 {/* First Name */}

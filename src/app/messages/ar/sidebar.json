@@ -1,90 +1,89 @@
 {
-    "doctor": {
-      "home": "الرئيسية",
-      "messages": "الرسائل",
-      "agent": "وكيلي",
-      "appointments": "المواعيد",
-      "appointmentsChildren": {
-        "all": "جميع المواعيد",
-        "create": "إنشاء موعد",
-        "waiting": "غرفة الانتظار",
-        "history": "سجل الاستشارات"
-      },
-      "patients": "مرضاي",
-      "patientsChildren": {
-        "management": "إدارة المرضى",
-        "record": "ملف المريض"
-      },
-      "video": "الاستشارات بالفيديو",
-      "videoChildren": {
-        "start": "بدء استشارة",
-        "history": "سجل المكالمات",
-        "settings": "إعدادات الكاميرا والميكروفون",
-        "feedback": "ملاحظات الفيديو"
-      },
-      "docs": "الوثائق الطبية",
-      "docsChildren": {
-        "received": "مستلمة من المرضى",
-        "sent": "مرسلة إلى المرضى",
-        "prescriptions": "الوصفات الطبية",
-        "createPrescription": "إنشاء وصفة"
-      },
-      "stats": "الإحصائيات",
-      "statsChildren": {
-        "period": "الاستشارات حسب الفترة",
-        "profile": "ملف المرضى",
-        "feedback": "الرضا / التعليقات",
-        "revenues": "الأداء / الإيرادات"
-      },
-      "settings": "الإعدادات",
-      "settingsChildren": {
-        "profile": "معلوماتي",
-        "availability": "التوفر / التقويم",
-        "security": "كلمة المرور / الأمان",
-        "docs": "الوثائق الداعمة",
-        "preferences": "التفضيلات"
-      },
-      "cabinet": "إدارة العيادة",
-      "cabinetChildren": {
-        "employees": "قائمة الموظفين",
-        "equipment": "المعدات الطبية",
-        "stocks": "إدارة المخزون",
-        "room": "غرفة الاستشارة"
-      }
+  "doctor": {
+    "home": "الرئيسية",
+    "messages": "الرسائل",
+    "agent": "وكيلي",
+    "appointments": "المواعيد",
+    "appointmentsChildren": {
+      "all": "جميع المواعيد",
+      "create": "إنشاء موعد",
+      "waiting": "غرفة الانتظار",
+      "history": "سجل الاستشارات"
     },
-    "patient": {
-      "home": "الرئيسية",
-      "messages": "الرسائل",
-      "followup": "متابعتي",
-      "appointments": "مواعيدي",
-      "appointmentsChildren": {
-        "book": "حجز موعد",
-        "list": "مواعيدي",
-        "history": "السجل"
-      },
-      "dossier": "ملفي الطبي",
-      "dossierChildren": {
-        "info": "معلوماتي",
-        "prescriptions": "وصفاتي الطبية",
-        "results": "نتائجي",
-        "documents": "وثائقي"
-      },
-      "teleconsultation": "الاستشارات عن بعد",
-      "teleconsultationChildren": {
-        "join": "الانضمام للاستشارة",
-        "history": "سجل المكالمات",
-        "test": "اختبار الصوت/الفيديو"
-      },
-      "settings": "الإعدادات",
-      "settingsChildren": {
-        "profile": "معلوماتي",
-        "preferences": "التفضيلات",
-        "security": "الأمان",
-        "notifications": "الإشعارات"
-      }
+    "patients": "مرضاي",
+    "patientsChildren": {
+      "management": "إدارة المرضى",
+      "record": "ملف المريض"
     },
-    "search": "ابحث...",
-    "patientSpace": "فضاء المريض",
-    "doctorPlan": "الخطة الأساسية"
-  
+    "video": "الاستشارات بالفيديو",
+    "videoChildren": {
+      "start": "بدء استشارة",
+      "history": "سجل المكالمات",
+      "settings": "إعدادات الكاميرا والميكروفون",
+      "feedback": "ملاحظات الفيديو"
+    },
+    "docs": "الوثائق الطبية",
+    "docsChildren": {
+      "received": "مستلمة من المرضى",
+      "sent": "مرسلة إلى المرضى",
+      "prescriptions": "الوصفات الطبية",
+      "createPrescription": "إنشاء وصفة"
+    },
+    "stats": "الإحصائيات",
+    "statsChildren": {
+      "period": "الاستشارات حسب الفترة",
+      "profile": "ملف المرضى",
+      "feedback": "الرضا / التعليقات",
+      "revenues": "الأداء / الإيرادات"
+    },
+    "settings": "الإعدادات",
+    "settingsChildren": {
+      "profile": "تفاصيل الحساب",
+      "workspace": "مساحة العمل",
+      "availability": "التوفر",
+      "preferences": "التفضيلات",
+      "billing": "الفوترة"
+    },
+    "cabinet": "إدارة العيادة",
+    "cabinetChildren": {
+      "employees": "إدارة الموظفين",
+      "services": "إدارة الخدمات",
+      "departements": "إدارة الأقسام",
+      "roles": "إدارة الأدوار"
+    }
+  },
+  "patient": {
+    "home": "الرئيسية",
+    "messages": "الرسائل",
+    "followup": "متابعتي",
+    "appointments": "مواعيدي",
+    "appointmentsChildren": {
+      "book": "حجز موعد",
+      "list": "مواعيدي",
+      "history": "السجل"
+    },
+    "dossier": "ملفي الطبي",
+    "dossierChildren": {
+      "info": "معلوماتي",
+      "prescriptions": "وصفاتي الطبية",
+      "results": "نتائجي",
+      "documents": "وثائقي"
+    },
+    "teleconsultation": "الاستشارات عن بعد",
+    "teleconsultationChildren": {
+      "join": "الانضمام للاستشارة",
+      "history": "سجل المكالمات",
+      "test": "اختبار الصوت/الفيديو"
+    },
+    "settings": "الإعدادات",
+    "settingsChildren": {
+      "profile": "معلوماتي",
+      "preferences": "التفضيلات",
+      "security": "الأمان",
+      "notifications": "الإشعارات"
+    }
+  },
+  "search": "ابحث...",
+  "patientSpace": "فضاء المريض",
+  "doctorPlan": "الخطة الأساسية"
 }

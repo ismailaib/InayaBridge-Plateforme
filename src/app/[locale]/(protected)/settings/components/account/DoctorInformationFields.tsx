@@ -11,7 +11,7 @@ export const DoctorInformationFields = ({
     onInputBlur,
 }: DoctorInformationFieldsProps) => (
     <div>
-        <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-50 mb-4 flex flex-row gap-2 items-center"><BriefcaseMedical /> Professional Information</h4>
+        <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-50 mb-4 flex flex-row gap-2 items-center"><BriefcaseMedical /> {t('Account.proffession')}</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
             <div>
                 <Label htmlFor="specialty">{t('personalInfo.speciality')}</Label>

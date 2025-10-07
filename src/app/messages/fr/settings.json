@@ -4,11 +4,12 @@
     "description": "Gérez vos informations personnelles, vos préférences d’espace de travail et vos notifications.",
     "Account": {
       "title": "Détails du compte",
-      "description": "Gérez vos informations personnelles et vos identifiants de connexion."
+      "description": "Gérez vos informations personnelles et vos identifiants de connexion.",
+      "proffession": "Informations professionnelles"
     },
     "tabs": {
       "account": "Détails du compte",
-      "workspaces": "Espaces de travail",
+      "workspaces": "Espace de travail",
       "billing": "Facturation",
       "disponibility": "Disponibilité",
       "preferences": "Préférences"
@@ -91,62 +92,167 @@
       "imagebig": "L’image doit être inférieure à 10 Mo."
     }
   },
+  "disponibility": {
+    "title": "Disponibilité",
+    "description": "Définissez vos disponibilités hebdomadaires.",
+    "loading": "Chargement des disponibilités...",
+    "update": "METTRE À JOUR",
+    "saving": "Enregistrement...",
+    "applyToAll": "Appliquer à tous les jours",
+    "timeslot": "Plage horaire",
+    "errorLoad": "Échec du chargement des disponibilités",
+    "errorSave": "Échec de la mise à jour du planning",
+    "errorAtLeastOneSlot": "Au moins une plage horaire est requise",
+    "successApplied": "Planning appliqué à tous les jours",
+    "successUpdated": "{count} jour(s) mis à jour",
+    "successTitle": "Modifications Enregistrée(s)",
+    "noChanges": "Aucun changement à enregistrer",
+    "availability": "Disponibilité",
+    "from": "De",
+    "to": "À",
+    "actions": "Actions",
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi",
+    "sunday": "Dimanche",
+    "unsavedChanges": "modification(s) non enregistrée(s)",
+    "errorTitle": "Action Impossible",
+    "errorMaxSlots": "Vous pouvez ajouter jusqu’à {{count}} créneaux horaires par jour."
+  },
   "workspace": {
-    "title": "Configuration de l’espace de travail",
-    "description": "Gérez les informations de votre clinique ou espace et votre abonnement.",
-    "tenantName": "Nom de l’espace",
+    "title": "Configuration de l’Espace de Travail",
+    "description": "Gérez les informations de votre clinique ou espace de travail ainsi que les paramètres d’abonnement.",
+    "tenantName": "Nom de l’Espace",
     "tenantDescription": "Description",
-    "tenantOwner": "Email du propriétaire",
+    "tenantOwner": "Email du Propriétaire",
     "privacy": "Confidentialité",
-    "subscriptionPlan": "Plan d’abonnement",
-    "selectPlan": "Choisir un plan",
+    "subscriptionPlan": "Plan d’Abonnement",
+    "selectPlan": "Sélectionnez un plan",
     "save": "Enregistrer les modifications",
     "saving": "Enregistrement...",
     "private": "Privé",
     "public": "Public",
+    "savebutton": "Enregistrer",
+    "resetbutton": "Réinitialiser",
     "plans": {
       "essential": "Essentiel",
       "plus": "Plus",
       "pro": "Pro"
+    },
+    "logoImage": {
+      "title": "Logo de l’Espace de Travail",
+      "description": "Téléchargez le logo de votre espace pour personnaliser l’identité de votre organisation.",
+      "button": "Téléverser le Logo",
+      "uploading": "Téléversement...",
+      "successTitle": "Logo Téléversé avec Succès",
+      "successDescription": "Le logo de votre espace a été mis à jour avec succès.",
+      "errorTitle": "Échec du Téléversement",
+      "errorDescription": "Une erreur est survenue lors du téléversement du logo. Veuillez réessayer."
+    },
+    "tenant": {
+      "successTitle": "Espace de Travail Mis à Jour",
+      "successDescription": "Les informations de votre espace ont été enregistrées avec succès.",
+      "errorTitle": "Échec de la Mise à Jour",
+      "errorDescription": "Une erreur est survenue lors de l’enregistrement. Veuillez réessayer."
+    },
+    "invalidefile": {
+      "errorTitle": "Type de Fichier Non Valide",
+      "errorDescription": "Seuls les formats JPG et PNG sont pris en charge."
+    },
+    "fileTooLarge": {
+      "errorTitle": "Fichier Trop Volumineux",
+      "errorDescription": "Le fichier téléversé dépasse la limite de 10 Mo."
+    },
+    "logoupload": {
+      "errorTitle": "Échec du Téléversement du Logo",
+      "errorDescription": "Une erreur est survenue lors du téléversement de votre logo. Veuillez réessayer."
     }
   },
+
   "preferences": {
-    "title": "Préférences",
-    "description": "Gérez l’apparence de l’application, les notifications et les informations affichées.",
+    "title": "Préférences Utilisateur",
+    "description": "Personnalisez votre expérience, vos notifications et les modules visibles sur le tableau de bord.",
 
     "language": {
       "title": "Langue",
-      "description": "Choisissez votre langue préférée pour l’interface."
+      "description": "Sélectionnez la langue de l’interface."
     },
 
     "theme": {
       "title": "Thème",
-      "description": "Choisissez l’apparence que vous préférez.",
+      "description": "Choisissez votre mode d’affichage préféré.",
       "light": "Clair",
       "dark": "Sombre",
-      "system": "Système par défaut"
-    },
-
-    "notifications": {
-      "title": "Notifications",
-      "description": "Choisissez quand vous souhaitez recevoir des alertes.",
-      "appointments": "Rendez-vous",
-      "messages": "Messages",
-      "system": "Mises à jour du système",
-      "billing": "Rappels de facturation"
-    },
-
-    "privacy": {
-      "title": "Confidentialité",
-      "description": "Contrôlez qui peut voir votre profil et les informations de votre espace de travail.",
-      "publicProfile": "Profil public"
+      "system": "Par défaut du système"
     },
 
     "timezone": {
       "title": "Fuseau horaire",
-      "description": "Définissez votre fuseau horaire préféré pour les rendez-vous."
+      "description": "Définissez votre fuseau horaire local pour les rendez-vous et événements."
     },
 
-    "save": "Enregistrer les préférences"
+    "notifications": {
+      "title": "Notifications",
+      "description": "Gérez la façon dont vous recevez les alertes et les mises à jour."
+    },
+
+    "privacy": {
+      "title": "Confidentialité",
+      "description": "Contrôlez qui peut voir votre profil et votre statut en ligne.",
+      "publicProfile": "Profil public",
+      "onlineStatus": "Afficher le statut en ligne"
+    },
+
+    "modules": {
+      "title": "Modules du tableau de bord",
+      "description": "Choisissez les modules affichés sur votre tableau de bord.",
+      "appointments": "Rendez-vous",
+      "patients": "Patients",
+      "billing": "Facturation",
+      "reports": "Rapports",
+      "chat": "Messagerie",
+      "analytics": "Analytique",
+      "notifications": "Notifications",
+      "teleconsultation": "Téléconsultation",
+      "dashboard": "Tableau de bord principal"
+    },
+
+    "save": {
+      "label": "Enregistrer les préférences",
+      "saving": "Enregistrement...",
+      "successTitle": "Préférences enregistrées",
+      "successDescription": "Vos préférences ont été mises à jour avec succès.",
+      "errorTitle": "Échec de l’enregistrement",
+      "errorDescription": "Une erreur s’est produite lors de l’enregistrement des préférences."
+    }
+  },
+
+  "billing": {
+    "title": "Facturation et abonnement",
+    "description": "Gérez votre plan, vos factures et vos méthodes de paiement.",
+    "currentPlan": {
+      "title": "Plan actuel",
+      "description": "Vous êtes actuellement abonné au plan Plus."
+    },
+    "billingPeriod": "Période de facturation",
+    "nextPayment": "Prochain paiement",
+    "upgradeButton": "Mettre à niveau le plan",
+    "paymentMethod": {
+      "title": "Méthode de paiement",
+      "description": "Votre méthode de paiement enregistrée pour les renouvellements automatiques."
+    },
+    "updateButton": "Mettre à jour la carte",
+    "invoices": {
+      "title": "Factures",
+      "description": "Téléchargez vos factures précédentes.",
+      "date": "Date",
+      "amount": "Montant",
+      "status": "Statut",
+      "actions": "Actions",
+      "download": "Télécharger"
+    }
   }
 }

@@ -19,6 +19,8 @@ const noLayoutRoutes = languages.flatMap((lang) => [
   `/${lang}/patient/visioconference`,
   `/${lang}/invite`,
   `/${lang}/settings`,
+  `/${lang}/cabinet`,
+
 ]);
 
 export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {

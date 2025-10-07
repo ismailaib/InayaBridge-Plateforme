@@ -54,6 +54,11 @@
     "allDone": {
       "title": "Congratulations! All steps are completed.",
       "subtitle": "You can now fully access your dashboard."
+    },
+    "return": {
+      "title": "Setup Almost Done",
+      "description": "Return to the dashboard to complete the remaining steps and finish creating your workspace.",
+      "button": "Return to Dashboard"
     }
   },
   "verification": {

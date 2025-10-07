@@ -1,90 +1,89 @@
 {
-    "search": "Search…",
-    "doctorPlan": "Essential Plan",
-    "patientSpace": "Patient Space",
-    "doctor": {
-      "home": "Home",
-      "messages": "Messages",
-      "agent": "My Agent",
-      "appointments": "Appointments",
-      "appointmentsChildren": {
-        "all": "All Appointments",
-        "create": "Create Appointment",
-        "waiting": "Waiting Room",
-        "history": "Consultation History"
-      },
-      "patients": "My Patients",
-      "patientsChildren": {
-        "management": "Patient Management",
-        "record": "Patient Record"
-      },
-      "video": "Video Consultations",
-      "videoChildren": {
-        "start": "Start Consultation",
-        "history": "Call History",
-        "settings": "Camera & Micro Settings",
-        "feedback": "Video Feedback"
-      },
-      "docs": "Medical Docs",
-      "docsChildren": {
-        "received": "Received from Patients",
-        "sent": "Sent to Patients",
-        "prescriptions": "Prescriptions",
-        "createPrescription": "Create Prescription"
-      },
-      "stats": "Statistics",
-      "statsChildren": {
-        "period": "Consultations by Period",
-        "profile": "Patient Profiles Seen",
-        "feedback": "Satisfaction / Feedback",
-        "revenues": "Performance / Revenues"
-      },
-      "settings": "Settings",
-      "settingsChildren": {
-        "profile": "My Info",
-        "availability": "Availability / Calendar",
-        "security": "Password / Security",
-        "docs": "Supporting Docs",
-        "preferences": "Preferences"
-      },
-      "cabinet": "Practice Management",
-      "cabinetChildren": {
-        "employees": "Employee List",
-        "equipment": "Medical Equipment",
-        "stocks": "Stock Management",
-        "room": "Consultation Room"
-      }
+  "search": "Search…",
+  "doctorPlan": "Essential Plan",
+  "patientSpace": "Patient Space",
+  "doctor": {
+    "home": "Home",
+    "messages": "Messages",
+    "agent": "My Agent",
+    "appointments": "Appointments",
+    "appointmentsChildren": {
+      "all": "All Appointments",
+      "create": "Create Appointment",
+      "waiting": "Waiting Room",
+      "history": "Consultation History"
     },
-    "patient": {
-      "home": "Home",
-      "messages": "Messages",
-      "followup": "My Follow-up",
-      "appointments": "My Appointments",
-      "appointmentsChildren": {
-        "book": "Book Appointment",
-        "list": "My Appointments",
-        "history": "History"
-      },
-      "dossier": "My Medical Record",
-      "dossierChildren": {
-        "info": "My Info",
-        "prescriptions": "My Prescriptions",
-        "results": "My Results",
-        "documents": "My Documents"
-      },
-      "teleconsultation": "Teleconsultations",
-      "teleconsultationChildren": {
-        "join": "Join Consultation",
-        "history": "Call History",
-        "test": "Audio/Video Test"
-      },
-      "settings": "Settings",
-      "settingsChildren": {
-        "profile": "My Info",
-        "preferences": "Preferences",
-        "security": "Security",
-        "notifications": "Notifications"
-      }
+    "patients": "My Patients",
+    "patientsChildren": {
+      "management": "Patient Management",
+      "record": "Patient Record"
+    },
+    "video": "Video Consultations",
+    "videoChildren": {
+      "start": "Start Consultation",
+      "history": "Call History",
+      "settings": "Camera & Micro Settings",
+      "feedback": "Video Feedback"
+    },
+    "docs": "Medical Docs",
+    "docsChildren": {
+      "received": "Received from Patients",
+      "sent": "Sent to Patients",
+      "prescriptions": "Prescriptions",
+      "createPrescription": "Create Prescription"
+    },
+    "stats": "Statistics",
+    "statsChildren": {
+      "period": "Consultations by Period",
+      "profile": "Patient Profiles Seen",
+      "feedback": "Satisfaction / Feedback",
+      "revenues": "Performance / Revenues"
+    },
+    "settings": "Settings",
+    "settingsChildren": {
+      "profile": "Account Details",
+      "workspace": "Workspace",
+      "availability": "Disponibility",
+      "preferences": "Preferences",
+      "billing": "Billing"
+    },
+    "cabinet": "Practice Management",
+    "cabinetChildren": {
+      "employees": "Employee Management",
+      "services": "Service Management",
+      "departements": "Department Management",
+      "roles": "Role Management"
     }
-  
+  },
+  "patient": {
+    "home": "Home",
+    "messages": "Messages",
+    "followup": "My Follow-up",
+    "appointments": "My Appointments",
+    "appointmentsChildren": {
+      "book": "Book Appointment",
+      "list": "My Appointments",
+      "history": "History"
+    },
+    "dossier": "My Medical Record",
+    "dossierChildren": {
+      "info": "My Info",
+      "prescriptions": "My Prescriptions",
+      "results": "My Results",
+      "documents": "My Documents"
+    },
+    "teleconsultation": "Teleconsultations",
+    "teleconsultationChildren": {
+      "join": "Join Consultation",
+      "history": "Call History",
+      "test": "Audio/Video Test"
+    },
+    "settings": "Settings",
+    "settingsChildren": {
+      "profile": "My Info",
+      "preferences": "Preferences",
+      "security": "Security",
+      "notifications": "Notifications"
+    }
+  }
 }

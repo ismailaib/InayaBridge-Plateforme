@@ -54,6 +54,11 @@
     "allDone": {
       "title": "Félicitations ! Toutes les étapes sont terminées.",
       "subtitle": "Vous pouvez maintenant accéder pleinement à votre tableau de bord."
+    },
+    "return": {
+      "title": "Configuration presque terminée",
+      "description": "Revenez au tableau de bord pour terminer les étapes restantes et finaliser la création de votre espace de travail.",
+      "button": "Revenir au tableau de bord"
     }
   },
   "tenantForm": {

@@ -139,11 +139,11 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       root: "parametres",
       active: false,
       children: [
-        { name: t("doctor.settingsChildren.profile"), root: "#" },
-        { name: t("doctor.settingsChildren.availability"), root: "#" },
-        { name: t("doctor.settingsChildren.security"), root: "#" },
-        { name: t("doctor.settingsChildren.docs"), root: "#" },
-        { name: t("doctor.settingsChildren.preferences"), root: "#" },
+        { name: t("doctor.settingsChildren.profile"), root: "/settings?tab=account" },
+        { name: t("doctor.settingsChildren.workspace"), root: "/settings?tab=workspaces" },
+        { name: t("doctor.settingsChildren.availability"), root: "/settings?tab=disponibility" },
+        { name: t("doctor.settingsChildren.preferences"), root: "/settings?tab=preferences" },
+        { name: t("doctor.settingsChildren.billing"), root: "/settings?tab=billing" },
       ],
     },
     {
@@ -152,10 +152,10 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       root: "gestion-cabinet",
       active: false,
       children: [
-        { name: t("doctor.cabinetChildren.employees"), root: "#" },
-        { name: t("doctor.cabinetChildren.equipment"), root: "#" },
-        { name: t("doctor.cabinetChildren.stocks"), root: "#" },
-        { name: t("doctor.cabinetChildren.room"), root: "#" },
+        { name: t("doctor.cabinetChildren.employees"), root: "/cabinet/employees" },
+        { name: t("doctor.cabinetChildren.services"), root: "/cabinet/services" },
+        { name: t("doctor.cabinetChildren.departements"), root: "/cabinet/departements" },
+        { name: t("doctor.cabinetChildren.roles"), root: "/cabinet/roles" },
       ],
     },
   ] as const;

@@ -1,90 +1,89 @@
 {
-    "search": "Rechercher…",
-    "doctorPlan": "Plan Essentiel",
-    "patientSpace": "Espace Patient",
-    "doctor": {
-      "home": "Accueil",
-      "messages": "Messagerie",
-      "agent": "Mon Agent",
-      "appointments": "Rendez-vous",
-      "appointmentsChildren": {
-        "all": "Tous les rendez-vous",
-        "create": "Créer un rendez-vous",
-        "waiting": "Salle d'attente",
-        "history": "Historique des consultations"
-      },
-      "patients": "Mes Patients",
-      "patientsChildren": {
-        "management": "Gestion des patients",
-        "record": "Dossier patient"
-      },
-      "video": "Consultations Vidéo",
-      "videoChildren": {
-        "start": "Lancer une consultation",
-        "history": "Historique des appels",
-        "settings": "Paramètres caméra & micro",
-        "feedback": "Feedback visio"
-      },
-      "docs": "Doc. Médicaux",
-      "docsChildren": {
-        "received": "Reçus des patients",
-        "sent": "Envoyés aux patients",
-        "prescriptions": "Ordonnances",
-        "createPrescription": "Créer une ordonnance"
-      },
-      "stats": "Statistiques",
-      "statsChildren": {
-        "period": "Consultations par période",
-        "profile": "Profil des patients vus",
-        "feedback": "Satisfaction / feedback",
-        "revenues": "Rendement / revenus"
-      },
-      "settings": "Paramètres",
-      "settingsChildren": {
-        "profile": "Mes informations",
-        "availability": "Disponibilité / calendrier",
-        "security": "Mot de passe / sécurité",
-        "docs": "Pièces justificatives",
-        "preferences": "Préférences"
-      },
-      "cabinet": "Gestion Cabinet",
-      "cabinetChildren": {
-        "employees": "Liste des employés",
-        "equipment": "Matériel médical",
-        "stocks": "Gestion des stocks",
-        "room": "Salle de consultation"
-      }
+  "search": "Rechercher…",
+  "doctorPlan": "Plan Essentiel",
+  "patientSpace": "Espace Patient",
+  "doctor": {
+    "home": "Accueil",
+    "messages": "Messagerie",
+    "agent": "Mon Agent",
+    "appointments": "Rendez-vous",
+    "appointmentsChildren": {
+      "all": "Tous les rendez-vous",
+      "create": "Créer un rendez-vous",
+      "waiting": "Salle d'attente",
+      "history": "Historique des consultations"
     },
-    "patient": {
-      "home": "Accueil",
-      "messages": "Messagerie",
-      "followup": "Mon Suivi",
-      "appointments": "Mes Rendez-vous",
-      "appointmentsChildren": {
-        "book": "Prendre un rendez-vous",
-        "list": "Mes rendez-vous",
-        "history": "Historique"
-      },
-      "dossier": "Mon Dossier Médical",
-      "dossierChildren": {
-        "info": "Mes informations",
-        "prescriptions": "Mes ordonnances",
-        "results": "Mes résultats",
-        "documents": "Mes documents"
-      },
-      "teleconsultation": "Téléconsultations",
-      "teleconsultationChildren": {
-        "join": "Rejoindre une consultation",
-        "history": "Historique des appels",
-        "test": "Test audio/vidéo"
-      },
-      "settings": "Paramètres",
-      "settingsChildren": {
-        "profile": "Mes informations",
-        "preferences": "Préférences",
-        "security": "Sécurité",
-        "notifications": "Notifications"
-      }
+    "patients": "Mes Patients",
+    "patientsChildren": {
+      "management": "Gestion des patients",
+      "record": "Dossier patient"
+    },
+    "video": "Consultations Vidéo",
+    "videoChildren": {
+      "start": "Lancer une consultation",
+      "history": "Historique des appels",
+      "settings": "Paramètres caméra & micro",
+      "feedback": "Feedback visio"
+    },
+    "docs": "Doc. Médicaux",
+    "docsChildren": {
+      "received": "Reçus des patients",
+      "sent": "Envoyés aux patients",
+      "prescriptions": "Ordonnances",
+      "createPrescription": "Créer une ordonnance"
+    },
+    "stats": "Statistiques",
+    "statsChildren": {
+      "period": "Consultations par période",
+      "profile": "Profil des patients vus",
+      "feedback": "Satisfaction / feedback",
+      "revenues": "Rendement / revenus"
+    },
+    "settings": "Paramètres",
+    "settingsChildren": {
+      "profile": "Détails du compte",
+      "workspace": "Espace de travail",
+      "availability": "Disponibilité",
+      "preferences": "Préférences",
+      "billing": "Facturation"
+    },
+    "cabinet": "Gestion Cabinet",
+    "cabinetChildren": {
+      "employees": "Gestion des employés",
+      "services": "Gestion des services",
+      "departements": "Gestion des départements",
+      "roles": "Gestion des rôles"
     }
-  
+  },
+  "patient": {
+    "home": "Accueil",
+    "messages": "Messagerie",
+    "followup": "Mon Suivi",
+    "appointments": "Mes Rendez-vous",
+    "appointmentsChildren": {
+      "book": "Prendre un rendez-vous",
+      "list": "Mes rendez-vous",
+      "history": "Historique"
+    },
+    "dossier": "Mon Dossier Médical",
+    "dossierChildren": {
+      "info": "Mes informations",
+      "prescriptions": "Mes ordonnances",
+      "results": "Mes résultats",
+      "documents": "Mes documents"
+    },
+    "teleconsultation": "Téléconsultations",
+    "teleconsultationChildren": {
+      "join": "Rejoindre une consultation",
+      "history": "Historique des appels",
+      "test": "Test audio/vidéo"
+    },
+    "settings": "Paramètres",
+    "settingsChildren": {
+      "profile": "Mes informations",
+      "preferences": "Préférences",
+      "security": "Sécurité",
+      "notifications": "Notifications"
+    }
+  }
 }
