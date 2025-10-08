@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { RiUserAddFill, RiCloseLine } from '@remixicon/react'
-
 import { Button } from '@/components/Button'
 import {
   Dialog,
@@ -23,9 +22,66 @@ import {
   SelectValue,
 } from '@/components/Select'
 import { Plus, Save } from 'lucide-react'
+import { showToast } from '../../../dashboard/hooks/utils'
+import { sendInvitation } from '@/api/invitations'
+import { getRolesByTenant } from '@/api/roles'
 
-export default function AddEmployeeModal() {
+interface AddEmployeeModalProps {
+  onSuccess?: () => void
+  tenantId:string
+}
+
+export default function AddEmployeeModal({ onSuccess , tenantId }: AddEmployeeModalProps) {
   const [open, setOpen] = useState(false)
+  const [email, setEmail] = useState('')
+  const [roleId, setRoleId] = useState('')
+  const [roles, setRoles] = useState<any[]>([])
+  const [loading, setLoading] = useState(false)
+
+
+  // Fetch tenant roles dynamically
+  const fetchRoles = async () => {
+    try {
+      const { data } = await getRolesByTenant(tenantId)
+      setRoles(data)
+    } catch (err) {
+      console.error('Failed to load roles:', err)
+      showToast('error', 'Erreur', 'Impossible de charger les rôles.')
+    }
+  }
+
+  useEffect(() => {
+    if (open) fetchRoles()
+  }, [open])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email || !roleId) {
+      showToast('error', 'Champs manquants', 'Veuillez remplir tous les champs.')
+      return
+    }
+
+    try {
+      setLoading(true)
+      await sendInvitation(tenantId, { email, roleId })
+      showToast(
+        'success',
+        'Invitation envoyée',
+        `Une invitation a été envoyée à ${email}`
+      )
+      setOpen(false)
+      setEmail('')
+      setRoleId('')
+      onSuccess?.()
+    } catch (err: any) {
+      console.error(err)
+      const message =
+        err.response?.data?.message || 'Erreur lors de l’envoi de l’invitation.'
+      showToast('error', 'Échec', message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -48,14 +104,14 @@ export default function AddEmployeeModal() {
 
         <DialogHeader className="border-b border-gray-200 px-6 py-4 dark:border-gray-900">
           <DialogTitle className="text-base font-semibold">
-            Ajouter un Employé
+            Inviter un Employé
           </DialogTitle>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Renseignez les informations de l’employé à ajouter.
+            Saisissez l’adresse e-mail et sélectionnez un rôle pour envoyer une invitation.
           </p>
         </DialogHeader>
 
-        <form className="flex flex-col md:flex-row">
+        <form onSubmit={handleSubmit} className="flex flex-col md:flex-row">
           {/* Sidebar */}
           <div className="flex flex-col justify-between border-gray-200 dark:border-gray-900 md:w-72 md:border-r">
             <div className="p-6">
@@ -65,16 +121,16 @@ export default function AddEmployeeModal() {
                 </div>
                 <div>
                   <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                    Nouvel Employé
+                    Nouvelle Invitation
                   </h3>
                   <p className="mt-0.5 text-sm text-gray-700 dark:text-gray-300">
-                    Gérer ses accès et son département.
+                    L’employé recevra un lien d’activation.
                   </p>
                 </div>
               </div>
               <Divider className="my-4" />
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Chaque employé recevra ses identifiants d’accès après création.
+                L’invité devra créer son mot de passe lors de l’acceptation.
               </p>
             </div>
 
@@ -82,38 +138,19 @@ export default function AddEmployeeModal() {
               <Button variant="secondary" onClick={() => setOpen(false)}>
                 Annuler
               </Button>
-              <Button type="submit" className='w-full'><Save width={18} className='mr-2' /> Enregistrer</Button>
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full flex items-center justify-center"
+              >
+                {loading ? 'Envoi...' : <Save width={18} className="mr-2" />}
+                {!loading && 'Envoyer'}
+              </Button>
             </div>
           </div>
 
           {/* Fields */}
           <div className="flex-1 space-y-6 p-6">
-            <div>
-              <Label htmlFor="firstName" className="font-medium">
-                Prénom
-              </Label>
-              <Input
-                id="firstName"
-                name="firstName"
-                placeholder="Ex : Sara"
-                className="mt-2"
-                required
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="lastName" className="font-medium">
-                Nom
-              </Label>
-              <Input
-                id="lastName"
-                name="lastName"
-                placeholder="Ex : El Amrani"
-                className="mt-2"
-                required
-              />
-            </div>
-
             <div>
               <Label htmlFor="email" className="font-medium">
                 Adresse e-mail professionnelle
@@ -124,37 +161,32 @@ export default function AddEmployeeModal() {
                 type="email"
                 placeholder="exemple@votrecabinet.ma"
                 className="mt-2"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
 
             <div>
               <Label htmlFor="role" className="font-medium">
-                Rôle
+                Rôle dans le cabinet
               </Label>
-              <Select defaultValue="staff">
+              <Select value={roleId} onValueChange={setRoleId}>
                 <SelectTrigger id="role" className="mt-2">
                   <SelectValue placeholder="Sélectionner un rôle" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="staff">Employé</SelectItem>
-                  <SelectItem value="doctor">Docteur</SelectItem>
-                  <SelectItem value="manager">Responsable</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label htmlFor="department" className="font-medium">
-                Département
-              </Label>
-              <Select defaultValue="1">
-                <SelectTrigger id="department" className="mt-2">
-                  <SelectValue placeholder="Sélectionner un département" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">Radiologie</SelectItem>
-                  <SelectItem value="2">Pédiatrie</SelectItem>
-                  <SelectItem value="3">Cardiologie</SelectItem>
+                  {roles.length === 0 ? (
+                    <SelectItem value="none" disabled>
+                      Aucun rôle disponible
+                    </SelectItem>
+                  ) : (
+                    roles.map((role) => (
+                      <SelectItem key={role.id} value={role.id}>
+                        {role.name}
+                      </SelectItem>
+                    ))
+                  )}
                 </SelectContent>
               </Select>
             </div>

@@ -6,14 +6,22 @@ import { useEffect, useState } from 'react'
 import { showToast } from '../../dashboard/hooks/utils'
 import TableServices from './components/TableService'
 import AddServiceModal from './components/AddServiceModal'
+import { getServicesByTenant, Service } from '@/api/services'
 
 export default function ServicesPage() {
+  const [services, setServices] = useState<Service[]>([])
   const [loading, setLoading] = useState(true)
 
   const fetchServices = async () => {
     try {
       setLoading(true)
-      // TODO: Replace with API call
+      const user = JSON.parse(localStorage.getItem('user') || '{}')
+      const tenantId = user?.doctorProfile?.tenantId
+
+      if (!tenantId) throw new Error('Tenant ID manquant')
+
+      const res = await getServicesByTenant(tenantId)
+      setServices(res.data)
     } catch (err) {
       showToast('error', 'Erreur de chargement', 'Impossible de charger les services.')
     } finally {
@@ -37,11 +45,11 @@ export default function ServicesPage() {
           </p>
         </div>
         <div>
-          <AddServiceModal />
+          <AddServiceModal onCreated={fetchServices} />
         </div>
       </div>
 
-      <TableServices />
+      <TableServices data={services} loading={loading} onRefresh={fetchServices} />
     </div>
   )
 }

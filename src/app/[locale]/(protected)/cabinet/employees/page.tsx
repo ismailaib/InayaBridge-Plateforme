@@ -1,19 +1,36 @@
 'use client'
 
-import { Button } from '@/components/Button'
-import { Plus } from 'lucide-react'
+import { getEmployees } from '@/api/employees'
+import { Card } from '@/components/Card'
 import { useEffect, useState } from 'react'
 import { showToast } from '../../dashboard/hooks/utils'
-import TableEmployees from './components/TableEmployees'
 import AddEmployeeModal from './components/AddEmployeeModal'
+import TableEmployees from './components/TableEmployees'
 
 export default function EmployeesPage() {
   const [loading, setLoading] = useState(true)
+  const [employees, setEmployees] = useState<any[]>([])
+  const [tenantId, setTenantId] = useState<string>('')
 
-  const fetchEmployees = async () => {
+  useEffect(() => {
+    try {
+      const storedUser = localStorage.getItem('user')
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser)
+        const tenant = parsedUser?.doctorProfile?.tenantId
+        if (tenant) setTenantId(tenant)
+      }
+    } catch (err) {
+      console.error('Error parsing user from localStorage', err)
+    }
+  }, [])
+
+  const fetchEmployees = async (id: string) => {
+    if (!id) return
     try {
       setLoading(true)
-      // TODO: Replace with API call
+      const res = await getEmployees(id)
+      setEmployees(res.data)
     } catch (err) {
       showToast('error', 'Erreur de chargement', 'Impossible de charger les employés.')
     } finally {
@@ -22,8 +39,8 @@ export default function EmployeesPage() {
   }
 
   useEffect(() => {
-    fetchEmployees()
-  }, [])
+    if (tenantId) fetchEmployees(tenantId)
+  }, [tenantId])
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6">
@@ -33,15 +50,20 @@ export default function EmployeesPage() {
             Gestion des Employés
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Consultez et gérez les employés de votre cabinet, leurs rôles et leur statut.
+            Consultez et gérez les employés et les invitations envoyées.
           </p>
         </div>
-        <div>
-          <AddEmployeeModal />
-        </div>
+        <AddEmployeeModal onSuccess={() => fetchEmployees(tenantId)} tenantId={tenantId} />
       </div>
 
-      <TableEmployees />
+      <Card className="p-6">
+        <TableEmployees
+          loading={loading}
+          employees={employees}
+          refresh={() => fetchEmployees(tenantId)}
+          tenantId={tenantId} 
+        />
+      </Card>
     </div>
   )
 }

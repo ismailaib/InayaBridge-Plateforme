@@ -16,14 +16,37 @@ import { Label } from '@/components/Label'
 import { RiCloseLine } from '@remixicon/react'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import { deleteRole } from '@/api/roles'
+import { showToast } from '../../../dashboard/hooks/utils'
 
-export default function DeleteRoleModal() {
+interface DeleteRoleModalProps {
+  roleId: string
+  onRoleDeleted?: () => void
+}
+
+export default function DeleteRoleModal({ roleId, onRoleDeleted }: DeleteRoleModalProps) {
   const [open, setOpen] = useState(false)
+  const [confirmName, setConfirmName] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleDelete = async () => {
+    try {
+      setLoading(true)
+      await deleteRole(roleId)
+      showToast('success', 'Succès', 'Rôle supprimé avec succès.')
+      onRoleDeleted?.()
+      setOpen(false)
+    } catch {
+      showToast('error', 'Erreur', 'Impossible de supprimer le rôle.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Trash2 className="size-4" />
+        <Trash2 className="size-4 cursor-pointer" />
       </DialogTrigger>
 
       <DialogContent className="max-w-md">
@@ -36,37 +59,38 @@ export default function DeleteRoleModal() {
           </Button>
         </DialogClose>
 
-        <form>
-          <DialogHeader>
-            <DialogTitle className="text-base font-semibold">
-              Supprimer le Rôle
-            </DialogTitle>
-            <DialogDescription className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              Cette action supprimera définitivement le rôle et ses permissions. Les
-              utilisateurs affectés perdront immédiatement cet accès.
-            </DialogDescription>
-          </DialogHeader>
+        <DialogHeader>
+          <DialogTitle className="text-base font-semibold">
+            Supprimer le Rôle
+          </DialogTitle>
+          <DialogDescription className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            Cette action supprimera définitivement le rôle et ses permissions.
+          </DialogDescription>
+        </DialogHeader>
 
-          <div className="mt-6">
-            <Label htmlFor="confirm-role" className="font-medium">
-              Confirmez le nom du rôle
-            </Label>
-            <Input
-              id="confirm-role"
-              name="confirm-role"
-              placeholder="Saisissez le nom du rôle"
-              className="mt-2"
-            />
-          </div>
+        <div className="mt-6">
+          <Label htmlFor="confirm-role" className="font-medium">
+            Confirmez le nom du rôle
+          </Label>
+          <Input
+            id="confirm-role"
+            placeholder="Saisissez le nom du rôle"
+            className="mt-2"
+            value={confirmName}
+            onChange={(e) => setConfirmName(e.target.value)}
+          />
+        </div>
 
-          <DialogFooter className="mt-4">
-            <DialogClose asChild>
-              <Button variant="destructive" className="w-full">
-                Supprimer définitivement
-              </Button>
-            </DialogClose>
-          </DialogFooter>
-        </form>
+        <DialogFooter className="mt-4">
+          <Button
+            variant="destructive"
+            className="w-full"
+            onClick={handleDelete}
+            disabled={loading}
+          >
+            {loading ? 'Suppression...' : 'Supprimer définitivement'}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

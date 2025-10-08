@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { RiCloseLine, RiDeleteBin7Line } from '@remixicon/react'
+import { RiCloseLine } from '@remixicon/react'
 import {
   Dialog,
   DialogClose,
@@ -13,17 +13,51 @@ import {
   DialogTrigger,
 } from '@/components/Dialog'
 import { Button } from '@/components/Button'
-import { Input } from '@/components/Input'
-import { Label } from '@/components/Label'
 import { Trash2 } from 'lucide-react'
+import api from '@/lib/api'
+import { cancelInvitation } from '@/api/invitations'
+import { showToast } from '../../../dashboard/hooks/utils'
 
-export default function DeleteEmployeeModal() {
+interface Props {
+  employee: any
+  onSuccess?: () => void
+  tenantId:string
+}
+
+export default function DeleteEmployeeModal({ employee, onSuccess, tenantId }: Props) {
   const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+
+  const handleDelete = async () => {
+    try {
+      setLoading(true)
+
+      if (employee.status === 'PENDING') {
+        // Delete invitation
+        await cancelInvitation(employee.id, tenantId)
+      } else {
+        // Delete doctor profile
+        await api.delete(`/doctors/${employee.id}`)
+      }
+
+      showToast('success', 'Employé supprimé', 'L’employé a été supprimé avec succès.')
+      setOpen(false)
+      onSuccess?.()
+    } catch (err) {
+      console.error(err)
+      showToast('error', 'Erreur', 'Impossible de supprimer cet employé.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
+        <button className="p-2 hover:text-red-600 dark:hover:text-red-400">
           <Trash2 className="size-4" />
+        </button>
       </DialogTrigger>
 
       <DialogContent className="max-w-md">
@@ -36,37 +70,26 @@ export default function DeleteEmployeeModal() {
           </Button>
         </DialogClose>
 
-        <form>
-          <DialogHeader>
-            <DialogTitle className="text-base font-semibold">
-              Supprimer l’Employé
-            </DialogTitle>
-            <DialogDescription className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              Cette action supprimera définitivement le compte et les accès de
-              l’employé. Elle ne peut pas être annulée.
-            </DialogDescription>
-          </DialogHeader>
+        <DialogHeader>
+          <DialogTitle>Supprimer l’Employé</DialogTitle>
+          <DialogDescription className="text-sm text-gray-500 dark:text-gray-400">
+            Cette action est irréversible. {employee?.email} sera définitivement supprimé.
+          </DialogDescription>
+        </DialogHeader>
 
-          <div className="mt-6">
-            <Label htmlFor="confirm-email" className="font-medium">
-              Confirmez l’adresse e-mail
-            </Label>
-            <Input
-              id="confirm-email"
-              name="confirm-email"
-              placeholder="Entrez l’e-mail de l’employé"
-              className="mt-2"
-            />
-          </div>
-
-          <DialogFooter className="mt-4">
-            <DialogClose asChild>
-              <Button variant="destructive" className="w-full">
-                Supprimer définitivement
-              </Button>
-            </DialogClose>
-          </DialogFooter>
-        </form>
+        <DialogFooter className="mt-6 flex gap-2">
+          <Button variant="secondary" onClick={() => setOpen(false)}>
+            Annuler
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={loading}
+            className="w-full"
+          >
+            {loading ? 'Suppression...' : 'Supprimer définitivement'}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

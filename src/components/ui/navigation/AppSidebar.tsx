@@ -262,7 +262,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
 
   const toggleMenu = (name: string) =>
     setOpenMenus((prev) =>
-      prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name],
+      prev.includes(name) ? [] : [name],
     );
 
   const generateHref = (root: string) => {

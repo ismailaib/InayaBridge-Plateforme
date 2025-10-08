@@ -1,11 +1,7 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import {
-  RiDeleteBin7Line,
-  RiPencilLine,
-  RiSearchLine,
-} from '@remixicon/react'
+import { RiSearchLine } from '@remixicon/react'
 import {
   createColumnHelper,
   flexRender,
@@ -14,64 +10,45 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { cx } from '@/lib/utils'
-
 import { Checkbox } from '@/components/Checkbox'
-import { Table, TableBody, TableCell, TableFoot, TableHead, TableHeaderCell, TableRoot, TableRow } from '@/components/Table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRoot,
+  TableRow,
+} from '@/components/Table'
 import { Card } from '@/components/Card'
 import { Input } from '@/components/Input'
 import { DateRangePicker } from '@/components/DatePicker'
 import { Label } from '@/components/Label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/Select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/Select'
 import EditRoleModal from './EditRoleModal'
 import DeleteRoleModal from './DeleteRoleModal'
+import type { Role } from '@/api/roles'
 
-type Role = {
-  id: string
-  name: string
-  description: string
-  users: number
-  status: 'active' | 'inactive'
-  createdAt: string
+interface TableRolesProps {
+  roles: Role[]
+  loading?: boolean
+  onRefresh?: () => void
+  tenantId: string
 }
-
-const roles: Role[] = [
-  {
-    id: '1',
-    name: 'Administrator',
-    description: 'Full access to all system features and settings.',
-    users: 3,
-    status: 'active',
-    createdAt: '2024-09-10',
-  },
-  {
-    id: '2',
-    name: 'Doctor',
-    description: 'Access to patient records, appointments, and consultations.',
-    users: 15,
-    status: 'active',
-    createdAt: '2024-09-18',
-  },
-  {
-    id: '3',
-    name: 'Nurse',
-    description: 'Limited access to patient data and daily tasks.',
-    users: 8,
-    status: 'active',
-    createdAt: '2024-09-22',
-  },
-  {
-    id: '4',
-    name: 'Receptionist',
-    description: 'Manages appointments and patient check-ins.',
-    users: 4,
-    status: 'inactive',
-    createdAt: '2024-08-27',
-  },
-]
 
 const columnHelper = createColumnHelper<Role>()
 
-export default function TableRoles() {
+export default function TableRoles({
+  roles,
+  loading,
+  onRefresh,
+}: TableRolesProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState<'all' | 'active' | 'inactive'>('all')
@@ -79,36 +56,14 @@ export default function TableRoles() {
   const filteredRoles = useMemo(() => {
     return roles.filter((role) => {
       const matchesSearch = role.name.toLowerCase().includes(search.toLowerCase())
-      const matchesStatus = status === 'all' || role.status === status
+      const matchesStatus =
+        status === 'all' || role.status.toLowerCase() === status
       return matchesSearch && matchesStatus
     })
-  }, [search, status])
+  }, [roles, search, status])
 
   const columns = useMemo(
     () => [
-      columnHelper.display({
-        id: 'select',
-        header: ({ table }) => (
-          <Checkbox
-            checked={
-              table.getIsAllPageRowsSelected()
-                ? true
-                : table.getIsSomePageRowsSelected()
-                  ? 'indeterminate'
-                  : false
-            }
-            onCheckedChange={() => table.toggleAllPageRowsSelected()}
-            className="translate-y-0.5"
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={() => row.toggleSelected()}
-            className="translate-y-0.5"
-          />
-        ),
-      }),
       columnHelper.accessor('name', {
         header: 'Role Name',
         meta: { align: 'text-left' },
@@ -122,15 +77,11 @@ export default function TableRoles() {
           </span>
         ),
       }),
-      columnHelper.accessor('users', {
-        header: 'Users',
-        meta: { align: 'text-center' },
-      }),
       columnHelper.accessor('status', {
         header: 'Status',
         meta: { align: 'text-left' },
         cell: ({ getValue }) => {
-          const value = getValue()
+          const value = getValue()?.toLowerCase()
           return (
             <span
               className={cx(
@@ -154,19 +105,30 @@ export default function TableRoles() {
         id: 'actions',
         header: 'Actions',
         meta: { align: 'text-right' },
-        cell: () => (
-          <div className="inline-flex items-center space-x-1">
-            <button className="p-2 hover:text-blue-600 dark:hover:text-blue-400">
-              <EditRoleModal />
-            </button>
-            <button className="p-2 hover:text-red-600 dark:hover:text-red-400">
-              <DeleteRoleModal />
-            </button>
-          </div>
-        ),
+        cell: ({ row }) => {
+          const role = row.original
+          const isProtected = role.permissions?.includes('*')
+
+          return (
+            <div className="inline-flex items-center space-x-1 justify-end">
+              {isProtected ? (
+                <span className="text-xs text-gray-400 italic">Protected</span>
+              ) : (
+                <>
+                  <button className="p-2 hover:text-blue-600 dark:hover:text-blue-400">
+                    <EditRoleModal role={role} onRoleUpdated={onRefresh} />
+                  </button>
+                  <button className="p-2 hover:text-red-600 dark:hover:text-red-400">
+                    <DeleteRoleModal roleId={role.id} onRoleDeleted={onRefresh} />
+                  </button>
+                </>
+              )}
+            </div>
+          )
+        },
       }),
     ],
-    [],
+    [onRefresh],
   )
 
   const table = useReactTable({
@@ -210,83 +172,58 @@ export default function TableRoles() {
             </SelectContent>
           </Select>
         </div>
-
-        <div className="md:col-span-2">
-          <Label>Created between</Label>
-          <DateRangePicker
-            defaultValue={{
-              from: new Date(new Date().setDate(new Date().getDate() - 30)),
-              to: new Date(),
-            }}
-            className="mt-2"
-          />
-        </div>
       </div>
 
       {/* ---------------- Table ---------------- */}
-      <TableRoot>
-        <Table>
-          <TableHead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHeaderCell
-                    key={header.id}
-                    className={cx(header.column.columnDef.meta?.align)}
-                  >
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHeaderCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableHead>
+      {loading ? (
+        <div className="flex items-center justify-center py-12 text-gray-500">
+          Loading roles...
+        </div>
+      ) : filteredRoles.length === 0 ? (
+        <div className="flex items-center justify-center py-12 text-gray-500">
+          No roles found.
+        </div>
+      ) : (
+        <TableRoot>
+          <Table>
+            <TableHead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHeaderCell
+                      key={header.id}
+                      className={cx(header.column.columnDef.meta?.align)}
+                    >
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHeaderCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHead>
 
-          <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                onClick={() => row.toggleSelected(!row.getIsSelected())}
-                className={cx(
-                  'group select-none hover:bg-gray-50 hover:dark:bg-gray-900 transition',
-                  row.getIsSelected() ? 'bg-gray-50 dark:bg-gray-900' : '',
-                )}
-              >
-                {row.getVisibleCells().map((cell, index) => (
-                  <TableCell
-                    key={cell.id}
-                    className={cx(cell.column.columnDef.meta?.align, 'relative')}
-                  >
-                    {index === 0 && row.getIsSelected() && (
-                      <div className="absolute inset-y-0 left-0 w-0.5 bg-blue-500 dark:bg-blue-500" />
-                    )}
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-
-          <TableFoot>
-            <TableRow>
-              <TableHeaderCell colSpan={1} className="border-transparent">
-                <Checkbox
-                  checked={
-                    table.getIsAllPageRowsSelected()
-                      ? true
-                      : table.getIsSomePageRowsSelected()
-                        ? 'indeterminate'
-                        : false
-                  }
-                  onCheckedChange={() => table.toggleAllPageRowsSelected()}
-                />
-              </TableHeaderCell>
-              <TableHeaderCell colSpan={7} className="border-transparent font-normal">
-                {Object.keys(rowSelection).length} of {table.getRowModel().rows.length} selected
-              </TableHeaderCell>
-            </TableRow>
-          </TableFoot>
-        </Table>
-      </TableRoot>
+            <TableBody>
+              {table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  className={cx(
+                    'group cursor-pointer hover:bg-gray-50 hover:dark:bg-gray-900 transition',
+                    row.getIsSelected() ? 'bg-gray-50 dark:bg-gray-900' : '',
+                  )}
+                >
+                  {row.getVisibleCells().map((cell, index) => (
+                    <TableCell
+                      key={cell.id}
+                      className={cx(cell.column.columnDef.meta?.align, 'relative')}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableRoot>
+      )}
     </Card>
   )
 }

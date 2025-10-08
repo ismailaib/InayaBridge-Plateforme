@@ -1,48 +1,53 @@
-import api from "@/lib/api";
+import api from "@/lib/api"
 
-export interface workspaceCreation {
-  name: string;
-  description: string;
-  ownerId: string;
-  tenantTypeId: string;
-  isPrivate: boolean;
-}
-
-export interface RegisterDoctor {
-  tenantId: string;
-  userId: string;
-  specialty: string;
-  licenseNumber: string;
-}
+/* ========== Types ========== */
 
 export interface SendInvitation {
-  email: string;
+  email: string
+  roleId: string // tenant-specific role ID
 }
 
 export interface AcceptInvitation {
-  firstName: string;
-  lastName: string;
-  password: string;
+  firstName: string
+  lastName: string
+  password: string
 }
 
-/* ========== API helpers ========== */
+/* ========== API Helpers ========== */
+
+/**
+ * Send an invitation to a user (doctor/assistant/etc.)
+ * Includes tenantId as query param and payload with email + roleId
+ */
 export const sendInvitation = (tenantId: string, payload: SendInvitation) =>
-  api.post(`/invitations/send?tenantId=${tenantId}`, payload);
+  api.post(`/invitations/send?tenantId=${tenantId}`, payload)
 
-export const getInvitations = (id: string) =>
-  api.get(`/invitations?tenantId=${id}`);
+/**
+ * Fetch all invitations of a tenant
+ */
+export const getInvitations = (tenantId: string) =>
+  api.get(`/invitations?tenantId=${tenantId}`)
 
-export const getInvitation = (id: string) => api.get(`/invitations/${id}`);
+/**
+ * Fetch one invitation by id or token
+ */
+export const getInvitation = (idOrToken: string) =>
+  api.get(`/invitations/${idOrToken}`)
 
-export const acceptInvitations = (payload: AcceptInvitation, token: string) =>
-  api.post(`/invitations/accept/${token}`, payload);
+/**
+ * Accept an invitation by token (used by invited users)
+ */
+export const acceptInvitation = (payload: AcceptInvitation, token: string) =>
+  api.post(`/invitations/accept/${token}`, payload)
 
+/**
+ * Delete (cancel) an invitation
+ */
 export const cancelInvitation = (invitationId: string, tenantId: string) =>
-  api.delete(
-    `/invitations/${invitationId}?tenantId=${tenantId}&invitationId=${invitationId}`,
-  );
+  api.delete(`/invitations/${invitationId}?tenantId=${tenantId}`)
 
-export const recentInvitation = (invitationId: string, tenantId: string) =>
-  api.post(
-    `/invitations/resend/${invitationId}?tenantId=${tenantId}&invitationId=${invitationId}`,
-  );
+/**
+ * Resend an existing pending invitation
+ */
+export const resendInvitation = (invitationId: string, tenantId: string) =>
+  api.post(`/invitations/resend/${invitationId}?tenantId=${tenantId}`)

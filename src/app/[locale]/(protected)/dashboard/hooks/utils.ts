@@ -25,5 +25,5 @@ export const showToast = (
   title: string,
   description: string,
 ) => {
-  toast({ title, description, variant: type, duration: 3000 });
+  toast({ title, description, variant: type, duration: 2000 });
 };
