@@ -31,8 +31,11 @@ export const getEmployees = (tenantId: string) =>
 /**
  * Delete an invitation (if still pending)
  */
-export const deleteEmployee = (employeeId: string, tenantId: string) =>
+export const deleteInvitation = (employeeId: string, tenantId: string) =>
   api.delete(`/invitations/${employeeId}?tenantId=${tenantId}`)
+
+export const deleteEmployee = (employeeId: string, tenantId: string) =>
+  api.delete(`/employees/${employeeId}?tenantId=${tenantId}`)
 
 /**
  * Resend an invitation email

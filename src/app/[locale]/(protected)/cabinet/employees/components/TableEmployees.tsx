@@ -1,6 +1,7 @@
 'use client'
 
-import { resendEmployeeInvite, deleteEmployee } from '@/api/employees'
+import { getDepartmentsByCabinet } from '@/api/departement'
+import { resendEmployeeInvite } from '@/api/employees'
 import { Input } from '@/components/Input'
 import { Label } from '@/components/Label'
 import {
@@ -27,10 +28,10 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { useMemo, useState } from 'react'
-import EditEmployeeModal from './EditEmployeeModal'
-import DeleteEmployeeModal from './DeleteEmployeeModal'
+import { useEffect, useMemo, useState } from 'react'
 import { showToast } from '../../../dashboard/hooks/utils'
+import DeleteEmployeeModal from './DeleteEmployeeModal'
+import EditEmployeeModal from './EditEmployeeModal'
 
 type Employee = {
   id: string
@@ -38,9 +39,16 @@ type Employee = {
   firstName: string | null
   lastName: string | null
   roleName: string | null
+  roleId?: string | null
+  departmentId?: string | null
   status: string
   type: 'EMPLOYEE' | 'INVITATION'
   joinedAt: string
+}
+
+type Department = {
+  id: string
+  name: string
 }
 
 const columnHelper = createColumnHelper<Employee>()
@@ -60,6 +68,37 @@ export default function TableEmployees({
 }: Props) {
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState<'all' | 'ACTIVE' | 'PENDING' | 'DECLINED'>('all')
+  const [departments, setDepartments] = useState<Department[]>([])
+  const [connectedEmail, setConnectedEmail] = useState<string | null>(null)
+
+  // ✅ Get connected user from localStorage
+  useEffect(() => {
+    try {
+      const storedUser = localStorage.getItem('user')
+      if (storedUser) {
+        const parsed = JSON.parse(storedUser)
+        if (parsed?.email) {
+          setConnectedEmail(parsed.email)
+        }
+      }
+    } catch (err) {
+      console.error('Failed to read user from localStorage:', err)
+    }
+  }, [])
+
+  // ✅ Load departments only if tenantId is ready
+  useEffect(() => {
+    async function fetchDepartments() {
+      if (!tenantId) return
+      try {
+        const res = await getDepartmentsByCabinet(tenantId)
+        setDepartments(res.data || [])
+      } catch (err) {
+        console.error('Failed to load departments', err)
+      }
+    }
+    fetchDepartments()
+  }, [tenantId])
 
   const filtered = useMemo(() => {
     return employees.filter((emp) => {
@@ -72,19 +111,21 @@ export default function TableEmployees({
     })
   }, [search, status, employees])
 
+  const getDepartmentName = (id?: string | null) => {
+    if (!id) return '-'
+    const dep = departments.find((d) => d.id === id)
+    return dep ? dep.name : '-'
+  }
+
   const columns = useMemo(
     () => [
-      columnHelper.accessor('email', {
-        header: 'Email',
-      }),
-      columnHelper.accessor('firstName', {
-        header: 'Prénom',
-      }),
-      columnHelper.accessor('lastName', {
-        header: 'Nom',
-      }),
-      columnHelper.accessor('roleName', {
-        header: 'Rôle',
+      columnHelper.accessor('email', { header: 'Email' }),
+      columnHelper.accessor('firstName', { header: 'Prénom' }),
+      columnHelper.accessor('lastName', { header: 'Nom' }),
+      columnHelper.accessor('roleName', { header: 'Rôle' }),
+      columnHelper.accessor('departmentId', {
+        header: 'Département',
+        cell: ({ getValue }) => getDepartmentName(getValue()),
       }),
       columnHelper.accessor('status', {
         header: 'Statut',
@@ -119,7 +160,11 @@ export default function TableEmployees({
         cell: ({ row }) => {
           const item = row.original
 
-          // INVITATION – PENDING
+          if (connectedEmail && item.email?.toLowerCase() === connectedEmail.toLowerCase()) {
+            return <span className="text-gray-400 text-sm font-light">Protected</span>
+          }
+
+          // Invitation
           if (item.type === 'INVITATION' && item.status === 'PENDING') {
             return (
               <div className="inline-flex items-center space-x-2">
@@ -131,7 +176,7 @@ export default function TableEmployees({
                       refresh()
                     } catch (err: any) {
                       const msg =
-                        err.response?.data?.message ||
+                        err.response?.data?.message ??
                         'Erreur lors de l’envoi de l’invitation.'
                       showToast('error', 'Échec', msg)
                     }
@@ -143,47 +188,36 @@ export default function TableEmployees({
                 <DeleteEmployeeModal
                   employee={item}
                   tenantId={tenantId}
-                  onSuccess={async () => {
-                    try {
-                      showToast('success', 'Invitation supprimée', 'Invitation annulée.')
-                      refresh()
-                    } catch (err: any) {
-                      showToast('error', 'Erreur', 'Impossible de supprimer cette invitation.')
-                    }
-                  }}
+                  onSuccess={refresh}
                 />
               </div>
             )
           }
 
-          // EMPLOYEE – ACTIVE
+          // Employee
           if (item.type === 'EMPLOYEE' && item.status === 'ACTIVE') {
             return (
               <div className="inline-flex items-center space-x-2">
-                <EditEmployeeModal employee={item} onSuccess={refresh} tenantId={tenantId} />
+                <EditEmployeeModal
+                  employee={item}
+                  tenantId={tenantId}
+                  departments={departments}
+                  onSuccess={refresh}
+                />
                 <DeleteEmployeeModal
                   employee={item}
                   tenantId={tenantId}
-                  onSuccess={async () => {
-                    try {
-                      await deleteEmployee(item.id, tenantId)
-                      showToast('success', 'Employé supprimé', 'Compte supprimé avec succès.')
-                      refresh()
-                    } catch (err: any) {
-                      showToast('error', 'Erreur', 'Impossible de supprimer cet employé.')
-                    }
-                  }}
+                  onSuccess={refresh}
                 />
               </div>
             )
           }
 
-          // Default fallback
           return <span className="text-gray-400 text-sm">—</span>
         },
       }),
     ],
-    [refresh, tenantId]
+    [departments, refresh, tenantId, connectedEmail]
   )
 
   const table = useReactTable({
@@ -208,7 +242,6 @@ export default function TableEmployees({
             />
           </div>
         </div>
-
         <div>
           <Label>Statut</Label>
           <Select value={status} onValueChange={(v) => setStatus(v as any)}>
@@ -239,17 +272,16 @@ export default function TableEmployees({
               </TableRow>
             ))}
           </TableHead>
-
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-4 text-gray-500">
+                <TableCell colSpan={8} className="text-center py-4 text-gray-500">
                   Chargement...
                 </TableCell>
               </TableRow>
             ) : filtered.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-4 text-gray-500">
+                <TableCell colSpan={8} className="text-center py-4 text-gray-500">
                   Aucun employé trouvé
                 </TableCell>
               </TableRow>

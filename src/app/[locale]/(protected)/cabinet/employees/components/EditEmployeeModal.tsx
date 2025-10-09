@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { RiUserSettingsFill, RiCloseLine } from '@remixicon/react'
+import { getRolesByTenant } from '@/api/roles'
+import { updateDoctorProfile } from '@/api/profile'
+import { Button } from '@/components/Button'
 import {
   Dialog,
   DialogClose,
@@ -10,10 +11,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/Dialog'
-import { Button } from '@/components/Button'
-import { Input } from '@/components/Input'
-import { Label } from '@/components/Label'
 import { Divider } from '@/components/Divider'
+import { Label } from '@/components/Label'
 import {
   Select,
   SelectContent,
@@ -21,56 +20,76 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/Select'
+import { RiCloseLine, RiUserSettingsFill } from '@remixicon/react'
 import { SquarePen } from 'lucide-react'
-import api from '@/lib/api'
+import { useEffect, useState } from 'react'
 import { showToast } from '../../../dashboard/hooks/utils'
-import { getRolesByTenant } from '@/api/roles'
-import { getDepartmentsByCabinet } from '@/api/departement'
 
-interface Props {
-  employee: any
-  onSuccess?: () => void
-  tenantId:string
+interface Department {
+  id: string
+  name: string
 }
 
-export default function EditEmployeeModal({ employee, onSuccess, tenantId }: Props) {
+interface Role {
+  id: string
+  name: string
+}
+
+interface Employee {
+  id: string
+  email: string | null
+  roleId?: string | null
+  departmentId?: string | null
+}
+
+interface Props {
+  employee: Employee
+  onSuccess?: () => void
+  tenantId: string
+  departments: Department[]
+}
+
+export default function EditEmployeeModal({
+  employee,
+  onSuccess,
+  tenantId,
+  departments,
+}: Props) {
   const [open, setOpen] = useState(false)
-  const [roles, setRoles] = useState<any[]>([])
-  const [departments, setDepartments] = useState<any[]>([])
+  const [roles, setRoles] = useState<Role[]>([])
   const [roleId, setRoleId] = useState(employee?.roleId || '')
   const [departmentId, setDepartmentId] = useState(employee?.departmentId || '')
   const [loading, setLoading] = useState(false)
 
-
-  const fetchRolesAndDepartments = async () => {
-    try {
-      const [rolesRes, deptRes] = await Promise.all([
-        await getRolesByTenant(tenantId),
-        await getDepartmentsByCabinet(tenantId),
-      ])
-      setRoles(rolesRes.data)
-      setDepartments(deptRes.data)
-    } catch (err) {
-      showToast('error', 'Erreur', 'Impossible de charger les données.')
-    }
-  }
-
   useEffect(() => {
-    if (open) fetchRolesAndDepartments()
-  }, [open])
+    async function fetchRoles() {
+      try {
+        const res = await getRolesByTenant(tenantId)
+        setRoles(res.data)
+      } catch {
+        showToast('error', 'Erreur', 'Impossible de charger les rôles.')
+      }
+    }
+    if (open) fetchRoles()
+  }, [open, tenantId])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
       setLoading(true)
-      await api.put(`/doctors/${employee.id}`, {
-        roleId,
-        departmentId,
-      })
+      await updateDoctorProfile(
+        {
+          userId: employee.id,
+          roleId,
+          departmentId,
+          tenantId,
+        },
+        employee.id
+      )
       showToast('success', 'Employé mis à jour', 'Les informations ont été sauvegardées.')
       setOpen(false)
       onSuccess?.()
-    } catch (err: any) {
+    } catch (err) {
       console.error(err)
       showToast('error', 'Erreur', 'Impossible de mettre à jour l’employé.')
     } finally {
@@ -101,7 +120,7 @@ export default function EditEmployeeModal({ employee, onSuccess, tenantId }: Pro
             Modifier l’Employé
           </DialogTitle>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Mettez à jour le rôle ou le département de {employee?.email}.
+            Mettez à jour le rôle ou le département de {employee?.email ?? 'cet employé'}.
           </p>
         </DialogHeader>
 
@@ -114,7 +133,7 @@ export default function EditEmployeeModal({ employee, onSuccess, tenantId }: Pro
                 </div>
                 <div>
                   <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                    {employee?.email}
+                    {employee?.email ?? '—'}
                   </h3>
                   <p className="mt-0.5 text-sm text-gray-700 dark:text-gray-300">
                     Employé actuel

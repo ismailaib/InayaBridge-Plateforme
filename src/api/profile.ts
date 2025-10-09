@@ -16,6 +16,8 @@ export interface RegisterDoctor {
   tenantId?: string;
   userId: string;
   specialty?: string;
+  roleId?:string;
+  departmentId?:string;
   licenseNumber?: string;
 }
 

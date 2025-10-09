@@ -1,6 +1,6 @@
 "use client";
 
-import { acceptInvitations, getInvitation } from "@/api/invitations";
+import { acceptInvitation, getInvitation } from "@/api/invitations";
 import { getTenant } from "@/api/tenant";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
@@ -165,7 +165,7 @@ export default function InvitePage() {
     setError("");
 
     try {
-      await acceptInvitations(
+      await acceptInvitation(
         {
           firstName: formData.firstName.trim(),
           lastName: formData.lastName.trim(),

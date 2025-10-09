@@ -14,9 +14,9 @@ import {
 } from '@/components/Dialog'
 import { Button } from '@/components/Button'
 import { Trash2 } from 'lucide-react'
-import api from '@/lib/api'
 import { cancelInvitation } from '@/api/invitations'
 import { showToast } from '../../../dashboard/hooks/utils'
+import { deleteEmployee } from '@/api/employees'
 
 interface Props {
   employee: any
@@ -34,11 +34,9 @@ export default function DeleteEmployeeModal({ employee, onSuccess, tenantId }: P
       setLoading(true)
 
       if (employee.status === 'PENDING') {
-        // Delete invitation
         await cancelInvitation(employee.id, tenantId)
       } else {
-        // Delete doctor profile
-        await api.delete(`/doctors/${employee.id}`)
+        await deleteEmployee(employee.id, tenantId)
       }
 
       showToast('success', 'Employé supprimé', 'L’employé a été supprimé avec succès.')

@@ -4,7 +4,6 @@ import { Button } from "@/components/Button";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { Plus } from "lucide-react";
 
-import React from "react";
 
 import Link from "next/link";
 
