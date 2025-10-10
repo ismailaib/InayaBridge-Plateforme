@@ -1,112 +1,190 @@
-// store/ChatStore.ts
-import create from "zustand";
+import create from "zustand"
+import type { ChatRoom, ChatMessage, UserChatState } from "@/api/chat"
+import {
+  markRoomAsRead as apiMarkRoomAsRead,
+  updateRoomPreferences as apiUpdateRoomPreferences,
+  incrementUnreadCount as apiIncrementUnreadCount,
+} from "@/api/chat"
 
-export type LipsyncEntry = {
-  start: number; // seconde où commence ce viseme
-  end: number; // seconde où se termine
-  value: string; // lettre (ex: "A", "B", etc.) mappée à un morph target
-};
+type MessagesByRoom = Record<string, ChatMessage[]>
+type StatesByRoom = Record<string, UserChatState>
 
-export type Message = {
-  id: string;
-  sender: "user" | "ai";
-  content: string;
-  timestamp: number;
-  audio: string | null; // base64 ou null
-  lipsync: LipsyncEntry[] | null;
-  facialExpression: string; // exemple: "smile"
-  animation: string; // exemple: "Idle1"
-};
+export interface ChatStoreState {
+  rooms: ChatRoom[]
+  messages: MessagesByRoom
+  states: StatesByRoom
+  selectedRoom: ChatRoom | null
 
-interface ChatState {
-  messages: Message[];
-  isLoading: boolean;
+  setRooms: (rooms: ChatRoom[]) => void
+  setSelectedRoom: (room: ChatRoom | null) => void
 
-  addMessage: (m: Omit<Message, "id" | "timestamp">) => void;
-  clearMessages: () => void;
-  setLoading: (loading: boolean) => void;
-  sendMessage: (content: string) => Promise<void>;
+  setMessages: (roomId: string, messages: ChatMessage[]) => void
+  appendMessage: (roomId: string, message: ChatMessage) => void
+
+  setState: (roomId: string, state: UserChatState) => void
+  updateUnreadCount: (tenantId:string ,roomId: string, count: number) => void
+
+  /* ✅ order is (tenantId, roomId, userId) */
+  incrementUnreadCount: (tenantId:string , roomId:string , userId: string) => void
+
+  markRoomAsRead: (tenantId:string , roomId: string, userId: string) => Promise<void>
+  toggleMute: (tenantId:string ,roomId: string, userId: string) => Promise<void>
+  togglePin: (tenantId:string ,roomId: string, userId: string) => Promise<void>
 }
 
-export const useChatStore = create<ChatState>((set, get) => ({
-  messages: [],
-  isLoading: false,
+export const useChatStore = create<ChatStoreState>()((set, get) => ({
+  rooms: [],
+  messages: {},
+  states: {},
+  selectedRoom: null,
+  setRooms: (rooms) => set({ rooms }),
 
-  addMessage: ({
-    sender,
-    content,
-    audio = null,
-    lipsync = null,
-    facialExpression,
-    animation,
-  }) => {
-    const newMsg: Message = {
-      id: crypto.randomUUID(),
-      sender,
-      content,
-      timestamp: Date.now(),
-      audio,
-      lipsync,
-      facialExpression,
-      animation,
-    };
-    set((state) => ({ messages: [...state.messages, newMsg] }));
-  },
+  setSelectedRoom: (room) => set({ selectedRoom: room }),
 
-  clearMessages: () => {
-    set({ messages: [] });
-  },
+  setMessages: (roomId, msgs) =>
+    set((state) => ({
+      messages: { ...state.messages, [roomId]: msgs },
+    })),
 
-  setLoading: (loading: boolean) => {
-    set({ isLoading: loading });
-  },
+  appendMessage: (roomId, message) =>
+    set((state) => {
+      const roomMessages = state.messages[roomId] ?? []
+      const nextMessages = { ...state.messages, [roomId]: [...roomMessages, message] }
+      return { messages: nextMessages }
+    }),
 
-  sendMessage: async (content: string) => {
-    const { addMessage, setLoading } = get();
+  setState: (roomId, stateForRoom) =>
+    set((state) => ({
+      states: { ...state.states, [roomId]: stateForRoom },
+    })),
 
-    addMessage({
-      sender: "user",
-      content,
-      audio: null,
-      lipsync: null,
-      facialExpression: "default",
-      animation: "Idle",
-    });
+  /* ✅ keep order consistent and persist */
+  incrementUnreadCount: (tenantId, roomId, userId) => {
+    const state = get()
+    const prev = state.states[roomId]
 
-    setLoading(true);
-
-    try {
-      const res = await fetch("http://localhost:3001/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: content }),
-      });
-      const data = await res.json();
-      if (data.messages && Array.isArray(data.messages)) {
-        data.messages.forEach((m: any) => {
-          addMessage({
-            sender: "ai",
-            content: m.text,
-            audio: m.audio || null,
-            lipsync: m.lipsync || null,
-            facialExpression: m.facialExpression || "default",
-            animation: m.animation || "Idle",
-          });
-        });
+    set((currentState) => {
+      const currentPrev = currentState.states[roomId]
+      if (!currentPrev) {
+        const newState: UserChatState = {
+          id: `${roomId}:state:${userId}`,
+          tenantId,
+          roomId,
+          userId,
+          unreadCount: 1,
+          muted: false,
+          pinned: false,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
+        apiIncrementUnreadCount(tenantId, roomId, userId).catch(() => {})
+        return {
+          states: {
+            ...currentState.states,
+            [roomId]: newState,
+          },
+        }
       }
-    } catch (err) {
-      console.error("Erreur dans sendMessage:", err);
-      addMessage({
-        sender: "ai",
-        content:
-          "Désolé, une erreur est survenue. Veuillez réessayer plus tard.",
-        audio: null,
-        lipsync: null,
-        facialExpression: "default",
-        animation: "Idle",
-      });
-    } finally {
-      setLoading(false);
+
+      const newCount = (currentPrev.unreadCount ?? 0) + 1
+      return {
+        states: {
+          ...currentState.states,
+          [roomId]: {
+            ...currentPrev,
+            unreadCount: newCount,
+            updatedAt: new Date().toISOString(),
+          },
+        },
+      }
+    })
+
+    if (prev) {
+      apiIncrementUnreadCount(tenantId, roomId, userId).catch(() => {})
     }
   },
-}));
+
+  updateUnreadCount: (tenantId, roomId, count) =>
+    set((state) => {
+      const prev = state.states[roomId]
+      if (!prev) return state
+      return {
+        states: {
+          ...state.states,
+          [roomId]: { ...prev, unreadCount: count, updatedAt: new Date().toISOString() },
+        },
+      }
+    }),
+
+  markRoomAsRead: async (tenantId, roomId, userId) => {
+    const prev = get().states[roomId]
+    set((state) => {
+      if (!state.states[roomId]) return state
+      return {
+        states: {
+          ...state.states,
+          [roomId]: {
+            ...state.states[roomId],
+            unreadCount: 0,
+            lastReadAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+        },
+      }
+    })
+    try {
+      await apiMarkRoomAsRead(tenantId, roomId, userId)
+    } catch (e) {
+      set((state) => ({
+        states: { ...state.states, [roomId]: prev ?? state.states[roomId] },
+      }))
+      throw e
+    }
+  },
+
+  toggleMute: async (tenantId, roomId, userId) => {
+    const prev = get().states[roomId]
+    const nextMuted = !(prev?.muted ?? false)
+    set((state) => ({
+      states: {
+        ...state.states,
+        [roomId]: {
+          ...state.states[roomId],
+          muted: nextMuted,
+          updatedAt: new Date().toISOString(),
+        },
+      },
+    }))
+    try {
+      await apiUpdateRoomPreferences(tenantId, userId, roomId, { muted: nextMuted })
+    } catch (e) {
+      set((state) => ({
+        states: { ...state.states, [roomId]: prev ?? state.states[roomId] },
+      }))
+      throw e
+    }
+  },
+
+  togglePin: async (tenantId, roomId, userId) => {
+    const prev = get().states[roomId]
+    const nextPinned = !(prev?.pinned ?? false)
+    set((state) => ({
+      states: {
+        ...state.states,
+        [roomId]: {
+          ...state.states[roomId],
+          pinned: nextPinned,
+          updatedAt: new Date().toISOString(),
+        },
+      },
+    }))
+    try {
+      await apiUpdateRoomPreferences(tenantId, userId, roomId, { pinned: nextPinned })
+    } catch (e) {
+      set((state) => ({
+        states: { ...state.states, [roomId]: prev ?? state.states[roomId] },
+      }))
+      throw e
+    }
+  },
+}))

@@ -1,22 +1,23 @@
 'use client'
 
-import { ChatRoom } from '@/api/chat'
 import { Card } from '@/components/Card'
+import { useChatStore } from '@/store/ChatStore'
 import { motion } from 'framer-motion'
 import { useEffect, useMemo, useState } from 'react'
 import ChatSidebar from './components/ChatSidebar'
 import ChatWindow from './components/ChatWindow'
 import CreateChannelModal from './components/CreateChannelModal'
 
-type UnreadMap = Record<string, number>
-
 export default function ChatPage() {
-  const [rooms, setRooms] = useState<ChatRoom[]>([])
-  const [selectedRoom, setSelectedRoom] = useState<ChatRoom | null>(null)
   const [tenantId, setTenantId] = useState('')
   const [userId, setUserId] = useState('')
-  const [unread, setUnread] = useState<UnreadMap>({})
   const [isSidebarOpen, setSidebarOpen] = useState(true)
+
+  const rooms = useChatStore((s) => s.rooms)
+  const setRooms = useChatStore((s) => s.setRooms)
+  const selectedRoom = useChatStore((s) => s.selectedRoom)
+  const setSelectedRoom = useChatStore((s) => s.setSelectedRoom)
+  const markRoomAsRead = useChatStore((s) => s.markRoomAsRead)
 
   useEffect(() => {
     const stored = localStorage.getItem('user')
@@ -28,10 +29,13 @@ export default function ChatPage() {
   }, [])
 
   useEffect(() => {
-    if (!selectedRoom) return
-    // Clear unread badge for active room
-    setUnread((prev) => ({ ...prev, [selectedRoom.id]: 0 }))
-  }, [selectedRoom])
+    if (!selectedRoom || !userId || !tenantId) return
+    console.log(selectedRoom)
+    console.log(userId)
+    console.log(tenantId)
+    console.log(`📖 Marking ${selectedRoom.id} as read`)
+    markRoomAsRead(tenantId, selectedRoom.id, userId).catch(console.error)
+  }, [selectedRoom, userId, tenantId, markRoomAsRead])
 
   const sidebarVariants = useMemo(
     () => ({
@@ -43,13 +47,13 @@ export default function ChatPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 grid grid-rows-[auto,1fr] gap-4 h-[82vh]">
-      <div className='flex flex-row items-center justify-between'>
+      <div className="flex flex-row items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
             Messagerie
           </h2>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Vous pouvez gérer vos rendez-vous ici. Vous pouvez créer, modifier ou supprimer des rendez-vous selon vos besoins.
+            Vous pouvez gérer vos messages ici. Communiquez avec vos collègues et patients.
           </p>
         </div>
         <CreateChannelModal
@@ -71,13 +75,9 @@ export default function ChatPage() {
               tenantId={tenantId}
               userId={userId}
               selectedRoom={selectedRoom}
-              setSelectedRoom={(room) => {
-                setSelectedRoom(room)
-              }}
+              setSelectedRoom={setSelectedRoom}
               setRooms={setRooms}
               rooms={rooms}
-              unread={unread}
-              setUnread={setUnread}
             />
           </Card>
         </motion.div>
@@ -87,9 +87,6 @@ export default function ChatPage() {
             room={selectedRoom}
             tenantId={tenantId}
             userId={userId}
-            onNewMessageInOtherRoom={(roomId) =>
-              setUnread((prev) => ({ ...prev, [roomId]: (prev[roomId] ?? 0) + 1 }))
-            }
           />
         </Card>
       </div>

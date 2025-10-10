@@ -1,12 +1,12 @@
 'use client'
 
-import { ChatRoom, getTenantRooms } from '@/api/chat'
+import { ChatRoom, getTenantRooms, sendMessage as sendMessageApi } from '@/api/chat'
 import { getEmployees } from '@/api/employees'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs'
-import { Client } from '@stomp/stompjs'
+import { useChatSocket } from '@/lib/useChatSocket'
+import { useChatStore } from '@/store/ChatStore'
 import { MessageSquareText, MessagesSquare } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import SockJS from 'sockjs-client'
+import { useEffect, useMemo, useState } from 'react'
 import { showToast } from '../../dashboard/hooks/utils'
 import Contact from './Contact'
 import { Salon } from './Salon'
@@ -18,10 +18,6 @@ interface Props {
   setRooms: (rooms: ChatRoom[]) => void
   selectedRoom: ChatRoom | null
   setSelectedRoom: (room: ChatRoom | null) => void
-  unread: Record<string, number>
-  setUnread: React.Dispatch<
-    React.SetStateAction<Record<string, number>>
-  >
 }
 
 export default function ChatSidebar({
@@ -31,14 +27,15 @@ export default function ChatSidebar({
   setRooms,
   selectedRoom,
   setSelectedRoom,
-  unread,
-  setUnread,
 }: Props) {
-  const clientRef = useRef<Client | null>(null)
   const [loading, setLoading] = useState(false)
   const [employees, setEmployees] = useState<any[]>([])
+  const incrementUnreadCount = useChatStore((s) => s.incrementUnreadCount)
+  const states = useChatStore((s) => s.states)
 
-  // 🧩 Load tenant rooms + employees
+  const { onlineUsers } = useChatSocket(selectedRoom?.id || '', userId, undefined)
+
+  // 📡 Load rooms and employees
   useEffect(() => {
     if (!tenantId) return
     setLoading(true)
@@ -53,70 +50,32 @@ export default function ChatSidebar({
       .finally(() => setLoading(false))
   }, [tenantId, setRooms])
 
-  // 🧠 Reset unread count when user opens a room
   useEffect(() => {
-    if (!selectedRoom) return
-    setUnread((prev) => {
-      if (!prev[selectedRoom.id]) return prev
-      const next = { ...prev }
-      next[selectedRoom.id] = 0
-      return next
-    })
-  }, [selectedRoom, setUnread])
+    const handler = (e: CustomEvent<{ roomId: string; senderId: string }>) => {
+      const { roomId, senderId } = e.detail
+      if (senderId === userId) return
+      if (selectedRoom?.id === roomId) return
 
-  // 🔌 WebSocket setup for notifications
-  useEffect(() => {
-    if (clientRef.current) return
-    const socket = new SockJS('http://localhost:8080/ws')
-    const client = new Client({
-      webSocketFactory: () => socket as any,
-      reconnectDelay: 5000,
-      onConnect: () => {
-        client.subscribe('/topic/public', (frame) => {
-          try {
-            const msg = JSON.parse(frame.body)
-            const roomId: string | undefined = msg?.roomId
-            const senderId: string | undefined = msg?.senderId
-            if (!roomId || !senderId || senderId === userId) return
+      incrementUnreadCount(tenantId, roomId, userId)
 
-            // 🚫 Don't count if user is viewing this room
-            if (selectedRoom?.id === roomId) return
+      const sender = employees.find((emp) => emp.id === senderId)
+      const senderName =
+        sender
+          ? `${sender.firstName ?? ''} ${sender.lastName ?? ''}`.trim() ||
+            sender.email
+          : `Utilisateur ${senderId.slice(0, 6)}`
 
-            // 🧮 Increase unread count
-            setUnread((prev) => ({
-              ...prev,
-              [roomId]: (prev[roomId] ?? 0) + 1,
-            }))
-
-            // 💬 Show toast with sender info
-            const sender = employees.find((e) => e.id === senderId)
-            const senderName =
-              sender
-                ? `${sender.firstName ?? ''} ${sender.lastName ?? ''}`.trim() ||
-                  sender.email
-                : `Utilisateur ${senderId.slice(0, 6)}`
-            const role = sender?.roleName ? ` (${sender.roleName})` : ''
-
-            showToast(
-              'success',
-              'Nouveau message',
-              `Nouveau message de <strong>${senderName}</strong>${role}`
-            )
-          } catch (err) {
-            console.error('Erreur WebSocket :', err)
-          }
-        })
-      },
-    })
-
-    clientRef.current = client
-    client.activate()
-
-    return () => {
-      client.deactivate().catch(() => {})
-      clientRef.current = null
+      showToast(
+        'success',
+        'Nouveau message',
+        `Nouveau message de ${senderName}`
+      )
     }
-  }, [selectedRoom, setUnread, userId, employees])
+
+    window.addEventListener('chat:message', handler as EventListener)
+    return () => window.removeEventListener('chat:message', handler as EventListener)
+  }, [selectedRoom, userId, employees, incrementUnreadCount, tenantId])
+
 
   const itemVariants = useMemo(
     () => ({
@@ -132,36 +91,23 @@ export default function ChatSidebar({
         {loading && (
           <div className="space-y-2 animate-pulse">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-9 rounded-md bg-gray-100 dark:bg-gray-800"
-              />
+              <div key={i} className="h-9 rounded-md bg-gray-100 dark:bg-gray-800" />
             ))}
           </div>
         )}
 
         {!loading && rooms.length === 0 && (
-          <div className="text-sm text-gray-500">
-            Aucun salon pour le moment.
-          </div>
+          <div className="text-sm text-gray-500">Aucun salon pour le moment.</div>
         )}
 
         <div className="w-full mt-2">
           <Tabs defaultValue="contact">
             <TabsList className="w-full" variant="line">
-              <TabsTrigger
-                value="contact"
-                className="flex flex-row items-center gap-2 w-full"
-              >
-                <MessageSquareText width={18} />
-                Contacts
+              <TabsTrigger value="contact" className="flex items-center gap-2 w-full">
+                <MessageSquareText width={18} /> Contacts
               </TabsTrigger>
-              <TabsTrigger
-                value="salon"
-                className="flex flex-row items-center gap-2 w-full"
-              >
-                <MessagesSquare width={18} />
-                Salons
+              <TabsTrigger value="salon" className="flex items-center gap-2 w-full">
+                <MessagesSquare width={18} /> Salons
               </TabsTrigger>
             </TabsList>
 
@@ -171,17 +117,16 @@ export default function ChatSidebar({
                   tenantId={tenantId}
                   userId={userId}
                   setSelectedRoom={setSelectedRoom}
-                  unread={unread}
+                  states={states}
                 />
               </TabsContent>
-
               <TabsContent value="salon">
                 <Salon
                   rooms={rooms}
                   selectedRoom={selectedRoom}
                   setSelectedRoom={setSelectedRoom}
-                  unread={unread}
                   itemVariants={itemVariants}
+                  states={states}
                 />
               </TabsContent>
             </div>

@@ -5,26 +5,23 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Badge } from '@/components/Badge'
 import { Input } from '@/components/Input'
 import { MessageSquareOff } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface SalonProps {
   rooms: ChatRoom[]
   selectedRoom: ChatRoom | null
   setSelectedRoom: (room: ChatRoom | null) => void
-  unread: Record<string, number>
   itemVariants: any
+  states: Record<string, any>
 }
 
-export function Salon({
-  rooms,
-  selectedRoom,
-  setSelectedRoom,
-  unread,
-  itemVariants,
-}: SalonProps) {
+export function Salon({ rooms, selectedRoom, setSelectedRoom, states }: SalonProps) {
   const [search, setSearch] = useState('')
 
-  // ✅ Filter only public (non-private) rooms
+  useEffect(() => {
+    console.log('🟢 [Salon] states updated:', states)
+  }, [states])
+
   const publicRooms = rooms.filter(
     (room) =>
       room.type !== 'PRIVATE' &&
@@ -41,7 +38,6 @@ export function Salon({
 
   return (
     <div className="w-full h-full flex flex-col">
-      {/* 🔍 Search input */}
       <Input
         placeholder="Rechercher un salon..."
         value={search}
@@ -62,7 +58,7 @@ export function Salon({
           <AnimatePresence>
             {publicRooms.map((room) => {
               const active = selectedRoom?.id === room.id
-              const count = unread[room.id] ?? 0
+              const count = states[room.id]?.unreadCount ?? 0
 
               return (
                 <motion.button
@@ -80,7 +76,6 @@ export function Salon({
                       : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-200'
                   }`}
                 >
-                  {/* Room name + type */}
                   <div className="flex items-center gap-2 truncate">
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200">
                       #
@@ -95,7 +90,6 @@ export function Salon({
                     </div>
                   </div>
 
-                  {/* Unread badge */}
                   {count > 0 && (
                     <Badge variant="neutral" className="ml-auto">
                       {count}

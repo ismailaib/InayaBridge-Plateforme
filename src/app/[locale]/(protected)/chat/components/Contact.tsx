@@ -13,20 +13,19 @@ interface ContactProps {
   tenantId: string
   userId: string
   setSelectedRoom: (room: ChatRoom | null) => void
-  unread?: Record<string, number>
+  states: Record<string, any>
 }
 
-export default function Contact({
-  tenantId,
-  userId,
-  setSelectedRoom,
-  unread = {},
-}: ContactProps) {
+export default function Contact({ tenantId, userId, setSelectedRoom, states }: ContactProps) {
   const [employees, setEmployees] = useState<any[]>([])
   const [filtered, setFiltered] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [search, setSearch] = useState('')
-  const [roomMap, setRoomMap] = useState<Record<string, string>>({}) // contactId → roomId
+  const [roomMap, setRoomMap] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    console.log('🟣 [Contact] states updated:', states)
+  }, [states])
 
   // 🧩 Load employees and existing rooms
   useEffect(() => {
@@ -114,7 +113,7 @@ export default function Contact({
         <div className="divide-y divide-gray-100 dark:divide-gray-800 rounded-lg border border-gray-100 dark:border-gray-800 overflow-hidden">
           {filtered.map((emp) => {
             const roomId = roomMap[emp.id]
-            const unreadCount = roomId ? unread[roomId] ?? 0 : 0
+            const unreadCount = roomId ? states.unread ?? 0 : 0
 
             return (
               <motion.button
