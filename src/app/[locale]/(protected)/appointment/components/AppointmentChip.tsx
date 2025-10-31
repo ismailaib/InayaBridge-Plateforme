@@ -2,7 +2,7 @@
 
 import { cx } from "@/lib/utils";
 
-import { CalendarAppointment } from "./types";
+import { CalendarAppointment } from "./helpers/types";
 
 type AppointmentChipProps = {
   appointment: CalendarAppointment;
@@ -13,6 +13,8 @@ export function AppointmentChip({
   appointment,
   onSelect,
 }: AppointmentChipProps) {
+
+  console.log("Rendering AppointmentChip for:", appointment);
   return (
     <button
       key={appointment.id}
@@ -26,7 +28,7 @@ export function AppointmentChip({
         {appointment.startTime}
       </span>
       <span className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
-        {appointment.patient}
+        {appointment.patientFullName}
       </span>
     </button>
   );

@@ -14,6 +14,8 @@
       "list": "قائمة"
     },
     "monthView": {
+      "showUnavailableLabel": "إظهار الأيام غير المتاحة",
+      "monthLabel": "شهر",
       "days": {
         "mon": "الاثنين",
         "tue": "الثلاثاء",
@@ -38,10 +40,13 @@
       }
     },
     "dayView": {
+      "showUnavailableLabel": "إظهار الأيام غير المتاحة",
       "hour": "الوقت",
       "appointments": "المواعيد"
     },
     "weekView": {
+      "showUnavailableLabel": "إظهار الأيام غير المتاحة",
+      "weekLabel": "أسبوع",
       "locale": "ar",
       "timeLabel": "الوقت"
     }
@@ -59,6 +64,11 @@
     "cost": "التكلفة",
     "motif": "السبب",
     "note": "ملاحظة",
+    "service": {
+      "label": "الخدمة",
+      "placeholder": "اختر خدمة",
+      "noResults": "لم يتم العثور على أي خدمة"
+    },
     "location": {
       "label": "المكان",
       "office": {
@@ -67,7 +77,9 @@
       },
       "home": {
         "title": "زيارة منزلية",
-        "desc": "استشارة تتم في منزل المريض."
+        "desc": "استشارة تتم في منزل المريض.",
+        "addressLabel": "عنوان المنزل",
+        "placeholder": "أدخل عنوان المنزل"
       },
       "video": {
         "title": "استشارة عن بعد",

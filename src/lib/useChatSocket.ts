@@ -19,7 +19,9 @@ export function useChatSocket(
 ) {
   const clientRef = useRef<Client | null>(null);
   const roomSubscriptionRef = useRef<StompSubscription | null>(null);
+  const globalSubscriptionRef = useRef<StompSubscription | null>(null);
   const mountedRef = useRef(true);
+  const currentRoomIdRef = useRef<string>(roomId);
 
   const [connected, setConnected] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
@@ -32,21 +34,36 @@ export function useChatSocket(
     })
   );
 
-  const cleanupSubscriptions = () => {
+  const cleanupRoomSubscription = () => {
     try {
       roomSubscriptionRef.current?.unsubscribe();
       console.log("[STOMP] Unsubscribed from room");
     } catch (e) {
-      console.warn("[STOMP] Error while unsubscribing", e);
+      console.warn("[STOMP] Error while unsubscribing room", e);
     }
     roomSubscriptionRef.current = null;
+  };
+
+  const cleanupGlobalSubscription = () => {
+    try {
+      globalSubscriptionRef.current?.unsubscribe();
+      console.log("[STOMP] Unsubscribed from global presence");
+    } catch (e) {
+      console.warn("[STOMP] Error while unsubscribing global", e);
+    }
+    globalSubscriptionRef.current = null;
+  };
+
+  const cleanupAllSubscriptions = () => {
+    cleanupRoomSubscription();
+    cleanupGlobalSubscription();
   };
 
   useEffect(() => {
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
-      cleanupSubscriptions();
+      cleanupAllSubscriptions();
       clientRef.current?.deactivate();
     };
   }, []);
@@ -74,7 +91,7 @@ export function useChatSocket(
             ? onlineUsers.has(receiverId)
             : false;
           if (!isReceiverOnline) {
-            incrementUnreadCount(parsed.tenantId, roomId, userId);
+            incrementUnreadCount(parsed.tenantId, roomId, userId ? userId : "");
           }
         }
       }
@@ -111,8 +128,12 @@ export function useChatSocket(
         console.log("[STOMP] Connected ✅");
         setConnected(true);
 
-        // Global presence channel
-        client.subscribe(`/topic/chat/global`, handleMessage);
+        // Global presence channel (clean first; then (re)subscribe)
+        cleanupGlobalSubscription();
+        globalSubscriptionRef.current = client.subscribe(
+          `/topic/chat/global`,
+          handleMessage
+        );
 
         // Announce online
         client.publish({
@@ -120,14 +141,15 @@ export function useChatSocket(
           body: JSON.stringify({ type: "ONLINE", userId }),
         });
 
-        // Subscribe to active room after reconnect
-        if (roomId) {
-          cleanupSubscriptions();
+        // Subscribe to active room after reconnect (use ref to avoid stale roomId)
+        const activeRoomId = currentRoomIdRef.current;
+        if (activeRoomId) {
+          cleanupRoomSubscription();
           roomSubscriptionRef.current = client.subscribe(
             `/topic/public`,
             handleMessage
           );
-          console.log("[STOMP] Subscribed to room after reconnect:", roomId);
+          console.log("[STOMP] Subscribed to room after reconnect:", activeRoomId);
         }
       },
       onDisconnect: () => {
@@ -137,7 +159,7 @@ export function useChatSocket(
       onWebSocketClose: () => {
         console.log("[STOMP] WebSocket closed 🛑");
         setConnected(false);
-        cleanupSubscriptions();
+        cleanupAllSubscriptions();
         if (clientRef.current?.connected) {
           clientRef.current.publish({
             destination: "/app/presence",
@@ -157,7 +179,7 @@ export function useChatSocket(
     clientRef.current = client;
 
     return () => {
-      cleanupSubscriptions();
+      cleanupAllSubscriptions();
       client.deactivate();
     };
   }, [userId]);
@@ -166,9 +188,10 @@ export function useChatSocket(
    * 📨 Subscribe when roomId changes
    */
   useEffect(() => {
+    currentRoomIdRef.current = roomId;
     if (!connected || !roomId || !clientRef.current) return;
     console.log("[STOMP] Subscribing to new room", roomId);
-    cleanupSubscriptions();
+    cleanupRoomSubscription();
     roomSubscriptionRef.current = clientRef.current.subscribe(
       `/topic/public`,
       handleMessage
@@ -182,7 +205,7 @@ export function useChatSocket(
   useEffect(() => {
     if (!connected || !roomId || !clientRef.current || !receiverId) return;
     console.log("[STOMP] Re-subscribing due to receiver presence change");
-    cleanupSubscriptions();
+    cleanupRoomSubscription();
     roomSubscriptionRef.current = clientRef.current.subscribe(
       `/topic/public`,
       handleMessage

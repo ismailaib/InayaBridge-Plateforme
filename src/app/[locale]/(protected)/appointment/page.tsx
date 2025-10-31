@@ -8,10 +8,10 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 
 import CalendarView from "./components/CalendarView";
+import { useState } from "react";
 
 const Page = () => {
   const t = useTranslations("appointments.page");
-
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <div className="flex flex-row items-start justify-between">

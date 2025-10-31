@@ -226,6 +226,30 @@
       "successDescription": "تم تحديث تفضيلاتك بنجاح.",
       "errorTitle": "فشل الحفظ",
       "errorDescription": "حدث خطأ أثناء حفظ التفضيلات. حاول مرة أخرى."
+    },
+
+    "features": {
+      "title": "التفضيلات",
+      "enableTeleconsultation": {
+        "label": "الاستشارة عن بُعد",
+        "description": "تمكين الاستشارات عبر الفيديو والمواعيد عن بُعد مع المرضى"
+      },
+      "enableLabIntegration": {
+        "label": "تكامل المختبر",
+        "description": "الاتصال بأنظمة المختبر لإدارة طلبات الفحوصات والنتائج"
+      },
+      "enableBilling": {
+        "label": "الفوترة",
+        "description": "إدارة الفواتير والمدفوعات والمعاملات المالية"
+      },
+      "enforce2FA": {
+        "label": "المصادقة الثنائية",
+        "description": "فرض المصادقة الثنائية لتعزيز الأمان"
+      },
+      "enableAuditLogs": {
+        "label": "سجلات التدقيق",
+        "description": "تتبع وتسجيل جميع أنشطة النظام لضمان الامتثال"
+      }
     }
   },
   "billing": {

@@ -48,7 +48,7 @@ const UI = () => {
         )}
 
         {/* Messages */}
-        {messages.map((msg) => (
+        {/* {messages.map((msg) => (
           <motion.div
             key={msg.id}
             initial={{ opacity: 0, y: 10 }}
@@ -97,7 +97,7 @@ const UI = () => {
               </div>
             </div>
           </motion.div>
-        ))}
+        ))} */}
 
         {/* Loader */}
         {isLoading && (

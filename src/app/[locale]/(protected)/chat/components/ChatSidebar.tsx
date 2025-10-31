@@ -35,6 +35,7 @@ export default function ChatSidebar({
 
   const { onlineUsers } = useChatSocket(selectedRoom?.id || '', userId, undefined)
 
+
   // 📡 Load rooms and employees
   useEffect(() => {
     if (!tenantId) return
@@ -118,6 +119,7 @@ export default function ChatSidebar({
                   userId={userId}
                   setSelectedRoom={setSelectedRoom}
                   states={states}
+                  onlineUsers={onlineUsers}
                 />
               </TabsContent>
               <TabsContent value="salon">

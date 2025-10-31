@@ -229,6 +229,30 @@
       "successDescription": "Your preferences have been successfully updated.",
       "errorTitle": "Save Failed",
       "errorDescription": "Something went wrong while saving preferences."
+    },
+
+    "features": {
+      "title": "Preferences",
+      "enableTeleconsultation": {
+        "label": "Teleconsultation",
+        "description": "Enable video consultations and remote appointments with patients"
+      },
+      "enableLabIntegration": {
+        "label": "Lab Integration",
+        "description": "Connect with laboratory systems for test orders and results"
+      },
+      "enableBilling": {
+        "label": "Billing",
+        "description": "Manage invoices, payments, and financial transactions"
+      },
+      "enforce2FA": {
+        "label": "Two-Factor Authentication",
+        "description": "Require two-factor authentication for enhanced security"
+      },
+      "enableAuditLogs": {
+        "label": "Audit Logs",
+        "description": "Track and record all system activities for compliance"
+      }
     }
   },
   "billing": {

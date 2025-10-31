@@ -5,48 +5,69 @@ import { useTranslations } from "@/lib/i18n/useTranslations";
 import { saveAs } from "file-saver";
 import { FileDown } from "lucide-react";
 import * as XLSX from "xlsx";
-
 import { useEffect, useState } from "react";
 
-import { Patient, getDoctorPatients } from "../api/patients";
 import Add from "./components/Add";
 import Filter from "./components/Filter";
+import { getPatientsByTenant, TenantPatient } from "@/api/patients";
 
 export default function PatientsPage() {
   const t = useTranslations("patients.patients");
-
-  const [patients, setPatients] = useState<Patient[]>([]);
+  const [patients, setPatients] = useState<TenantPatient[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [tenantId, setTenantId] = useState<string | null>(null);
 
-  /* ─── refetch à chaque ajout ─── */
   useEffect(() => {
-    setLoading(true);
-    getDoctorPatients()
-      .then((res) => setPatients(res.data))
-      .catch((err) => console.error("Failed to fetch patients", err))
-      .finally(() => setLoading(false));
-  }, [refreshKey]);
+    try {
+      const stored = localStorage.getItem("user");
+      if (stored) {
+        const user = JSON.parse(stored);
+        const tid = user?.doctorProfile?.tenantId || user?.tenantId || null;
+        if (tid) {
+          setTenantId(tid);
+          console.log("tenantId loaded:", tid);
+        }
+      }
+    } catch (err) {
+      console.error("Erreur lecture tenantId:", err);
+    }
+  }, []);
 
-  /* ─── export Excel ─── */
+  useEffect(() => {
+    if (!tenantId) return; // Wait until tenantId is loaded
+
+    const fetchPatients = async () => {
+      try {
+        setLoading(true);
+        console.log("Fetching patients for tenant:", tenantId);
+        const res = await getPatientsByTenant(tenantId);
+        setPatients(res.data || []);
+      } catch (err) {
+        console.error("Erreur chargement patients:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPatients();
+  }, [tenantId, refreshKey]); // depend also on tenantId
+
   const handleExport = () => {
     if (!patients.length) return;
 
     const rows = patients.map((p) => ({
-      [t("export.firstName")]: p.last_name,
-      [t("export.lastName")]: p.first_name,
+      [t("export.firstName")]: p.firstName,
+      [t("export.lastName")]: p.lastName,
       [t("export.gender")]:
         p.gender === "male" ? t("export.male") : t("export.female"),
-      [t("export.birthDate")]: new Date(
-        p?.date_of_birth || "",
-      ).toLocaleDateString("fr-FR"),
+      [t("export.birthDate")]: p.dateOfBirth
+        ? new Date(p.dateOfBirth).toLocaleDateString("fr-FR")
+        : "",
       [t("export.cin")]: p.cin,
-      [t("export.phone")]: p.phone_number,
-      [t("export.email")]: p.email,
-      [t("export.address")]: p.address,
-      [t("export.bloodType")]: p.blood_type,
-      [t("export.allergies")]: p.medical_history?.allergies?.join(", ") ?? "",
-      [t("export.emergencyContact")]: p.contact_urgence?.phone_number ?? "",
+      [t("export.phone")]: p.phone || "",
+      [t("export.email")]: p.email || "",
+      [t("export.address")]: p.address || "",
     }));
 
     const ws = XLSX.utils.json_to_sheet(rows);
@@ -57,7 +78,7 @@ export default function PatientsPage() {
     const file = new Blob([wbBlob], { type: "application/octet-stream" });
     saveAs(
       file,
-      `${t("export.fileName")}_${new Date().toISOString().slice(0, 10)}.xlsx`,
+      `${t("export.fileName")}_${new Date().toISOString().slice(0, 10)}.xlsx`
     );
   };
 
@@ -74,16 +95,12 @@ export default function PatientsPage() {
         </div>
 
         <div className="flex gap-4">
-          <Add
-            onSuccess={() => {
-              setRefreshKey((k) => k + 1);
-            }}
-          />
+          <Add onSuccess={() => setRefreshKey((k) => k + 1)} />
 
           <Button
             variant="secondary"
             onClick={handleExport}
-            disabled={loading || !patients.length}
+            disabled={!patients.length}
           >
             <FileDown className="mx-1" width={22} />
             {t("exportButton")}

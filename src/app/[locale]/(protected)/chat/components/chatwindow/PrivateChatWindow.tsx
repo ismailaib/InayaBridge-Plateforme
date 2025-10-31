@@ -3,7 +3,7 @@
 import { ChatMessage, ChatRoom, getMessages, sendMessage as sendMessageApi } from '@/api/chat'
 import { getEmployees } from '@/api/employees'
 import { Button } from '@/components/Button'
-import { Client } from '@stomp/stompjs'
+import { Client, StompSubscription } from '@stomp/stompjs'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import SockJS from 'sockjs-client'
 import { showToast } from '../../../dashboard/hooks/utils'
@@ -29,6 +29,19 @@ export default function PrivateChatWindow({
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   const clientRef = useRef<Client | null>(null)
   const textRef = useRef<HTMLTextAreaElement | null>(null)
+  const roomSubscriptionRef = useRef<StompSubscription | null>(null)
+  const presenceSubscriptionRef = useRef<StompSubscription | null>(null)
+
+  const cleanupSubs = () => {
+    try {
+      roomSubscriptionRef.current?.unsubscribe()
+    } catch {}
+    roomSubscriptionRef.current = null
+    try {
+      presenceSubscriptionRef.current?.unsubscribe()
+    } catch {}
+    presenceSubscriptionRef.current = null
+  }
 
   useEffect(() => {
     if (!tenantId) return
@@ -58,6 +71,7 @@ export default function PrivateChatWindow({
   useEffect(() => {
     if (!room) return
     if (clientRef.current) {
+      cleanupSubs()
       clientRef.current.deactivate().catch(() => {})
       clientRef.current = null
     }
@@ -67,7 +81,9 @@ export default function PrivateChatWindow({
       webSocketFactory: () => socket as any,
       reconnectDelay: 5000,
       onConnect: () => {
-        client.subscribe('/topic/public', (frame) => {
+        // Ensure old subs are cleared before (re)subscribing
+        cleanupSubs()
+        roomSubscriptionRef.current = client.subscribe('/topic/public', (frame) => {
           try {
             const payload = JSON.parse(frame.body)
             if (!payload || !payload.roomId || !payload.content) return
@@ -89,7 +105,7 @@ export default function PrivateChatWindow({
           } catch {}
         })
 
-        client.subscribe('/topic/chat/global', (frame) => {
+        presenceSubscriptionRef.current = client.subscribe('/topic/chat/global', (frame) => {
           try {
             const data = JSON.parse(frame.body)
             setOnlineUsers((prev) => {
@@ -112,6 +128,7 @@ export default function PrivateChatWindow({
     client.activate()
     clientRef.current = client
     return () => {
+      cleanupSubs()
       client.deactivate().catch(() => {})
     }
   }, [room, userId, onNewMessageInOtherRoom])

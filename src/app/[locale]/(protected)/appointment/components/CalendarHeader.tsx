@@ -12,10 +12,8 @@ import {
   LayoutGrid,
   List,
 } from "lucide-react";
-
 import type { ElementType } from "react";
-
-import { CalendarViewType } from "./types";
+import { CalendarViewType } from "./helpers/types";
 
 type CalendarHeaderProps = {
   currentDate: Date;
@@ -24,6 +22,8 @@ type CalendarHeaderProps = {
   onNext: () => void;
   onToday: () => void;
   onViewChange: (view: CalendarViewType) => void;
+  showUnavailable: boolean;
+  onToggleUnavailable: () => void;
 };
 
 export function CalendarHeader({
@@ -33,13 +33,15 @@ export function CalendarHeader({
   onPrevious,
   onToday,
   onViewChange,
+  showUnavailable,
+  onToggleUnavailable,
 }: CalendarHeaderProps) {
   const t = useTranslations("appointments.calendar");
 
-  const renderTitle = () => {
-    const locale =
-      t("locale") === "ar" ? arSA : t("locale") === "fr" ? fr : enUS;
+  const locale =
+    t("locale") === "ar" ? arSA : t("locale") === "fr" ? fr : enUS;
 
+  const renderTitle = () => {
     switch (view) {
       case "month":
         return format(currentDate, "MMMM yyyy", { locale });
@@ -79,45 +81,47 @@ export function CalendarHeader({
         </h2>
       </div>
 
-      <div className="flex items-center space-x-2">
-        <div className="mr-4 flex">
-          {viewButtons.map(({ value, icon: Icon }, index) => (
-            <Button
-              key={value}
-              variant={view === value ? "secondary" : "ghost"}
-              onClick={() => onViewChange(value)}
-              className={
-                index === 0
-                  ? "rounded-l-md rounded-r-none"
-                  : index === viewButtons.length - 1
-                    ? "rounded-l-none rounded-r-md"
-                    : "rounded-none border-l-0 border-r-0"
-              }
-            >
-              <Icon className="mr-1 h-4 w-4" />
-              <span className="hidden sm:inline">{t(`views.${value}`)}</span>
-            </Button>
-          ))}
-        </div>
+      <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
+          <div className="mr-4 flex">
+            {viewButtons.map(({ value, icon: Icon }, index) => (
+              <Button
+                key={value}
+                variant={view === value ? "secondary" : "ghost"}
+                onClick={() => onViewChange(value)}
+                className={
+                  index === 0
+                    ? "rounded-l-md rounded-r-none"
+                    : index === viewButtons.length - 1
+                      ? "rounded-l-none rounded-r-md"
+                      : "rounded-none border-l-0 border-r-0"
+                }
+              >
+                <Icon className="mr-1 h-4 w-4" />
+                <span className="hidden sm:inline">{t(`views.${value}`)}</span>
+              </Button>
+            ))}
+          </div>
 
-        <Button onClick={onToday} variant="secondary">
-          {t("today")}
-        </Button>
-        <div className="flex">
-          <Button
-            onClick={onPrevious}
-            variant="secondary"
-            className="rounded-r-none"
-          >
-            <ChevronLeft className="h-4 w-4" />
+          <Button onClick={onToday} variant="secondary">
+            {t("today")}
           </Button>
-          <Button
-            onClick={onNext}
-            variant="secondary"
-            className="rounded-l-none border-l-0"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+          <div className="flex">
+            <Button
+              onClick={onPrevious}
+              variant="secondary"
+              className="rounded-r-none"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              onClick={onNext}
+              variant="secondary"
+              className="rounded-l-none border-l-0"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>

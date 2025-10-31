@@ -5,8 +5,9 @@ import { cx } from "@/lib/utils";
 import { endOfMonth, format, isToday, parseISO, startOfMonth } from "date-fns";
 import { arSA, enUS, fr } from "date-fns/locale";
 import { Clock, MapPin } from "lucide-react";
+import { motion } from "framer-motion";
 
-import { CalendarAppointment } from "./types";
+import { CalendarAppointment } from "../helpers/types";
 
 type ListViewProps = {
   currentDate: Date;
@@ -26,12 +27,7 @@ export function ListView({
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
 
-  const monthAppointments = appointments
-    .filter((appointment) => {
-      const appointmentDate = new Date(appointment.date);
-      return appointmentDate >= monthStart && appointmentDate <= monthEnd;
-    })
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const monthAppointments = appointments.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   const groupedAppointments = monthAppointments.reduce<
     Record<string, CalendarAppointment[]>
@@ -41,6 +37,16 @@ export function ListView({
     groups[date].push(appointment);
     return groups;
   }, {});
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.05 },
+    }),
+    exit: { opacity: 0, y: -10 },
+  };
 
   return (
     <div className="space-y-6">
@@ -67,8 +73,15 @@ export function ListView({
                 role="list"
                 className="divide-y divide-gray-200 dark:divide-gray-800"
               >
-                {groupedAppointments[date].map((appointment) => (
-                  <li key={appointment.id}>
+                {groupedAppointments[date].map((appointment, index) => (
+                  <motion.li
+                    key={appointment.id}
+                    custom={index}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    variants={itemVariants}
+                  >
                     <button
                       onClick={() => onSelectAppointment(appointment)}
                       className="flex w-full items-center px-4 py-4 text-left hover:bg-gray-50 sm:px-6 dark:hover:bg-gray-900"
@@ -122,7 +135,7 @@ export function ListView({
                         </div>
                       </div>
                     </button>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
             </div>

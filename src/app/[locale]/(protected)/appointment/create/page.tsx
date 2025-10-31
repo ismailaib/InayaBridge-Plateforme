@@ -1,136 +1,232 @@
 "use client";
 
-import { Button } from "@/components/Button";
-import { DatePicker } from "@/components/DatePicker";
-import { Divider } from "@/components/Divider";
-import { Input } from "@/components/Input";
-import { Label } from "@/components/Label";
-import {
-  RadioCardGroup,
-  RadioCardIndicator,
-  RadioCardItem,
-} from "@/components/RadioCardGroup";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/Select";
-import { Switch } from "@/components/Switch";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Card } from "@/components/Card";
 import { useTranslations } from "@/lib/i18n/useTranslations";
-import { Search } from "lucide-react";
+import { getPatientsByTenant, TenantPatient } from "@/api/patients";
+import { getServicesByTenant, Service } from "@/api/services";
+import { createAppointment } from "@/api/appointments";
+import type { AppointmentStatus } from "@/api/appointments";
+import AppointmentForm from "./components/AppointmentForm";
+import PatientDetails from "./components/PatientDetails";
+import { useToast } from "@/lib/useToast";
+import { Toaster } from "@/components/Toaster";
 
-import React, { useEffect, useRef, useState } from "react";
+type ConsultationType = "LOCAL" | "IN_PERSON" | "VIDEO";
 
-import { Patient, getDoctorPatients } from "../../mes-patients/api/patients";
-import { createAppointment } from "../api/appointment";
+interface FormState {
+  selectedPatientId: string | null;
+  date: Date | undefined;
+  cost: number | undefined;
+  motif: string;
+  note: string;
+  locationType: string | null;
+  serviceId: string | null;
+  placelocation: string | null;
+  inWaitingRoom: boolean;
+  isUrgent: boolean;
+}
+
+const LOCATION_MAP: Record<string, ConsultationType> = {
+  "1": "LOCAL",
+  "2": "IN_PERSON",
+  "3": "VIDEO",
+};
 
 export default function RendezVousForm() {
   const t = useTranslations("appointments.form");
+  const [patients, setPatients] = useState<TenantPatient[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectOpen, setSelectOpen] = useState(false);
+  const [tenantId, setTenantId] = useState<string | null>(null);
+  const [doctorId, setDoctorId] = useState<string | null>(null);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const [selectedPatient, setSelectedPatient] = useState<TenantPatient | null>(null);
+  const [services, setServices] = useState<Service[]>([]);
+  const { toast } = useToast();
 
-  const [patients, setPatients] = useState<Patient[]>([]);
-  const [_, setLoading] = useState(true);
+  const showToast = (type: 'success' | 'error', title: string, message: string) => {
+    toast({
+      variant: type === 'error' ? 'error' : 'success',
+      title,
+      description: message,
+    });
+  };
+
+  const [formState, setFormState] = useState<FormState>(() => {
+    const defaultDate = new Date();
+    defaultDate.setHours(defaultDate.getHours() + 1);
+    defaultDate.setMinutes(0);
+    defaultDate.setSeconds(0);
+    defaultDate.setMilliseconds(0);
+
+    return {
+      selectedPatientId: null,
+      serviceId: null,
+      date: defaultDate,
+      cost: 0, 
+      motif: "",
+      placelocation: "",
+      note: "",
+      locationType: "1",
+      inWaitingRoom: false,
+      isUrgent: false,
+    };
+  });
 
   useEffect(() => {
-    setLoading(true);
-    getDoctorPatients()
-      .then((res) => setPatients(res.data))
-      .catch((err) => console.error("Failed to fetch patients", err))
-      .finally(() => setLoading(false));
+    try {
+      const stored = localStorage.getItem("user");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setTenantId(parsed?.doctorProfile?.tenantId ?? null);
+        setDoctorId(parsed?.doctorProfile?.id ?? null);
+      }
+    } catch (e) {
+      console.error(e);
+      showToast('error', 'Erreur', 'Échec du chargement des données utilisateur.');
+    }
   }, []);
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
-  const [selectedPatientId, setSelectedPatientId] = useState<number | null>(
-    null,
-  );
-  const [value, setValue] = useState<Date | undefined>(undefined);
-  const [selectOpen, setSelectOpen] = useState(false);
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  const [checked, setChecked] = useState(false);
-  const [isUrgent, setUrgent] = useState(false);
-  const [cost, setCost] = useState<number | undefined>();
-  const [motif, setMotif] = useState("");
-  const [note, setNote] = useState("");
-  const [locationValue, setLocationValue] = useState<string | null>(null);
-
   useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredPatients(patients.slice(0, 10));
-      return;
-    }
+    if (!tenantId) return;
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [patientsRes, servicesRes] = await Promise.all([
+          getPatientsByTenant(tenantId),
+          getServicesByTenant(tenantId),
+        ]);
+        setPatients(patientsRes.data);
+        setServices(servicesRes.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        showToast('error', 'Erreur', t("alerts.errorLoadingPatients"));
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [tenantId, t]);
 
-    const query = searchQuery.toLowerCase();
-    const filtered = patients.filter(
+  const filteredPatients = useMemo(() => {
+    if (!searchQuery.trim()) return patients;
+    const q = searchQuery.toLowerCase();
+    return patients.filter(
       (p) =>
-        p?.first_name?.toLowerCase().includes(query) ||
-        p?.last_name?.toLowerCase().includes(query),
+        p.firstName.toLowerCase().includes(q) ||
+        p.lastName.toLowerCase().includes(q) ||
+        p.cin.toLowerCase().includes(q) ||
+        p.email?.toLowerCase().includes(q) ||
+        p.phone?.includes(q)
     );
-    setFilteredPatients(filtered);
-  }, [searchQuery, patients]);
+  }, [patients, searchQuery]);
 
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    setTimeout(() => searchInputRef.current?.focus(), 0);
-  };
+  const updateFormState = (updates: Partial<FormState>) =>
+    setFormState((prev) => ({ ...prev, ...updates }));
 
-  useEffect(() => {
-    if (selectOpen) {
-      setTimeout(() => searchInputRef.current?.focus(), 50);
-    }
-  }, [selectOpen]);
-
-  const handlePatientSelect = (patientId: string) => {
-    setSelectedPatientId(Number(patientId));
+  const handlePatientSelect = (id: string) => {
+    updateFormState({ selectedPatientId: id });
     setSelectOpen(false);
     setSearchQuery("");
+    const patient = patients.find((p) => p.id === id) ?? null;
+    setSelectedPatient(patient);
   };
 
-  type ConsultationType = "local" | "in-person" | "video";
+  const resetForm = () => {
+    const defaultDate = new Date();
+    defaultDate.setHours(defaultDate.getHours() + 1);
+    defaultDate.setMinutes(0);
+    defaultDate.setSeconds(0);
+    defaultDate.setMilliseconds(0);
+
+    setFormState({
+      selectedPatientId: null,
+      serviceId: null,
+      date: defaultDate,
+      cost: 0,
+      motif: "",
+      note: "",
+      placelocation: "",
+      locationType: "1",
+      inWaitingRoom: false,
+      isUrgent: false,
+    });
+    setSearchQuery("");
+    setSelectedPatient(null);
+  };
+
+  const validateForm = () => {
+    const { selectedPatientId, serviceId, date, motif, locationType, cost, placelocation } = formState;
+    if (!selectedPatientId || !date || !motif.trim() || !locationType || cost === undefined || !serviceId) {
+      showToast('error', 'Erreur', t("alerts.fillAllFields"));
+      return false;
+    }
+    if (locationType === "2" && !placelocation?.trim()) {
+      showToast('error', 'Erreur', t("alerts.fillAllFields")); // Or a specific message for address
+      return false;
+    }
+    if (!doctorId || !tenantId) {
+      showToast('error', 'Erreur', "ID docteur/tenant manquant.");
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (
-      !selectedPatientId ||
-      !value ||
-      !motif ||
-      !locationValue ||
-      cost === undefined
-    ) {
-      alert(t("alerts.fillAllFields"));
-      return;
-    }
+    if (!validateForm()) return;
 
-    const consultationType: ConsultationType =
-      locationValue === "1"
-        ? "local"
-        : locationValue === "2"
-          ? "in-person"
-          : "video";
+    const {
+      selectedPatientId,
+      date,
+      cost,
+      motif,
+      note,
+      locationType,
+      inWaitingRoom,
+      placelocation,
+      serviceId,
+      isUrgent,
+    } = formState;
 
     const payload = {
-      patientId: selectedPatientId,
-      date: value.toISOString().split("T")[0],
-      startTime: value.toTimeString().slice(0, 5),
-      status: "pending",
-      consultationType,
+      tenantId,
+      doctorProfileId: doctorId!,
+      patientProfileId: selectedPatientId!,
+      date: date!.toISOString().split("T")[0],
+      startTime: date!.toTimeString().slice(0, 5),
+      endTime: "",
+      status: "PENDING" as AppointmentStatus,
+      consultationType: LOCATION_MAP[locationType!],
       motif,
-      cost,
-      note,
+      cost: cost!,
+      notes: note,
+      location: placelocation,
+      serviceId: serviceId,
+      isUrgent,
+      inWaitingRoom,
     };
 
     try {
-      await createAppointment(payload);
-      alert(t("alerts.success"));
+      setSubmitting(true);
+      await createAppointment(payload as any);
+      showToast('success', 'Succès', t("alerts.success"));
+      resetForm();
     } catch (err) {
-      console.error("Erreur lors de la création :", err);
-      alert(t("alerts.error"));
+      console.error(err);
+      showToast('error', 'Erreur', t("alerts.error"));
+    } finally {
+      setSubmitting(false);
     }
   };
 
+  const isToday = formState.date?.toDateString() === new Date().toDateString();
+
   return (
-    <div className="p-4 sm:p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8 duration-300 transition-all">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
         {t("title")}
       </h3>
@@ -138,200 +234,35 @@ export default function RendezVousForm() {
         {t("subtitle")}
       </p>
 
-      <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-6">
-          {/* Patient */}
-          <div className="col-span-3 sm:col-span-2">
-            <Label htmlFor="patient" className="font-medium">
-              {t("patient.label")} <span className="text-red-500">*</span>
-            </Label>
-            <div className="relative mt-2">
-              <Select
-                value={
-                  selectedPatientId !== null
-                    ? String(selectedPatientId)
-                    : undefined
-                }
-                onValueChange={handlePatientSelect}
-                open={selectOpen}
-                onOpenChange={setSelectOpen}
-              >
-                <SelectTrigger id="patient" name="patient">
-                  <SelectValue placeholder={t("patient.placeholder")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-60 overflow-auto">
-                  <div className="sticky top-0 z-10 bg-white p-2 dark:bg-gray-800">
-                    <div className="relative">
-                      <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
-                      <Input
-                        ref={searchInputRef}
-                        placeholder={t("patient.searchPlaceholder")}
-                        value={searchQuery}
-                        onChange={handleSearchInputChange}
-                        className="pl-8 text-sm"
-                        autoComplete="off"
-                        onClick={(e) => e.stopPropagation()}
-                        onKeyDown={(e) => {
-                          if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-                            e.stopPropagation();
-                          }
-                        }}
-                      />
-                    </div>
-                  </div>
-                  {filteredPatients.length > 0 ? (
-                    filteredPatients.map((p) => (
-                      <SelectItem key={p.id} value={String(p.id)}>
-                        {p.first_name} {p.last_name}
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <div className="px-2 py-2 text-sm text-gray-500">
-                      {t("patient.noResults")}
-                    </div>
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+      <Card className="mt-8 flex gap-8 overflow-hidden">
+        <AppointmentForm
+          formState={formState}
+          updateFormState={updateFormState}
+          services={services}
+          loading={loading}
+          submitting={submitting}
+          t={t}
+          isToday={isToday}
+          handleSubmit={handleSubmit}
+          resetForm={resetForm}
+          filteredPatients={filteredPatients}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          selectOpen={selectOpen}
+          setSelectOpen={setSelectOpen}
+          searchInputRef={searchInputRef}
+          handlePatientSelect={handlePatientSelect}
+        />
 
-          {/* Date */}
-          <div className="col-span-full sm:col-span-2">
-            <Label htmlFor="date" className="font-medium">
-              {t("date")} <span className="text-red-500">*</span>
-            </Label>
-            <DatePicker
-              className="mt-2"
-              showTimePicker
-              value={value}
-              onChange={(val) => setValue(val)}
-            />
-          </div>
-
-          {/* Cost */}
-          <div className="col-span-full sm:col-span-2">
-            <Label htmlFor="cost" className="font-medium">
-              {t("cost")} <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              type="number"
-              id="cost"
-              name="cost"
-              min={0}
-              placeholder={t("placeholders.cost")}
-              className="mt-2"
-              onChange={(e) => setCost(Number(e.target.value))}
-            />
-          </div>
-
-          {/* Motif */}
-          <div className="col-span-full sm:col-span-3">
-            <Label htmlFor="motif" className="font-medium">
-              {t("motif")} <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              type="text"
-              id="motif"
-              name="motif"
-              placeholder={t("placeholders.motif")}
-              className="mt-2"
-              onChange={(e) => setMotif(e.target.value)}
-            />
-          </div>
-
-          {/* Note */}
-          <div className="col-span-full sm:col-span-3">
-            <Label htmlFor="note" className="font-medium">
-              {t("note")}
-            </Label>
-            <Input
-              type="text"
-              id="note"
-              name="note"
-              placeholder={t("placeholders.note")}
-              className="mt-2"
-              onChange={(e) => setNote(e.target.value)}
-            />
-          </div>
-
-          {/* Location */}
-          <div className="col-span-full sm:col-span-6">
-            <Label className="font-medium">
-              {t("location.label")} <span className="text-red-500">*</span>
-            </Label>
-            <RadioCardGroup
-              className="mt-2 flex flex-wrap gap-4"
-              value={locationValue ?? undefined}
-              onValueChange={setLocationValue}
-            >
-              <RadioCardItem value="1" className="min-w-48 flex-1">
-                <div className="flex items-start gap-3">
-                  <RadioCardIndicator className="mt-1" />
-                  <div>
-                    <span className="sm:text-sm">
-                      {t("location.office.title")}
-                    </span>
-                    <p className="mt-1 text-xs text-gray-500">
-                      {t("location.office.desc")}
-                    </p>
-                  </div>
-                </div>
-              </RadioCardItem>
-              <RadioCardItem value="2" className="min-w-48 flex-1">
-                <div className="flex items-start gap-3">
-                  <RadioCardIndicator className="mt-1" />
-                  <div>
-                    <span className="sm:text-sm">
-                      {t("location.home.title")}
-                    </span>
-                    <p className="mt-1 text-xs text-gray-500">
-                      {t("location.home.desc")}
-                    </p>
-                  </div>
-                </div>
-              </RadioCardItem>
-              <RadioCardItem value="3" className="min-w-48 flex-1">
-                <div className="flex items-start gap-3">
-                  <RadioCardIndicator className="mt-1" />
-                  <div>
-                    <span className="sm:text-sm">
-                      {t("location.video.title")}
-                    </span>
-                    <p className="mt-1 text-xs text-gray-500">
-                      {t("location.video.desc")}
-                    </p>
-                  </div>
-                </div>
-              </RadioCardItem>
-            </RadioCardGroup>
-          </div>
+        <div
+          className={`transition-all duration-300 ease-in-out overflow-hidden w-90 ${
+            selectedPatient ? "opacity-100" : "w-0 opacity-0 pl-0"
+          }`}
+        >
+          {selectedPatient && <PatientDetails patient={selectedPatient} />}
         </div>
-
-        <Divider />
-
-        {value && value.toDateString() === new Date().toDateString() && (
-          <>
-            <div className="flex items-center gap-3">
-              <Switch id="a" checked={checked} onCheckedChange={setChecked} />
-              <Label htmlFor="a">{t("waitingRoom")}</Label>
-            </div>
-            <Divider />
-          </>
-        )}
-
-        <div className="flex items-center gap-3">
-          <Switch id="b" checked={isUrgent} onCheckedChange={setUrgent} />
-          <Label htmlFor="b">{t("urgent")}</Label>
-        </div>
-        <Divider />
-
-        <div className="flex items-center justify-end space-x-4 gap-2">
-          <Button variant="secondary" type="button">
-            {t("cancel")}
-          </Button>
-          <Button type="submit">{t("submit")}</Button>
-        </div>
-      </form>
+      </Card>
+      <Toaster />
     </div>
   );
 }

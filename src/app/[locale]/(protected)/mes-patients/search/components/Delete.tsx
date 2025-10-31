@@ -1,5 +1,6 @@
 "use client";
 
+import { deletePatient } from "@/api/patients";
 import { Button } from "@/components/Button";
 import {
   Dialog,
@@ -18,10 +19,9 @@ import { UserRoundMinus } from "lucide-react";
 
 import React, { useEffect, useState } from "react";
 
-import { deletePatient } from "../../api/patients";
 
 interface DeletePatientModalProps {
-  patientId: number;
+  patientId: string;
   onSuccess?: () => void;
 }
 
@@ -29,13 +29,11 @@ export default function DeletePatientModal({
   patientId,
   onSuccess,
 }: DeletePatientModalProps) {
-  /* ─────────── state ─────────── */
-  const [code, setCode] = useState(""); // code affiché
-  const [userInput, setUserInput] = useState(""); // saisi par user
+  const [code, setCode] = useState("");
+  const [userInput, setUserInput] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
 
-  /* ─────────── génère un nouveau code à chaque ouverture ─────────── */
   useEffect(() => {
     if (open) {
       const newCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -44,10 +42,9 @@ export default function DeletePatientModal({
     }
   }, [open]);
 
-  /* ─────────── submit ─────────── */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (userInput !== code) return; // code incorrect → on ne fait rien
+    if (userInput !== code) return;
 
     setSubmitting(true);
     try {
@@ -61,7 +58,6 @@ export default function DeletePatientModal({
     }
   };
 
-  /* ─────────── UI ─────────── */
   return (
     <div className="flex items-center justify-center">
       <Dialog open={open} onOpenChange={setOpen}>

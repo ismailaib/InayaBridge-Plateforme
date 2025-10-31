@@ -3,7 +3,6 @@ export type CalendarViewType = "month" | "week" | "day" | "list";
 export interface CalendarAppointment {
   id: string;
   patient: string;
-  phoneNumber: string;
   type: string;
   typeColor?: string;
   date: string;
@@ -11,6 +10,7 @@ export interface CalendarAppointment {
   endTime: string;
   location: string;
   notes: string;
+  patientProfileId: string;
   confirmed: boolean;
   date_of_birth?: string;
   consultationType?: string;
@@ -19,5 +19,10 @@ export interface CalendarAppointment {
     enterTime: string;
     endTime: string;
   };
+  status: string;
+  recurring: boolean;
+  patientFullName: string;
+  createdAt: string;
+  updatedAt: string;
   timeOfExitFromConsultation?: string;
 }

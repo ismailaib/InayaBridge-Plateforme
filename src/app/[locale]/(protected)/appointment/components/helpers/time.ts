@@ -1,4 +1,7 @@
-export function parseTime(value: string) {
+export function parseTime(value: string | null) {
+  if (value == null) {
+    return null;
+  }
   const [hoursStr, minutesStr] = value.split(":");
   const hours = Number(hoursStr);
   const minutes = Number(minutesStr);
@@ -24,3 +27,4 @@ export function isTimeWithinRange(
 
   return targetMinutes >= startMinutes && targetMinutes < endMinutes;
 }
+

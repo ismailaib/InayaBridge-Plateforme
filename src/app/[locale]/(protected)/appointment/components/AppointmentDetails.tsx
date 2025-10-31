@@ -8,18 +8,36 @@ import {
 import { cx } from "@/lib/utils";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Calendar1, Clock, Edit2, Phone, Save, User, X } from "lucide-react";
+import {
+  Calendar,
+  Edit2,
+  MapPin,
+  Phone,
+  RefreshCw,
+  User,
+  Mail,
+  CreditCard,
+  AlertCircle,
+  X,
+  CircleOff,
+  MapPinCheckInside,
+  CalendarCheck,
+  CirclePlay,
+} from "lucide-react";
+import { useState, useEffect } from "react";
+import { CopyableRow } from "./CopyableRow";
 
-import { useEffect, useState } from "react";
-
-import { deleteAppointment, updateAppointment } from "../api/appointment";
-import type { CalendarAppointment } from "./types";
+import { getPatientById, TenantPatient } from "@/api/patients";
+import { Card } from "@/components/Card";
+import { Divider } from "@/components/Divider";
+import { getStatusLabel, getStatusDotColor, getConsultationType, getConsultationDotColor, getGenderLabel, formatTime, getValidDate } from "./helpers/details";
+import { CalendarAppointment } from "./helpers/types";
 
 type AppointmentDetailsProps = {
   appointment: CalendarAppointment | null;
   isOpen: boolean;
   onClose: () => void;
-  onAppointmentUpdated?: (updatedAppointment: CalendarAppointment) => void;
+  onEdit?: (appointmentId: string) => void;
   onAppointmentDeleted?: (appointmentId: string) => void;
 };
 
@@ -27,486 +45,303 @@ export const AppointmentDetails = ({
   appointment,
   isOpen,
   onClose,
-  onAppointmentUpdated,
+  onEdit,
   onAppointmentDeleted,
 }: AppointmentDetailsProps) => {
-  const formatDateForInput = (value?: string) => {
-    if (!value) return "";
-    const parsed = new Date(value);
-    return Number.isNaN(parsed.getTime()) ? "" : format(parsed, "yyyy-MM-dd");
-  };
-
-  const getValidDate = (value?: string) => {
-    if (!value) return null;
-    const parsed = new Date(value);
-    return Number.isNaN(parsed.getTime()) ? null : parsed;
-  };
-
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [editingField, setEditingField] = useState<string | null>(null);
-  const [tempValues, setTempValues] = useState({
-    date: formatDateForInput(appointment?.date),
-    notes: appointment?.notes ?? "",
-    confirmed: appointment?.confirmed ?? false,
-    startTime: appointment?.startTime ?? "",
-    endTime: appointment?.endTime ?? "",
-  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [patientData, setPatientData] = useState<TenantPatient | null>(null);
+  const [loadingPatient, setLoadingPatient] = useState(false);
 
   useEffect(() => {
-    setTempValues({
-      date: formatDateForInput(appointment?.date),
-      notes: appointment?.notes ?? "",
-      confirmed: appointment?.confirmed ?? false,
-      startTime: appointment?.startTime ?? "",
-      endTime: appointment?.endTime ?? "",
-    });
-  }, [appointment]);
+    if (!isOpen || !appointment?.patientProfileId) {
+      setPatientData(null);
+      setLoadingPatient(false);
+      return;
+    }
+
+    const fetchPatientData = async () => {
+      setLoadingPatient(true);
+      setPatientData(null);
+      try {
+        const { data } = await getPatientById(appointment?.patientProfileId);
+        setPatientData(data);
+      } catch (error) {
+        console.error("Erreur lors du chargement du patient:", error);
+        setPatientData(null);
+      } finally {
+        setLoadingPatient(false);
+      }
+    };
+
+    fetchPatientData();
+  }, [appointment?.patientProfileId, isOpen]);
 
   if (!appointment) return null;
 
   const appointmentDate = getValidDate(appointment.date);
-  const appointmentBirthDate = getValidDate(appointment.date_of_birth);
+  const patientBirthDate = getValidDate(patientData?.dateOfBirth);
+  const createdAtDate = getValidDate(appointment.createdAt);
+  const updatedAtDate = getValidDate(appointment.updatedAt);
 
   const handleDelete = async () => {
     if (!appointment.id) return;
 
     setIsDeleting(true);
     try {
-      await deleteAppointment(appointment.id);
       onAppointmentDeleted?.(appointment.id);
       onClose();
     } catch (error) {
       console.error("Erreur lors de la suppression:", error);
-      // You might want to show a toast notification here
     } finally {
       setIsDeleting(false);
     }
   };
 
-  const formatTimeToHi = (time: string) => {
-    // Convert time to H:i format (e.g., "14:30" or "9:15")
-    if (!time) return time;
-
-    // Handle different input formats
-    let cleanTime = time.trim();
-
-    // If it's already in H:i or HH:MM format
-    if (cleanTime.includes(":")) {
-      const [hours, minutes] = cleanTime.split(":");
-      const h = parseInt(hours, 10);
-      const m = parseInt(minutes, 10);
-
-      // Validate time values
-      if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) {
-        return time; // Return original if invalid
-      }
-
-      return `${h}:${m.toString().padStart(2, "0")}`;
-    }
-
-    return time;
-  };
-
-  const convertToTimeInput = (time: string) => {
-    // Convert H:i format to HH:MM for HTML time input
-    if (!time || !time.includes(":")) return time;
-
-    const [hours, minutes] = time.split(":");
-    const h = parseInt(hours, 10);
-    const m = parseInt(minutes, 10);
-
-    if (isNaN(h) || isNaN(m)) return time;
-
-    return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
-  };
-
-  const handleStatusToggle = async () => {
-    const newStatus = !appointment.confirmed;
-    setIsUpdating(true);
-
-    try {
-      const payload = {
-        patientId: parseInt(appointment.id, 10),
-        date: formatDateForInput(appointment.date) || tempValues.date,
-        startTime: formatTimeToHi(appointment.startTime),
-        status: newStatus ? "confirmed" : "pending",
-        consultationType: appointment.type as "local" | "video" | "in-person",
-        motif: appointment.notes || "",
-        endTime: formatTimeToHi(appointment.endTime),
-      };
-
-      await updateAppointment(appointment.id, payload);
-
-      const updatedAppointment = {
-        ...appointment,
-        confirmed: newStatus,
-      };
-
-      onAppointmentUpdated?.(updatedAppointment);
-      onClose();
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour du statut:", error);
-    } finally {
-      setIsUpdating(false);
+  const handleEdit = () => {
+    if (appointment.id && onEdit) {
+      onEdit(appointment.id);
     }
   };
 
-  const handleFieldUpdate = async (field: string) => {
-    setIsUpdating(true);
+  const consultationType = getConsultationType(appointment.consultationType || appointment.type);
 
-    try {
-      let updatedData: CalendarAppointment = { ...appointment };
-
-      if (field === "date") {
-        updatedData.date = tempValues.date;
-      } else if (field === "notes") {
-        updatedData.notes = tempValues.notes;
-      } else if (field === "startTime") {
-        updatedData.startTime = tempValues.startTime;
-      } else if (field === "endTime") {
-        updatedData.endTime = tempValues.endTime;
-      } else if (field === "times") {
-        updatedData.startTime = tempValues.startTime;
-        updatedData.endTime = tempValues.endTime;
-      }
-
-      const payload = {
-        patientId: parseInt(appointment.id, 10),
-        date:
-          field === "date"
-            ? tempValues.date
-            : formatDateForInput(appointment.date) || tempValues.date,
-        startTime: formatTimeToHi(
-          field === "startTime" || field === "times"
-            ? tempValues.startTime
-            : appointment.startTime,
-        ),
-        status: appointment.confirmed ? "confirmed" : "pending",
-        consultationType: appointment.type as "local" | "video" | "in-person",
-        motif: field === "notes" ? tempValues.notes : appointment.notes || "",
-        endTime: formatTimeToHi(
-          field === "endTime" || field === "times"
-            ? tempValues.endTime
-            : appointment.endTime,
-        ),
-      };
-
-      await updateAppointment(appointment.id, payload);
-      onAppointmentUpdated?.(updatedData);
-      setEditingField(null);
-      onClose();
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour:", error);
-      // You might want to show error message to user
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
-  const handleCancelEdit = (field: string) => {
-    setEditingField(null);
-    // Reset temp values to original
-    if (field === "date") {
-      setTempValues((prev) => ({
-        ...prev,
-        date: formatDateForInput(appointment?.date),
-      }));
-    } else if (field === "notes") {
-      setTempValues((prev) => ({
-        ...prev,
-        notes: appointment?.notes || "",
-      }));
-    } else if (field === "startTime") {
-      setTempValues((prev) => ({
-        ...prev,
-        startTime: appointment?.startTime || "",
-      }));
-    } else if (field === "endTime") {
-      setTempValues((prev) => ({
-        ...prev,
-        endTime: appointment?.endTime || "",
-      }));
-    } else if (field === "times") {
-      setTempValues((prev) => ({
-        ...prev,
-        startTime: appointment?.startTime || "",
-        endTime: appointment?.endTime || "",
-      }));
-    }
-  };
+  const patientFullName = patientData
+    ? `${patientData.firstName} ${patientData.lastName}`.trim()
+    : "Patient inconnu";
 
   return (
-    <Dialog open={isOpen} onOpenChange={() => onClose()}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Détails du rendez-vous</DialogTitle>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="flex flex-row items-center justify-between">
+          <DialogTitle className="text-xl">Détails du rendez-vous</DialogTitle>
+          <Button variant="light" onClick={onClose}><X width={18} /></Button>
         </DialogHeader>
+
+        <Divider />
+
         <div className="mt-4 space-y-4">
+          <div className="flex flex-row items-center justify-between pb-2">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+                {appointmentDate ? format(appointmentDate, "EEEE d MMMM yyyy", { locale: fr }) : "--"}
+              </h3>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                {formatTime(appointment.startTime)}
+                {appointment.endTime && appointment.endTime !== null && ` - ${formatTime(appointment.endTime)}`}
+              </p>
+            </div>
+            <div className="flex flex-row gap-2">
+              <div className="flex items-center gap-1.5 border border-0.5 dark:border-gray-800 border-gray-200 rounded-full p-2 px-4">
+                <span className={cx("w-2 h-2 rounded-full", getConsultationDotColor(appointment.consultationType || appointment.type))} />
+                <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                  {consultationType.label}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1.5 border border-0.5 dark:border-gray-800 border-gray-200  rounded-full p-2 px-4">
+                <span className={cx("w-2 h-2 rounded-full", getStatusDotColor(appointment.status))} />
+                <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                  {getStatusLabel(appointment.status)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <Divider />
+
           <div>
-            <div className="flex justify-between">
-              <div
-                className={cx(
-                  "inline-flex items-center rounded px-2 py-1 text-xs font-medium",
-                  appointment.typeColor ?? "",
-                )}
-              >
-                {appointment.type === "local" && (
-                  <span className="ml-2 inline-block rounded bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                    Cabinet principale
-                  </span>
-                )}
-
-                {appointment.type === "in-person" && (
-                  <span className="ml-2 inline-block rounded bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
-                    À domicile
-                  </span>
-                )}
-
-                {appointment.type === "video" && (
-                  <span className="ml-2 inline-block rounded bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800 dark:bg-red-900 dark:text-red-200">
-                    Visio Conférence
-                  </span>
-                )}
+            {appointment.motif && (
+              <div className="">
+                <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-50 mb-1">{appointment.motif}</h4>
               </div>
+            )}
 
-              <button
-                onClick={handleStatusToggle}
-                disabled={isUpdating}
-                className={cx(
-                  "inline-flex items-center rounded-full px-3 py-0.5 text-xs font-medium transition-colors hover:opacity-80 disabled:opacity-50",
-                  appointment.confirmed
-                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                    : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-                )}
-              >
-                {isUpdating
-                  ? "..."
-                  : appointment.confirmed
-                    ? "Confirmé"
-                    : "À confirmer"}
-              </button>
-            </div>
-
-            <div className="mt-2 flex items-center gap-2">
-              {editingField === "date" ? (
-                <div className="flex items-center gap-2">
-                  <input
-                    type="date"
-                    value={tempValues.date}
-                    onChange={(e) =>
-                      setTempValues((prev) => ({
-                        ...prev,
-                        date: e.target.value,
-                      }))
-                    }
-                    className="rounded border px-2 py-1 text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
-                  />
-                  <button
-                    onClick={() => handleFieldUpdate("date")}
-                    disabled={isUpdating}
-                    className="p-1 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"
-                  >
-                    <Save className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => handleCancelEdit("date")}
-                    className="p-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">
-                    {appointmentDate
-                      ? format(appointmentDate, "EEEE d MMMM yyyy", {
-                          locale: fr,
-                        })
-                      : "--"}
-                  </h3>
-                  <button
-                    onClick={() => setEditingField("date")}
-                    className="p-1 text-gray-500 hover:text-gray-700"
-                  >
-                    <Edit2 className="h-4 w-4" />
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="space-y-2 rounded-md bg-gray-50 p-3 dark:bg-gray-900">
-            <div className="flex items-center">
-              <User className="mr-2 h-4 w-4 text-gray-500 dark:text-gray-400" />
-              <h4 className="font-medium text-gray-900 dark:text-gray-50">
-                {appointment.patient}
-              </h4>
-            </div>
-            <div className="flex items-center">
-              <Phone className="mr-2 h-4 w-4 text-gray-500 dark:text-gray-400" />
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                {appointment.phoneNumber}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-3 rounded-md bg-gray-50 p-3 dark:bg-gray-900">
-            <Clock className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            <div className="flex-1">
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-medium text-gray-900 dark:text-gray-50">
-                  Horaires
-                </h4>
-                {editingField !== "times" && (
-                  <button
-                    onClick={() => setEditingField("times")}
-                    className="p-1 text-gray-500 hover:text-gray-700"
-                  >
-                    <Edit2 className="h-4 w-4" />
-                  </button>
-                )}
+            {appointment.notes && (
+              <div className="">
+                <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{appointment.notes}</p>
               </div>
-
-              {editingField === "times" ? (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 w-16">
-                      Début:
-                    </label>
-                    <input
-                      type="time"
-                      value={convertToTimeInput(tempValues.startTime)}
-                      onChange={(e) =>
-                        setTempValues((prev) => ({
-                          ...prev,
-                          startTime: e.target.value,
-                        }))
-                      }
-                      className="rounded border px-2 py-1 text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
-                    />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 w-16">
-                      Fin:
-                    </label>
-                    <input
-                      type="time"
-                      value={convertToTimeInput(tempValues.endTime)}
-                      onChange={(e) =>
-                        setTempValues((prev) => ({
-                          ...prev,
-                          endTime: e.target.value,
-                        }))
-                      }
-                      className="rounded border px-2 py-1 text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleFieldUpdate("times")}
-                      disabled={isUpdating}
-                      className="flex items-center gap-1 px-2 py-1 text-xs bg-green-100 text-green-800 rounded hover:bg-green-200"
-                    >
-                      <Save className="h-3 w-3" />
-                      Sauvegarder
-                    </button>
-                    <button
-                      onClick={() => handleCancelEdit("times")}
-                      className="flex items-center gap-1 px-2 py-1 text-xs bg-red-100 text-red-800 rounded hover:bg-red-200"
-                    >
-                      <X className="h-3 w-3" />
-                      Annuler
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-sm text-gray-700 dark:text-gray-300">
-                  {appointment.startTime} - {appointment.endTime}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-3 rounded-md bg-gray-50 p-3 dark:bg-gray-900">
-            <Calendar1 className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            <div>
-              <h4 className="font-medium text-gray-900 dark:text-gray-50">
-                Date de Naissance
-              </h4>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                {appointmentBirthDate
-                  ? format(appointmentBirthDate, "dd/MM/yyyy")
-                  : "--"}
-              </p>
-            </div>
-          </div>
-
-          <div className="rounded-md bg-gray-50 p-3 dark:bg-gray-900">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="font-medium text-gray-900 dark:text-gray-50">
-                Notes
-              </h4>
-              {editingField !== "notes" && (
-                <button
-                  onClick={() => setEditingField("notes")}
-                  className="p-1 text-gray-500 hover:text-gray-700"
-                >
-                  <Edit2 className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-
-            {editingField === "notes" ? (
-              <div className="space-y-2">
-                <textarea
-                  value={tempValues.notes}
-                  onChange={(e) =>
-                    setTempValues((prev) => ({
-                      ...prev,
-                      notes: e.target.value,
-                    }))
-                  }
-                  className="w-full rounded border px-2 py-1 text-sm min-h-[60px] bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
-                  placeholder="Ajouter des notes..."
-                />
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleFieldUpdate("notes")}
-                    disabled={isUpdating}
-                    className="flex items-center gap-1 px-2 py-1 text-xs bg-green-100 text-green-800 rounded hover:bg-green-200 dark:bg-green-900 dark:text-green-200 dark:hover:bg-green-800"
-                  >
-                    <Save className="h-3 w-3" />
-                    Sauvegarder
-                  </button>
-                  <button
-                    onClick={() => handleCancelEdit("notes")}
-                    className="flex items-center gap-1 px-2 py-1 text-xs bg-red-100 text-red-800 rounded hover:bg-red-200 dark:bg-red-900 dark:text-red-200 dark:hover:bg-red-800"
-                  >
-                    <X className="h-3 w-3" />
-                    Annuler
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                {appointment.notes || "Aucune note"}
-              </p>
             )}
           </div>
 
-          <div className="mt-6 flex justify-end space-x-2">
-            <Button variant="secondary" onClick={onClose}>
-              Fermer
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={isDeleting}
-            >
-              {isDeleting ? "Suppression..." : "Supprimer"}
-            </Button>
+
+          <Divider />
+
+          <div className="space-y-3 pt-2">
+            {loadingPatient ? (
+              <p className="text-sm text-gray-500">Chargement...</p>
+            ) : patientData ? (
+
+              <div className="">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 mb-2">
+                    <User className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-50">{patientFullName}</h4>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    <span
+                      className={cx(
+                        "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium",
+                        getGenderLabel(patientData.gender) === "Homme"
+                          ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                          : "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300"
+                      )}
+                    >
+                      {getGenderLabel(patientData.gender)}
+                    </span>
+                    {patientBirthDate && <span className="mx-2">•</span>}
+                    {patientBirthDate && <span>{format(patientBirthDate, "dd/MM/yyyy")} ({new Date().getFullYear() - patientBirthDate.getFullYear()} ans)</span>}
+                  </p>
+                </div>
+
+                <div className="w-full rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 mt-2">
+                  <table className="w-full table-auto">
+                    <tbody>
+                      {patientData.cin && (
+                        <CopyableRow
+                          icon={<CreditCard className="h-4 w-4 text-gray-500 dark:text-gray-400" />}
+                          label="CIN"
+                          value={patientData.cin}
+                        />
+                      )}
+                      {patientData.phone && (
+                        <CopyableRow
+                          icon={<Phone className="h-4 w-4 text-gray-500 dark:text-gray-400" />}
+                          label="Téléphone"
+                          value={patientData.phone}
+                        />
+                      )}
+                      {patientData.email && (
+                        <CopyableRow
+                          icon={<Mail className="h-4 w-4 text-gray-500 dark:text-gray-400" />}
+                          label="Email"
+                          value={patientData.email}
+                        />
+                      )}
+                      {patientData.address && (
+                        <CopyableRow
+                          icon={<MapPin className="h-4 w-4 text-gray-500 dark:text-gray-400" />}
+                          label="Adresse"
+                          value={patientData.address}
+                        />
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                <p className="text-sm text-gray-700 dark:text-gray-300">Données patient indisponibles</p>
+              </div>
+            )}
           </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            {appointment.location && (
+              <Card className="p-4 w-full">
+                <div className="flex items-center gap-2 mb-1">
+                  <MapPin className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-50">Lieu</h4>
+                </div>
+                <p className="text-sm text-gray-700 dark:text-gray-300">{appointment.location}</p>
+              </Card>
+            )}
+
+              <Card className="p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <RefreshCw className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-50">Récurrent</h4>
+                </div>
+                <p className="text-sm text-gray-700 dark:text-gray-300">{appointment.recurring ? "Oui" : "Non"}</p>
+              </Card>
+          </div>
+
+          <Divider />
+
+          <div className="flex justify-between items-center">
+            <div
+              className="flex space-x-2 overflow-x-auto cursor-grab"
+              style={{ overflowY: "hidden", scrollbarWidth: "none", msOverflowStyle: "none" }}
+              onMouseDown={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.dataset.isDown = "true";
+                el.dataset.startX = (e.pageX - el.offsetLeft).toString();
+                el.dataset.scrollLeft = el.scrollLeft.toString();
+                el.classList.add("cursor-grabbing");
+              }}
+              onMouseMove={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                if (el.dataset.isDown !== "true") return;
+                e.preventDefault();
+                const x = e.pageX - el.offsetLeft;
+                const walk = x - Number(el.dataset.startX || 0);
+                el.scrollLeft = Number(el.dataset.scrollLeft || 0) - walk;
+              }}
+              onMouseUp={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.dataset.isDown = "false";
+                el.classList.remove("cursor-grabbing");
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.dataset.isDown = "false";
+                el.classList.remove("cursor-grabbing");
+              }}
+              onTouchStart={(e) => {
+                const touch = e.touches[0];
+                const el = e.currentTarget as HTMLElement;
+                el.dataset.isDown = "true";
+                el.dataset.startX = (touch.pageX - el.offsetLeft).toString();
+                el.dataset.scrollLeft = el.scrollLeft.toString();
+              }}
+              onTouchMove={(e) => {
+                const touch = e.touches[0];
+                const el = e.currentTarget as HTMLElement;
+                if (el.dataset.isDown !== "true") return;
+                const x = touch.pageX - el.offsetLeft;
+                const walk = x - Number(el.dataset.startX || 0);
+                el.scrollLeft = Number(el.dataset.scrollLeft || 0) - walk;
+              }}
+              onTouchEnd={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.dataset.isDown = "false";
+              }}
+            >
+              <Button variant="secondary" onClick={handleEdit} disabled={isEditing} className="text-sm flex flex-row items-center gap-2">
+                <Edit2 width={18} /> {isEditing ? "Modification..." : "Modifier"}
+              </Button>
+              <Button variant="secondary" onClick={handleEdit} disabled={isEditing} className="text-sm flex flex-row items-center gap-2">
+                <MapPinCheckInside width={18} /> {isEditing ? "Modification..." : "Patient Arrivé"}
+              </Button>
+              <Button variant="success" onClick={handleEdit} disabled={isEditing} className="text-sm flex flex-row items-center gap-2">
+                <CalendarCheck width={18} /> {isEditing ? "Confirmation..." : "Patient Confirmé"}
+              </Button>
+              <Button variant="success" onClick={handleEdit} disabled={isEditing} className="text-sm flex flex-row items-center gap-2">
+                <CirclePlay width={18} /> {isEditing ? "Chargement..." : "Debut Consultation"}
+              </Button>
+              <Button variant="destructive" onClick={handleDelete} disabled={isDeleting} className="text-sm flex flex-row items-center gap-2">
+                <CircleOff width={18} /> {isDeleting ? "Annulation..." : "Annuler"}
+              </Button>
+            </div>
+          </div>
+
+          <Divider />
+
+          {(createdAtDate || updatedAtDate) && (
+            <div className="text-xs text-gray-500 dark:text-gray-400 flex flex-row items-center gap-4">
+              {createdAtDate && (
+                <p><span className="font-medium">Créé le :</span> {format(createdAtDate, "dd/MM/yyyy HH:mm", { locale: fr })}</p>
+              )}
+              -
+              {updatedAtDate && (
+                <p><span className="font-medium">Modifié le :</span> {format(updatedAtDate, "dd/MM/yyyy HH:mm", { locale: fr })}</p>
+              )}
+            </div>
+          )}
+
         </div>
       </DialogContent>
     </Dialog>

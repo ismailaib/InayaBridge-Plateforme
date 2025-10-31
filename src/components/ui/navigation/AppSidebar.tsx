@@ -134,6 +134,21 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       ],
     },
     {
+      name: t("doctor.cabinet"),
+      icon: Building2,
+      root: "gestion-cabinet",
+      active: false,
+      children: [
+        { name: t("doctor.cabinetChildren.employees"), root: "/cabinet/employees" },
+        { name: t("doctor.cabinetChildren.services"), root: "/cabinet/services" },
+        { name: t("doctor.cabinetChildren.departements"), root: "/cabinet/departements" },
+        { name: t("doctor.cabinetChildren.roles"), root: "/cabinet/roles" },
+      ],
+    },
+  ] as const;
+
+  const thirdnavigation = [
+    {
       name: t("doctor.settings"),
       icon: Settings,
       root: "parametres",
@@ -144,18 +159,6 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         { name: t("doctor.settingsChildren.availability"), root: "/settings?tab=disponibility" },
         { name: t("doctor.settingsChildren.preferences"), root: "/settings?tab=preferences" },
         { name: t("doctor.settingsChildren.billing"), root: "/settings?tab=billing" },
-      ],
-    },
-    {
-      name: t("doctor.cabinet"),
-      icon: Building2,
-      root: "gestion-cabinet",
-      active: false,
-      children: [
-        { name: t("doctor.cabinetChildren.employees"), root: "/cabinet/employees" },
-        { name: t("doctor.cabinetChildren.services"), root: "/cabinet/services" },
-        { name: t("doctor.cabinetChildren.departements"), root: "/cabinet/departements" },
-        { name: t("doctor.cabinetChildren.roles"), root: "/cabinet/roles" },
       ],
     },
   ] as const;
@@ -386,6 +389,64 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        <Divider className="my-0" />
+
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1">
+              {thirdnavigation.map((item) => {
+                const isOpen = openMenus.includes(item.name);
+                return (
+                  <SidebarMenuItem key={item.name}>
+                    <button
+                      onClick={() => toggleMenu(item.name)}
+                      className={cx(
+                        "flex w-full items-center justify-between rounded-md p-2 text-base text-gray-900 hover:bg-gray-200/50 dark:text-gray-400 dark:hover:bg-gray-900",
+                        focusRing,
+                      )}
+                    >
+                      <div className="flex items-center gap-2.5 text-sm">
+                        <item.icon className="size-[18px]" aria-hidden />
+                        {item.name}
+                      </div>
+                      <RiArrowDownSFill
+                        className={cx(
+                          isOpen ? "rotate-0" : "-rotate-90",
+                          "size-5 transform transition-transform",
+                        )}
+                      />
+                    </button>
+
+                    {isOpen && (
+                      <SidebarMenuSub>
+                        <div className={`absolute inset-y-0 left-4 w-px`} />
+                        {item.children.map((child) => {
+                          const childHref = generateHref(child.root);
+                          return (
+                            <SidebarMenuItem key={child.root}>
+                              <SidebarSubLink
+                                href={childHref}
+                                className={
+                                  pathname === childHref
+                                    ? "text-[#3b82f6] dark:text-gray-100"
+                                    : ""
+                                }
+                              >
+                                {child.name}
+                              </SidebarSubLink>
+                            </SidebarMenuItem>
+                          );
+                        })}
+                      </SidebarMenuSub>
+                    )}
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <Divider className="my-0" />
       </SidebarContent>
 
       <SidebarFooter>

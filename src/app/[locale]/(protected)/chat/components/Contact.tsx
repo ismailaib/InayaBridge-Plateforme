@@ -14,14 +14,18 @@ interface ContactProps {
   userId: string
   setSelectedRoom: (room: ChatRoom | null) => void
   states: Record<string, any>
+  onlineUsers:any
 }
 
-export default function Contact({ tenantId, userId, setSelectedRoom, states }: ContactProps) {
+export default function Contact({ tenantId, userId, setSelectedRoom, states , onlineUsers}: ContactProps) {
   const [employees, setEmployees] = useState<any[]>([])
   const [filtered, setFiltered] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [search, setSearch] = useState('')
   const [roomMap, setRoomMap] = useState<Record<string, string>>({})
+    console.log("online users from contatc sidebar :" ,onlineUsers)
+
+    
 
   useEffect(() => {
     console.log('🟣 [Contact] states updated:', states)

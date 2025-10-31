@@ -16,7 +16,6 @@ import {
 
 import React, { useState } from "react";
 
-import { updatePatient } from "../../api/patients";
 
 interface Patient {
   id: number;
@@ -157,10 +156,7 @@ const Details: React.FC<{ patient: Patient | null }> = ({ patient }) => {
                     onChange={(e) => setBloodType(e.target.value)}
                     onBlur={async () => {
                       setEditingBlood(false);
-                      await updatePatient(patient.id!, {
-                        ...patient,
-                        blood_type: bloodType,
-                      });
+                      
                     }}
                   />
                 ) : (
@@ -216,13 +212,7 @@ const Details: React.FC<{ patient: Patient | null }> = ({ patient }) => {
                       }
                       onBlur={async () => {
                         setEditingEmergency(false);
-                        await updatePatient(patient.id!, {
-                          ...patient,
-                          contact_urgence: {
-                            relation: String(emergency.relation),
-                            phone_number: String(emergency.phone_number),
-                          },
-                        });
+                        
                       }}
                     />
                   </div>

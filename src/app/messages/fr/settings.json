@@ -191,7 +191,7 @@
 
     "timezone": {
       "title": "Fuseau horaire",
-      "description": "Définissez votre fuseau horaire local pour les rendez-vous et événements."
+      "description": "Définissez votre fuseau horaire local."
     },
 
     "notifications": {
@@ -227,6 +227,30 @@
       "successDescription": "Vos préférences ont été mises à jour avec succès.",
       "errorTitle": "Échec de l’enregistrement",
       "errorDescription": "Une erreur s’est produite lors de l’enregistrement des préférences."
+    },
+
+    "features": {
+      "title": "Préférences",
+      "enableTeleconsultation": {
+        "label": "Téléconsultation",
+        "description": "Activez les consultations vidéo et les rendez-vous à distance avec les patients"
+      },
+      "enableLabIntegration": {
+        "label": "Intégration de laboratoire",
+        "description": "Connectez-vous aux systèmes de laboratoire pour les demandes et les résultats d’analyses"
+      },
+      "enableBilling": {
+        "label": "Facturation",
+        "description": "Gérez les factures, les paiements et les transactions financières"
+      },
+      "enforce2FA": {
+        "label": "Authentification à deux facteurs",
+        "description": "Exigez une authentification à deux facteurs pour renforcer la sécurité"
+      },
+      "enableAuditLogs": {
+        "label": "Journaux d’audit",
+        "description": "Suivez et enregistrez toutes les activités du système pour assurer la conformité"
+      }
     }
   },
 

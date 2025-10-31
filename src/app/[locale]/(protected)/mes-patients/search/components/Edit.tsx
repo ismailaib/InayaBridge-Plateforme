@@ -1,5 +1,6 @@
 "use client";
 
+import { updatePatient } from "@/api/patients";
 import { Button } from "@/components/Button";
 import { DatePicker } from "@/components/DatePicker";
 import {
@@ -26,25 +27,24 @@ import { UserRoundPen } from "lucide-react";
 
 import React, { useState } from "react";
 
-import { updatePatient } from "../../api/patients";
 
 /* ------------------------------------------------------------------ */
 /* API wrapper                                                        */
 /* ------------------------------------------------------------------ */
 export interface Patient {
-  id: number | undefined;
-  first_name: string;
-  last_name: string;
+  id: string | number;
+  firstName: string;
+  lastName: string;
   gender: "male" | "female";
-  date_of_birth: string;
+  dateOfBirth: string;
   cin: string;
-  phone_number: string;
+  phone: string;
   address: string;
   email: string;
 }
 
 export const update = (id: number | string, payload: Patient) =>
-  updatePatient(id, payload);
+  updatePatient(String(id), payload);
 
 /* ------------------------------------------------------------------ */
 /* Component                                                          */
@@ -61,8 +61,7 @@ export default function EditPatientModal({
   /* -----  local form state  -------------------------------------- */
   const [form, setForm] = useState<Patient>({
     ...patient,
-    // s’il arrive que date_of_birth vaille null, assure une chaîne vide :
-    date_of_birth: patient.date_of_birth ?? "",
+    dateOfBirth: patient.dateOfBirth ?? "",
   });
 
   const handleChange = (
@@ -75,7 +74,7 @@ export default function EditPatientModal({
   const handleDateChange = (d: Date | undefined) => {
     setForm((f) => ({
       ...f,
-      date_of_birth: d ? d.toISOString().slice(0, 10) : "",
+      dateOfBirth: d ? d.toISOString().slice(0, 10) : "",
     }));
   };
 
@@ -87,12 +86,11 @@ export default function EditPatientModal({
     setIsLoading(true);
     try {
       await update(Number(patient.id), form);
-      onSuccess(); // informe le parent → refresh list
+      onSuccess();
     } catch (err) {
-      // ici on pourrait afficher un toast d’erreur
       console.error("Échec de la mise à jour", err);
       setIsLoading(false);
-      return; // ne pas fermer le modal
+      return;
     }
     setIsLoading(false);
   };
@@ -125,7 +123,7 @@ export default function EditPatientModal({
               <DialogTitle className="text-base font-semibold">
                 Modifier{" "}
                 <span className="font-bold">
-                  {patient.first_name} {patient.last_name}
+                  {patient.firstName} {patient.lastName}
                 </span>
               </DialogTitle>
               <DialogDescription className="mt-1 text-sm">
@@ -136,30 +134,30 @@ export default function EditPatientModal({
             <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Nom */}
               <div>
-                <Label htmlFor="first_name" className="font-medium">
+                <Label htmlFor="firstName" className="font-medium">
                   Nom
                 </Label>
                 <Input
-                  id="first_name"
-                  name="first_name"
+                  id="firstName"
+                  name="firstName"
                   type="text"
                   className="mt-2"
-                  value={form.first_name}
+                  value={form.firstName}
                   onChange={handleChange}
                 />
               </div>
 
               {/* Prénom */}
               <div>
-                <Label htmlFor="last_name" className="font-medium">
+                <Label htmlFor="lastName" className="font-medium">
                   Prénom
                 </Label>
                 <Input
-                  id="last_name"
-                  name="last_name"
+                  id="lastName"
+                  name="lastName"
                   type="text"
                   className="mt-2"
-                  value={form.last_name}
+                  value={form.lastName}
                   onChange={handleChange}
                 />
               </div>
@@ -193,8 +191,8 @@ export default function EditPatientModal({
                 <DatePicker
                   id="dob"
                   value={
-                    form.date_of_birth
-                      ? new Date(form.date_of_birth)
+                    form.dateOfBirth
+                      ? new Date(form.dateOfBirth)
                       : undefined
                   }
                   onChange={handleDateChange}
@@ -220,15 +218,15 @@ export default function EditPatientModal({
 
               {/* Téléphone */}
               <div>
-                <Label htmlFor="phone_number" className="font-medium">
+                <Label htmlFor="phone" className="font-medium">
                   Téléphone
                 </Label>
                 <Input
-                  id="phone_number"
-                  name="phone_number"
+                  id="phone"
+                  name="phone"
                   type="tel"
                   className="mt-2"
-                  value={form.phone_number}
+                  value={form.phone}
                   onChange={handleChange}
                 />
               </div>

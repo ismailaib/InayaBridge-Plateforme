@@ -8,11 +8,9 @@ import {
 } from '@/api/tenant';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-import { Checkbox } from '@/components/Checkbox';
 import { Divider } from '@/components/Divider';
 import { Input } from '@/components/Input';
 import { Label } from '@/components/Label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/Select';
 import { useTranslationsContext } from '@/lib/i18n/TranslationsProvider';
 import { getDirection } from '@/lib/i18n/i18n';
 import useTranslations from '@/lib/i18n/useTranslations';
@@ -22,11 +20,11 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { showToast } from '../../dashboard/hooks/utils';
 import { Switch } from '@/components/Switch';
-import Workspace from '../../dashboard/components/onboarding/workspace/Workspace';
 import ReturnToDashboard from '@/components/ReturnToDashboard';
 
 export default function Workspaces() {
   const t = useTranslations('settings.workspace');
+  const p = useTranslations('settings');
   const { locale } = useTranslationsContext();
   const dir = getDirection(locale);
 
@@ -151,32 +149,31 @@ export default function Workspaces() {
     tenant.isPrivate !== originalTenant.isPrivate ||
     tenant.logoUrl !== originalTenant.logoUrl;
 
-  // Feature configurations with descriptions
   const features = [
     {
       key: 'enableTeleconsultation',
-      label: 'Teleconsultation',
-      description: 'Enable video consultations and remote appointments with patients',
+      label: p('preferences.features.enableTeleconsultation.label'),
+      description: p('preferences.features.enableTeleconsultation.description'),
     },
     {
       key: 'enableLabIntegration',
-      label: 'Lab Integration',
-      description: 'Connect with laboratory systems for test orders and results',
+      label: p('preferences.features.enableLabIntegration.label'),
+      description: p('preferences.features.enableLabIntegration.description'),
     },
     {
       key: 'enableBilling',
-      label: 'Billing',
-      description: 'Manage invoices, payments, and financial transactions',
+      label: p('preferences.features.enableBilling.label'),
+      description: p('preferences.features.enableBilling.description'),
     },
     {
       key: 'enforce2FA',
-      label: 'Two-Factor Auth',
-      description: 'Require two-factor authentication for enhanced security',
+      label: p('preferences.features.enforce2FA.label'),
+      description: p('preferences.features.enforce2FA.description'),
     },
     {
       key: 'enableAuditLogs',
-      label: 'Audit Logs',
-      description: 'Track and record all system activities for compliance',
+      label: p('preferences.features.enableAuditLogs.label'),
+      description: p('preferences.features.enableAuditLogs.description'),
     },
   ];
 
@@ -284,9 +281,6 @@ export default function Workspaces() {
             </Label>
           </div>
 
-
-
-
           {/* Actions */}
           <Divider className="my-6" />
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-end sm:gap-3">
@@ -313,7 +307,7 @@ export default function Workspaces() {
             {/* Feature Toggles */}
             <Divider className="my-6" />
             <div>
-              <Label className="font-medium">{t('preferences.features') || 'Enabled Features'}</Label>
+              <Label className="font-medium">{p('preferences.features.title') || 'Enabled Features'}</Label>
               
               {/* First 4 features in 2x2 grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
