@@ -8,11 +8,9 @@ import {
   subMonths,
   subWeeks,
 } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import { CalendarHeader } from "./CalendarHeader";
-
-
 import { getAllAppointments } from "@/api/appointments";
 import { AppointmentDetails } from "./AppointmentDetails";
 import { DayView } from "./calendar-views/DayView";
@@ -48,6 +46,7 @@ const VIEW_COMPONENTS: Record<
     appointments: CalendarAppointment[];
     onSelectAppointment: (appointment: CalendarAppointment) => void;
     doctorProfileId: string;
+    onAppointmentUpdated: (updatedAppointment: CalendarAppointment) => void;
   }>
 > = {
   month: MonthView,
@@ -65,6 +64,7 @@ export default function CalendarView() {
   const [loading, setLoading] = useState(true);
   const [doctorProfileId, setDoctorProfileId] = useState<string>("");
   const [showUnavailable, setShowUnavailable] = useState(true);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 
   const handleNavigation = (direction: "next" | "previous") => {
     setCurrentDate((prev) => navigateDate(prev, view, direction));
@@ -76,6 +76,16 @@ export default function CalendarView() {
   const handleSelectAppointment = (appointment: CalendarAppointment) => {
     setSelectedAppointment(appointment);
     setDialogOpen(true);
+  };
+
+  const handleAppointmentUpdated = (updated: CalendarAppointment) => {
+    if (!updated) {
+      setAppointments(prev => prev.filter(a => a.id !== selectedAppointment?.id))
+    } else {
+      setAppointments(prev =>
+        prev.map(a => (a.id === updated.id ? updated : a))
+      )
+    }
   };
 
   useEffect(() => {
@@ -105,12 +115,14 @@ export default function CalendarView() {
           endTime: item.endTime ?? null,
           location: item.location ?? "",
           notes: item.notes ?? "",
-          confirmed: item.status === "confirmed",
           consultationType: item.consultationType ?? "",
           motif: item.motif ?? "",
           status: item.status ?? "",
           patientFullName: item.patientFullName ?? "",
           recurring: item.recurring ?? false,
+          doctorProfileId: item.doctorProfileId ?? "",
+          serviceId: item.serviceId ?? "",
+          urgent: item.urgent ?? false,
           createdAt: item.createdAt ?? "",
           updatedAt: item.updatedAt ?? ""
         })));
@@ -125,6 +137,11 @@ export default function CalendarView() {
 
   const handleToggleUnavailable = () =>
     setShowUnavailable((prev) => !prev);
+
+  const filteredAppointments = useMemo(() => {
+    if (!selectedStatus) return appointments;
+    return appointments.filter((a) => a.status === selectedStatus);
+  }, [appointments, selectedStatus]);
 
   if (loading) return <LoadingState />;
 
@@ -141,19 +158,24 @@ export default function CalendarView() {
         onViewChange={handleViewChange}
         showUnavailable={showUnavailable}
         onToggleUnavailable={handleToggleUnavailable}
+        selectedStatus={selectedStatus}
+        onStatusSelect={setSelectedStatus}
       />
 
       <ActiveView
         currentDate={currentDate}
-        appointments={appointments}
+        appointments={filteredAppointments}
         onSelectAppointment={handleSelectAppointment}
         doctorProfileId={doctorProfileId}
+        onAppointmentUpdated={handleAppointmentUpdated}
       />
-
+      
       <AppointmentDetails
         appointment={selectedAppointment}
         isOpen={dialogOpen}
         onClose={() => setDialogOpen(false)}
+        //@ts-ignore
+        onAppointmentUpdated={handleAppointmentUpdated}
       />
     </div>
   );

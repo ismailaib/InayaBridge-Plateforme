@@ -1,3 +1,4 @@
+import { Providers } from "@/components/Providers";
 import {
   type Locale,
   defaultLocale,
@@ -100,7 +101,7 @@ export default function RootLayout({
       <body
         className={`${appliedFont} ${inter.variable} ${tajawal.variable} min-h-screen scroll-auto antialiased selection:bg-blue-100 selection:text-[#3b82f6] dark:bg-gray-950`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

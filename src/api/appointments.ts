@@ -4,8 +4,8 @@ import api from "@/lib/api"
 // Types
 // =========================
 
-export type AppointmentStatus = "PENDING" | "COMPLETED" | "CANCELLED"
-export type ConsultationType = "IN_PERSON" | "VIDEO"
+export type AppointmentStatus = "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED" | "IN_PROGRESS" | "ARRIVED"
+export type ConsultationType = "LOCAL" |"IN_PERSON" | "VIDEO"
 
 export interface Appointment {
   id: string
@@ -17,7 +17,11 @@ export interface Appointment {
   status: AppointmentStatus
   consultationType: ConsultationType
   notes?: string
+  urgent: boolean
   location?: string
+  motif?: string
+  serviceId?: string
+  doctorId?: string
   recurring: boolean
   patientFullName: string
   createdAt: string
@@ -33,20 +37,46 @@ export interface AppointmentCreateDTO {
   status?: AppointmentStatus
   consultationType?: ConsultationType
   notes?: string
+  urgent: boolean
+  serviceId?: string
+  motif?: string
+  doctorId?: string
   location?: string
   recurring?: boolean
 }
 
 export interface AppointmentUpdateDTO {
-  date?: string
-  startTime?: string
+  date?: string // "yyyy-MM-dd"
+  startTime?: string // "HH:mm"
   endTime?: string
   status?: AppointmentStatus
   consultationType?: ConsultationType
+  doctorProfileId?: string
+  motif?: string
   notes?: string
+  urgent?: boolean
   location?: string
   recurring?: boolean
 }
+
+export interface AppointmentResponse {
+  id: string;
+  doctorProfileId: string;
+  patientProfileId: string;
+  date: string; // "yyyy-MM-dd"
+  startTime: string; // "HH:mm"
+  endTime?: string;
+  status: AppointmentStatus; // e.g., "PENDING", "CONFIRMED", "ARRIVED", etc.
+  consultationType: ConsultationType; // e.g., "LOCAL", "VIDEO"
+  motif?: string;
+  notes?: string;
+  location?: string;
+  recurring?: boolean;
+  urgent: boolean;
+  serviceId?: string;
+  patientFullName: string;
+}
+
 
 // =========================
 // API Helpers

@@ -123,6 +123,16 @@ const config: Config = {
             transform: "translateY(0px)",
           },
         },
+        'gradient-x': {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center',
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center',
+          },
+        },
       },
       animation: {
         hide: `hide ${cubicBezier}`,
@@ -146,6 +156,7 @@ const config: Config = {
         "drawer-slide-right-and-fade": "drawer-slide-right-and-fade 250ms cubic-bezier(0.16, 1, 0.3, 1)",
         "slide-down-fade": "slide-down-fade ease-in-out",
         "slide-up-fade": "slide-up-fade ease-in-out",
+        'gradient-x': 'gradient-x 3s ease infinite',
       },
     },
   },

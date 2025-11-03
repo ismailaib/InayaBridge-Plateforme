@@ -11,11 +11,13 @@ import AppointmentForm from "./components/AppointmentForm";
 import PatientDetails from "./components/PatientDetails";
 import { useToast } from "@/lib/useToast";
 import { Toaster } from "@/components/Toaster";
+import { getEmployees } from "@/api/employees";
 
 type ConsultationType = "LOCAL" | "IN_PERSON" | "VIDEO";
 
 interface FormState {
   selectedPatientId: string | null;
+  doctorId: string | null;
   date: Date | undefined;
   cost: number | undefined;
   motif: string;
@@ -24,7 +26,7 @@ interface FormState {
   serviceId: string | null;
   placelocation: string | null;
   inWaitingRoom: boolean;
-  isUrgent: boolean;
+  urgent: boolean;
 }
 
 const LOCATION_MAP: Record<string, ConsultationType> = {
@@ -45,6 +47,7 @@ export default function RendezVousForm() {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedPatient, setSelectedPatient] = useState<TenantPatient | null>(null);
   const [services, setServices] = useState<Service[]>([]);
+  const [employees, setEmployees] = useState<any[]>([]);
   const { toast } = useToast();
 
   const showToast = (type: 'success' | 'error', title: string, message: string) => {
@@ -66,13 +69,14 @@ export default function RendezVousForm() {
       selectedPatientId: null,
       serviceId: null,
       date: defaultDate,
-      cost: 0, 
+      doctorId: "",
+      cost: 0,
       motif: "",
       placelocation: "",
       note: "",
       locationType: "1",
       inWaitingRoom: false,
-      isUrgent: false,
+      urgent: false,
     };
   });
 
@@ -95,12 +99,14 @@ export default function RendezVousForm() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [patientsRes, servicesRes] = await Promise.all([
+        const [patientsRes, servicesRes, employees] = await Promise.all([
           getPatientsByTenant(tenantId),
           getServicesByTenant(tenantId),
+          getEmployees(tenantId),
         ]);
         setPatients(patientsRes.data);
         setServices(servicesRes.data);
+        setEmployees(employees.data);
       } catch (error) {
         console.error("Error fetching data:", error);
         showToast('error', 'Erreur', t("alerts.errorLoadingPatients"));
@@ -148,11 +154,12 @@ export default function RendezVousForm() {
       date: defaultDate,
       cost: 0,
       motif: "",
+      doctorId: "",
       note: "",
       placelocation: "",
       locationType: "1",
       inWaitingRoom: false,
-      isUrgent: false,
+      urgent: false,
     });
     setSearchQuery("");
     setSelectedPatient(null);
@@ -189,15 +196,29 @@ export default function RendezVousForm() {
       inWaitingRoom,
       placelocation,
       serviceId,
-      isUrgent,
+      urgent,
     } = formState;
+
+    // Format date in local timezone to avoid UTC conversion issues
+    const formatLocalDate = (date: Date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    const formatLocalTime = (date: Date) => {
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${hours}:${minutes}`;
+    };
 
     const payload = {
       tenantId,
       doctorProfileId: doctorId!,
       patientProfileId: selectedPatientId!,
-      date: date!.toISOString().split("T")[0],
-      startTime: date!.toTimeString().slice(0, 5),
+      date: formatLocalDate(date!),
+      startTime: formatLocalTime(date!),
       endTime: "",
       status: "PENDING" as AppointmentStatus,
       consultationType: LOCATION_MAP[locationType!],
@@ -206,7 +227,7 @@ export default function RendezVousForm() {
       notes: note,
       location: placelocation,
       serviceId: serviceId,
-      isUrgent,
+      urgent: urgent,
       inWaitingRoom,
     };
 
@@ -251,13 +272,13 @@ export default function RendezVousForm() {
           selectOpen={selectOpen}
           setSelectOpen={setSelectOpen}
           searchInputRef={searchInputRef}
-          handlePatientSelect={handlePatientSelect}
+          handlePatientSelect={handlePatientSelect} 
+          employees={employees}        
         />
 
         <div
-          className={`transition-all duration-300 ease-in-out overflow-hidden w-90 ${
-            selectedPatient ? "opacity-100" : "w-0 opacity-0 pl-0"
-          }`}
+          className={`transition-all duration-300 ease-in-out overflow-hidden w-90 ${selectedPatient ? "opacity-100" : "w-0 opacity-0 pl-0"
+            }`}
         >
           {selectedPatient && <PatientDetails patient={selectedPatient} />}
         </div>

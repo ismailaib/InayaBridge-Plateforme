@@ -1,349 +1,211 @@
-import { Button } from "@/components/Button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/Dialog";
-import { cx } from "@/lib/utils";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import {
-  Calendar,
-  Edit2,
-  MapPin,
-  Phone,
-  RefreshCw,
-  User,
-  Mail,
-  CreditCard,
-  AlertCircle,
-  X,
-  CircleOff,
-  MapPinCheckInside,
-  CalendarCheck,
-  CirclePlay,
-} from "lucide-react";
-import { useState, useEffect } from "react";
-import { CopyableRow } from "./CopyableRow";
+"use client"
 
-import { getPatientById, TenantPatient } from "@/api/patients";
-import { Card } from "@/components/Card";
-import { Divider } from "@/components/Divider";
-import { getStatusLabel, getStatusDotColor, getConsultationType, getConsultationDotColor, getGenderLabel, formatTime, getValidDate } from "./helpers/details";
-import { CalendarAppointment } from "./helpers/types";
+import { Dialog, DialogContent } from "@/components/Dialog"
+import { Divider } from "@/components/Divider"
+import { useState, useEffect } from "react"
+import { getAppointmentById, deleteAppointment } from "@/api/appointments"
+import { getPatientById, TenantPatient } from "@/api/patients"
+import { getEmployees, Employee } from "@/api/employees"
+import { getServicesByTenant, Service } from "@/api/services"
+import {
+  markPatientArrived,
+  confirmPatientAppointment,
+  startConsultation,
+  cancelAppointment,
+} from "./helpers/appointmentActions"
+import { showToast } from "../../dashboard/hooks/utils"
+import { CalendarAppointment } from "./helpers/types"
+
+import { AppointmentHeader } from "./details/AppointmentHeader"
+import { DateTimeSection } from "./details/DateTimeSection"
+import { ServiceDoctorSection } from "./details/ServiceDoctorSection"
+import { MotifNotesSection } from "./details/MotifNotesSection"
+import { PatientInfoSection } from "./details/PatientInfoSection"
+import { LocationRecurringSection } from "./details/LocationRecurringSection"
+import { ActionButtons } from "./details/ActionButtons"
 
 type AppointmentDetailsProps = {
-  appointment: CalendarAppointment | null;
-  isOpen: boolean;
-  onClose: () => void;
-  onEdit?: (appointmentId: string) => void;
-  onAppointmentDeleted?: (appointmentId: string) => void;
-};
+  appointment: CalendarAppointment | null
+  isOpen: boolean
+  onClose: () => void
+  onEdit?: (appointmentId: string) => void
+  onAppointmentUpdated?: (updated: CalendarAppointment | null) => void
+}
+
+const useUser = () => {
+  const [user, setUser] = useState<any>(null)
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("user")
+      if (stored) setUser(JSON.parse(stored))
+    } catch (e) {
+      console.error(e)
+      showToast("error", "Erreur", "Échec du chargement des données utilisateur.")
+    }
+  }, [])
+  return user
+}
+
+const usePatientData = (patientProfileId: string | undefined, isOpen: boolean) => {
+  const [patientData, setPatientData] = useState<TenantPatient | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (!isOpen || !patientProfileId) return
+    const fetchPatient = async () => {
+      setLoading(true)
+      try {
+        const { data } = await getPatientById(patientProfileId)
+        setPatientData(data)
+      } catch {
+        setPatientData(null)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPatient()
+  }, [patientProfileId, isOpen])
+
+  return { patientData, loading }
+}
+
+const useTenantResources = (tenantId: string | undefined, isOpen: boolean) => {
+  const [employees, setEmployees] = useState<Employee[]>([])
+  const [services, setServices] = useState<Service[]>([])
+
+  useEffect(() => {
+    if (!isOpen || !tenantId) return
+    const fetchResources = async () => {
+      try {
+        const [employeesRes, servicesRes] = await Promise.all([
+          getEmployees(tenantId),
+          getServicesByTenant(tenantId),
+        ])
+        setEmployees(employeesRes.data)
+        setServices(servicesRes.data)
+      } catch (error) {
+        console.error("Error fetching employees and services:", error)
+      }
+    }
+    fetchResources()
+  }, [tenantId, isOpen])
+
+  return { employees, services }
+}
 
 export const AppointmentDetails = ({
   appointment,
   isOpen,
   onClose,
   onEdit,
-  onAppointmentDeleted,
+  onAppointmentUpdated,
 }: AppointmentDetailsProps) => {
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [patientData, setPatientData] = useState<TenantPatient | null>(null);
-  const [loadingPatient, setLoadingPatient] = useState(false);
+  const [currentAppointment, setCurrentAppointment] = useState<CalendarAppointment | null>(appointment)
+  const [isLoading, setIsLoading] = useState({
+    cancelling: false,
+    markingArrived: false,
+    confirming: false,
+    starting: false,
+  })
+
+  const user = useUser()
+  const tenantId = user?.doctorProfile?.tenantId
+  const { patientData, loading: loadingPatient } = usePatientData(currentAppointment?.patientProfileId, isOpen)
+  const { employees, services } = useTenantResources(tenantId, isOpen)
 
   useEffect(() => {
-    if (!isOpen || !appointment?.patientProfileId) {
-      setPatientData(null);
-      setLoadingPatient(false);
-      return;
+    if (appointment) {
+      setCurrentAppointment(appointment)
     }
+  }, [appointment])
 
-    const fetchPatientData = async () => {
-      setLoadingPatient(true);
-      setPatientData(null);
+  if (!currentAppointment) return null
+
+  const refreshAppointmentData = async (id: string) => {
+    try {
+      const { data } = await getAppointmentById(id)
+      setCurrentAppointment(data)
+      onAppointmentUpdated?.(data)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const handleUpdate = (updated: CalendarAppointment) => {
+    setCurrentAppointment(updated)
+    onAppointmentUpdated?.(updated)
+  }
+
+  const createActionHandler = (
+    actionName: keyof typeof isLoading,
+    action: (id: string, ...args: any[]) => Promise<any>
+  ) => {
+    return async () => {
+      if (!currentAppointment.id) return
+      setIsLoading((prev) => ({ ...prev, [actionName]: true }))
       try {
-        const { data } = await getPatientById(appointment?.patientProfileId);
-        setPatientData(data);
-      } catch (error) {
-        console.error("Erreur lors du chargement du patient:", error);
-        setPatientData(null);
+        await action(currentAppointment.id)
+        await refreshAppointmentData(currentAppointment.id)
       } finally {
-        setLoadingPatient(false);
+        setIsLoading((prev) => ({ ...prev, [actionName]: false }))
       }
-    };
-
-    fetchPatientData();
-  }, [appointment?.patientProfileId, isOpen]);
-
-  if (!appointment) return null;
-
-  const appointmentDate = getValidDate(appointment.date);
-  const patientBirthDate = getValidDate(patientData?.dateOfBirth);
-  const createdAtDate = getValidDate(appointment.createdAt);
-  const updatedAtDate = getValidDate(appointment.updatedAt);
+    }
+  }
 
   const handleDelete = async () => {
-    if (!appointment.id) return;
-
-    setIsDeleting(true);
+    if (!currentAppointment.id) return
     try {
-      onAppointmentDeleted?.(appointment.id);
-      onClose();
-    } catch (error) {
-      console.error("Erreur lors de la suppression:", error);
-    } finally {
-      setIsDeleting(false);
+      await deleteAppointment(currentAppointment.id)
+      onAppointmentUpdated?.(null)
+      onClose()
+    } catch (e) {
+      console.error(e)
     }
-  };
+  }
 
   const handleEdit = () => {
-    if (appointment.id && onEdit) {
-      onEdit(appointment.id);
-    }
-  };
-
-  const consultationType = getConsultationType(appointment.consultationType || appointment.type);
-
-  const patientFullName = patientData
-    ? `${patientData.firstName} ${patientData.lastName}`.trim()
-    : "Patient inconnu";
+    if (currentAppointment.id && onEdit) onEdit(currentAppointment.id)
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="flex flex-row items-center justify-between">
-          <DialogTitle className="text-xl">Détails du rendez-vous</DialogTitle>
-          <Button variant="light" onClick={onClose}><X width={18} /></Button>
-        </DialogHeader>
-
+        <AppointmentHeader appointment={currentAppointment} onClose={onClose} />
         <Divider />
 
-        <div className="mt-4 space-y-4">
-          <div className="flex flex-row items-center justify-between pb-2">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-                {appointmentDate ? format(appointmentDate, "EEEE d MMMM yyyy", { locale: fr }) : "--"}
-              </h3>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                {formatTime(appointment.startTime)}
-                {appointment.endTime && appointment.endTime !== null && ` - ${formatTime(appointment.endTime)}`}
-              </p>
-            </div>
-            <div className="flex flex-row gap-2">
-              <div className="flex items-center gap-1.5 border border-0.5 dark:border-gray-800 border-gray-200 rounded-full p-2 px-4">
-                <span className={cx("w-2 h-2 rounded-full", getConsultationDotColor(appointment.consultationType || appointment.type))} />
-                <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                  {consultationType.label}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-1.5 border border-0.5 dark:border-gray-800 border-gray-200  rounded-full p-2 px-4">
-                <span className={cx("w-2 h-2 rounded-full", getStatusDotColor(appointment.status))} />
-                <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                  {getStatusLabel(appointment.status)}
-                </span>
-              </div>
-            </div>
-          </div>
-
+        <div className="space-y-4">
+          <DateTimeSection appointment={currentAppointment} onUpdate={handleUpdate} />
           <Divider />
 
-          <div>
-            {appointment.motif && (
-              <div className="">
-                <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-50 mb-1">{appointment.motif}</h4>
-              </div>
-            )}
-
-            {appointment.notes && (
-              <div className="">
-                <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{appointment.notes}</p>
-              </div>
-            )}
-          </div>
-
-
+          <ServiceDoctorSection
+            appointment={currentAppointment}
+            services={services}
+            //@ts-ignore
+            employees={employees}
+            onUpdate={handleUpdate}
+          />
+          <LocationRecurringSection appointment={currentAppointment} onUpdate={handleUpdate} />
+          <MotifNotesSection appointment={currentAppointment} onUpdate={handleUpdate} />
           <Divider />
 
           <div className="space-y-3 pt-2">
-            {loadingPatient ? (
-              <p className="text-sm text-gray-500">Chargement...</p>
-            ) : patientData ? (
-
-              <div className="">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 mb-2">
-                    <User className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                    <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-50">{patientFullName}</h4>
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                    <span
-                      className={cx(
-                        "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium",
-                        getGenderLabel(patientData.gender) === "Homme"
-                          ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
-                          : "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300"
-                      )}
-                    >
-                      {getGenderLabel(patientData.gender)}
-                    </span>
-                    {patientBirthDate && <span className="mx-2">•</span>}
-                    {patientBirthDate && <span>{format(patientBirthDate, "dd/MM/yyyy")} ({new Date().getFullYear() - patientBirthDate.getFullYear()} ans)</span>}
-                  </p>
-                </div>
-
-                <div className="w-full rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 mt-2">
-                  <table className="w-full table-auto">
-                    <tbody>
-                      {patientData.cin && (
-                        <CopyableRow
-                          icon={<CreditCard className="h-4 w-4 text-gray-500 dark:text-gray-400" />}
-                          label="CIN"
-                          value={patientData.cin}
-                        />
-                      )}
-                      {patientData.phone && (
-                        <CopyableRow
-                          icon={<Phone className="h-4 w-4 text-gray-500 dark:text-gray-400" />}
-                          label="Téléphone"
-                          value={patientData.phone}
-                        />
-                      )}
-                      {patientData.email && (
-                        <CopyableRow
-                          icon={<Mail className="h-4 w-4 text-gray-500 dark:text-gray-400" />}
-                          label="Email"
-                          value={patientData.email}
-                        />
-                      )}
-                      {patientData.address && (
-                        <CopyableRow
-                          icon={<MapPin className="h-4 w-4 text-gray-500 dark:text-gray-400" />}
-                          label="Adresse"
-                          value={patientData.address}
-                        />
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                <p className="text-sm text-gray-700 dark:text-gray-300">Données patient indisponibles</p>
-              </div>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-            {appointment.location && (
-              <Card className="p-4 w-full">
-                <div className="flex items-center gap-2 mb-1">
-                  <MapPin className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                  <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-50">Lieu</h4>
-                </div>
-                <p className="text-sm text-gray-700 dark:text-gray-300">{appointment.location}</p>
-              </Card>
-            )}
-
-              <Card className="p-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <RefreshCw className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                  <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-50">Récurrent</h4>
-                </div>
-                <p className="text-sm text-gray-700 dark:text-gray-300">{appointment.recurring ? "Oui" : "Non"}</p>
-              </Card>
+            <PatientInfoSection patientData={patientData} loading={loadingPatient} />
           </div>
 
           <Divider />
 
-          <div className="flex justify-between items-center">
-            <div
-              className="flex space-x-2 overflow-x-auto cursor-grab"
-              style={{ overflowY: "hidden", scrollbarWidth: "none", msOverflowStyle: "none" }}
-              onMouseDown={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.dataset.isDown = "true";
-                el.dataset.startX = (e.pageX - el.offsetLeft).toString();
-                el.dataset.scrollLeft = el.scrollLeft.toString();
-                el.classList.add("cursor-grabbing");
-              }}
-              onMouseMove={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                if (el.dataset.isDown !== "true") return;
-                e.preventDefault();
-                const x = e.pageX - el.offsetLeft;
-                const walk = x - Number(el.dataset.startX || 0);
-                el.scrollLeft = Number(el.dataset.scrollLeft || 0) - walk;
-              }}
-              onMouseUp={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.dataset.isDown = "false";
-                el.classList.remove("cursor-grabbing");
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.dataset.isDown = "false";
-                el.classList.remove("cursor-grabbing");
-              }}
-              onTouchStart={(e) => {
-                const touch = e.touches[0];
-                const el = e.currentTarget as HTMLElement;
-                el.dataset.isDown = "true";
-                el.dataset.startX = (touch.pageX - el.offsetLeft).toString();
-                el.dataset.scrollLeft = el.scrollLeft.toString();
-              }}
-              onTouchMove={(e) => {
-                const touch = e.touches[0];
-                const el = e.currentTarget as HTMLElement;
-                if (el.dataset.isDown !== "true") return;
-                const x = touch.pageX - el.offsetLeft;
-                const walk = x - Number(el.dataset.startX || 0);
-                el.scrollLeft = Number(el.dataset.scrollLeft || 0) - walk;
-              }}
-              onTouchEnd={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.dataset.isDown = "false";
-              }}
-            >
-              <Button variant="secondary" onClick={handleEdit} disabled={isEditing} className="text-sm flex flex-row items-center gap-2">
-                <Edit2 width={18} /> {isEditing ? "Modification..." : "Modifier"}
-              </Button>
-              <Button variant="secondary" onClick={handleEdit} disabled={isEditing} className="text-sm flex flex-row items-center gap-2">
-                <MapPinCheckInside width={18} /> {isEditing ? "Modification..." : "Patient Arrivé"}
-              </Button>
-              <Button variant="success" onClick={handleEdit} disabled={isEditing} className="text-sm flex flex-row items-center gap-2">
-                <CalendarCheck width={18} /> {isEditing ? "Confirmation..." : "Patient Confirmé"}
-              </Button>
-              <Button variant="success" onClick={handleEdit} disabled={isEditing} className="text-sm flex flex-row items-center gap-2">
-                <CirclePlay width={18} /> {isEditing ? "Chargement..." : "Debut Consultation"}
-              </Button>
-              <Button variant="destructive" onClick={handleDelete} disabled={isDeleting} className="text-sm flex flex-row items-center gap-2">
-                <CircleOff width={18} /> {isDeleting ? "Annulation..." : "Annuler"}
-              </Button>
-            </div>
-          </div>
-
-          <Divider />
-
-          {(createdAtDate || updatedAtDate) && (
-            <div className="text-xs text-gray-500 dark:text-gray-400 flex flex-row items-center gap-4">
-              {createdAtDate && (
-                <p><span className="font-medium">Créé le :</span> {format(createdAtDate, "dd/MM/yyyy HH:mm", { locale: fr })}</p>
-              )}
-              -
-              {updatedAtDate && (
-                <p><span className="font-medium">Modifié le :</span> {format(updatedAtDate, "dd/MM/yyyy HH:mm", { locale: fr })}</p>
-              )}
-            </div>
-          )}
-
+          <ActionButtons
+            appointment={currentAppointment}
+            isLoading={isLoading}
+            onCancel={createActionHandler("cancelling", cancelAppointment)}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            onPatientArrived={createActionHandler("markingArrived", markPatientArrived)}
+            onPatientConfirmed={createActionHandler("confirming", confirmPatientAppointment)}
+            onStartConsultation={createActionHandler("starting", startConsultation)}
+          />
         </div>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

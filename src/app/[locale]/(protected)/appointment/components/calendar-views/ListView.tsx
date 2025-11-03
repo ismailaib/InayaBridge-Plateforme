@@ -13,12 +13,16 @@ type ListViewProps = {
   currentDate: Date;
   appointments: CalendarAppointment[];
   onSelectAppointment: (appointment: CalendarAppointment) => void;
+  doctorProfileId: string;
+  onAppointmentUpdated: (updatedAppointment: CalendarAppointment) => void;
 };
 
 export function ListView({
   currentDate,
   appointments,
   onSelectAppointment,
+  onAppointmentUpdated,
+  doctorProfileId,
 }: ListViewProps) {
   const t = useTranslations("appointments.calendar.listView");
 
@@ -123,12 +127,12 @@ export function ListView({
                           <div
                             className={cx(
                               "inline-flex items-center rounded-full px-3 py-0.5 text-xs font-medium",
-                              appointment.confirmed
+                              appointment.status === "confirmed"
                                 ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
                                 : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
                             )}
                           >
-                            {appointment.confirmed
+                            {appointment.status === "confirmed"
                               ? t("status.confirmed")
                               : t("status.pending")}
                           </div>

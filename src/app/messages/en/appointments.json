@@ -63,6 +63,11 @@
     },
     "date": "Date",
     "cost": "Cost",
+    "doctor": {
+      "label": "Doctor",
+      "placeholder": "Select a doctor",
+      "noResults": "No doctor found"
+    },
     "motif": "Reason",
     "note": "Note",
     "service": {

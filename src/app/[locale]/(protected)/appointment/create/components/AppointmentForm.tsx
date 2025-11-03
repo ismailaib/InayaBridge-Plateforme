@@ -23,6 +23,7 @@ import { Textarea } from "@/components/Textarea ";
 import { Home, Video, Search, Hospital } from "lucide-react";
 import { TenantPatient } from "@/api/patients";
 import { Service } from "@/api/services";
+import { Employee } from "@/api/employees";
 
 interface FormState {
     selectedPatientId: string | null;
@@ -32,8 +33,9 @@ interface FormState {
     note: string;
     locationType: string | null;
     serviceId: string | null;
+    doctorId: string | null;
     inWaitingRoom: boolean;
-    isUrgent: boolean;
+    urgent: boolean;
     placelocation: string | null;
 }
 
@@ -41,6 +43,7 @@ interface AppointmentFormProps {
     formState: FormState;
     updateFormState: (updates: Partial<FormState>) => void;
     services: Service[];
+    employees: Employee[]; 
     loading: boolean;
     submitting: boolean;
     t: any;
@@ -60,6 +63,7 @@ export default function AppointmentForm({
     formState,
     updateFormState,
     services,
+    employees, 
     loading,
     submitting,
     t,
@@ -79,17 +83,16 @@ export default function AppointmentForm({
         updateFormState({
             serviceId: val,
             cost: selected?.price ?? formState.cost ?? 0,
-            motif: selected?.name ?? "",  
+            motif: selected?.name ?? "",
             note: `Rendez-vous pour le service ${selected?.name ?? "non spécifié"}.`,
         });
     };
-
 
     return (
         <form className="flex-1 space-y-6 transition-all duration-300" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-6">
                 <div className="col-span-3">
-                    <Label htmlFor="patient">{t("patient.label")} *</Label>
+                    <Label htmlFor="patient">{t("patient.label")} <span className="text-red-500">*</span></Label>
                     <div className="relative mt-2">
                         <Select
                             value={formState.selectedPatientId ?? undefined}
@@ -133,7 +136,7 @@ export default function AppointmentForm({
                 </div>
 
                 <div className="col-span-3">
-                    <Label htmlFor="date">{t("date")} *</Label>
+                    <Label htmlFor="date">{t("date")} <span className="text-red-500">*</span></Label>
                     <DatePicker
                         className="mt-2"
                         showTimePicker
@@ -142,8 +145,8 @@ export default function AppointmentForm({
                     />
                 </div>
 
-                <div className="col-span-3">
-                    <Label htmlFor="service">{t("service.label")} *</Label>
+                <div className="col-span-2">
+                    <Label htmlFor="service">{t("service.label")} <span className="text-red-500">*</span></Label>
                     <Select
                         value={formState.serviceId ?? undefined}
                         onValueChange={handleServiceSelect}
@@ -162,8 +165,8 @@ export default function AppointmentForm({
                     </Select>
                 </div>
 
-                <div className="col-span-3">
-                    <Label htmlFor="cost">{t("cost")} *</Label>
+                <div className="col-span-2">
+                    <Label htmlFor="cost">{t("cost")} <span className="text-red-500">*</span></Label>
                     <Input
                         type="number"
                         id="cost"
@@ -175,8 +178,30 @@ export default function AppointmentForm({
                     />
                 </div>
 
+                <div className="col-span-2">
+                    <Label htmlFor="doctor">{t("doctor.label")} <span className="text-red-500">*</span></Label>
+                    <Select
+                        value={formState.doctorId ?? undefined}
+                        onValueChange={(val) => updateFormState({ doctorId: val })}
+                        disabled={loading || employees.length === 0}
+                    >
+                        <SelectTrigger id="doctor" className="mt-1">
+                            <SelectValue placeholder={t("doctor.placeholder")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {employees.map((e) => (
+                                <SelectItem key={e.id} value={e.id}>
+                                    {e.firstName} {e.lastName}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+
+
+
                 <div className="col-span-6">
-                    <Label htmlFor="motif">{t("motif")} *</Label>
+                    <Label htmlFor="motif">{t("motif")} <span className="text-red-500">*</span></Label>
                     <Input
                         id="motif"
                         placeholder={t("placeholders.motif")}
@@ -198,7 +223,7 @@ export default function AppointmentForm({
                 </div>
 
                 <div className="col-span-6">
-                    <Label>{t("location.label")} *</Label>
+                    <Label>{t("location.label")} <span className="text-red-500">*</span></Label>
                     <RadioCardGroup
                         className="mt-2 flex flex-row items-center gap-4"
                         defaultValue="1"
@@ -275,8 +300,8 @@ export default function AppointmentForm({
             <div className="flex items-center gap-3">
                 <Switch
                     id="urgent"
-                    checked={formState.isUrgent}
-                    onCheckedChange={(c) => updateFormState({ isUrgent: c })}
+                    checked={formState.urgent}
+                    onCheckedChange={(c) => updateFormState({ urgent: c })}
                 />
                 <Label htmlFor="urgent">{t("urgent")}</Label>
             </div>

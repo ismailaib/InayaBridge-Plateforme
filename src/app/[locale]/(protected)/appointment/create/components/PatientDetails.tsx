@@ -6,6 +6,8 @@ import { TenantPatient } from "@/api/patients";
 import { User, CreditCard, Phone, Mail, MapPin } from "lucide-react";
 import { getGenderLabel } from "../../components/helpers/details";
 import { CopyableRow } from "../../components/CopyableRow";
+import Statistics from "./Statistics";
+import { Divider } from "@/components/Divider";
 
 export default function PatientDetails({ patient }: { patient: TenantPatient }) {
   return (
@@ -27,7 +29,7 @@ export default function PatientDetails({ patient }: { patient: TenantPatient }) 
                   : "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300"
               )}
             >
-              {patient.gender}
+              {getGenderLabel(patient.gender)}
             </span>
             {patient.createdAt && <span className="mx-2">•</span>}
             {patient.createdAt && (
@@ -74,6 +76,8 @@ export default function PatientDetails({ patient }: { patient: TenantPatient }) 
           </table>
         </div>
       </div>
+      <Divider />
+      <Statistics />
     </div>
   );
 }

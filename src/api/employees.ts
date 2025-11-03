@@ -6,6 +6,7 @@ import api from '@/lib/api'
 
 export interface Employee {
   id: string
+  doctorId: string | null
   tenantId: string
   email: string | null
   firstName: string | null
@@ -16,10 +17,6 @@ export interface Employee {
   type: 'EMPLOYEE' | 'INVITATION'
   joinedAt: string
 }
-
-/* ============================================================
-   🚀 API Functions
-   ============================================================ */
 
 /**
  * Get all employees and invitations for a given tenant.

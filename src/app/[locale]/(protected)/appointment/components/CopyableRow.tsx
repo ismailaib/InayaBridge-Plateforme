@@ -29,7 +29,7 @@ export const CopyableRow = ({ icon, label, value }: CopyableRowProps) => {
     };
 
     return (
-        <tr className="border-b last:border-b-0 dark:border-gray-700">
+        <tr className="border-b last:border-b-0 dark:border-gray-900">
             <td className="py-4 px-4 flex items-center gap-2">
                 {icon}
                 <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
