@@ -8,16 +8,21 @@ import {
   subMonths,
   subWeeks,
 } from "date-fns";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import { CalendarHeader } from "./CalendarHeader";
 import { getAllAppointments } from "@/api/appointments";
+import { Employee, getEmployees } from "@/api/employees";
+import { getUserPreferences, updateUserPreferences, UserPreferences } from "@/api/preferences";
+import { getServicesByTenant, Service } from "@/api/services";
 import { AppointmentDetails } from "./AppointmentDetails";
 import { DayView } from "./calendar-views/DayView";
 import { ListView } from "./calendar-views/ListView";
 import { MonthView } from "./calendar-views/MonthView";
 import { WeekView } from "./calendar-views/WeekView";
+import { CalendarHeader } from "./CalendarHeader";
 import { CalendarAppointment, CalendarViewType } from "./helpers/types";
+
+import { ConditionFilter } from "./header/PriceFilter";
 
 const DEFAULT_VIEW: CalendarViewType = "month";
 const BUSINESS_HOURS_FALLBACK = "--";
@@ -47,6 +52,8 @@ const VIEW_COMPONENTS: Record<
     onSelectAppointment: (appointment: CalendarAppointment) => void;
     doctorProfileId: string;
     onAppointmentUpdated: (updatedAppointment: CalendarAppointment) => void;
+    showUnavailableDays: boolean;
+    showAddAppointment: boolean;
   }>
 > = {
   month: MonthView,
@@ -65,6 +72,17 @@ export default function CalendarView() {
   const [doctorProfileId, setDoctorProfileId] = useState<string>("");
   const [showUnavailable, setShowUnavailable] = useState(true);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  const [selectedDoctor, setSelectedDoctor] = useState<string | null>(null);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [selectedPrice, setSelectedPrice] = useState<ConditionFilter | undefined>(undefined);
+  const [employees, setEmployees] = useState<Employee[]>([])
+  const [services, setServices] = useState<Service[]>([])
+  const [prefs, setPrefs] = useState<UserPreferences | null>(null);
+  const [prefsLoading, setPrefsLoading] = useState(false);
+
+  const [showUnavailableDays, setShowUnavailableDays] = useState(true);
+  const [showAddAppointment, setShowAddAppointment] = useState(true);
+
 
   const handleNavigation = (direction: "next" | "previous") => {
     setCurrentDate((prev) => navigateDate(prev, view, direction));
@@ -78,7 +96,7 @@ export default function CalendarView() {
     setDialogOpen(true);
   };
 
-  const handleAppointmentUpdated = (updated: CalendarAppointment) => {
+  const handleAppointmentUpdated = (updated: CalendarAppointment | null) => {
     if (!updated) {
       setAppointments(prev => prev.filter(a => a.id !== selectedAppointment?.id))
     } else {
@@ -89,59 +107,161 @@ export default function CalendarView() {
   };
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("user");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setDoctorProfileId(parsed?.doctorProfile?.id ?? "");
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
-
-  useEffect(() => {
-    async function fetchAppointments() {
+    async function fetchResources() {
       try {
         setLoading(true);
-        const { data } = await getAllAppointments();
-        setAppointments(data.map((item: any) => ({
-          id: item.id ?? "",
-          patient: "--",
-          patientProfileId: item.patientProfileId ?? "",
-          type: item.consultationType ?? "",
-          date: item.date ?? "",
-          startTime: item.startTime || BUSINESS_HOURS_FALLBACK,
-          endTime: item.endTime ?? null,
-          location: item.location ?? "",
-          notes: item.notes ?? "",
-          consultationType: item.consultationType ?? "",
-          motif: item.motif ?? "",
-          status: item.status ?? "",
-          patientFullName: item.patientFullName ?? "",
-          recurring: item.recurring ?? false,
-          doctorProfileId: item.doctorProfileId ?? "",
-          serviceId: item.serviceId ?? "",
-          urgent: item.urgent ?? false,
-          createdAt: item.createdAt ?? "",
-          updatedAt: item.updatedAt ?? ""
-        })));
-      } catch (error) {
-        console.error("Erreur lors du chargement des rendez-vous :", error);
+        const stored = localStorage.getItem("user");
+        const parsed = stored ? JSON.parse(stored) : null;
+        const tenantId = parsed?.doctorProfile?.tenantId;
+        const profileId = parsed?.doctorProfile?.id;
+
+        if (!tenantId) return;
+
+        setDoctorProfileId(profileId);
+
+        const [employeesRes, servicesRes, appointmentsRes] = await Promise.all([
+          getEmployees(tenantId),
+          getServicesByTenant(tenantId),
+          getAllAppointments(),
+        ]);
+
+        const servicesData = servicesRes.data;
+        setEmployees(employeesRes.data);
+        setServices(servicesData);
+
+        setAppointments(appointmentsRes.data.map((item: any) => {
+          const service = servicesData.find(s => s.id === item.serviceId);
+          return {
+            id: item.id ?? "",
+            patient: "--",
+            patientProfileId: item.patientProfileId ?? "",
+            type: item.consultationType ?? "",
+            date: item.date ?? "",
+            startTime: item.startTime || BUSINESS_HOURS_FALLBACK,
+            endTime: item.endTime ?? null,
+            location: item.location ?? "",
+            notes: item.notes ?? "",
+            consultationType: item.consultationType ?? "",
+            motif: item.motif ?? "",
+            status: item.status ?? "",
+            patientFullName: item.patientFullName ?? "",
+            recurring: item.recurring ?? false,
+            doctorProfileId: item.doctorProfileId ?? "",
+            serviceId: item.serviceId ?? "",
+            isUrgent: item.isUrgent ?? false,
+            createdAt: item.createdAt ?? "",
+            updatedAt: item.updatedAt ?? "",
+            price: item?.price
+          }
+        }));
+
+      } catch (e) {
+        console.error("Erreur lors du chargement des ressources :", e);
       } finally {
         setLoading(false);
       }
     }
-    fetchAppointments();
+
+    fetchResources();
   }, []);
+
+  useEffect(() => {
+    const fetchPreferences = async () => {
+      try {
+        const stored = localStorage.getItem("user");
+        if (stored) {
+          const user = JSON.parse(stored);
+          const res = await getUserPreferences(user.id);
+          setPrefs(res.data);
+          setShowUnavailableDays(res.data.showUnavailableDays);
+          setShowAddAppointment(res.data.showAddAppointment);
+        }
+      } catch (error) {
+        console.error("Failed to load preferences:", error);
+      }
+    };
+    fetchPreferences();
+  }, []);
+
+  const handleTogglePreference = async (key: 'showUnavailableDays' | 'showAddAppointment') => {
+    if (!prefs) return;
+
+    const updatedValue = !prefs[key];
+    const updatedPrefs = { ...prefs, [key]: updatedValue };
+    setPrefs(updatedPrefs);
+
+    if (key === 'showUnavailableDays') {
+      setShowUnavailableDays(updatedValue);
+    } else if (key === 'showAddAppointment') {
+      setShowAddAppointment(updatedValue);
+    }
+
+    setPrefsLoading(true);
+    try {
+      const stored = localStorage.getItem("user");
+      if (stored) {
+        const user = JSON.parse(stored);
+        await updateUserPreferences(user.id, { [key]: updatedValue });
+      }
+    } catch (error) {
+      console.error("Failed to update preferences:", error);
+      // Revert state on failure
+      const revertedPrefs = { ...prefs, [key]: !updatedValue };
+      setPrefs(revertedPrefs);
+      if (key === 'showUnavailableDays') {
+        setShowUnavailableDays(!updatedValue);
+      } else if (key === 'showAddAppointment') {
+        setShowAddAppointment(!updatedValue);
+      }
+    } finally {
+      setPrefsLoading(false);
+    }
+  };
+
+
+
 
   const handleToggleUnavailable = () =>
     setShowUnavailable((prev) => !prev);
 
   const filteredAppointments = useMemo(() => {
-    if (!selectedStatus) return appointments;
-    return appointments.filter((a) => a.status === selectedStatus);
-  }, [appointments, selectedStatus]);
+    let filtered = appointments;
+
+    if (selectedStatus) {
+      filtered = filtered.filter((a) => a.status === selectedStatus);
+    }
+
+    if (selectedDoctor) {
+      filtered = filtered.filter((a) => a.doctorProfileId === selectedDoctor);
+    }
+
+    if (selectedServices.length > 0) {
+      filtered = filtered.filter((a) => a.serviceId && selectedServices.includes(a.serviceId));
+    }
+
+    if (selectedPrice) {
+      filtered = filtered.filter(a => {
+        if (a.price === undefined || a.price === null) return false;
+        const price = a.price;
+        const [min, max] = selectedPrice.value.map(v => v ? parseFloat(v) : undefined);
+
+        switch (selectedPrice.condition) {
+          case 'greater-than':
+            return min !== undefined && price > min;
+          case 'less-than':
+            return min !== undefined && price < min;
+          case 'equal-to':
+            return min !== undefined && price === min;
+          case 'is-between':
+            return min !== undefined && max !== undefined && price >= min && price <= max;
+          default:
+            return true;
+        }
+      });
+    }
+
+    return filtered;
+  }, [appointments, selectedStatus, selectedDoctor, selectedServices, selectedPrice]);
 
   if (loading) return <LoadingState />;
 
@@ -160,6 +280,19 @@ export default function CalendarView() {
         onToggleUnavailable={handleToggleUnavailable}
         selectedStatus={selectedStatus}
         onStatusSelect={setSelectedStatus}
+        selectedDoctor={selectedDoctor}
+        onDoctorChange={setSelectedDoctor}
+        selectedServices={selectedServices}
+        onServicesChange={setSelectedServices}
+        selectedPrice={selectedPrice}
+        onPriceChange={setSelectedPrice}
+        services={services}
+        employees={employees}
+        showUnavailableDays={showUnavailableDays}
+        showAddAppointment={showAddAppointment}
+        onToggleUnavailableDays={() => handleTogglePreference('showUnavailableDays')}
+        onToggleAddAppointment={() => handleTogglePreference('showAddAppointment')}
+        prefsLoading={prefsLoading}
       />
 
       <ActiveView
@@ -168,14 +301,17 @@ export default function CalendarView() {
         onSelectAppointment={handleSelectAppointment}
         doctorProfileId={doctorProfileId}
         onAppointmentUpdated={handleAppointmentUpdated}
+        showUnavailableDays={showUnavailableDays}
+        showAddAppointment={showAddAppointment}
       />
-      
+
       <AppointmentDetails
         appointment={selectedAppointment}
         isOpen={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        //@ts-ignore
         onAppointmentUpdated={handleAppointmentUpdated}
+        services={services}
+        employees={employees}
       />
     </div>
   );

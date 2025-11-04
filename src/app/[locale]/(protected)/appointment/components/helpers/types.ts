@@ -21,10 +21,11 @@ export interface CalendarAppointment {
   status: string;
   serviceId?: string;
   recurring: boolean;
-  urgent: boolean;
+  isUrgent: boolean;
   patientFullName: string;
   doctorProfileId: string;
   createdAt: string;
   updatedAt: string;
   timeOfExitFromConsultation?: string;
+  price?: number;
 }

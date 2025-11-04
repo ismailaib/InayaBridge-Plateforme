@@ -91,7 +91,7 @@
       }
     },
     "waitingRoom": "Add to waiting room",
-    "urgent": "Mark as urgent",
+    "isUrgent": "Mark as isUrgent",
     "cancel": "Cancel",
     "submit": "Create appointment",
     "placeholders": {

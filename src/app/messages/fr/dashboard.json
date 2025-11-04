@@ -215,9 +215,9 @@
     },
     "alerts": {
       "title": "Alertes principales",
-      "tooltip": "Messages urgents nécessitant une attention immédiate.",
+      "tooltip": "Messages isUrgents nécessitant une attention immédiate.",
       "items": {
-        "urgent": "Message urgent"
+        "isUrgent": "Message isUrgent"
       },
       "actions": {
         "close": "Clôturer l'alerte",

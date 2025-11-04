@@ -92,7 +92,7 @@
       }
     },
     "waitingRoom": "Ajouter à la salle d’attente",
-    "urgent": "Marquer comme urgent",
+    "isUrgent": "Marquer comme isUrgent",
     "cancel": "Annuler",
     "submit": "Créer le rendez-vous",
     "placeholders": {
@@ -202,5 +202,5 @@
       "type": "Type",
       "lastUpdated": "Dernière mise à jour"
     }
-}
+  }
 }

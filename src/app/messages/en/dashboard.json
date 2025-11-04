@@ -268,9 +268,9 @@
     },
     "alerts": {
       "title": "Top alerts",
-      "tooltip": "Urgent messages that require immediate attention.",
+      "tooltip": "isUrgent messages that require immediate attention.",
       "items": {
-        "urgent": "Urgent message"
+        "isUrgent": "isUrgent message"
       },
       "actions": {
         "close": "Close alert",

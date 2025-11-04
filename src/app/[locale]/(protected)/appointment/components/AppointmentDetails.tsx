@@ -1,28 +1,27 @@
 "use client"
 
+import { deleteAppointment, getAppointmentById } from "@/api/appointments"
+import { Employee } from "@/api/employees"
+import { getPatientById, TenantPatient } from "@/api/patients"
+import { Service } from "@/api/services"
 import { Dialog, DialogContent } from "@/components/Dialog"
 import { Divider } from "@/components/Divider"
-import { useState, useEffect } from "react"
-import { getAppointmentById, deleteAppointment } from "@/api/appointments"
-import { getPatientById, TenantPatient } from "@/api/patients"
-import { getEmployees, Employee } from "@/api/employees"
-import { getServicesByTenant, Service } from "@/api/services"
+import { useEffect, useState } from "react"
 import {
-  markPatientArrived,
-  confirmPatientAppointment,
-  startConsultation,
   cancelAppointment,
+  confirmPatientAppointment,
+  markPatientArrived,
+  startConsultation,
 } from "./helpers/appointmentActions"
-import { showToast } from "../../dashboard/hooks/utils"
 import { CalendarAppointment } from "./helpers/types"
 
+import { ActionButtons } from "./details/ActionButtons"
 import { AppointmentHeader } from "./details/AppointmentHeader"
 import { DateTimeSection } from "./details/DateTimeSection"
-import { ServiceDoctorSection } from "./details/ServiceDoctorSection"
+import { LocationRecurringSection } from "./details/LocationRecurringSection"
 import { MotifNotesSection } from "./details/MotifNotesSection"
 import { PatientInfoSection } from "./details/PatientInfoSection"
-import { LocationRecurringSection } from "./details/LocationRecurringSection"
-import { ActionButtons } from "./details/ActionButtons"
+import { ServiceDoctorSection } from "./details/ServiceDoctorSection"
 
 type AppointmentDetailsProps = {
   appointment: CalendarAppointment | null
@@ -30,21 +29,10 @@ type AppointmentDetailsProps = {
   onClose: () => void
   onEdit?: (appointmentId: string) => void
   onAppointmentUpdated?: (updated: CalendarAppointment | null) => void
+  services: Service[]
+  employees: Employee[]
 }
 
-const useUser = () => {
-  const [user, setUser] = useState<any>(null)
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("user")
-      if (stored) setUser(JSON.parse(stored))
-    } catch (e) {
-      console.error(e)
-      showToast("error", "Erreur", "Échec du chargement des données utilisateur.")
-    }
-  }, [])
-  return user
-}
 
 const usePatientData = (patientProfileId: string | undefined, isOpen: boolean) => {
   const [patientData, setPatientData] = useState<TenantPatient | null>(null)
@@ -69,29 +57,6 @@ const usePatientData = (patientProfileId: string | undefined, isOpen: boolean) =
   return { patientData, loading }
 }
 
-const useTenantResources = (tenantId: string | undefined, isOpen: boolean) => {
-  const [employees, setEmployees] = useState<Employee[]>([])
-  const [services, setServices] = useState<Service[]>([])
-
-  useEffect(() => {
-    if (!isOpen || !tenantId) return
-    const fetchResources = async () => {
-      try {
-        const [employeesRes, servicesRes] = await Promise.all([
-          getEmployees(tenantId),
-          getServicesByTenant(tenantId),
-        ])
-        setEmployees(employeesRes.data)
-        setServices(servicesRes.data)
-      } catch (error) {
-        console.error("Error fetching employees and services:", error)
-      }
-    }
-    fetchResources()
-  }, [tenantId, isOpen])
-
-  return { employees, services }
-}
 
 export const AppointmentDetails = ({
   appointment,
@@ -99,6 +64,8 @@ export const AppointmentDetails = ({
   onClose,
   onEdit,
   onAppointmentUpdated,
+  services,
+  employees,
 }: AppointmentDetailsProps) => {
   const [currentAppointment, setCurrentAppointment] = useState<CalendarAppointment | null>(appointment)
   const [isLoading, setIsLoading] = useState({
@@ -108,10 +75,7 @@ export const AppointmentDetails = ({
     starting: false,
   })
 
-  const user = useUser()
-  const tenantId = user?.doctorProfile?.tenantId
   const { patientData, loading: loadingPatient } = usePatientData(currentAppointment?.patientProfileId, isOpen)
-  const { employees, services } = useTenantResources(tenantId, isOpen)
 
   useEffect(() => {
     if (appointment) {
@@ -131,7 +95,7 @@ export const AppointmentDetails = ({
     }
   }
 
-  const handleUpdate = (updated: CalendarAppointment) => {
+  const handleUpdate = (updated: CalendarAppointment | null) => {
     setCurrentAppointment(updated)
     onAppointmentUpdated?.(updated)
   }
@@ -170,7 +134,7 @@ export const AppointmentDetails = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
-        <AppointmentHeader appointment={currentAppointment} onClose={onClose} />
+        <AppointmentHeader appointment={currentAppointment} onClose={onClose} onUpdate={handleUpdate}  />
         <Divider />
 
         <div className="space-y-4">

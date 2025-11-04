@@ -1,7 +1,24 @@
 "use client";
 
+import {
+  AppointmentUpdateDTO,
+  updateAppointment,
+} from "@/api/appointments";
+import { getAvailabilitySlotsByDoctor } from "@/api/disponibility";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { cx } from "@/lib/utils";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  useDraggable, useDroppable,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 import {
   eachDayOfInterval,
   endOfWeek,
@@ -11,28 +28,13 @@ import {
   startOfWeek,
 } from "date-fns";
 import { arSA, enUS, fr } from "date-fns/locale";
-import React, { useState, useEffect, useMemo } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useMemo, useState } from "react";
 import { AppointmentChip } from "../AppointmentChip";
 import { parseTime } from "../helpers/time";
 import { CalendarAppointment } from "../helpers/types";
-import { getAvailabilitySlotsByDoctor } from "@/api/disponibility";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
-import { useDraggable, useDroppable } from "@dnd-kit/core";
-import {
-  updateAppointment,
-  AppointmentUpdateDTO,
-} from "@/api/appointments";
 
 type WeekViewProps = {
   currentDate: Date;
@@ -40,6 +42,8 @@ type WeekViewProps = {
   onSelectAppointment: (appointment: CalendarAppointment) => void;
   doctorProfileId: string;
   onAppointmentUpdated: (updatedAppointment: CalendarAppointment) => void;
+  showAddAppointment: boolean;
+  showUnavailableDays: boolean;
 };
 
 const HOURS = Array.from({ length: 24 }, (_, index) => index);
@@ -88,16 +92,21 @@ function DroppableTimeCell({
   hour,
   appointments: cellAppointments,
   available,
-  showUnavailable,
+  showUnavailableDays,
   onSelectAppointment,
+  onCellClick,
+  showAddAppointment,
 }: {
   day: Date;
   hour: number;
   appointments: CalendarAppointment[];
   available: boolean;
-  showUnavailable: boolean;
+  showUnavailableDays: boolean;
   onSelectAppointment: (appointment: CalendarAppointment) => void;
+  onCellClick: (date: Date, hour: number) => void;
+  showAddAppointment: boolean;
 }) {
+  const [isHovered, setIsHovered] = useState(false);
   const { setNodeRef, isOver } = useDroppable({
     id: `${day.toISOString()}-${hour}`,
     data: { date: day, hour },
@@ -106,12 +115,23 @@ function DroppableTimeCell({
   const unavailableBgVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
   const cellVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
 
+  const handleClick = (e: React.MouseEvent) => {
+    // Only trigger if clicking the cell itself, not an appointment
+    if ((e.target as HTMLElement).closest('[data-appointment]')) {
+      return;
+    }
+    onCellClick(day, hour);
+  };
+
   return (
     <motion.div
       ref={setNodeRef}
       key={`${day.toISOString()}-${hour}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
       className={cx(
-        "relative border-b border-r border-gray-200 dark:border-gray-800 transition-colors min-h-[64px]",
+        "relative border-b border-r border-gray-200 dark:border-gray-800 transition-colors min-h-[64px] cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900",
         isOver && "ring-2 ring-blue-500 ring-inset bg-blue-100 dark:bg-blue-900/30"
       )}
       initial="hidden"
@@ -121,7 +141,7 @@ function DroppableTimeCell({
     >
       {/* Animated unavailable background */}
       <AnimatePresence>
-        {!available && showUnavailable && (
+        {!available && showUnavailableDays && (
           <motion.div
             className="absolute inset-0 z-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_2px,#f32b113b_2px,rgba(17,24,39,0.5)_4px)]"
             initial="hidden"
@@ -136,13 +156,34 @@ function DroppableTimeCell({
       {/* Appointments */}
       <div className="relative z-10">
         {cellAppointments.map((appointment) => (
-          <DraggableAppointment
-            key={appointment.id}
-            appointment={appointment}
-            onSelect={onSelectAppointment}
-          />
+          <div key={appointment.id} data-appointment>
+            <DraggableAppointment
+              appointment={appointment}
+              onSelect={onSelectAppointment}
+            />
+          </div>
         ))}
       </div>
+
+      {/* Hover overlay to create appointment */}
+      <AnimatePresence>
+        {isHovered && cellAppointments.length === 0 && showAddAppointment && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="absolute inset-0 pointer-events-none flex items-center justify-center"
+          >
+            <div className="border-2 border-dashed border-blue-500 dark:border-blue-400 w-full h-full flex flex-col items-center justify-center gap-1 bg-blue-50/50 dark:bg-blue-900/20 pointer-events-auto">
+              <Plus className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                Créer un rendez-vous
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -153,8 +194,11 @@ export function WeekView({
   onSelectAppointment,
   doctorProfileId,
   onAppointmentUpdated,
+  showAddAppointment,
+  showUnavailableDays,
 }: WeekViewProps) {
   const t = useTranslations("appointments.calendar.weekView");
+  const router = useRouter();
   const locale = t("locale") === "ar" ? arSA : t("locale") === "fr" ? fr : enUS;
 
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
@@ -171,7 +215,6 @@ export function WeekView({
   );
 
   const [availability, setAvailability] = useState<AvailabilitySlot[]>([]);
-  const [showUnavailable, setShowUnavailable] = useState(true);
   const [activeAppointment, setActiveAppointment] =
     useState<CalendarAppointment | null>(null);
 
@@ -215,6 +258,13 @@ export function WeekView({
     return false;
   };
 
+  // Handle cell click to create appointment
+  const handleCellClick = (date: Date, hour: number) => {
+    const formattedDate = format(date, "dd/MM/yyyy");
+    const formattedTime = `${hour.toString().padStart(2, "0")}:00`;
+    showAddAppointment && router.push(`/appointment/create?date=${formattedDate}&time=${formattedTime}`);
+  };
+
   // Handle drag start
   const handleDragStart = (event: DragStartEvent) => {
     const appointment = event.active.data.current
@@ -255,7 +305,7 @@ export function WeekView({
       // Calculate new start and end times
       const startTime = parseTime(appointment.startTime);
       const endTime = parseTime(appointment.endTime);
-      const duration = startTime && endTime 
+      const duration = startTime && endTime
         ? (endTime.hours * 60 + endTime.minutes) - (startTime.hours * 60 + startTime.minutes)
         : 30; // default 30 minutes
 
@@ -276,7 +326,7 @@ export function WeekView({
 
       // Prepare API payload
       const payload: AppointmentUpdateDTO = {
-        urgent: appointment.urgent,
+        isUrgent: appointment.isUrgent,
       };
 
       if (dateChanged) {
@@ -309,21 +359,6 @@ export function WeekView({
     >
       <div className="overflow-x-auto">
         <div className="min-w-[800px] rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
-          {/* Header */}
-          <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-800">
-            <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-              {t("weekLabel")}
-            </div>
-            <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <input
-                type="checkbox"
-                checked={showUnavailable}
-                onChange={(e) => setShowUnavailable(e.target.checked)}
-                className="h-4 w-4 cursor-pointer rounded border-gray-400 accent-blue-600"
-              />
-              {t("showUnavailableLabel") || "Show unavailable slots"}
-            </label>
-          </div>
 
           {/* Days header */}
           <div className="grid grid-cols-8 border-b border-gray-200 dark:border-gray-800">
@@ -363,7 +398,7 @@ export function WeekView({
               const visibleCells = days
                 .map((day) => {
                   const available = isHourAvailable(day, hour);
-                  if (!showUnavailable && !available) return null;
+                  if (!showUnavailableDays && !available) return null;
 
                   const hourAppointments = visibleAppointments.filter(
                     (appointment) => {
@@ -384,8 +419,10 @@ export function WeekView({
                       hour={hour}
                       appointments={hourAppointments}
                       available={available}
-                      showUnavailable={showUnavailable}
+                      showUnavailableDays={showUnavailableDays}
                       onSelectAppointment={onSelectAppointment}
+                      onCellClick={handleCellClick}
+                      showAddAppointment={showAddAppointment}
                     />
                   );
                 })
@@ -412,7 +449,7 @@ export function WeekView({
           <div className="opacity-90 scale-105 cursor-grabbing">
             <AppointmentChip
               appointment={activeAppointment}
-              onSelect={() => {}}
+              onSelect={() => { }}
             />
           </div>
         ) : null}

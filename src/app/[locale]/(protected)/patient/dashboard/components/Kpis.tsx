@@ -5,10 +5,10 @@ import { Tooltip } from "@/components/Tooltip";
 import { BookmarkX, CheckCheck, Info, Pin } from "lucide-react";
 
 const topMedicalAlerts = [
-  { category: "Message urgent", date: "20-04-2025 21:21", clotured: false },
-  { category: "Message urgent", date: "20-04-2025 18:24", clotured: false },
-  { category: "Message urgent", date: "20-04-2025 15:50", clotured: true },
-  { category: "Message urgent", date: "20-04-2025 12:20", clotured: true },
+  { category: "Message isUrgent", date: "20-04-2025 21:21", clotured: false },
+  { category: "Message isUrgent", date: "20-04-2025 18:24", clotured: false },
+  { category: "Message isUrgent", date: "20-04-2025 15:50", clotured: true },
+  { category: "Message isUrgent", date: "20-04-2025 12:20", clotured: true },
 ];
 
 const kpiData = [
@@ -100,7 +100,7 @@ export default function DoctorKPIBlock() {
             Alertes principales
           </p>
           <Tooltip
-            content="Ces alertes représentent les messages urgents nécessitant une attention immédiate."
+            content="Ces alertes représentent les messages isUrgents nécessitant une attention immédiate."
             showArrow={false}
           >
             <span className="text-sm text-gray-500 dark:text-gray-400">
@@ -112,9 +112,8 @@ export default function DoctorKPIBlock() {
           {topMedicalAlerts.map((issue, index) => (
             <li
               key={index}
-              className={`flex cursor-pointer items-center justify-between px-2 py-2 transition-all duration-300 hover:bg-gray-50 hover:dark:bg-gray-800 ${
-                issue.clotured ? "" : ""
-              } `}
+              className={`flex cursor-pointer items-center justify-between px-2 py-2 transition-all duration-300 hover:bg-gray-50 hover:dark:bg-gray-800 ${issue.clotured ? "" : ""
+                } `}
             >
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-gray-900 dark:text-gray-50">

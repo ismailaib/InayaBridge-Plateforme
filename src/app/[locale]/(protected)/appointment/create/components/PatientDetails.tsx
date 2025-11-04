@@ -11,7 +11,7 @@ import { Divider } from "@/components/Divider";
 
 export default function PatientDetails({ patient }: { patient: TenantPatient }) {
   return (
-    <div className="space-y-6 border-l border-gray-200 dark:border-gray-800 pl-6 h-full">
+    <div className="space-y-6  h-full">
       <div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 mb-2">
@@ -41,7 +41,7 @@ export default function PatientDetails({ patient }: { patient: TenantPatient }) 
           </p>
         </div>
 
-        <div className="w-full rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 mt-2">
+        <div className="w-full rounded-xl overflow-hidden border border-gray-200 dark:border-gray-900 mt-2">
           <table className="w-full table-auto">
             <tbody>
               {patient.cin && (
@@ -77,7 +77,7 @@ export default function PatientDetails({ patient }: { patient: TenantPatient }) 
         </div>
       </div>
       <Divider />
-      <Statistics />
+      <Statistics patient={patient} />
     </div>
   );
 }

@@ -1,5 +1,4 @@
-
-import { z } from 'zod';
+import { z } from "zod";
 
 export const appointmentSchema = z.object({
   patientId: z.string().min(1, { message: "Patient is required." }),
@@ -12,7 +11,7 @@ export const appointmentSchema = z.object({
   locationType: z.enum(["LOCAL", "IN_PERSON", "VIDEO"]),
   placelocation: z.string().optional(),
   inWaitingRoom: z.boolean().optional(),
-  urgent: z.boolean().optional(),
+  isUrgent: z.boolean().optional(),
 });
 
 export type AppointmentFormValues = z.infer<typeof appointmentSchema>;

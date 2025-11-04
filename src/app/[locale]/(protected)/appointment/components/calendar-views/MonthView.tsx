@@ -1,29 +1,31 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { eachDayOfInterval, endOfMonth, endOfWeek, format, isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek } from "date-fns";
-import { getAvailabilitySlotsByDoctor } from "@/api/disponibility";
-import { cx } from "@/lib/utils";
-import { useTranslations } from "@/lib/i18n/useTranslations";
-import { AppointmentChip } from "../AppointmentChip";
-import { CalendarAppointment } from "../helpers/types";
-import { motion, AnimatePresence } from "framer-motion";
 import {
+  AppointmentUpdateDTO,
+  updateAppointment,
+} from "@/api/appointments";
+import { getAvailabilitySlotsByDoctor } from "@/api/disponibility";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
+import {
+  closestCenter,
   DndContext,
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
-  closestCenter,
   PointerSensor,
+  useDraggable, useDroppable,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { useDraggable, useDroppable } from "@dnd-kit/core";
-import {
-  updateAppointment,
-  AppointmentUpdateDTO,
-} from "@/api/appointments";
+import { eachDayOfInterval, endOfMonth, endOfWeek, format, isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek } from "date-fns";
+import { AnimatePresence, motion } from "framer-motion";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { AppointmentChip } from "../AppointmentChip";
+import { CalendarAppointment } from "../helpers/types";
 
 
 type MonthViewProps = {
@@ -32,6 +34,8 @@ type MonthViewProps = {
   onSelectAppointment: (appointment: CalendarAppointment) => void;
   doctorProfileId: string;
   onAppointmentUpdated: (updatedAppointment: CalendarAppointment) => void;
+  showAddAppointment: boolean;
+  showUnavailableDays: boolean;
 };
 
 interface AvailabilitySlot {
@@ -73,18 +77,23 @@ function DroppableDay({
   currentDate,
   dayAppointments,
   available,
-  showUnavailable,
+  showUnavailableDays,
   onSelectAppointment,
+  onDayClick,
   t,
+  showAddAppointment,
 }: {
   day: Date;
   currentDate: Date;
   dayAppointments: CalendarAppointment[];
   available: boolean;
-  showUnavailable: boolean;
+  showUnavailableDays: boolean;
   onSelectAppointment: (appointment: CalendarAppointment) => void;
+  onDayClick: (date: Date) => void;
   t: any;
+  showAddAppointment: boolean;
 }) {
+  const [isHovered, setIsHovered] = useState(false);
   const { setNodeRef, isOver } = useDroppable({
     id: day.toISOString(),
     data: { date: day },
@@ -96,16 +105,28 @@ function DroppableDay({
     visible: { opacity: 1 },
   };
 
+  const handleClick = (e: React.MouseEvent) => {
+    // Only trigger if clicking the day cell itself, not an appointment
+    if ((e.target as HTMLElement).closest('[data-appointment]')) {
+      return;
+    }
+    onDayClick(day);
+  };
+
   return (
     <motion.div
       ref={setNodeRef}
       key={day.toISOString()}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
       className={cx(
-        "h-32 min-h-[8rem] overflow-y-auto border-b p-1 sm:p-2 relative transition-colors overflow-hidden",
+        "h-32 min-h-[8rem] overflow-y-auto border-b p-1 sm:p-2 relative transition-colors overflow-hidden hover:bg-gray-100 dark:hover:bg-gray-800 group",
         !isSameMonth(day, currentDate) &&
         "bg-gray-50 text-gray-400 dark:bg-gray-900 dark:text-gray-600",
-        isSameDay(day, new Date()) && "bg-blue-50 dark:bg-blue-900/20",
-        isOver && "ring-2 ring-blue-500 ring-inset bg-blue-100 dark:bg-blue-900/30"
+        isSameDay(day, new Date()) && "bg-blue-50 dark:bg-blue-900/20 ",
+        isOver && "ring-2 ring-blue-500 ring-inset bg-blue-100 dark:bg-blue-900/30 ",
+        showAddAppointment && "cursor-pointer"
       )}
       initial="hidden"
       animate="visible"
@@ -114,9 +135,9 @@ function DroppableDay({
     >
       {/* Animated Unavailable Red Texture */}
       <AnimatePresence>
-        {!available && showUnavailable && (
+        {!available && showUnavailableDays && (
           <motion.div
-            className="absolute inset-0 z-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_2px,#f32b113b_2px,rgba(17,24,39,0.5)_4px)] rounded-lg"
+            className="absolute inset-0 z-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_2px,#f32b113b_2px,rgba(17,24,39,0.5)_4px)]"
             initial="hidden"
             animate="visible"
             exit="hidden"
@@ -127,7 +148,7 @@ function DroppableDay({
       </AnimatePresence>
 
       {/* Day number */}
-      <div className="mb-1 text-right relative z-10">
+      <div className="mb-1 text-right relative">
         <span
           className={cx(
             "inline-flex h-6 w-6 items-center justify-center rounded-full text-sm",
@@ -145,11 +166,12 @@ function DroppableDay({
       {/* Appointments */}
       <div className="space-y-1 relative z-10">
         {dayAppointments.slice(0, 3).map((appointment) => (
-          <DraggableAppointment
-            key={appointment.id}
-            appointment={appointment}
-            onSelect={onSelectAppointment}
-          />
+          <div key={appointment.id} data-appointment>
+            <DraggableAppointment
+              appointment={appointment}
+              onSelect={onSelectAppointment}
+            />
+          </div>
         ))}
         {dayAppointments.length > 3 && (
           <div className="px-1 text-xs text-gray-500 dark:text-gray-400">
@@ -157,6 +179,26 @@ function DroppableDay({
           </div>
         )}
       </div>
+
+      {/* Hover overlay to create appointment */}
+      <AnimatePresence>
+        {isHovered && dayAppointments.length === 0 && showAddAppointment && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="absolute inset-0 pointer-events-none flex items-center justify-center"
+          >
+            <div className="border-2 border-dashed border-blue-500 dark:border-blue-400 w-full h-full flex flex-col items-center justify-center gap-2 bg-blue-50/50 dark:bg-blue-900/20 pointer-events-auto">
+              <Plus className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                Créer un rendez-vous
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -167,10 +209,12 @@ export function MonthView({
   onSelectAppointment,
   doctorProfileId,
   onAppointmentUpdated,
+  showAddAppointment,
+  showUnavailableDays,
 }: MonthViewProps) {
   const t = useTranslations("appointments.calendar.monthView");
+  const router = useRouter();
   const [availability, setAvailability] = useState<AvailabilitySlot[]>([]);
-  const [showUnavailable, setShowUnavailable] = useState(true);
   const [activeAppointment, setActiveAppointment] =
     useState<CalendarAppointment | null>(null);
 
@@ -202,7 +246,12 @@ export function MonthView({
     return !!slot;
   };
 
-  const shouldRenderDay = (day: Date) => showUnavailable || isDayAvailable(day);
+  const shouldRenderDay = (day: Date) => showUnavailableDays || isDayAvailable(day);
+
+  const handleDayClick = (date: Date) => {
+    const formattedDate = format(date, "dd/MM/yyyy");
+    showAddAppointment && router.push(`/appointment/create?date=${formattedDate}`);
+  };
 
   const handleDragStart = (event: DragStartEvent) => {
     const appointment = event.active.data.current
@@ -231,7 +280,7 @@ export function MonthView({
 
       const payload: AppointmentUpdateDTO = {
         date: format(newDate, "yyyy-MM-dd"),
-        urgent: appointment.urgent,
+        isUrgent: appointment.isUrgent,
       };
 
       try {
@@ -258,21 +307,7 @@ export function MonthView({
     >
       <div className="overflow-x-auto">
         <div className="min-w-full rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
-          {/* Header with toggle */}
-          <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-800">
-            <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-              {t("monthLabel")}
-            </div>
-            <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-              <input
-                type="checkbox"
-                checked={showUnavailable}
-                onChange={(e) => setShowUnavailable(e.target.checked)}
-                className="h-4 w-4 cursor-pointer rounded border-gray-400 accent-blue-600"
-              />
-              {t("showUnavailableLabel") || "Show unavailable slots"}
-            </label>
-          </div>
+
 
           {/* Days header */}
           <div className="grid grid-cols-7 border-b border-gray-200 bg-gray-50 text-center dark:border-gray-800 dark:bg-gray-900">
@@ -298,7 +333,7 @@ export function MonthView({
                     <motion.div
                       key={day.toISOString()}
                       className={cx(
-                        "h-32 min-h-[8rem] border-b p-1 sm:p-2 bg-gray-50 dark:bg-gray-900"
+                        "h-32 min-h-[8rem] border-b p-1 sm:p-2 bg-gray-50 dark:bg-gray-900 "
                       )}
                       initial="hidden"
                       animate="visible"
@@ -315,9 +350,11 @@ export function MonthView({
                     currentDate={currentDate}
                     dayAppointments={dayAppointments}
                     available={available}
-                    showUnavailable={showUnavailable}
+                    showUnavailableDays={showUnavailableDays}
                     onSelectAppointment={onSelectAppointment}
+                    onDayClick={handleDayClick}
                     t={t}
+                    showAddAppointment={showAddAppointment}
                   />
                 );
               })}

@@ -1,5 +1,7 @@
 "use client";
 
+import { Employee } from "@/api/employees";
+import { Service } from "@/api/services";
 import { Button } from "@/components/Button";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { endOfWeek, format, startOfWeek } from "date-fns";
@@ -14,7 +16,13 @@ import {
   RotateCcw,
 } from "lucide-react";
 import type { ElementType } from "react";
+import DepartementServiceFilter from "./header/DepartementServiceFilter";
+import DoctorFilter from "./header/DoctorFilter";
+import PriceFilter from "./header/PriceFilter";
 import { CalendarViewType } from "./helpers/types";
+
+import { ConditionFilter } from "./header/PriceFilter";
+import { CalendarPreferences } from "./header/CalendarPreferences";
 
 type CalendarHeaderProps = {
   currentDate: Date;
@@ -27,6 +35,19 @@ type CalendarHeaderProps = {
   onToggleUnavailable: () => void;
   selectedStatus: string | null;
   onStatusSelect: (status: string | null) => void;
+  services: Service[];
+  employees: Employee[];
+  selectedDoctor: string | null;
+  onDoctorChange: (doctorId: string | null) => void;
+  selectedServices: string[];
+  onServicesChange: (serviceIds: string[]) => void;
+  selectedPrice: ConditionFilter | undefined;
+  onPriceChange: (price: ConditionFilter | undefined) => void;
+  showUnavailableDays: boolean;
+  showAddAppointment: boolean;
+  onToggleUnavailableDays: () => void;
+  onToggleAddAppointment: () => void;
+  prefsLoading: boolean;
 };
 
 export function CalendarHeader({
@@ -38,6 +59,19 @@ export function CalendarHeader({
   onViewChange,
   selectedStatus,
   onStatusSelect,
+  services,
+  employees,
+  selectedDoctor,
+  onDoctorChange,
+  selectedServices,
+  onServicesChange,
+  selectedPrice,
+  onPriceChange,
+  showUnavailableDays,
+  showAddAppointment,
+  onToggleUnavailableDays,
+  onToggleAddAppointment,
+  prefsLoading,
 }: CalendarHeaderProps) {
   const t = useTranslations("appointments.calendar");
 
@@ -96,19 +130,13 @@ export function CalendarHeader({
 
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <div className="mr-4 flex">
+            <div className="mr-4 flex gap-2">
               {viewButtons.map(({ value, icon: Icon }, index) => (
                 <Button
                   key={value}
                   variant={view === value ? "secondary" : "ghost"}
                   onClick={() => onViewChange(value)}
-                  className={
-                    index === 0
-                      ? "rounded-l-md rounded-r-none"
-                      : index === viewButtons.length - 1
-                      ? "rounded-l-none rounded-r-md"
-                      : "rounded-none border-l-0 border-r-0"
-                  }
+                  className={"rounded-lg"}
                 >
                   <Icon className="mr-1 h-4 w-4" />
                   <span className="hidden sm:inline">{t(`views.${value}`)}</span>
@@ -139,41 +167,55 @@ export function CalendarHeader({
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-3 pt-4 items-center">
-        {statuses.map((status) => (
-          <div
-            key={status.label}
-            onClick={() =>
-              onStatusSelect(
-                selectedStatus === status.label ? null : status.label
-              )
-            }
-            className={`flex items-center gap-2 cursor-pointer px-2 py-1 rounded-md transition ${
-              selectedStatus === status.label
+      <div className="flex flex-row items-center pt-4  justify-between">
+        <div className="flex flex-wrap gap-3 items-center">
+          {statuses.map((status) => (
+            <div
+              key={status.label}
+              onClick={() =>
+                onStatusSelect(
+                  selectedStatus === status.label ? null : status.label
+                )
+              }
+              className={`flex items-center gap-2 cursor-pointer px-2 py-1 rounded-md transition ${selectedStatus === status.label
                 ? "bg-gray-200 dark:bg-gray-700"
                 : "hover:bg-gray-100 dark:hover:bg-gray-800"
-            }`}
-          >
-            <span
-              className={`h-3 w-3 rounded-sm ${status.color}`}
-              aria-hidden="true"
-            />
-            <span className="text-sm text-gray-700 dark:text-gray-200 font-normal hover:dark:text-white">
-              {status.label}
-            </span>
-          </div>
-        ))}
+                }`}
+            >
+              <span
+                className={`h-3 w-3 rounded-sm ${status.color}`}
+                aria-hidden="true"
+              />
+              <span className="text-sm text-gray-700 dark:text-gray-200 font-normal hover:dark:text-white">
+                {status.label}
+              </span>
+            </div>
+          ))}
 
-        {selectedStatus && (
-          <button
-            onClick={() => onStatusSelect(null)}
-            className="flex items-center gap-2 m-0 p-0 bg-transparent hover:bg-transparent text-sm text-blue-500 hover:underline"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Réinitialiser
-          </button>
-        )}
+          {selectedStatus && (
+            <button
+              onClick={() => onStatusSelect(null)}
+              className="flex items-center gap-2 m-0 p-0 bg-transparent hover:bg-transparent text-sm text-blue-500 hover:underline"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Réinitialiser
+            </button>
+          )}
+        </div>
+        <div className="flex items-center gap-4">
+          <DoctorFilter employees={employees} selectedDoctor={selectedDoctor} onDoctorChange={onDoctorChange} />
+          <DepartementServiceFilter services={services} selectedServices={selectedServices} onServicesChange={onServicesChange} />
+          <PriceFilter selectedPrice={selectedPrice} onPriceChange={onPriceChange} />
+          <CalendarPreferences 
+            showUnavailableDays={showUnavailableDays}
+            showAddAppointment={showAddAppointment}
+            onToggleUnavailableDays={onToggleUnavailableDays}
+            onToggleAddAppointment={onToggleAddAppointment}
+            loading={prefsLoading}
+          />
+        </div>
       </div>
+
     </div>
   );
 }

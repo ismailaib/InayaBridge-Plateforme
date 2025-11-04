@@ -450,7 +450,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter>
-        <Divider className="my-0" />
+        <Divider className="my-0 mb-1" />
         <UserProfile />
       </SidebarFooter>
     </Sidebar>

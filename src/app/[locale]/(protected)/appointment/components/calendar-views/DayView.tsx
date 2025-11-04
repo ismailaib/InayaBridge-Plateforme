@@ -1,35 +1,32 @@
 "use client";
 
+import {
+  AppointmentUpdateDTO,
+  updateAppointment,
+} from "@/api/appointments";
+import { getAvailabilitySlotsByDoctor } from "@/api/disponibility";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { cx } from "@/lib/utils";
-import { isSameDay, format } from "date-fns";
-import React, { useState, useEffect } from "react";
-import { AppointmentChip } from "../AppointmentChip";
-import { isTimeWithinRange, parseTime } from "../helpers/time";
-import { CalendarAppointment } from "../helpers/types";
-import { getAvailabilitySlotsByDoctor } from "@/api/disponibility";
-import { motion, AnimatePresence } from "framer-motion";
 import {
+  closestCenter,
   DndContext,
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
-  closestCenter,
   PointerSensor,
+  useDraggable, useDroppable,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import {
-  SortableContext,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useDraggable, useDroppable } from "@dnd-kit/core";
-import {
-  updateAppointment,
-  AppointmentUpdateDTO,
-} from "@/api/appointments";
+import { format, isSameDay } from "date-fns";
+import { AnimatePresence, motion } from "framer-motion";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { AppointmentChip } from "../AppointmentChip";
+import { isTimeWithinRange, parseTime } from "../helpers/time";
+import { CalendarAppointment } from "../helpers/types";
 
 type DayViewProps = {
   currentDate: Date;
@@ -37,6 +34,8 @@ type DayViewProps = {
   onSelectAppointment: (appointment: CalendarAppointment) => void;
   doctorProfileId: string;
   onAppointmentUpdated: (updatedAppointment: CalendarAppointment) => void;
+  showUnavailableDays: boolean;
+  showAddAppointment: boolean;
 };
 
 const BUSINESS_HOURS = Array.from({ length: 24 }, (_, index) => index);
@@ -87,6 +86,8 @@ function DroppableTimeSlot({
   available,
   showUnavailable,
   onSelectAppointment,
+  onCellClick,
+  showAddAppointment,
 }: {
   slot: string;
   index: number;
@@ -94,21 +95,35 @@ function DroppableTimeSlot({
   available: boolean;
   showUnavailable: boolean;
   onSelectAppointment: (appointment: CalendarAppointment) => void;
+  onCellClick: (slot: string) => void;
+  showAddAppointment: boolean;
 }) {
   const { setNodeRef, isOver } = useDroppable({
     id: slot,
     data: { time: slot },
   });
+  const [isHovered, setIsHovered] = useState(false);
 
   const unavailableBgVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
   const cellVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
 
+  const handleClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('[data-appointment]')) {
+      return;
+    }
+    onCellClick(slot);
+  };
+
   return (
     <motion.div
       key={slot}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
       className={cx(
         "grid grid-cols-[100px_1fr] border-b border-gray-200 dark:border-gray-800 min-h-[48px]",
-        index % 2 === 0 && "bg-gray-50 dark:bg-gray-900/50"
+        index % 2 === 0 && "bg-gray-50 dark:bg-gray-900/50",
+        showAddAppointment && isHovered && "cursor-pointer"
       )}
       initial="hidden"
       animate="visible"
@@ -140,14 +155,34 @@ function DroppableTimeSlot({
 
         <div className="relative z-10 flex flex-wrap gap-2">
           {slotAppointments.map((appointment) => (
-            <DraggableAppointment
-              key={`${slot}-${appointment.id}`}
-              appointment={appointment}
-              onSelect={onSelectAppointment}
-              slot={slot}
-            />
+            <div key={`${slot}-${appointment.id}`} data-appointment>
+              <DraggableAppointment
+                appointment={appointment}
+                onSelect={onSelectAppointment}
+                slot={slot}
+              />
+            </div>
           ))}
         </div>
+
+        <AnimatePresence>
+          {isHovered && slotAppointments.length === 0 && showAddAppointment && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 pointer-events-none flex items-center justify-center"
+            >
+              <div className="border-2 border-dashed border-blue-500 dark:border-blue-400 w-full h-full flex flex-col items-center justify-center gap-1 bg-blue-50/50 dark:bg-blue-900/20 pointer-events-auto">
+                <Plus className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                  Créer un rendez-vous
+                </span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );
@@ -159,9 +194,11 @@ export function DayView({
   onSelectAppointment,
   doctorProfileId,
   onAppointmentUpdated,
+  showUnavailableDays,
+  showAddAppointment,
 }: DayViewProps) {
   const t = useTranslations("appointments.calendar.dayView");
-  const [showUnavailable, setShowUnavailable] = useState(true);
+  const router = useRouter();
   const [availability, setAvailability] = useState<AvailabilitySlot[]>([]);
   const [activeAppointment, setActiveAppointment] =
     useState<CalendarAppointment | null>(null);
@@ -206,18 +243,13 @@ export function DayView({
     });
   };
 
-  const shouldRenderSlot = (slotTime: string) => showUnavailable || isSlotAvailable(slotTime);
+  const shouldRenderSlot = (slotTime: string) => showUnavailableDays || isSlotAvailable(slotTime);
 
-  const startsAt = (appointment: CalendarAppointment, slotHour: number, slotMinute: number) => {
-    const start = parseTime(appointment.startTime);
-    return !!start && start.hours === slotHour && start.minutes === slotMinute;
-  };
-
-  const spansSlot = (appointment: CalendarAppointment, slotHour: number, slotMinute: number) => {
-    const start = parseTime(appointment.startTime);
-    const end = parseTime(appointment.endTime);
-    if (!start || !end) return false;
-    return isTimeWithinRange(start, end, { hours: slotHour, minutes: slotMinute });
+  // Handle cell click to create appointment
+  const handleCellClick = (slot: string) => {
+    const formattedDate = format(currentDate, "dd/MM/yyyy");
+    const formattedTime = slot;
+    showAddAppointment && router.push(`/appointment/create?date=${formattedDate}&time=${formattedTime}`);
   };
 
   // Handle drag start
@@ -246,15 +278,15 @@ export function DayView({
 
     // Appointments that were already in the target slot
     const existingAppointmentsInSlot = otherDayAppointments.filter(appointment => {
-        const start = parseTime(appointment.startTime);
-        if (!start) return false;
-        const appointmentStartMinutes = start.hours * 60 + start.minutes;
-        return appointmentStartMinutes >= slotStartMinutes && appointmentStartMinutes < (slotStartMinutes + 30);
+      const start = parseTime(appointment.startTime);
+      if (!start) return false;
+      const appointmentStartMinutes = start.hours * 60 + start.minutes;
+      return appointmentStartMinutes >= slotStartMinutes && appointmentStartMinutes < (slotStartMinutes + 30);
     });
 
     // All appointments that will be in the slot after the drop
     const allAppointmentsInSlot = [...existingAppointmentsInSlot, droppedAppointment]
-        .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
     if (allAppointmentsInSlot.length === 0) return;
 
@@ -269,14 +301,14 @@ export function DayView({
     for (let i = 0; i < allAppointmentsInSlot.length; i++) {
       const appointment = allAppointmentsInSlot[i];
       const originalAppointment = dayAppointments.find(a => a.id === appointment.id);
-      if(originalAppointment) {
+      if (originalAppointment) {
         originalAppointments.push(originalAppointment);
       } else {
         originalAppointments.push(droppedAppointment);
       }
 
       const newStartMinutes = slotStartMinutes + currentMinuteOffset;
-      
+
       let newEndMinutes;
       if (i === allAppointmentsInSlot.length - 1) {
         // Last appointment takes the rest of the slot
@@ -312,7 +344,7 @@ export function DayView({
         date: appointment.date,
         startTime: appointment.startTime,
         endTime: appointment.endTime,
-        urgent: appointment.urgent,
+        isUrgent: appointment.isUrgent,
       };
       try {
         await updateAppointment(appointment.id, payload);
@@ -344,17 +376,6 @@ export function DayView({
                 {t("appointments")}
               </div>
             </div>
-            <div className="flex justify-end px-4">
-              <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                <input
-                  type="checkbox"
-                  checked={showUnavailable}
-                  onChange={(e) => setShowUnavailable(e.target.checked)}
-                  className="h-4 w-4 cursor-pointer rounded border-gray-400 accent-blue-600"
-                />
-                {t("showUnavailableLabel") || "Show unavailable slots"}
-              </label>
-            </div>
           </div>
 
           {/* Slots */}
@@ -380,8 +401,10 @@ export function DayView({
                 index={index}
                 appointments={timeAppointments}
                 available={available}
-                showUnavailable={showUnavailable}
+                showUnavailable={showUnavailableDays}
                 onSelectAppointment={onSelectAppointment}
+                onCellClick={handleCellClick}
+                showAddAppointment={showAddAppointment}
               />
             );
           })}
@@ -394,7 +417,7 @@ export function DayView({
           <div className="opacity-90 scale-105 cursor-grabbing">
             <AppointmentChip
               appointment={activeAppointment}
-              onSelect={() => {}}
+              onSelect={() => { }}
             />
           </div>
         ) : null}
@@ -402,3 +425,4 @@ export function DayView({
     </DndContext>
   );
 }
+

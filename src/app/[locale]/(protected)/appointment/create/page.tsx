@@ -1,32 +1,35 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Card } from "@/components/Card";
-import { useTranslations } from "@/lib/i18n/useTranslations";
+import type { AppointmentStatus } from "@/api/appointments";
+import { createAppointment } from "@/api/appointments";
+import { getEmployees } from "@/api/employees";
 import { getPatientsByTenant, TenantPatient } from "@/api/patients";
 import { getServicesByTenant, Service } from "@/api/services";
-import { createAppointment } from "@/api/appointments";
-import type { AppointmentStatus } from "@/api/appointments";
+import { Button } from "@/components/Button";
+import { Card } from "@/components/Card";
+import { Toaster } from "@/components/Toaster";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { useToast } from "@/lib/useToast";
+import { ScanSearch } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import AppointmentForm from "./components/AppointmentForm";
 import PatientDetails from "./components/PatientDetails";
-import { useToast } from "@/lib/useToast";
-import { Toaster } from "@/components/Toaster";
-import { getEmployees } from "@/api/employees";
 
 type ConsultationType = "LOCAL" | "IN_PERSON" | "VIDEO";
 
 interface FormState {
   selectedPatientId: string | null;
-  doctorId: string | null;
+  doctorId: string;
   date: Date | undefined;
-  cost: number | undefined;
+  price: number | undefined;
   motif: string;
   note: string;
   locationType: string | null;
   serviceId: string | null;
   placelocation: string | null;
   inWaitingRoom: boolean;
-  urgent: boolean;
+  isUrgent: boolean;
 }
 
 const LOCATION_MAP: Record<string, ConsultationType> = {
@@ -37,6 +40,7 @@ const LOCATION_MAP: Record<string, ConsultationType> = {
 
 export default function RendezVousForm() {
   const t = useTranslations("appointments.form");
+  const searchParams = useSearchParams();
   const [patients, setPatients] = useState<TenantPatient[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -49,6 +53,10 @@ export default function RendezVousForm() {
   const [services, setServices] = useState<Service[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
   const { toast } = useToast();
+  const [showPatientDetails, setShowPatientDetails] = useState(true);
+  const [leftWidth, setLeftWidth] = useState(70);
+  const [isResizing, setIsResizing] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const showToast = (type: 'success' | 'error', title: string, message: string) => {
     toast({
@@ -70,13 +78,13 @@ export default function RendezVousForm() {
       serviceId: null,
       date: defaultDate,
       doctorId: "",
-      cost: 0,
+      price: 0,
       motif: "",
       placelocation: "",
       note: "",
       locationType: "1",
       inWaitingRoom: false,
-      urgent: false,
+      isUrgent: false,
     };
   });
 
@@ -93,6 +101,26 @@ export default function RendezVousForm() {
       showToast('error', 'Erreur', 'Échec du chargement des données utilisateur.');
     }
   }, []);
+
+  useEffect(() => {
+    const dateParam = searchParams.get('date');
+    const timeParam = searchParams.get('time');
+
+    if (dateParam) {
+      const [day, month, year] = dateParam.split('/').map(Number);
+      if (day && month && year) {
+        const newDate = new Date(year, month - 1, day);
+        if (timeParam) {
+          const [hours, minutes] = timeParam.split(':').map(Number);
+          if (hours !== undefined && minutes !== undefined) {
+            newDate.setHours(hours);
+            newDate.setMinutes(minutes);
+          }
+        }
+        updateFormState({ date: newDate });
+      }
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (!tenantId) return;
@@ -152,27 +180,27 @@ export default function RendezVousForm() {
       selectedPatientId: null,
       serviceId: null,
       date: defaultDate,
-      cost: 0,
+      price: 0,
       motif: "",
       doctorId: "",
       note: "",
       placelocation: "",
       locationType: "1",
       inWaitingRoom: false,
-      urgent: false,
+      isUrgent: false,
     });
     setSearchQuery("");
     setSelectedPatient(null);
   };
 
   const validateForm = () => {
-    const { selectedPatientId, serviceId, date, motif, locationType, cost, placelocation } = formState;
-    if (!selectedPatientId || !date || !motif.trim() || !locationType || cost === undefined || !serviceId) {
+    const { selectedPatientId, serviceId, date, motif, locationType, price, placelocation } = formState;
+    if (!selectedPatientId || !date || !motif.trim() || !locationType || price === undefined || !serviceId) {
       showToast('error', 'Erreur', t("alerts.fillAllFields"));
       return false;
     }
     if (locationType === "2" && !placelocation?.trim()) {
-      showToast('error', 'Erreur', t("alerts.fillAllFields")); // Or a specific message for address
+      showToast('error', 'Erreur', t("alerts.fillAllFields"));
       return false;
     }
     if (!doctorId || !tenantId) {
@@ -189,17 +217,16 @@ export default function RendezVousForm() {
     const {
       selectedPatientId,
       date,
-      cost,
+      price,
       motif,
       note,
       locationType,
       inWaitingRoom,
       placelocation,
       serviceId,
-      urgent,
+      isUrgent,
     } = formState;
 
-    // Format date in local timezone to avoid UTC conversion issues
     const formatLocalDate = (date: Date) => {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -223,11 +250,11 @@ export default function RendezVousForm() {
       status: "PENDING" as AppointmentStatus,
       consultationType: LOCATION_MAP[locationType!],
       motif,
-      cost: cost!,
+      price: price!,
       notes: note,
       location: placelocation,
       serviceId: serviceId,
-      urgent: urgent,
+      isUrgent: isUrgent,
       inWaitingRoom,
     };
 
@@ -246,6 +273,47 @@ export default function RendezVousForm() {
 
   const isToday = formState.date?.toDateString() === new Date().toDateString();
 
+  const handleMouseDown = () => {
+    setIsResizing(true);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isResizing || !containerRef.current) return;
+
+    const container = containerRef.current;
+    const containerRect = container.getBoundingClientRect();
+    const newLeftWidth = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+
+    if (newLeftWidth >= 40 && newLeftWidth <= 75) {
+      setLeftWidth(newLeftWidth);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsResizing(false);
+  };
+
+  useEffect(() => {
+    if (isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    } else {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+  }, [isResizing]);
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 duration-300 transition-all">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
@@ -255,33 +323,55 @@ export default function RendezVousForm() {
         {t("subtitle")}
       </p>
 
-      <Card className="mt-8 flex gap-8 overflow-hidden">
-        <AppointmentForm
-          formState={formState}
-          updateFormState={updateFormState}
-          services={services}
-          loading={loading}
-          submitting={submitting}
-          t={t}
-          isToday={isToday}
-          handleSubmit={handleSubmit}
-          resetForm={resetForm}
-          filteredPatients={filteredPatients}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          selectOpen={selectOpen}
-          setSelectOpen={setSelectOpen}
-          searchInputRef={searchInputRef}
-          handlePatientSelect={handlePatientSelect} 
-          employees={employees}        
-        />
-
-        <div
-          className={`transition-all duration-300 ease-in-out overflow-hidden w-90 ${selectedPatient ? "opacity-100" : "w-0 opacity-0 pl-0"
-            }`}
-        >
-          {selectedPatient && <PatientDetails patient={selectedPatient} />}
+      <Card className="mt-8 flex gap-0 overflow-hidden relative" ref={containerRef}>
+        <div style={{ width: selectedPatient && showPatientDetails ? `${leftWidth}%` : '100%' }} className="transition-all duration-300">
+          <AppointmentForm
+            formState={formState}
+            updateFormState={updateFormState}
+            services={services}
+            loading={loading}
+            submitting={submitting}
+            t={t}
+            isToday={isToday}
+            handleSubmit={handleSubmit}
+            resetForm={resetForm}
+            filteredPatients={filteredPatients}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectOpen={selectOpen}
+            setSelectOpen={setSelectOpen}
+            searchInputRef={searchInputRef}
+            handlePatientSelect={handlePatientSelect}
+            employees={employees}
+          />
         </div>
+
+        {selectedPatient && showPatientDetails && (
+          <>
+            <div
+              onMouseDown={handleMouseDown}
+              className="w-1 mx-2 bg-gray-200 dark:bg-gray-700 hover:bg-blue-500 dark:hover:bg-blue-600 cursor-col-resize transition-colors flex-shrink-0"
+              style={{ cursor: isResizing ? 'col-resize' : 'col-resize' }}
+            />
+            <div
+              style={{ width: `${100 - leftWidth}%` }}
+              className="transition-all duration-300 overflow-auto"
+            >
+              <PatientDetails patient={selectedPatient} />
+            </div>
+          </>
+        )}
+
+        {selectedPatient && !showPatientDetails && (
+          <Button
+            variant="secondary"
+            onClick={() => setShowPatientDetails(!showPatientDetails)}
+            className="absolute top-0 right-0 rounded-none bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors z-10"
+            title={showPatientDetails ? "Masquer les détails" : "Afficher les détails"}
+          >
+            <ScanSearch width={18} />
+          </Button>
+        )}
       </Card>
       <Toaster />
     </div>

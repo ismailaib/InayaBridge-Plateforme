@@ -111,7 +111,7 @@ export default function DoctorKPIBlock() {
             >
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                  {t("alerts.items.urgent")}
+                  {t("alerts.items.isUrgent")}
                   <p className="text-sm tabular-nums text-gray-600 dark:text-gray-400">
                     {date}
                   </p>

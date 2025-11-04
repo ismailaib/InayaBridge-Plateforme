@@ -6,7 +6,7 @@ import api from '@/lib/api'
 
 export interface Employee {
   id: string
-  doctorId: string | null
+  doctorId: string 
   tenantId: string
   email: string | null
   firstName: string | null
