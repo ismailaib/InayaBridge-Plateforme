@@ -3,7 +3,7 @@
 import { Card } from '@/components/Card'
 import { Divider } from '@/components/Divider'
 import { Badge } from '@/components/Badge'
-import { Cake, Fingerprint, FolderArchive, Mail, PersonStanding, Phone, User } from 'lucide-react'
+import { Cake, DatabaseZap, Fingerprint, FolderArchive, Mail, PersonStanding, Phone } from 'lucide-react'
 import { Button } from '@/components/Button'
 import { useEffect, useState } from 'react'
 
@@ -72,10 +72,22 @@ export default function PatientInfoCard(patient: PatientProps) {
       </div>
 
       <Divider className="my-3" />
-      <span className="h-4 w-4 animate-ping rounded-full bg-sky-400 opacity-75"></span>
-      <p className="text-sm">
-        Consultation médical en cours - {minutes}m {remainingSeconds}s
-      </p>
+      <div className='flex flex-row items-center justify-between'>
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 animate-ping rounded-full bg-sky-400 opacity-75"></span>
+          <span className="absolute h-2 w-2 rounded-full bg-sky-400 opacity-75"></span>
+          <p className="text-sm">Consultation médical en cours
+            <Badge variant='default' className='ml-2'>
+              {minutes}m {remainingSeconds}s
+            </Badge>
+          </p>
+        </div>
+        <div className='flex flex-row items-center gap-2'>
+          <DatabaseZap width={18}/>
+          <p className='text-sm'>Changements Sauvegardé avec succès</p>
+        </div>
+      </div>
+
     </Card>
   )
 }

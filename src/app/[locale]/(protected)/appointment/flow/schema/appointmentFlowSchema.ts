@@ -2,29 +2,6 @@ import { Step } from "../../types/appointmentFlow";
 
 export const appointmentFlowSchema: Step[] = [
   {
-    id: 'patient-information',
-    title: 'Patient Information',
-    description: 'Basic demographics and contact details',
-    sections: [
-      {
-        title: 'Emergency Contact',
-        fields: [
-          { name: 'emergencyContactName', label: 'Emergency Contact Name', type: 'text', placeholder: 'Enter name of emergency contact' },
-          { name: 'emergencyContactRelationship', label: 'Relationship', type: 'text', placeholder: 'Enter relationship to patient' },
-          { name: 'emergencyContactPhone', label: 'Phone', type: 'text', placeholder: 'Type phone number' },
-        ],
-      },
-      {
-        title: 'Other',
-        fields: [
-          { name: 'occupation', label: 'Occupation', type: 'text' },
-          { name: 'maritalStatus', label: 'Marital Status', type: 'select', options: ['Single', 'Married', 'Divorced', 'Widowed'] },
-          { name: 'preferredLanguage', label: 'Preferred Language', type: 'text' },
-        ],
-      },
-    ],
-  },
-  {
     id: 'complaints',
     title: 'Complaints',
     description: 'Details about the patient\'s current complaints',
@@ -85,7 +62,6 @@ export const appointmentFlowSchema: Step[] = [
         fields: [
           { name: 'reviewOfSystemsConstitutional', label: 'Constitutional', type: 'text' },
           { name: 'reviewOfSystemsEyes', label: 'Eyes', type: 'text' },
-          // Add more ROS fields as needed, but truncated for brevity
         ],
       },
     ],

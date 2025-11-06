@@ -66,6 +66,7 @@
     "react-dom": "^18.2.0",
     "react-markdown": "^10.1.0",
     "react-wrap-balancer": "^1.1.1",
+    "reactflow": "^11.11.4",
     "recharts": "^2.15.3",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",

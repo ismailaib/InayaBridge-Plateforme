@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/Toaster";
 import { TranslationsProvider } from "@/lib/i18n/TranslationsProvider";
 import { type Messages, getMessages } from "@/lib/i18n/getMessages";
-import { type Locale, getDirection, isLocale, locales } from "@/lib/i18n/i18n";
+import { type Locale, isLocale, locales } from "@/lib/i18n/i18n";
 import { readdir } from "fs/promises";
 import path from "path";
 
@@ -9,25 +9,10 @@ import { ThemeProvider } from "next-themes";
 import { notFound } from "next/navigation";
 
 import { LayoutWrapper } from "./(landing)/Layout";
-import { Inter, Tajawal } from "next/font/google";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-});
-
-const tajawal = Tajawal({
-  weight: ["400", "700"],
-  subsets: ["arabic"],
-  display: "swap",
-  variable: "--font-tajawal",
-});
-
 
 type LocaleLayoutProps = {
   children: React.ReactNode;
@@ -78,14 +63,8 @@ export default async function LocaleLayout({
     {} as Messages,
   );
 
-  const dir = getDirection(locale);
-  const fontClass = locale === "ar" ? tajawal.className : inter.className;
-
   return (
-    <html lang={locale} dir={dir} suppressHydrationWarning>
-      <body
-        className={`${fontClass} ${inter.variable} ${tajawal.variable} min-h-screen scroll-auto antialiased selection:bg-blue-100 selection:text-[#3b82f6] dark:bg-gray-950`}
-      >
+    <div>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -98,7 +77,6 @@ export default async function LocaleLayout({
             <LayoutWrapper>{children}</LayoutWrapper>
           </TranslationsProvider>
         </ThemeProvider>
-      </body>
-    </html>
+    </div>
   );
 }

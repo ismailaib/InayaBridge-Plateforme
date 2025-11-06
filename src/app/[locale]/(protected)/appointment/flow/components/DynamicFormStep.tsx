@@ -5,6 +5,7 @@ import FormField from './FormField';
 import { Step } from '../../types/appointmentFlow';
 import { Card } from '@/components/Card';
 import Steps from './Steps';
+import { Divider } from '@/components/Divider';
 
 interface DynamicFormStepProps {
   step: Step;
@@ -31,7 +32,8 @@ export default function DynamicFormStep({ step }: DynamicFormStepProps) {
             (section: { title: any; fields: any[] }, sectionIndex: Key | null | undefined) => (
               <Card key={sectionIndex} >
                 <SectionTitle title={section.title} />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Divider />
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                   {section.fields.map((field) => (
                     <FormField
                       key={field.name}

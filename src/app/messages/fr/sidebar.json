@@ -11,7 +11,8 @@
       "all": "Tous les rendez-vous",
       "create": "Créer un rendez-vous",
       "waiting": "Salle d'attente",
-      "history": "Historique des consultations"
+      "history": "Historique des consultations",
+      "flow": "Flow Designer"
     },
     "patients": "Mes Patients",
     "patientsChildren": {

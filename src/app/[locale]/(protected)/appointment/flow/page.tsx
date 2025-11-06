@@ -7,7 +7,6 @@ import StepNavigator from "./components/StepNavigator";
 import { AppointmentFlowProvider } from "./context/AppointmentFlowContext";
 import { useAppointmentFlow } from "./hooks/useAppointmentFlow";
 import { appointmentFlowSchema } from "./schema/appointmentFlowSchema";
-import Steps from "./components/Steps";
 
 
 
@@ -33,7 +32,7 @@ function AppointmentFlowContent() {
   }
 
   return (
-    <div className="pb-24 overflow-hidden">
+    <div className="pb-24 overflow-hidden p-4 md:p-8">
       <PatientInfoCard patient={patient} />
       <Divider />
       {currentStep && <DynamicFormStep step={currentStep} />}

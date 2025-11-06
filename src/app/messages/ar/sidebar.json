@@ -8,7 +8,8 @@
       "all": "جميع المواعيد",
       "create": "إنشاء موعد",
       "waiting": "غرفة الانتظار",
-      "history": "سجل الاستشارات"
+      "history": "سجل الاستشارات",
+      "flow": "Flow Designer"
     },
     "patients": "مرضاي",
     "patientsChildren": {

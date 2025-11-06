@@ -79,6 +79,10 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
           name: t("doctor.appointmentsChildren.history"),
           root: "/appointment/history",
         },
+        {
+          name: t("doctor.appointmentsChildren.flow"),
+          root: "/appointment/flow-edit",
+        },
       ],
     },
     {

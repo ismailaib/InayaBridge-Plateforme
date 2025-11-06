@@ -36,6 +36,6 @@
     "src/app/(protected)/ai/components/UI.jsx",
     "src/app/[locale]/(landing)/changelog/tsx.mdx",
     "src/app/[locale]/(landing)/changelog/page.tsx"
-  ],
+, "src/app/[locale]/(protected)/appointment/flow-edit"  ],
   "exclude": ["node_modules"]
 }

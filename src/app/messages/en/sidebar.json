@@ -11,7 +11,8 @@
       "all": "All Appointments",
       "create": "Create Appointment",
       "waiting": "Waiting Room",
-      "history": "Consultation History"
+      "history": "Consultation History",
+      "flow": "Flow Designer"
     },
     "patients": "My Patients",
     "patientsChildren": {

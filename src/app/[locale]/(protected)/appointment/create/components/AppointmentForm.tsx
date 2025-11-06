@@ -7,7 +7,6 @@ import { Service } from "@/api/services";
 import { Button } from "@/components/Button";
 import { DatePicker } from "@/components/DatePicker";
 import { Divider } from "@/components/Divider";
-import FileUpload from "@/components/FileUpload";
 import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
 import {
