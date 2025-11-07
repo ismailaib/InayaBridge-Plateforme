@@ -38,7 +38,7 @@ export default function FieldTypeSelector({ onSelect, onCancel }: FieldTypeSelec
       value: 'number', 
       label: 'Number', 
       icon: <Binary width={18}/>, 
-      description: 'Numeric input with min/max' 
+      description: 'Numeric input' 
     },
     { 
       value: 'date', 

@@ -158,7 +158,6 @@ export default function NodeDetails({
                             />
                         ) : (
                             <FieldConfigurator
-                                //@ts-ignore
                                 fieldType={newField.type}
                                 fieldData={newField}
                                 onChange={(data: FieldData) => setNewField(data as typeof newField)}

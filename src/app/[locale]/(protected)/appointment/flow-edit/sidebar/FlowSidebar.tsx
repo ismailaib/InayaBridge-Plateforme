@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/Button"
-import { CopySlash, SquareMousePointer, Layers } from "lucide-react"
+import { CopySlash, SquareMousePointer, Layers, ListPlus, DiamondPlus } from "lucide-react"
 import { Node } from "reactflow"
 import NodeDetails from "./components/NodeDetails"
 import TemplateModal from "./components/TemplateModal"
@@ -68,9 +68,10 @@ export default function FlowSidebar({
                 {!showAddFieldForm && (
                   <Button
                     onClick={() => setShowAddFieldForm(true)}
-                    variant="secondary"
-                    className="w-full"
+                    variant="primary"
+                    className="w-full flex flex-row items-center justify-center gap-2"
                   >
+                    <DiamondPlus width={18}/>
                     Ajouter un champ
                   </Button>
                 )}

@@ -16,6 +16,7 @@ import { Handle, Position } from "reactflow"
 import { Textarea } from "@/components/Textarea "
 import { DatePicker } from "@/components/DatePicker"
 import { Checkbox } from "@/components/Checkbox"
+import { Divider } from "@/components/Divider"
 
 export default function CustomNode({
   data,
@@ -24,16 +25,24 @@ export default function CustomNode({
     id: string
     title?: string
     label: string
+    description?: string
     onDelete?: (id: string) => void
     fields?: any[]
     isStartNode?: boolean
   }
 }) {
+
   return (
-    <Card className="p-3 w-64 relative border dark:border-gray-800">
+    <Card className="p-3 w-72 relative border dark:border-gray-800">
       <div className="flex justify-between items-center mb-2">
-        <h2 className="text-sm font-semibold truncate">{data.title || "Untitled"}</h2>
-        {!data.isStartNode && (
+        <div>
+          <h2 className="text-sm font-semibold truncate">{data.title || "Untitled"}</h2>
+          <p className="text-xs text-gray-500 mb-2">{data.description}</p>
+        </div>
+
+
+
+        {data.id !== "1" && (
           <Button
             variant="light"
             className="p-2 py-0"
@@ -44,7 +53,7 @@ export default function CustomNode({
         )}
       </div>
 
-      <p className="text-xs text-gray-500 mb-2">{data.label}</p>
+      <Divider />
 
       <div className="space-y-2">
         {data.fields?.map((field, index) => (
@@ -54,11 +63,11 @@ export default function CustomNode({
             </Label>
 
             {field.type === "text" && (
-              <Input id={field.name} name={field.name} placeholder={field.placeholder} className=" mt-1"/>
+              <Input id={field.name} name={field.name} placeholder={field.placeholder} className=" mt-1" />
             )}
 
             {field.type === "textarea" && (
-              <Textarea id={field.name} name={field.name} placeholder={field.placeholder} className=" mt-1"/>
+              <Textarea id={field.name} name={field.name} placeholder={field.placeholder} className=" mt-1" />
             )}
 
             {field.type === "number" && (
@@ -108,10 +117,10 @@ export default function CustomNode({
         ))}
       </div>
 
-      {!data.isStartNode && (
+      {data.id !== "1" && (
         <Handle type="target" position={Position.Left} className="!bg-blue-500" />
       )}
-      <Handle type="source" position={Position.Right} className="!bg-green-500" />
+      <Handle type="source" position={Position.Right} className="!bg-green-500" isConnectable={true} />
     </Card>
   )
 }

@@ -4,7 +4,7 @@ import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Button } from "@/components/Button"
 import { Upload, X, Plus } from "lucide-react"
-import { ChangeEvent, Key } from "react"
+import { ChangeEvent } from "react"
 
 interface FieldData {
     name: string;
@@ -16,7 +16,7 @@ interface FieldData {
 }
 
 interface FieldConfiguratorProps {
-    fieldType: 'text' | 'textarea' | 'number' | 'select';
+    fieldType: "text" | "textarea" | "number" | "select" | "checkbox" | "radio" | "date";
     fieldData: FieldData;
     onChange: (data: FieldData) => void;
     onSave: () => void;
@@ -177,9 +177,9 @@ export default function FieldConfigurator({ fieldType, fieldData, onChange, onSa
                         </label>
                     </div>
 
-                    {fieldData.options?.length > 0 && (
+                    {fieldData?.options && fieldData.options.length > 0 && (
                         <div className="space-y-2 max-h-48 overflow-y-auto">
-                            {fieldData.options.map((option, index) => (
+                            {fieldData?.options.map((option, index) => (
                                 <div key={index} className="flex gap-2">
                                     <Input
                                         value={option}

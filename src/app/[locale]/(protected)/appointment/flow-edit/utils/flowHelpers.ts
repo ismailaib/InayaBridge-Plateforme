@@ -9,20 +9,24 @@ export const addNewNode = (
 ) => {
   if (!rfInstance) return;
 
-  setNodes((nodes) => {
-    const id = (nodes.length + 1).toString();
-    const { x, y } = rfInstance.getViewport();
+  const id = crypto.randomUUID();
+  const { x, y } = rfInstance.getViewport();
 
+  setNodes((nodes) => {
+    const num = nodes.length + 1;
     const newNode: Node = {
       id,
       type: "custom",
       position: { x: -x + Math.random() * 200, y: -y + Math.random() * 200 },
-      data: { id, title: `Node ${id}`, label: "New Node", fields: [], onDelete: deleteNode },
+      data: { id, title: `Node ${num}`, label: "New Node", fields: [], onDelete: deleteNode },
     };
 
-    setSelectedNodeId(id);
     return [...nodes, newNode];
   });
+  // Note: Previously, setSelectedNodeId was called inside the setNodes updater function,
+  // which caused a maximum update depth exceeded error due to impure side effects in the updater.
+  // Moved it outside to eliminate the repeated state updates and ensure the updater remains pure.
+  setSelectedNodeId(id);
 };
 
 // Add from template
@@ -35,10 +39,10 @@ export const addNodeFromTemplate = (
 ) => {
   if (!rfInstance) return;
 
-  setNodes((nodes) => {
-    const id = (nodes.length + 1).toString();
-    const { x, y } = rfInstance.getViewport();
+  const id = crypto.randomUUID();
+  const { x, y } = rfInstance.getViewport();
 
+  setNodes((nodes) => {
     const allFields = template.sections.flatMap((section: any) =>
       section.fields.map((field: any) => ({ ...field, section: section.title }))
     );
@@ -50,9 +54,12 @@ export const addNodeFromTemplate = (
       data: { id, title: template.title, description: template.description, fields: allFields, onDelete: deleteNode },
     };
 
-    setSelectedNodeId(id);
     return [...nodes, newNode];
   });
+  // Note: Previously, setSelectedNodeId was called inside the setNodes updater function,
+  // which caused a maximum update depth exceeded error due to impure side effects in the updater.
+  // Moved it outside to eliminate the repeated state updates and ensure the updater remains pure.
+  setSelectedNodeId(id);
 };
 
 // Organize in one horizontal line respecting user order
