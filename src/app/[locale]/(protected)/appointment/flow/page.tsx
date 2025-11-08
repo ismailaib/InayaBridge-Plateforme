@@ -32,7 +32,7 @@ function AppointmentFlowContent() {
   }
 
   return (
-    <div className="pb-24 overflow-hidden p-4 md:p-8">
+    <div className="pb-24 overflow-hidden p-4 md:p-8 mb-24">
       <PatientInfoCard patient={patient} />
       <Divider />
       {currentStep && <DynamicFormStep step={currentStep} />}

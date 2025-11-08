@@ -2,22 +2,43 @@ import ActionsBar from "./components/ActionsBar";
 import MenuHeader from "./components/MenuHeader";
 
 interface FlowHeaderProps {
-  organizeNodes: () => void;
-  importFlow: (data: any) => void;
-  exportFlow: () => void;
-  onPreview: () => void;
+  flows: any[];
+  groupedFlows: { [groupId: string]: any[] };
+  nodes: any[];
+  selectedFlow: any;
+  onSelectFlow: (flow: any) => void;
+  onShowPreview: () => void;
+  onHidePreview: () => void;
   onSave: () => void;
+  isPreviewVisible: boolean;
+  organizeNodes: () => void;
+  onPrevGroup: () => void;
+  onNextGroup: () => void;
+  onCreateNew: () => void;
+  onImport: (data: any) => void;
+  onExport: () => void;
+  handleDeleteFlow: (flow: any) => void;
 }
 
-export default function FlowHeader({ organizeNodes, exportFlow, onPreview, onSave }: FlowHeaderProps) {
+export default function FlowHeader({  handleDeleteFlow , groupedFlows, selectedFlow, onSelectFlow, organizeNodes, isPreviewVisible, onShowPreview, onHidePreview, onSave, onCreateNew, onImport, onExport }: FlowHeaderProps) {
   return (
     <header className="flex items-center justify-between px-6 py-3 border-b dark:border-gray-800 bg-white dark:bg-gray-950">
-      <MenuHeader />
+      <MenuHeader
+        groupedFlows={groupedFlows}
+        selectedFlow={selectedFlow}
+        onSelectFlow={onSelectFlow}
+        onCreateNew={onCreateNew}
+        onImport={onImport}
+        onExport={onExport}
+        handleDeleteFlow={handleDeleteFlow}
+      />
       <ActionsBar
         organizeNodes={organizeNodes}
-        exportFlow={exportFlow}
-        onPreview={onPreview}
+        isPreviewVisible={isPreviewVisible}
+        onShowPreview={onShowPreview}
+        onHidePreview={onHidePreview}
         onSave={onSave}
+        handleTogglePreview={() => isPreviewVisible ? onHidePreview() : onShowPreview()}
       />
     </header>
   );

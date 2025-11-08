@@ -1,34 +1,53 @@
 'use client'
 
 import { Button } from "@/components/Button"
-import { X } from "lucide-react"
+import { X, Pencil, GripVertical } from "lucide-react"
 import { Card } from "@/components/Card"
 import { Field } from "./types"
+import { HTMLAttributes } from "react"
 
 interface FieldCardProps {
   field: Field
   onDelete?: () => void
+  onEdit?: () => void
+  dragHandleProps?: HTMLAttributes<HTMLDivElement>
 }
 
-export default function FieldCard({ field, onDelete }: FieldCardProps) {
+export default function FieldCard({ field, onDelete, onEdit, dragHandleProps }: FieldCardProps) {
   return (
     <Card className="p-2">
-      <div className="flex justify-between items-start">
-        <div className="flex-1">
-          <p className="text-sm font-bold">{field.label}</p>
-          <p className="text-xs text-gray-500">
-            {field.name} • {field.type}
-          </p>
+      <div className="flex items-start justify-between">
+        <div className="flex items-start gap-2 flex-1">
+          <div {...dragHandleProps} className="cursor-grab text-gray-500 pt-1">
+            <GripVertical width={14} />
+          </div>
+          <div>
+            <p className="text-sm font-bold">{field.label}</p>
+            <p className="text-xs text-gray-500">
+              {field.name} • {field.type}
+            </p>
+          </div>
         </div>
-        {onDelete && (
-          <Button
-            variant="secondary"
-            onClick={onDelete}
-            className="px-2 py-1 h-auto"
-          >
-            <X width={14} />
-          </Button>
-        )}
+        <div className="flex gap-1">
+          {onEdit && (
+            <Button
+              variant="secondary"
+              onClick={onEdit}
+              className="px-2 py-1 h-auto"
+            >
+              <Pencil width={14} />
+            </Button>
+          )}
+          {onDelete && (
+            <Button
+              variant="secondary"
+              onClick={onDelete}
+              className="px-2 py-1 h-auto"
+            >
+              <X width={14} />
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Placeholder */}

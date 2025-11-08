@@ -1,4 +1,6 @@
-import { Node, ReactFlowInstance, Edge } from "reactflow";
+
+import { createFlowTemplate, getTemplatesByDoctor } from "@/api/flow";
+import { Node, Edge, ReactFlowInstance } from "reactflow";
 
 // Add a new node
 export const addNewNode = (
@@ -23,9 +25,6 @@ export const addNewNode = (
 
     return [...nodes, newNode];
   });
-  // Note: Previously, setSelectedNodeId was called inside the setNodes updater function,
-  // which caused a maximum update depth exceeded error due to impure side effects in the updater.
-  // Moved it outside to eliminate the repeated state updates and ensure the updater remains pure.
   setSelectedNodeId(id);
 };
 
@@ -56,9 +55,6 @@ export const addNodeFromTemplate = (
 
     return [...nodes, newNode];
   });
-  // Note: Previously, setSelectedNodeId was called inside the setNodes updater function,
-  // which caused a maximum update depth exceeded error due to impure side effects in the updater.
-  // Moved it outside to eliminate the repeated state updates and ensure the updater remains pure.
   setSelectedNodeId(id);
 };
 
@@ -83,7 +79,6 @@ export const importFlow = (
   setEdges(data.edges);
 };
 
-// Export flow
 export const exportFlow = (nodes: Node[], edges: Edge[]) => {
   const json = JSON.stringify({ nodes, edges }, null, 2);
   const blob = new Blob([json], { type: "application/json" });
@@ -95,7 +90,72 @@ export const exportFlow = (nodes: Node[], edges: Edge[]) => {
   URL.revokeObjectURL(url);
 };
 
-// Preview flow
-export const previewFlow = (rfInstance: ReactFlowInstance | null) => {
-  if (rfInstance) console.log(rfInstance.toObject());
+export const fetchUserFlows = async () => {
+  try {
+    const stored = localStorage.getItem("user");
+    const parsed = stored ? JSON.parse(stored) : null;
+    const doctorId = parsed?.doctorProfile?.id;
+    if (!doctorId) return [];
+
+    const response = await getTemplatesByDoctor(doctorId);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch user flows:", error);
+    return [];
+  }
+};
+
+export async function createDefaultFlow() {
+  const stored = localStorage.getItem("user");
+  const parsed = stored ? JSON.parse(stored) : null;
+  const doctorId = parsed?.doctorProfile?.id;
+  if (!doctorId) return;
+
+  const payload = {
+    doctorProfileId: doctorId,
+    name: "New Flow Template",
+    schema: JSON.stringify({
+      description: "Automatically generated flow",
+      sections: [{ title: "Start Node", fields: [] }],
+    }),
+    active: true,
+  };
+
+  try {
+    const res = await createFlowTemplate(payload);
+    console.log("Default template created:", res.data);
+  } catch (err) {
+    console.error("Failed to create default template", err);
+  }
+};
+
+export function loadFlowToNodesEdges(flow: any, deleteNode: (id: string) => void): { nodes: Node[]; edges: Edge[] } {
+  const schema = JSON.parse(flow.schema);
+  const nodes: Node[] = schema.sections.map((section: any, index: number) => {
+    const id = index === 0 ? '1' : crypto.randomUUID();
+    return {
+      id,
+      type: "custom",
+      position: { x: 0, y: 0 },
+      data: {
+        id,
+        title: section.title,
+        description: schema.description,
+        fields: section.fields,
+        onDelete: deleteNode,
+        isStartNode: index === 0,
+      },
+    };
+  });
+
+  const edges: Edge[] = [];
+  for (let i = 0; i < nodes.length - 1; i++) {
+    edges.push({
+      id: `e${nodes[i].id}-${nodes[i + 1].id}`,
+      source: nodes[i].id,
+      target: nodes[i + 1].id,
+    });
+  }
+
+  return { nodes, edges };
 };

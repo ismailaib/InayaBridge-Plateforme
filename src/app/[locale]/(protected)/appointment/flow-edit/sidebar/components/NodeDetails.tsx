@@ -3,13 +3,18 @@
 import { Card } from "@/components/Card"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Node } from "reactflow";
 import FieldTypeSelector from "./FieldTypeSelector";
 import FieldConfigurator from "./FieldConfigurator";
 import FieldCard from "./FieldCard";
 import { Divider } from "@/components/Divider"
 import { Field } from "./types";
+import { DndContext, closestCorners } from "@dnd-kit/core";
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import React from "react";
 
 interface FieldData {
     name: string;
@@ -18,6 +23,20 @@ interface FieldData {
     min?: number;
     max?: number;
     options?: string[] | { label: string; value: string }[];
+}
+
+function SortableItem({ id, children }: { id: string; children: React.ReactNode }) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition: 'none',
+  } as React.CSSProperties; 
+  return (
+    <div ref={setNodeRef} style={style}>
+      {/* @ts-ignore */}
+      {React.cloneElement(children as React.ReactElement, { dragHandleProps: { ...attributes, ...listeners } })}
+    </div>
+  );
 }
 
 export default function NodeDetails({
@@ -32,7 +51,7 @@ export default function NodeDetails({
     onNodeDataChange: (nodeId: string, data: any) => void;
 }) {
     const [step, setStep] = useState('type')
-    const [newField, setNewField] = useState({
+    const [fieldData, setFieldData] = useState({
         name: "",
         label: "",
         type: "text" as "text" | "textarea" | "number" | "select" | "checkbox" | "radio" | "date",
@@ -41,37 +60,58 @@ export default function NodeDetails({
         max: undefined,
         options: [] as string[],
     })
+    const [isEditing, setIsEditing] = useState(false)
+    const [editIndex, setEditIndex] = useState<number | null>(null)
+
+    const fields = useMemo(() => node.data.fields || [], [node.data.fields])
+    const fieldIds = useMemo(() => fields.map((_: any, index: number) => `field-${index}`), [fields])
+
+    const isStartNode = node.id === '1'
 
     const handleSelectFieldType = (type: any) => {
-        setNewField({ ...newField, type })
+        setFieldData({ ...fieldData, type })
         setStep('config')
     }
 
-    const handleAddField = () => {
-        if (newField.name && newField.label) {
+    const handleSave = () => {
+        if (fieldData.name && fieldData.label) {
             const fieldToAdd: any = {
-                name: newField.name,
-                label: newField.label,
-                type: newField.type,
+                name: fieldData.name,
+                label: fieldData.label,
+                type: fieldData.type,
             }
 
-            if (newField.placeholder) fieldToAdd.placeholder = newField.placeholder
-            if (newField.type === 'number') {
-                if (newField.min !== undefined) fieldToAdd.min = newField.min
-                if (newField.max !== undefined) fieldToAdd.max = newField.max
+            if (fieldData.placeholder) fieldToAdd.placeholder = fieldData.placeholder
+            if (fieldData.type === 'number') {
+                if (fieldData.min !== undefined) fieldToAdd.min = fieldData.min
+                if (fieldData.max !== undefined) fieldToAdd.max = fieldData.max
             }
-            if (newField.type === 'select' && newField.options.length > 0) {
-                fieldToAdd.options = newField.options
+            if (fieldData.type === 'select' && fieldData.options.length > 0) {
+                fieldToAdd.options = fieldData.options
             }
 
-            const newFields = [...(node.data.fields || []), fieldToAdd]
+            let newFields
+            if (isEditing && editIndex !== null) {
+                newFields = [...fields]
+                newFields[editIndex] = fieldToAdd
+            } else {
+                newFields = [...fields, fieldToAdd]
+            }
             onNodeDataChange(node.id, { ...node.data, fields: newFields })
             handleCancel()
         }
     }
 
+    const handleEditField = (index: number) => {
+        setFieldData(fields[index])
+        setStep('config')
+        setShowAddFieldForm(true)
+        setIsEditing(true)
+        setEditIndex(index)
+    }
+
     const handleDeleteField = (index: number) => {
-        const newFields = [...(node.data.fields || [])]
+        const newFields = [...fields]
         newFields.splice(index, 1)
         onNodeDataChange(node.id, { ...node.data, fields: newFields })
     }
@@ -79,7 +119,7 @@ export default function NodeDetails({
     const handleCancel = () => {
         setShowAddFieldForm(false)
         setStep('type')
-        setNewField({
+        setFieldData({
             name: "",
             label: "",
             type: "text",
@@ -88,6 +128,8 @@ export default function NodeDetails({
             max: undefined,
             options: [],
         })
+        setIsEditing(false)
+        setEditIndex(null)
     }
 
     const handleInputChange = (e: { target: { name: any; value: any } }) => {
@@ -97,13 +139,25 @@ export default function NodeDetails({
         })
     }
 
+    const handleDragEnd = (event: any) => {
+        const { active, over } = event
+        if (!over || active.id === over.id) return
+        const oldIndex = fieldIds.indexOf(active.id)
+        const newIndex = fieldIds.indexOf(over.id)
+        const newFields = arrayMove(fields, oldIndex, newIndex)
+        onNodeDataChange(node.id, { ...node.data, fields: newFields })
+    }
+
+    if (isStartNode) {
+        return (
+            <Card className="p-4 space-y-4">
+                <p className="text-sm text-gray-500">This is the start node</p>
+            </Card>
+        )
+    }
+
     return (
         <Card className="p-4 space-y-4">
-            <div>
-                <h2 className="font-semibold text-sm">Nœud sélectionné</h2>
-                <div className="text-xs text-gray-500">ID : {node.id}</div>
-            </div>
-
             <div>
                 <Label htmlFor="title">Titre</Label>
                 <Input
@@ -128,17 +182,23 @@ export default function NodeDetails({
 
             <div className="space-y-2">
                 <h3 className="font-semibold text-sm">
-                    Champs ({node.data.fields?.length || 0})
+                    Champs ({fields?.length || 0})
                 </h3>
-                {node.data.fields && node.data.fields.length > 0 ? (
+                {fields.length > 0 ? (
                     <div className="space-y-2 max-h-64 overflow-y-auto">
-                        {node.data.fields.map((field: Field, index: number) => (
-                            <FieldCard
-                                key={index}
-                                field={field}
-                                onDelete={() => handleDeleteField(index)}
-                            />
-                        ))}
+                        <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+                            <SortableContext items={fieldIds} strategy={verticalListSortingStrategy}>
+                                {fields.map((field: Field, index: number) => (
+                                    <SortableItem key={fieldIds[index]} id={fieldIds[index]}>
+                                        <FieldCard
+                                            field={field}
+                                            onDelete={() => handleDeleteField(index)}
+                                            onEdit={() => handleEditField(index)}
+                                        />
+                                    </SortableItem>
+                                ))}
+                            </SortableContext>
+                        </DndContext>
                     </div>
                 ) : (
                     <p className="text-xs text-gray-400 text-center py-4">
@@ -158,11 +218,12 @@ export default function NodeDetails({
                             />
                         ) : (
                             <FieldConfigurator
-                                fieldType={newField.type}
-                                fieldData={newField}
-                                onChange={(data: FieldData) => setNewField(data as typeof newField)}
-                                onSave={handleAddField}
+                                fieldType={fieldData.type}
+                                fieldData={fieldData}
+                                onChange={(data: FieldData) => setFieldData(data as typeof fieldData)}
+                                onSave={handleSave}
                                 onCancel={handleCancel}
+                                isEdit={isEditing}
                             />
                         )}
                     </div>

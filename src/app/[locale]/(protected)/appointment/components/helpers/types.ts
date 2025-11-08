@@ -1,3 +1,5 @@
+import { AppointmentStatus, ConsultationType } from "@/api/appointments";
+
 export type CalendarViewType = "month" | "week" | "day" | "list";
 
 export interface CalendarAppointment {
@@ -12,13 +14,13 @@ export interface CalendarAppointment {
   notes?: string | undefined;
   patientProfileId: string;
   date_of_birth?: string;
-  consultationType?: string;
+  consultationType?: ConsultationType;
   motif?: string;
   timeSpentInWaitingRoom?: {
     enterTime: string;
     endTime: string;
   };
-  status: string;
+  status: AppointmentStatus;
   serviceId?: string;
   recurring: boolean;
   isUrgent: boolean;

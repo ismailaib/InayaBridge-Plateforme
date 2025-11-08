@@ -1,6 +1,6 @@
 "use client"
 
-import { deleteAppointment, getAppointmentById } from "@/api/appointments"
+import { Appointment, deleteAppointment, getAppointmentById } from "@/api/appointments"
 import { Employee } from "@/api/employees"
 import { getPatientById, TenantPatient } from "@/api/patients"
 import { Service } from "@/api/services"
@@ -20,8 +20,8 @@ import { AppointmentHeader } from "./details/AppointmentHeader"
 import { DateTimeSection } from "./details/DateTimeSection"
 import { LocationRecurringSection } from "./details/LocationRecurringSection"
 import { MotifNotesSection } from "./details/MotifNotesSection"
-import { PatientInfoSection } from "./details/PatientInfoSection"
-import { ServiceDoctorSection } from "./details/ServiceDoctorSection"
+import { PatientInfoSection } from "./details/PatientInfoSection" // Corrected import
+import ServiceDoctorSection from "./details/ServiceDoctorSection"
 
 type AppointmentDetailsProps = {
   appointment: CalendarAppointment | null
@@ -133,8 +133,8 @@ export const AppointmentDetails = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
-        <AppointmentHeader appointment={currentAppointment} onClose={onClose} onUpdate={handleUpdate}  />
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto"> 
+        <AppointmentHeader appointment={currentAppointment as Appointment} onClose={onClose} onUpdate={handleUpdate} />
         <Divider />
 
         <div className="space-y-4">
@@ -144,7 +144,6 @@ export const AppointmentDetails = ({
           <ServiceDoctorSection
             appointment={currentAppointment}
             services={services}
-            //@ts-ignore
             employees={employees}
             onUpdate={handleUpdate}
           />

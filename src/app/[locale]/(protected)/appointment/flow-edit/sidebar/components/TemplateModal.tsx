@@ -134,7 +134,7 @@ export default function TemplateModal({
                                                     onClose()
                                                 }}
                                             >
-                                                Utiliser ce modèle
+                                                Ajouter ce modèle
                                             </Button>
                                         </div>
                                     </Card>

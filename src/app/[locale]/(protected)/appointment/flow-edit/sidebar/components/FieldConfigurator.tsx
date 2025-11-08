@@ -21,9 +21,10 @@ interface FieldConfiguratorProps {
     onChange: (data: FieldData) => void;
     onSave: () => void;
     onCancel: () => void;
+    isEdit?: boolean;
 }
 
-export default function FieldConfigurator({ fieldType, fieldData, onChange, onSave, onCancel }: FieldConfiguratorProps) {
+export default function FieldConfigurator({ fieldType, fieldData, onChange, onSave, onCancel, isEdit = false }: FieldConfiguratorProps) {
     const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -56,16 +57,18 @@ export default function FieldConfigurator({ fieldType, fieldData, onChange, onSa
         onChange({ ...fieldData, options });
     };
 
+    const needsOptions = ['select', 'checkbox', 'radio'].includes(fieldType);
+
     const isValid =
         fieldData.name &&
         fieldData.label &&
-        (fieldType !== 'select' || (fieldData.options && fieldData.options.length > 0));
+        (!needsOptions || (fieldData.options && fieldData.options.length > 0));
 
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
                 <h3 className="font-semibold text-sm">
-                    Configuration du champ ({fieldType})
+                    {isEdit ? 'Modification' : 'Configuration'} du champ ({fieldType})
                 </h3>
             </div>
 
@@ -145,7 +148,7 @@ export default function FieldConfigurator({ fieldType, fieldData, onChange, onSa
                 </>
             )}
 
-            {fieldType === 'select' && (
+            {needsOptions && (
                 <div className="space-y-3">
                     <Label>Options *</Label>
 
@@ -202,7 +205,7 @@ export default function FieldConfigurator({ fieldType, fieldData, onChange, onSa
 
             <div className="flex gap-2">
                 <Button onClick={onSave} variant="primary" className="flex-1" disabled={!isValid}>
-                    Ajouter le champ
+                    {isEdit ? 'Modifier le champ' : 'Ajouter le champ'}
                 </Button>
                 <Button onClick={onCancel} variant="secondary" className="flex-1">
                     Annuler

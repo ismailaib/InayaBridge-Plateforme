@@ -1,118 +1,249 @@
 import { Card } from "@/components/Card"
 import { Button } from "@/components/Button"
-import { Input } from "@/components/Input"
-import { Label } from "@/components/Label"
-import { Trash } from "lucide-react"
-import { Handle, Position } from "reactflow"
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
+  SelectValue,
 } from "@/components/Select"
-import { Textarea } from "@/components/Textarea "
-import { Checkbox } from "@/components/Checkbox"
+import { Appointment, updateAppointment } from "@/api/appointments"
+import { Employee } from "@/api/employees"
+import { Service } from "@/api/services"
+import { CalendarAppointment } from "../helpers/types"
+import { Edit, Check, X, RotateCw } from "lucide-react"
+import { useState } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 
-export default function CustomNode({
-  data,
+
+export default function ServiceDoctorSection({
+  appointment,
+  services,
+  employees,
+  onUpdate,
 }: {
-  data: {
-    id: string
-    title?: string
-    label: string
-    onDelete?: (id: string) => void
-    fields?: any[]
-    isStartNode?: boolean
-  }
+  appointment: CalendarAppointment
+  services: Service[]
+  employees: Employee[]
+  onUpdate?: (updated: CalendarAppointment | null) => void
 }) {
+  const [localAppointment, setLocalAppointment] =
+    useState<CalendarAppointment>(appointment)
+  const [editingField, setEditingField] = useState<string | null>(null)
+  const [hoveredField, setHoveredField] = useState<string | null>(null)
+  const [tempServiceId, setTempServiceId] = useState<string>(
+    appointment.serviceId || ""
+  )
+  const [tempDoctorId, setTempDoctorId] = useState<string>(
+    appointment.doctorProfileId || ""
+  )
+  const [loading, setLoading] = useState(false)
+
+  const handleSave = async (field: "serviceId" | "doctorProfileId") => {
+    setLoading(true)
+    try {
+      const updateData: Partial<Appointment> = {}
+      if (field === "serviceId") {
+        updateData.serviceId = tempServiceId
+      } else {
+        updateData.doctorProfileId = tempDoctorId
+      }
+      const res = await updateAppointment(localAppointment.id, updateData)
+      setLocalAppointment((prev) => ({ ...prev, ...updateData }))
+      onUpdate?.({ ...localAppointment, ...updateData })
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoading(false)
+      setEditingField(null)
+    }
+  }
+
   return (
-    <Card className="p-3 w-64 relative border dark:border-gray-800">
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="text-sm font-semibold truncate">{data.title || "Untitled"}</h2>
-        {!data.isStartNode && (
-          <Button
-            variant="light"
-            className="p-2 py-0"
-            onClick={() => data.onDelete?.(data.id)}
-          >
-            <Trash width={12} />
-          </Button>
-        )}
-      </div>
-
-      <p className="text-xs text-gray-500 mb-2">{data.label}</p>
-
-      <div className="space-y-2">
-        {data.fields?.map((field, index) => (
-          <div key={index}>
-            <Label htmlFor={field.name} className="text-xs">{field.label}</Label>
-
-            {field.type === 'text' && (
-              <Input id={field.name} name={field.name} placeholder={field.placeholder} />
-            )}
-
-            {field.type === 'textarea' && (
-              <Textarea id={field.name} name={field.name} placeholder={field.placeholder} />
-            )}
-
-            {field.type === 'number' && (
-              <Input
-                id={field.name}
-                name={field.name}
-                type="number"
-                placeholder={field.placeholder}
-                min={field.min}
-                max={field.max}
-              />
-            )}
-
-            {field.type === 'date' && (
-              <Input
-                id={field.name}
-                name={field.name}
-                type="date"
-                placeholder={field.placeholder}
-              />
-            )}
-
-            {field.type === 'select' && (
-              <Select>
-                <SelectTrigger className="w-full">
-                  {field.placeholder || "Select an option"}
-                </SelectTrigger>
-                <SelectContent>
-                  {field.options?.map((opt: string, i: number) => (
-                    <SelectItem key={i} value={opt}>
-                      {opt}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-
-            {(field.type === 'checkbox' || field.type === 'radio') && field.options && (
-              <div className="flex flex-col space-y-1 mt-1">
-                {field.options.map((opt: string, i: number) => ( 
-                  <div key={i}>
-                      <Checkbox
-                        type={field.type}
-                        name={field.name}
-                        value={opt}
-                        className="accent-blue-500"
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Card className="p-4">
+        <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-50 mb-2">
+          Service
+        </h4>
+        <div
+          className="relative group"
+          onMouseEnter={() => setHoveredField("service")}
+          onMouseLeave={() => setHoveredField(null)}
+        >
+          <AnimatePresence mode="wait">
+            {editingField === "service" ? (
+              <motion.div
+                key="service-edit"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+                className="flex items-center gap-2"
+              >
+                <Select
+                  value={tempServiceId}
+                  onValueChange={setTempServiceId}
+                  disabled={loading}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select service" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {services.map((service) => (
+                      <SelectItem key={service.id} value={service.id}>
+                        {service.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  onClick={() => handleSave("serviceId")}
+                  disabled={loading}
+                  variant="ghost"
+                  className="p-1 h-auto"
+                >
+                  {loading ? (
+                    <RotateCw size={16} className="animate-spin" />
+                  ) : (
+                    <Check size={16} />
+                  )}
+                </Button>
+                <Button
+                  onClick={() => setEditingField(null)}
+                  variant="ghost"
+                  className="p-1 h-auto text-red-500"
+                >
+                  <X size={16} />
+                </Button>
+              </motion.div>
+            ) : (
+              <motion.p
+                key="service-display"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+                className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-1"
+              >
+                {services.find((s) => s.id === localAppointment.serviceId)
+                  ?.name || "N/A"}
+                <AnimatePresence>
+                  {hoveredField === "service" && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -5 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -5 }}
+                      transition={{ duration: 0.15, ease: "easeOut" }}
+                    >
+                      <Edit
+                        size={14}
+                        className="ml-1 cursor-pointer text-gray-400 hover:text-gray-600"
+                        onClick={() => {
+                          setEditingField("service")
+                          setTempServiceId(localAppointment.serviceId || "")
+                        }}
                       />
-                      {opt}
-                  </div>
-                ))}
-              </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.p>
             )}
-          </div>
-        ))}
-      </div>
+          </AnimatePresence>
+        </div>
+      </Card>
 
-      {!data.isStartNode && (
-        <Handle type="target" position={Position.Left} className="!bg-blue-500" />
-      )}
-      <Handle type="source" position={Position.Right} className="!bg-green-500" />
-    </Card>
+      <Card className="p-4">
+        <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-50 mb-2">
+          Doctor
+        </h4>
+        <div
+          className="relative group"
+          onMouseEnter={() => setHoveredField("doctor")}
+          onMouseLeave={() => setHoveredField(null)}
+        >
+          <AnimatePresence mode="wait">
+            {editingField === "doctor" ? (
+              <motion.div
+                key="doctor-edit"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+                className="flex items-center gap-2"
+              >
+                <Select
+                  value={tempDoctorId}
+                  onValueChange={setTempDoctorId}
+                  disabled={loading}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select doctor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {employees.map((employee) => (
+                      <SelectItem key={employee.id} value={employee.id}>
+                        {employee.firstName} {employee.lastName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  onClick={() => handleSave("doctorProfileId")}
+                  disabled={loading}
+                  variant="ghost"
+                  className="p-1 h-auto"
+                >
+                  {loading ? (
+                    <RotateCw size={16} className="animate-spin" />
+                  ) : (
+                    <Check size={16} />
+                  )}
+                </Button>
+                <Button
+                  onClick={() => setEditingField(null)}
+                  variant="ghost"
+                  className="p-1 h-auto text-red-500"
+                >
+                  <X size={16} />
+                </Button>
+              </motion.div>
+            ) : (
+              <motion.p
+                key="doctor-display"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+                className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-1"
+              >
+                {employees.find((e) => e.id === localAppointment.doctorProfileId)
+                  ?.firstName || "N/A"}{" "}
+                {employees.find((e) => e.id === localAppointment.doctorProfileId)
+                  ?.lastName || ""}
+                <AnimatePresence>
+                  {hoveredField === "doctor" && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -5 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -5 }}
+                      transition={{ duration: 0.15, ease: "easeOut" }}
+                    >
+                      <Edit
+                        size={14}
+                        className="ml-1 cursor-pointer text-gray-400 hover:text-gray-600"
+                        onClick={() => {
+                          setEditingField("doctor")
+                          setTempDoctorId(localAppointment.doctorProfileId || "")
+                        }}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </div>
+      </Card>
+    </div>
   )
 }
