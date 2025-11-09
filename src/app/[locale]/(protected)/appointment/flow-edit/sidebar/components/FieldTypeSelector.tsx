@@ -67,7 +67,7 @@ export default function FieldTypeSelector({ onSelect, onCancel }: FieldTypeSelec
         {fieldTypes.map((fieldType) => (
           <Card
             key={fieldType.value}
-            className="p-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors border-2 hover:border-blue-500"
+            className="p-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 dark:bg-gray-950 transition-colors border-2 "
             onClick={() => onSelect(fieldType.value)}
           >
             <div className="mb-2">{fieldType.icon}</div>

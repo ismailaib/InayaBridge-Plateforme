@@ -18,6 +18,7 @@ export interface FlowTemplateDto {
   schema: string
   version: number
   active: boolean
+  createdAt: number
 }
 
 // =========================
@@ -39,6 +40,13 @@ export const getTemplateById = (templateId: string) => {
   return api.get<FlowTemplateDto>(`/flows/template/${templateId}`)
 }
 
+// Update flow name
+export const updateFlowName = (groupId: string, newName: string) => {
+  return api.patch<FlowTemplateDto>(`/flows/template/${groupId}/name`, null, {
+    params: { newName },
+  });
+}
+
 // Delete template (and all its versions)
 export const deleteFlowTemplate = (templateId: string) => {
   return api.delete(`/flows/template/${templateId}`)
@@ -53,3 +61,4 @@ export interface CreateFlowInstanceDto {
 export const createFlowInstance = (data: CreateFlowInstanceDto) => {
   return api.post<string>("/flows/instance", data)
 }
+

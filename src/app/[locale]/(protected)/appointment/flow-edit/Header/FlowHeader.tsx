@@ -7,6 +7,7 @@ interface FlowHeaderProps {
   nodes: any[];
   selectedFlow: any;
   onSelectFlow: (flow: any) => void;
+  onFlowUpdate: (flow: any) => void;
   onShowPreview: () => void;
   onHidePreview: () => void;
   onSave: () => void;
@@ -20,13 +21,14 @@ interface FlowHeaderProps {
   handleDeleteFlow: (flow: any) => void;
 }
 
-export default function FlowHeader({  handleDeleteFlow , groupedFlows, selectedFlow, onSelectFlow, organizeNodes, isPreviewVisible, onShowPreview, onHidePreview, onSave, onCreateNew, onImport, onExport }: FlowHeaderProps) {
+export default function FlowHeader({ handleDeleteFlow, groupedFlows, selectedFlow, onSelectFlow, onFlowUpdate, organizeNodes, isPreviewVisible, onShowPreview, onHidePreview, onSave, onCreateNew, onImport, onExport }: FlowHeaderProps) {
   return (
     <header className="flex items-center justify-between px-6 py-3 border-b dark:border-gray-800 bg-white dark:bg-gray-950">
       <MenuHeader
         groupedFlows={groupedFlows}
         selectedFlow={selectedFlow}
         onSelectFlow={onSelectFlow}
+        onFlowUpdate={onFlowUpdate}
         onCreateNew={onCreateNew}
         onImport={onImport}
         onExport={onExport}

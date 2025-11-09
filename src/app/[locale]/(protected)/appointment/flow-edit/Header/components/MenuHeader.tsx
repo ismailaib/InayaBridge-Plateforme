@@ -5,12 +5,13 @@ import { useRef, useState } from "react";
 import { FlowTemplateDto, SchemasModal } from "./SchemasModal";
 import { HistoryDrawer } from "./HistoryDrawer";
 import { Badge } from "@/components/Badge";
-
+import { FlowNameField } from "./FlowNameField";
 
 interface MenuHeaderProps {
   groupedFlows: { [groupId: string]: FlowTemplateDto[] };
   selectedFlow: FlowTemplateDto | null;
   onSelectFlow: (flow: FlowTemplateDto) => void;
+  onFlowUpdate: (flow: FlowTemplateDto) => void;
   onCreateNew: () => void;
   onImport: (data: any) => void;
   onExport: () => void;
@@ -21,6 +22,7 @@ export default function MenuHeader({
   groupedFlows,
   selectedFlow,
   onSelectFlow,
+  onFlowUpdate,
   onCreateNew,
   onImport,
   onExport,
@@ -29,6 +31,9 @@ export default function MenuHeader({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+
+  const parentFlowsCount = Object.keys(groupedFlows).length;
+  const canCreate = parentFlowsCount < 10;
 
   const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -49,7 +54,7 @@ export default function MenuHeader({
   return (
     <div className="flex flex-row items-center gap-1">
       <h1 className="text-lg font-semibold flex items-center gap-1">
-        {selectedFlow?.name || "Schéma de flux"}
+        <FlowNameField selectedFlow={selectedFlow} onUpdateFlow={onFlowUpdate}/>
         <Badge variant="neutral">v{selectedFlow?.version || 0}</Badge>
       </h1>
 
@@ -65,13 +70,21 @@ export default function MenuHeader({
           <DropdownMenuSeparator />
 
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={onCreateNew} className="flex flex-row items-center gap-2">
-              <FilePlus width={18} />
-              Créer un nouveau
-            </DropdownMenuItem>
+            {/* <Tooltip className="w-[100%]" content={canCreate ? "" : "Maximum 10 parent flows reached"}> */}
+              <div className="w-full">
+                <DropdownMenuItem
+                  onClick={canCreate ? onCreateNew : undefined}
+                  disabled={!canCreate}
+                  className="flex flex-row w-full items-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+                >
+                  <FilePlus width={18} />
+                  Créer un nouveau
+                </DropdownMenuItem>
+              </div>
+            {/* </Tooltip> */}
 
             <DropdownMenuItem
-              onSelect={(e: { preventDefault: () => void; }) => {
+              onSelect={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
                 setModalOpen(true);
               }}
@@ -86,7 +99,7 @@ export default function MenuHeader({
 
           <DropdownMenuGroup>
             <DropdownMenuItem
-              onSelect={(e: { preventDefault: () => void; }) => {
+              onSelect={(e: { preventDefault: () => void }) => {
                 e.preventDefault();
                 setDrawerOpen(true);
               }}

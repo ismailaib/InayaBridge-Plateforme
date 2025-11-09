@@ -185,7 +185,7 @@ export default function NodeDetails({
                     Champs ({fields?.length || 0})
                 </h3>
                 {fields.length > 0 ? (
-                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                    <div className="space-y-2 max-h-64 overflow-y-auto overflow-x-hidden">
                         <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
                             <SortableContext items={fieldIds} strategy={verticalListSortingStrategy}>
                                 {fields.map((field: Field, index: number) => (

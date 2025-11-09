@@ -15,7 +15,7 @@ interface FieldCardProps {
 
 export default function FieldCard({ field, onDelete, onEdit, dragHandleProps }: FieldCardProps) {
   return (
-    <Card className="p-2">
+    <Card className="p-2 dark:bg-gray-950">
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-2 flex-1">
           <div {...dragHandleProps} className="cursor-grab text-gray-500 pt-1">

@@ -6,7 +6,7 @@ import { Node, Edge, ReactFlowInstance } from "reactflow";
 export const addNewNode = (
   rfInstance: ReactFlowInstance | null,
   setNodes: React.Dispatch<React.SetStateAction<Node[]>>,
-  setSelectedNodeId: React.Dispatch<React.SetStateAction<string | null>>,
+  setSelectedNodeId: React.Dispatch<React.SetStateAction<string>>,
   deleteNode: (id: string) => void
 ) => {
   if (!rfInstance) return;
