@@ -30,6 +30,11 @@ export const createFlowTemplate = (data: FlowTemplateCreateDTO) => {
   return api.post<FlowTemplateDto>("/flows/template", data)
 }
 
+// Restore a flow to latest (creates new version)
+export const restoreFlowTemplate = (templateId: string) => {
+  return api.post<FlowTemplateDto>(`/flows/template/${templateId}/restore`);
+}
+
 // Get all templates for a doctor
 export const getTemplatesByDoctor = (doctorId: string) => {
   return api.get<FlowTemplateDto[]>(`/flows/template/doctor/${doctorId}`)

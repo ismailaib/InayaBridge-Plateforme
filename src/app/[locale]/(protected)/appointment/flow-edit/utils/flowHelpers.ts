@@ -57,14 +57,103 @@ export const addNodeFromTemplate = (
   });
   setSelectedNodeId(id);
 };
+// Organize all nodes in one horizontal line based on dependencies.
+// Uses topological sort (Kahn) for nodes that appear in edges (linked).
+// Nodes that never appear in any edge are appended at the end (preserving original order).
+export const organizeNodes = (
+  nodes: Node[],
+  edges: Edge[],
+  setNodes: React.Dispatch<React.SetStateAction<Node[]>>,
+  spacing = 350,
+  y = 150
+) => {
+  if (nodes.length === 0) return;
 
-// Organize in one horizontal line respecting user order
-export const organizeNodes = (setNodes: React.Dispatch<React.SetStateAction<Node[]>>, spacing = 350, y = 150) => {
-  setNodes((nodes) => {
-    const sorted = [...nodes].sort((a, b) => a.position.x - b.position.x);
-    return sorted.map((node, i) => ({ ...node, position: { x: i * spacing, y } }));
+  // Quick path: no edges -> simple left-to-right by original order
+  if (!edges || edges.length === 0) {
+    setNodes(current =>
+      current.map((node, i) => ({
+        ...node,
+        position: { x: i * spacing, y },
+      }))
+    );
+    return;
+  }
+
+  // Build adjacency and indegree for nodes that appear in edges
+  const adj = new Map<string, Set<string>>();    // source -> Set(target)
+  const indegree = new Map<string, number>();    // nodeId -> indegree
+  const linkedSet = new Set<string>();           // nodes that appear in any edge
+
+  // initialize maps for all nodes
+  nodes.forEach(n => {
+    adj.set(n.id, new Set());
+    indegree.set(n.id, 0);
   });
+
+  // fill adjacency / indegree and linkedSet using edges
+  edges.forEach(e => {
+    // ensure entries exist (defensive)
+    if (!adj.has(e.source)) adj.set(e.source, new Set());
+    if (!indegree.has(e.target)) indegree.set(e.target, 0);
+
+    // add edge
+    adj.get(e.source)!.add(e.target);
+    indegree.set(e.target, (indegree.get(e.target) || 0) + 1);
+
+    // mark source/target as linked
+    linkedSet.add(e.source);
+    linkedSet.add(e.target);
+  });
+
+  // Kahn's algorithm for topological ordering limited to linked nodes
+  const queue: string[] = [];
+  // push linked nodes with indegree 0
+  linkedSet.forEach(id => {
+    if ((indegree.get(id) || 0) === 0) queue.push(id);
+  });
+
+  const topo: string[] = [];
+  while (queue.length > 0) {
+    const id = queue.shift()!;
+    topo.push(id);
+
+    const children = adj.get(id);
+    if (!children) continue;
+    children.forEach(childId => {
+      // only process child if it's part of linkedSet
+      if (!linkedSet.has(childId)) return;
+      indegree.set(childId, (indegree.get(childId) || 0) - 1);
+      if ((indegree.get(childId) || 0) === 0) queue.push(childId);
+    });
+  }
+
+  // If there are linked nodes not included in topo (cycle or disconnected within linked),
+  // include them preserving original nodes order (but after topo).
+  const linkedNotInTopo = nodes
+    .map(n => n.id)
+    .filter(id => linkedSet.has(id) && !topo.includes(id));
+
+  // Build final order:
+  // 1. topo (topological for linked nodes)
+  // 2. remaining linked nodes not in topo (preserve original order)
+  // 3. unlinked nodes (nodes that never appear in any edge), preserve original order
+  const unlinkedNodes = nodes.filter(n => !linkedSet.has(n.id)).map(n => n.id);
+  const finalOrder = [...topo, ...linkedNotInTopo, ...unlinkedNodes];
+
+  // Apply horizontal positions according to finalOrder
+  setNodes(current =>
+    current.map(node => {
+      const index = finalOrder.indexOf(node.id);
+      if (index === -1) return node; // shouldn't happen but safe fallback
+      return {
+        ...node,
+        position: { x: index * spacing, y },
+      };
+    })
+  );
 };
+
 
 // Import flow
 export const importFlow = (
@@ -132,7 +221,7 @@ export async function createDefaultFlow() {
 export function loadFlowToNodesEdges(flow: any, deleteNode: (id: string) => void): { nodes: Node[]; edges: Edge[] } {
   const schema = JSON.parse(flow.schema);
   const nodes: Node[] = schema.sections.map((section: any, index: number) => {
-    const id = index === 0 ? '1' : crypto.randomUUID();
+    const id = section.id || (index === 0 ? '1' : crypto.randomUUID());
     return {
       id,
       type: "custom",

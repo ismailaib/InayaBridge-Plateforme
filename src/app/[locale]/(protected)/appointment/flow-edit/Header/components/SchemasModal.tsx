@@ -11,6 +11,8 @@ import { CircleOff, Copy, FileClock, FileDown, PencilRuler, Trash2, X } from "lu
 import { useMemo, useState } from "react"
 import FlowPreview from "./FlowPreview"
 import { AnimatePresence, motion } from "framer-motion"
+import { HistoryDrawer } from "./HistoryDrawer"
+import { showToast } from "@/app/[locale]/(protected)/dashboard/hooks/utils"
 
 export interface FlowTemplateDto {
   groupId: string
@@ -41,11 +43,7 @@ export function SchemasModal({
   onOpenChange,
   groupedFlows,
   onSelectFlow,
-  onViewFlow,
   handleDeleteFlow,
-  onExportFlow,
-  onDuplicateFlow,
-  onShowHistory,
 }: SchemasModalProps) {
   const [search, setSearch] = useState("")
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -88,6 +86,7 @@ export function SchemasModal({
     if (selectedFlow && confirmName === selectedFlow.name) {
       handleDeleteFlow?.(selectedFlow)
       setConfirmOpen(false)
+      showToast('success', 'Succès', "Flow supprimé avec succès.");
     }
   }
 
@@ -96,7 +95,11 @@ export function SchemasModal({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-6xl max-h-[90vh] min-h-[400px] flex flex-col">
           <DialogHeader className="flex flex-row items-center justify-between">
-            <DialogTitle>Mes schémas disponibles</DialogTitle>
+            <div>
+              <DialogTitle>Mes schémas disponibles</DialogTitle>
+              <p className="text-gray-600 text-sm">Description</p>
+            </div>
+
             <Button variant="light" onClick={() => onOpenChange(false)}>
               <X width={18} />
             </Button>
@@ -135,7 +138,7 @@ export function SchemasModal({
                       key={flow.groupId}
                       layout
                       initial={{ opacity: 0 }}
-                      animate={{ opacity: 1}}
+                      animate={{ opacity: 1 }}
                       transition={{ delay: index * 0.05 }}
                     >
                       <Card
@@ -156,19 +159,17 @@ export function SchemasModal({
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent className="min-w-[180px]">
-                                <DropdownMenuItem onClick={() => onViewFlow?.(flow)}>
+                                <DropdownMenuItem onClick={() => handleSelectFlow(flow)}>
                                   <PencilRuler className="size-4 mr-2" /> Modifier
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => onShowHistory?.(flow)}>
-                                  <FileClock className="size-4 mr-2" /> Historique
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => onExportFlow?.(flow)}>
+                                {/* TODO . */}
+                                {/* <DropdownMenuItem onClick={() => onExportFlow?.(flow)}>
                                   <FileDown className="size-4 mr-2" /> Exporter
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => onDuplicateFlow?.(flow)} disabled={totalParents == parentLimit} className={` ${totalParents == parentLimit ? "cursor-not-allowed" : ""}`}>
                                   <Copy className="size-4 mr-2" /> Dupliquer
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator />
+                                </DropdownMenuItem>*/}
+                                <DropdownMenuSeparator /> 
                                 <DropdownMenuItem onClick={() => handleConfirmDelete(flow)} className="text-red-500">
                                   <Trash2 className="size-4 mr-2" /> Supprimer
                                 </DropdownMenuItem>
@@ -209,10 +210,10 @@ export function SchemasModal({
           </div>
 
         </DialogContent>
-      </Dialog>
+      </Dialog >
 
       {/* Delete confirmation modal */}
-      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen} >
         <DialogContent className="max-w-md">
           <DialogClose asChild>
             <Button

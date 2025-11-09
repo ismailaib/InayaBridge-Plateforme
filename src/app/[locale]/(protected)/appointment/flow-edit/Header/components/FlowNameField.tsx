@@ -3,6 +3,7 @@ import { FlowTemplateDto } from "@/api/flow";
 import { updateFlowName } from "@/api/flow";
 import { Loader2, Check, Save } from "lucide-react";
 import { Button } from "@/components/Button";
+import { showToast } from "@/app/[locale]/(protected)/dashboard/hooks/utils";
 
 interface FlowNameFieldProps {
     selectedFlow: FlowTemplateDto | null;
@@ -33,11 +34,12 @@ export function FlowNameField({ selectedFlow, onUpdateFlow }: FlowNameFieldProps
         try {
             const updated = await updateFlowName(selectedFlow.groupId, name);
             onUpdateFlow?.(updated.data);
-
             setDone(true);
             setTimeout(() => setDone(false), 2000);
+            showToast('success', 'Succès', "Nom du schéma mis à jour avec succès.");
         } catch (err) {
             console.error("Failed to update flow name", err);
+            showToast('error', 'Erreur', "Erreur lors de la mise à jour du nom du schéma.");
         } finally {
             const elapsed = Date.now() - startTime;
             const remaining = 2000 - elapsed;

@@ -33,6 +33,7 @@ import { Input } from '@/components/Input'
 import { Label } from '@/components/Label'
 import { CheckboxRemove } from '@/components/CheckboxRemove'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { showToast } from '@/app/[locale]/(protected)/dashboard/hooks/utils'
 
 interface CSVColumnSelectorProps {
   isOpen: boolean
@@ -146,6 +147,7 @@ export default function CSVColumnSelector({
       setEditedValues(new Map())
       setSeparator(' ')
       setShowEditMode(false)
+      showToast('success', 'Succès', "Select Mise à jour avec succès.");
     }
   }
 

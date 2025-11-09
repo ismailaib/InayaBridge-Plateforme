@@ -6,6 +6,7 @@ import { FlowTemplateDto, SchemasModal } from "./SchemasModal";
 import { HistoryDrawer } from "./HistoryDrawer";
 import { Badge } from "@/components/Badge";
 import { FlowNameField } from "./FlowNameField";
+import { showToast } from "@/app/[locale]/(protected)/dashboard/hooks/utils";
 
 interface MenuHeaderProps {
   groupedFlows: { [groupId: string]: FlowTemplateDto[] };
@@ -48,6 +49,7 @@ export default function MenuHeader({
         }
       };
       reader.readAsText(file);
+      showToast('success', 'Succès', "Fichier importé avec succès.");
     }
   };
 

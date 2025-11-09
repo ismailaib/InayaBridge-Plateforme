@@ -76,11 +76,18 @@ export const handleAddFromTemplate = (template: any, actions: FlowActions) => {
 };
 
 export const handleSave = async (state: FlowState, actions: FlowActions) => {
-  const { nodes, selectedFlow } = state;
+  const { nodes, edges, selectedFlow } = state;
   const { setFlows, setGroupedFlows, setSelectedFlow } = actions;
   
   try {
-    const saved = await saveFlowTemplate(nodes, selectedFlow?.id, selectedFlow?.name);
+    // Pass all 4 parameters to save
+    const saved = await saveFlowTemplate(
+      nodes, 
+      edges,
+      selectedFlow?.id,
+      selectedFlow?.name
+    );
+    
     if (saved) {
       const newFlows = await fetchUserFlows();
       const newGroups = groupFlowsByGroupId(newFlows);
@@ -96,8 +103,11 @@ export const handleSave = async (state: FlowState, actions: FlowActions) => {
   }
 };
 
-export const handleOrganize = (actions: FlowActions) => {
-  organizeNodes(actions.setNodes);
+// Updated to pass nodes and edges
+export const handleOrganize = (state: FlowState, actions: FlowActions) => {
+  const { nodes, edges } = state;
+  const { setNodes } = actions;
+  organizeNodes(nodes, edges, setNodes);
 };
 
 export const handleImport = (data: any, actions: FlowActions) => {
@@ -229,6 +239,7 @@ const getLatestFlowFromGroups = (groups: { [groupId: string]: any[] }): any => {
   return latestGroup.sort((a, b) => b.version - a.version)[0];
 };
 
+// Updated loadFlow to pass nodes and edges to organizeNodes
 const loadFlow = (
   flow: any,
   setSelectedFlow: Dispatch<SetStateAction<any>>,
@@ -240,5 +251,7 @@ const loadFlow = (
   const { nodes: loadedNodes, edges: loadedEdges } = loadFlowToNodesEdges(flow, deleteNode);
   setNodes(loadedNodes);
   setEdges(loadedEdges);
-  organizeNodes(setNodes);
+  
+  // Organize nodes based on their connections
+  organizeNodes(loadedNodes, loadedEdges, setNodes);
 };

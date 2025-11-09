@@ -3,9 +3,10 @@ import { Button } from "@/components/Button";
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerBody } from "@/components/Drawer";
 import { format } from "date-fns";
 import { Divider } from "@/components/Divider";
-import { ArrowRightLeft, Fullscreen, Trash2, XCircle } from "lucide-react";
+import { ArrowRightLeft, Fullscreen, GitPullRequestCreateArrow, PencilRuler, Replace, ScanEye, Trash2, XCircle } from "lucide-react";
 import { FlowTemplateDto } from "./SchemasModal";
-import { deleteFlowTemplate } from "@/api/flow";
+import { deleteFlowTemplate, restoreFlowTemplate } from "@/api/flow";
+import { showToast } from "@/app/[locale]/(protected)/dashboard/hooks/utils";
 
 interface HistoryDrawerProps {
   open: boolean;
@@ -27,7 +28,6 @@ export function HistoryDrawer({
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [deletedIds, setDeletedIds] = useState(new Set<string>());
 
-  // Derive localVersions from groupedFlows[selectedFlow.groupId]
   const localVersions = useMemo(() => {
     if (!selectedFlow || !groupedFlows[selectedFlow.groupId]) return [];
     return [...groupedFlows[selectedFlow.groupId]].sort((a, b) => b.version - a.version);
@@ -41,16 +41,37 @@ export function HistoryDrawer({
 
   const handleSelectFlow = (flow: FlowTemplateDto) => {
     onSelectFlow(flow);
-    onOpenChange(false);
   };
+  const handleRestoreFlow = async (flow: FlowTemplateDto) => {
+    try {
+      const { data: restoredFlow } = await restoreFlowTemplate(flow.id);
 
+      setDeletedIds((prev) => new Set([...prev]));
+
+      onSelectFlow(restoredFlow);
+
+      if (groupedFlows[restoredFlow.groupId]) {
+        groupedFlows[restoredFlow.groupId] = [
+          restoredFlow,
+          ...groupedFlows[restoredFlow.groupId],
+        ].sort((a, b) => b.version - a.version);
+      }
+      onOpenChange(false);
+      showToast('success', 'Succès', "Flow restauré avec succès.");
+
+    } catch (err) {
+      console.error("Error restoring flow:", err);
+      showToast('error', 'Erreur', "Erreur lors de la restauration du flow.");
+    }
+  };
   const handleDelete = async (flow: FlowTemplateDto) => {
     if (confirmDelete === flow.id) {
       try {
         await deleteFlowTemplate(flow.id);
         setDeletedIds((prev) => new Set([...prev, flow.id]));
         onFlowDeleted?.(flow.id);
-
+        showToast('success', 'Succès', "Flow supprimé avec succès.");
+       
         // Auto-select the latest remaining flow if the deleted one was selected
         const updatedVersions = localVersions.filter(v => v.id !== flow.id);
         if (selectedFlow?.id === flow.id) {
@@ -76,6 +97,7 @@ export function HistoryDrawer({
       <DrawerContent className="sm:max-w-lg">
         <DrawerHeader>
           <DrawerTitle>Historique du schéma: {selectedFlow?.name}</DrawerTitle>
+          <p className="text-gray-600 text-sm">Description</p>
         </DrawerHeader>
 
         <DrawerBody className="py-4">
@@ -91,13 +113,12 @@ export function HistoryDrawer({
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2.5">
                 <div
-                  className={`h-2.5 rounded-full transition-all ${
-                    displayedVersions.length >= 15
-                      ? "bg-red-500"
-                      : displayedVersions.length >= 12
+                  className={`h-2.5 rounded-full transition-all ${displayedVersions.length >= 15
+                    ? "bg-red-500"
+                    : displayedVersions.length >= 12
                       ? "bg-yellow-500"
                       : "bg-green-500"
-                  }`}
+                    }`}
                   style={{ width: `${(displayedVersions.length / 15) * 100}%` }}
                 ></div>
               </div>
@@ -126,20 +147,37 @@ export function HistoryDrawer({
                     </div>
 
                     <div className="flex gap-2">
-                      <Button
-                        variant="secondary"
-                        onClick={() => handleSelectFlow(flow)}
-                        className="flex flex-row items-center gap-2"
-                      >
-                        <Fullscreen width={18} />
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        onClick={() => handleSelectFlow(flow)}
-                        className="flex flex-row items-center gap-2"
-                      >
-                        <ArrowRightLeft width={18} />
-                      </Button>
+                      {flow.id === latestVersionId && (
+                        <Button
+                          variant="secondary"
+                          onClick={() => handleSelectFlow(flow)}
+                          className="flex flex-row items-center gap-2"
+                        >
+                          <PencilRuler width={18} />
+                        </Button>
+                      )}
+                      {flow.id !== latestVersionId && (
+                        <Button
+                          variant="secondary"
+                          onClick={() => handleSelectFlow(flow)}
+                          className="flex flex-row items-center gap-2"
+                        >
+                          <ScanEye width={18} />
+                        </Button>
+                      )}
+
+
+                      {flow.id !== latestVersionId && (
+                        <Button
+                          variant="secondary"
+                          onClick={() => handleRestoreFlow(flow)}
+                          className="flex flex-row items-center gap-2"
+                          disabled={displayedVersions.length >= 15}
+                        >
+                          <GitPullRequestCreateArrow width={18} />
+                        </Button>
+                      )}
+
 
                       {flow.id !== latestVersionId && (
                         <Button

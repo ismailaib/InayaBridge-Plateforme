@@ -8,6 +8,7 @@ import { Upload, X, Plus, FileSliders, Check } from "lucide-react"
 import { ChangeEvent } from "react"
 import CSVColumnSelector from "./CsvColumnSelectorModal"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
+import { showToast } from "@/app/[locale]/(protected)/dashboard/hooks/utils"
 
 interface FieldData {
     name: string;
@@ -63,6 +64,7 @@ export default function FieldConfigurator({ fieldType, fieldData, onChange, onSa
                         setCSVData(parsed);
                         setShowCSVModal(true);
                     }
+                    showToast('success', 'Succès', "Fichier CSV importé avec succès.");
                 }
             };
             reader.readAsText(file);
@@ -108,6 +110,7 @@ export default function FieldConfigurator({ fieldType, fieldData, onChange, onSa
             
             setNewOptionValue('');
             setShowAddInput(false);
+            showToast('success', 'Succès', "Option ajoutée avec succès.");
         }
     };
 
