@@ -3,6 +3,7 @@ import api from "@/lib/api"
 // =========================
 // Types
 // =========================
+
 export interface FlowTemplateCreateDTO {
   doctorProfileId: string
   name: string
@@ -19,6 +20,13 @@ export interface FlowTemplateDto {
   version: number
   active: boolean
   createdAt: number
+}
+
+export interface FlowInstanceDto {
+  id: string
+  templateId: string
+  appointmentId: string
+  data: string
 }
 
 // =========================
@@ -67,3 +75,17 @@ export const createFlowInstance = (data: CreateFlowInstanceDto) => {
   return api.post<string>("/flows/instance", data)
 }
 
+// Get flow instance by appointment
+export const getFlowInstanceByAppointment = (appointmentId: string) => {
+  return api.get<FlowInstanceDto>(`/flows/instance/appointment/${appointmentId}`)
+}
+
+// Update flow instance
+export const updateFlowInstance = (instanceId: string, data: { data: string }) => {
+  return api.patch<FlowInstanceDto>(`/flows/instance/${instanceId}`, data)
+}
+
+// Delete flow instance
+export const deleteFlowInstance = (instanceId: string) => {
+  return api.delete(`/flows/instance/${instanceId}`)
+}

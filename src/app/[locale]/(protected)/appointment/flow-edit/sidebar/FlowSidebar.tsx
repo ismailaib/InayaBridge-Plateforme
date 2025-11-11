@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from "react"
-import { motion } from "framer-motion"
 import { Button } from "@/components/Button"
-import { CopySlash, SquareMousePointer, Layers, DiamondPlus } from "lucide-react"
+import { motion } from "framer-motion"
+import { CopySlash, DiamondPlus, Layers, SquareMousePointer } from "lucide-react"
+import { useState } from "react"
 import { Node } from "reactflow"
+import { appointmentFlowSchema } from "../../flow/[id]/schema/appointmentFlowSchema"
 import NodeDetails from "./components/NodeDetails"
 import TemplateModal from "./components/TemplateModal"
-import { appointmentFlowSchema } from "../../flow/schema/appointmentFlowSchema"
 
 export default function FlowSidebar({
   node,

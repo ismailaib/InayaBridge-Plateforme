@@ -6,6 +6,7 @@ import { Badge } from '@/components/Badge'
 import { Cake, DatabaseZap, Fingerprint, FolderArchive, Mail, PersonStanding, Phone } from 'lucide-react'
 import { Button } from '@/components/Button'
 import { useEffect, useState } from 'react'
+import PainLocationModal from './PainLocationModal'
 
 interface PatientInfoCardProps {
   name: string
@@ -18,9 +19,10 @@ interface PatientInfoCardProps {
 
 interface PatientProps {
   patient: PatientInfoCardProps
+  saveStatus?: 'saved' | 'pending' | null
 }
 
-export default function PatientInfoCard(patient: PatientProps) {
+export default function PatientInfoCard({ patient, saveStatus }: PatientProps) {
   const [seconds, setSeconds] = useState(0)
 
   useEffect(() => {
@@ -40,31 +42,31 @@ export default function PatientInfoCard(patient: PatientProps) {
           <div className="flex w-full flex-row items-center justify-between">
             <div>
               <h2 className="text-xl font-semibold flex flex-row gap-2 items-center ">
-                {patient.patient.name}
+                {patient.name}
               </h2>
               <div className="flex flex-row gap-4 mt-2">
                 <Badge variant='neutral' className="text-sm flex flex-row gap-2 items-center">
-                  <Cake size={14} /> {patient.patient.age} ans
+                  <Cake size={14} /> {patient.age} ans
                 </Badge>
                 <Badge variant='neutral' className="text-sm flex flex-row gap-2 items-center">
-                  <Fingerprint size={14} /> {patient.patient.cin}
+                  <Fingerprint size={14} /> {patient.cin}
                 </Badge>
-                {patient.patient.phone && (
+                {patient.phone && (
                   <Badge variant='neutral' className="text-sm flex flex-row gap-2 items-center">
-                    <Phone size={14} /> {patient.patient.phone}
+                    <Phone size={14} /> {patient.phone}
                   </Badge>
                 )}
-                {patient.patient.email && (
+                {patient.email && (
                   <Badge variant='neutral' className="text-sm flex flex-row gap-2 items-center">
-                    <Mail size={14} /> {patient.patient.email}
+                    <Mail size={14} /> {patient.email}
                   </Badge>
                 )}
               </div>
             </div>
             <div className="flex flex-col">
               <div className="flex flex-row gap-4">
-                <Button variant='primary' className='flex items-center gap-2'><FolderArchive />Dossier médical</Button>
-                <Button variant='secondary'><PersonStanding /></Button>
+                <Button variant='primary' className='flex flex-row items-center gap-2'><FolderArchive />Dossier médical</Button>
+                <PainLocationModal />
               </div>
             </div>
           </div>
@@ -82,10 +84,18 @@ export default function PatientInfoCard(patient: PatientProps) {
             </Badge>
           </p>
         </div>
-        <div className='flex flex-row items-center gap-2'>
-          <DatabaseZap width={18}/>
-          <p className='text-sm'>Changements Sauvegardé avec succès</p>
-        </div>
+        {saveStatus === 'saved' && (
+          <div className='flex flex-row items-center gap-2'>
+            <DatabaseZap width={18}/>
+            <p className='text-sm'>Changements Sauvegardé avec succès</p>
+          </div>
+        )}
+        {saveStatus === 'pending' && (
+          <div className='flex flex-row items-center gap-2'>
+            <DatabaseZap width={18}/>
+            <p className='text-sm'>Cliquez sur suivant pour sauvegarder</p>
+          </div>
+        )}
       </div>
 
     </Card>

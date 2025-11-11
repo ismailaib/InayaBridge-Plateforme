@@ -48,7 +48,7 @@ export default function ServiceDoctorSection({
       } else {
         updateData.doctorProfileId = tempDoctorId
       }
-      const res = await updateAppointment(localAppointment.id, updateData)
+      await updateAppointment(localAppointment.id, updateData)
       setLocalAppointment((prev) => ({ ...prev, ...updateData }))
       onUpdate?.({ ...localAppointment, ...updateData })
     } catch (err) {
@@ -181,7 +181,7 @@ export default function ServiceDoctorSection({
                   </SelectTrigger>
                   <SelectContent>
                     {employees.map((employee) => (
-                      <SelectItem key={employee.id} value={employee.id}>
+                      <SelectItem key={employee.doctorId} value={employee.doctorId}>
                         {employee.firstName} {employee.lastName}
                       </SelectItem>
                     ))}
@@ -216,9 +216,9 @@ export default function ServiceDoctorSection({
                 transition={{ duration: 0.2, ease: "easeInOut" }}
                 className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-1"
               >
-                {employees.find((e) => e.id === localAppointment.doctorProfileId)
+                {employees.find((e) => e.doctorId === localAppointment.doctorProfileId)
                   ?.firstName || "N/A"}{" "}
-                {employees.find((e) => e.id === localAppointment.doctorProfileId)
+                {employees.find((e) => e.doctorId === localAppointment.doctorProfileId)
                   ?.lastName || ""}
                 <AnimatePresence>
                   {hoveredField === "doctor" && (

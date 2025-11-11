@@ -1,11 +1,11 @@
-import { Input } from "@/components/Input";
-import { DatePicker } from "@/components/DatePicker";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select";
 import { Checkbox } from "@/components/Checkbox";
-import { RadioGroup, RadioGroupItem } from "@/components/RadioGroup";
+import { DatePicker } from "@/components/DatePicker";
+import { Input } from "@/components/Input";
 import { Label } from "@/components/Label";
+import { RadioGroup, RadioGroupItem } from "@/components/RadioGroup";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select";
 import { Textarea } from "@/components/Textarea ";
-import { Field } from "../../types/appointmentFlow";
+import { Field } from "../../../types/appointmentFlow";
 
 interface FormFieldProps {
   field: Field;
@@ -20,8 +20,15 @@ export default function FormField({ field, value, onChange }: FormFieldProps) {
   };
 
   const handleDateChange = (date: Date | undefined) => {
-    onChange(field.name, date ? date.toISOString().split('T')[0] : '');
+    if (!date) return onChange(field.name, '');
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    onChange(field.name, `${year}-${month}-${day}`);
   };
+
 
   const handleSelectChange = (val: string) => {
     onChange(field.name, val);
@@ -63,8 +70,9 @@ export default function FormField({ field, value, onChange }: FormFieldProps) {
             {field.label}
           </Label>
           <DatePicker
-            value={value ? new Date(value) : undefined }
+            value={value ? new Date(value) : undefined}
             onChange={handleDateChange}
+            showTimePicker
             disabled={field.disabled}
           />
         </div>
@@ -80,7 +88,7 @@ export default function FormField({ field, value, onChange }: FormFieldProps) {
               <SelectValue placeholder="Select..." />
             </SelectTrigger>
             <SelectContent>
-              {field.options?.map((option : string) => (
+              {field.options?.map((option: string) => (
                 <SelectItem key={option} value={option}>
                   {option}
                 </SelectItem>
@@ -123,7 +131,7 @@ export default function FormField({ field, value, onChange }: FormFieldProps) {
         <div className="flex flex-col">
           <Label className="mb-1 text-sm font-medium">{field.label}</Label>
           <RadioGroup value={value} onValueChange={handleRadioChange} disabled={field.disabled}>
-            {field.options?.map((option : string) => (
+            {field.options?.map((option: string) => (
               <div key={option} className="flex items-center space-x-2">
                 <RadioGroupItem value={option} id={`${field.name}-${option}`} />
                 <Label htmlFor={`${field.name}-${option}`}>{option}</Label>

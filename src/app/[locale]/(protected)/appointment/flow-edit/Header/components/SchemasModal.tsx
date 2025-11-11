@@ -7,11 +7,10 @@ import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { RiCloseLine, RiMore2Fill } from "@remixicon/react"
 import { format } from "date-fns"
-import { CircleOff, Copy, FileClock, FileDown, PencilRuler, Trash2, X } from "lucide-react"
+import { CircleOff, PencilRuler, Trash2, X } from "lucide-react"
 import { useMemo, useState } from "react"
 import FlowPreview from "./FlowPreview"
 import { AnimatePresence, motion } from "framer-motion"
-import { HistoryDrawer } from "./HistoryDrawer"
 import { showToast } from "@/app/[locale]/(protected)/dashboard/hooks/utils"
 
 export interface FlowTemplateDto {
@@ -131,7 +130,7 @@ export function SchemasModal({
               {filteredFlows.length > 0 ? (
                 filteredFlows.slice().reverse().map((flow, index) => {
                   const versions = groupedFlows[flow.groupId]?.length || 1
-                  const progress = (versions / 15) * 100
+                  // const progress = (versions / 15) * 100
 
                   return (
                     <motion.div

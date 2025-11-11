@@ -63,9 +63,9 @@ export default function FlowPreview({ schema }: { schema: Schema }) {
                 <div className="w-1 h-1 rounded-full bg-gray-300"></div>
                 <div className="w-1 h-1 rounded-full bg-gray-300"></div>
               </div>
-              <div className="px-2 py-1 rounded bg-gray-100 text-xs text-gray-500 font-medium flex-shrink-0">
+              <Badge variant='neutral'>
                 +{remainingCount}
-              </div>
+              </Badge>
             </>
           )}
         </div>
