@@ -30,10 +30,6 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (!selectedRoom || !userId || !tenantId) return
-    console.log(selectedRoom)
-    console.log(userId)
-    console.log(tenantId)
-    console.log(`📖 Marking ${selectedRoom.id} as read`)
     markRoomAsRead(tenantId, selectedRoom.id, userId).catch(console.error)
   }, [selectedRoom, userId, tenantId, markRoomAsRead])
 

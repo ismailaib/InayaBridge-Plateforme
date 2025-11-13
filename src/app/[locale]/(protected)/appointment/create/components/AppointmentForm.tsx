@@ -106,7 +106,6 @@ export default function AppointmentForm({
                 })
                 .catch((err) => console.error(err));
         }
-        console.log("doctorId", formState.doctorId);
     }, [formState.doctorId]);
 
     useEffect(() => {

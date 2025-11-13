@@ -21,8 +21,6 @@ export const MotifNotesSection = ({
   const [loading, setLoading] = useState(false)
   const [localAppointment, setLocalAppointment] = useState(appointment)
 
-  console.log("Rendering MotifNotesSection with appointment:", appointment)
-
   const handleSave = async (field: "motif" | "notes" | "price") => {
     try {
       setLoading(true)

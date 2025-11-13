@@ -1,19 +1,19 @@
 'use client'
 
-import { SetStateAction, useEffect, useState, useCallback, useRef } from 'react'
+import { createFlowInstance, deleteFlowInstance, FlowInstanceDto, FlowTemplateDto, getFlowInstanceByAppointment, getTemplateById, getTemplatesByDoctor, updateFlowInstance } from '@/api/flow'
+import { Button } from '@/components/Button'
 import { Divider } from '@/components/Divider'
+import { AnimatePresence } from 'framer-motion'
+import { Replace } from 'lucide-react'
+import { useParams } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
 import DynamicFormStep from './components/DynamicFormStep'
+import FlowSelector from './components/FlowSelector'
+import FlowSwipeModal from './components/FlowSwipeModal'
 import PatientInfoCard from './components/PatientInfoCard'
 import StepNavigator from './components/StepNavigator'
 import { AppointmentFlowProvider } from './context/AppointmentFlowContext'
 import { useAppointmentFlow } from './hooks/useAppointmentFlow'
-import FlowSelector from './components/FlowSelector'
-import { useParams } from 'next/navigation'
-import { FlowTemplateDto, getTemplatesByDoctor, getTemplateById, FlowInstanceDto, getFlowInstanceByAppointment, createFlowInstance, updateFlowInstance, deleteFlowInstance } from '@/api/flow'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Replace } from 'lucide-react'
-import { Button } from '@/components/Button'
-import FlowSwipeModal from './components/FlowSwipeModal'
 
 export default function AppointmentFlowPage() {
   return (
@@ -24,17 +24,19 @@ export default function AppointmentFlowPage() {
 }
 
 function AppointmentFlowContent() {
-  const { id } = useParams() // appointment id
+  const { id } = useParams()
   const [flows, setFlows] = useState<FlowTemplateDto[]>([])
   const [selectedFlow, setSelectedFlow] = useState<FlowTemplateDto | null>(null)
   const [instance, setInstance] = useState<FlowInstanceDto | null>(null)
   const [loading, setLoading] = useState(true)
   const [showChangeModal, setShowChangeModal] = useState(false)
   const [isPreserving, setIsPreserving] = useState(false)
-
+  const [preservedData, setPreservedData] = useState<string | null>(null)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const [saveStatus, setSaveStatus] = useState<'saved' | 'pending' | null>(null)
+  const lastSavedDataRef = useRef<string>('')
+  const isInitialLoadRef = useRef(true)
   const { formData, setFormData, currentStepIndex, setCurrentStepIndex } = useAppointmentFlow()
-
-  // Replace with real doctor ID (from auth context/localStorage)
   const stored = typeof window !== 'undefined' ? localStorage.getItem('user') : null
   const parsed = stored ? JSON.parse(stored) : null
   const doctorId = parsed?.doctorProfile?.id
@@ -42,59 +44,85 @@ function AppointmentFlowContent() {
   useEffect(() => {
     if (!doctorId || !id) return
     setLoading(true)
-    getFlowInstanceByAppointment(id as string)
+    isInitialLoadRef.current = true
+    let instancePromise = getFlowInstanceByAppointment(id as string)
+    instancePromise
       .then((instRes) => {
         const inst = instRes.data
         if (inst) {
           setInstance(inst)
-          getTemplateById(inst.templateId)
-            .then((templRes) => {
-              setSelectedFlow(templRes.data)
-              const parsedData = JSON.parse(inst.data || '{}')
-              setFormData(parsedData)
-            })
-            .catch((err) => console.error('Error fetching template:', err))
+          return getTemplateById(inst.templateId).then((templRes) => {
+            setSelectedFlow(templRes.data)
+            const savedData = inst.data || '{}'
+            const parsedData = JSON.parse(savedData)
+            console.log('parsedData', parsedData)
+            setFormData(parsedData)
+            lastSavedDataRef.current = savedData
+          })
+        } else {
+          return Promise.resolve()
         }
-        return getTemplatesByDoctor(doctorId)
       })
+      .then(() => getTemplatesByDoctor(doctorId))
       .then((flowsRes) => {
         if (flowsRes) setFlows(flowsRes.data)
       })
-      .catch((err) => console.error('Error fetching data:', err))
-      .finally(() => setLoading(false))
+      .catch((err) => {
+        console.error('Error fetching data:', err)
+      })
+      .finally(() => {
+        setLoading(false)
+        isInitialLoadRef.current = false
+      })
   }, [doctorId, id, setFormData])
 
-  // Save on unmount
-  useEffect(() => {
-    return () => {
-      if (instance?.id) {
-        updateFlowInstance(instance.id, { data: JSON.stringify(formData) }).catch(() => {})
-      }
-    }
-  }, [])
-
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-
+  useEffect(() => {
+    if (isInitialLoadRef.current) return
+    const currentData = JSON.stringify(formData)
+    if (currentData !== lastSavedDataRef.current) {
+      setHasUnsavedChanges(true)
+      setSaveStatus('pending')
+    }
+  }, [formData])
   useEffect(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    if (!hasUnsavedChanges) return
     timeoutRef.current = setTimeout(() => {
       if (instance?.id) {
-        updateFlowInstance(instance.id, { data: JSON.stringify(formData) })
-          .catch((err) => console.error('Error saving instance:', err))
+        const currentData = JSON.stringify(formData)
+        if (currentData !== lastSavedDataRef.current) {
+          updateFlowInstance(instance.id, { data: currentData })
+            .then(() => {
+              lastSavedDataRef.current = currentData
+              setHasUnsavedChanges(false)
+              setSaveStatus('saved')
+              setTimeout(() => setSaveStatus(null), 3000)
+            })
+            .catch((err) => console.error('Error saving instance:', err))
+        }
       }
     }, 1000)
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
-  }, [formData, instance])
-
+  }, [formData, instance, hasUnsavedChanges])
   useEffect(() => {
-    if (instance?.id) {
-      updateFlowInstance(instance.id, { data: JSON.stringify(formData) })
-        .catch((err) => console.error('Error saving instance:', err))
+    if (isInitialLoadRef.current) return
+    if (instance?.id && hasUnsavedChanges) {
+      const currentData = JSON.stringify(formData)
+      if (currentData !== lastSavedDataRef.current) {
+        updateFlowInstance(instance.id, { data: currentData })
+          .then(() => {
+            lastSavedDataRef.current = currentData
+            setHasUnsavedChanges(false)
+            setSaveStatus('saved')
+            setTimeout(() => setSaveStatus(null), 3000)
+          })
+          .catch((err) => console.error('Error saving instance:', err))
+      }
     }
-  }, [currentStepIndex, instance])
-
+  }, [currentStepIndex])
   // Calculate total steps from selected flow (excluding Start Node)
   const parsedSchema = selectedFlow?.schema ? JSON.parse(selectedFlow.schema) : null
   const allSections = parsedSchema?.sections || []
@@ -102,7 +130,6 @@ function AppointmentFlowContent() {
     (section: any) => section.title !== 'Start Node' && section.id !== '1'
   )
   const totalSteps = filteredSections.length
-
   const patient = {
     name: 'Fatima Zahra Benali',
     age: 34,
@@ -111,64 +138,82 @@ function AppointmentFlowContent() {
     email: 'fatimazahra@example.com',
     status: 'active' as 'active',
   }
-
   const handleChangeFlow = () => {
     if (Object.keys(formData).length === 0) {
       setCurrentStepIndex(0)
       setSelectedFlow(null)
       if (instance?.id) {
-        deleteFlowInstance(instance.id).catch(() => {})
+        deleteFlowInstance(instance.id).catch(() => { })
         setInstance(null)
       }
     } else {
       setShowChangeModal(true)
     }
   }
-
   const handleConfirmChange = (preserve: boolean) => {
     setShowChangeModal(false)
     setIsPreserving(preserve)
-    if (!preserve) {
+    if (preserve) {
+      setPreservedData(JSON.stringify(formData))
+    } else {
+      setPreservedData(null)
       setFormData({})
     }
     setCurrentStepIndex(0)
     setSelectedFlow(null)
     if (instance?.id) {
-      deleteFlowInstance(instance.id).catch(() => {})
-      setInstance(null)
+      deleteFlowInstance(instance.id).catch(() => { })
     }
   }
+  const handleSelectFlow = async (flow: FlowTemplateDto) => {
+    try {
+      const schemaParsed = JSON.parse(flow.schema)
 
-  const handleSelectFlow = (flow: FlowTemplateDto) => {
-    const schemaParsed = JSON.parse(flow.schema)
-    const allFields = schemaParsed.sections.flatMap((s: any) =>
-      s.fields ? s.fields.map((f: any) => f.name) : []
-    )
-
-    let dataToUse: Record<string, any> = {}
-    if (isPreserving) {
-      dataToUse = Object.fromEntries(
-        Object.entries(formData).filter(([key]) => allFields.includes(key))
+      const allFields = schemaParsed.sections.flatMap((s: any) =>
+        s.fields ? s.fields.map((f: any) => f.name) : []
       )
-    }
-    setFormData(dataToUse)
-    setIsPreserving(false)
 
-    createFlowInstance({ templateId: flow.id, appointmentId: id as string })
-      .then((res) => {
-        const instId = res.data
-        setInstance({
-          id: instId,
-          templateId: flow.id,
-          appointmentId: id as string,
-          data: JSON.stringify(dataToUse),
-        })
-        updateFlowInstance(instId, { data: JSON.stringify(dataToUse) }).catch(() => {})
-        setSelectedFlow(flow)
+      console.log('All fields in new schema:', allFields)
+
+      let dataToUse: Record<string, any> = {}
+      if (isPreserving && preservedData) {
+        const preserved = JSON.parse(preservedData)
+        console.log('Preserved data:', preserved)
+        console.log('Preserved keys:', Object.keys(preserved))
+
+        dataToUse = Object.fromEntries(
+          Object.entries(preserved).filter(([key]) => {
+            const isIncluded = allFields.includes(key)
+            console.log(`Field "${key}": ${isIncluded ? 'INCLUDED' : 'EXCLUDED'}`)
+            return isIncluded
+          })
+        )
+        console.log('Final data to use:', dataToUse)
+      }
+      setFormData(dataToUse)
+      setIsPreserving(false)
+      setPreservedData(null)
+      const res = await createFlowInstance({
+        templateId: flow.id,
+        appointmentId: id as string,
       })
-      .catch((err) => console.error('Error creating instance:', err))
+      const instId = res.data
+      const dataStr = JSON.stringify(dataToUse)
+      const currentInstance = {
+        id: instId,
+        templateId: flow.id,
+        appointmentId: id as string,
+        data: dataStr,
+      }
+      setInstance(currentInstance)
+      await updateFlowInstance(instId, { data: dataStr })
+      lastSavedDataRef.current = dataStr
+      setHasUnsavedChanges(false)
+      setSelectedFlow(flow)
+    } catch (err) {
+      console.error('Error selecting flow:', err)
+    }
   }
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -179,29 +224,25 @@ function AppointmentFlowContent() {
       </div>
     )
   }
-
   return (
     <div className="pb-32 overflow-hidden p-4 md:p-8">
-      <PatientInfoCard patient={patient} />
+      <PatientInfoCard patient={patient} saveStatus={saveStatus} startTime={instance?.startTime} instanceId={instance?.id} />
       <Divider />
-
       {!selectedFlow && (
         <FlowSelector flows={flows} onSelectFlow={handleSelectFlow} />
       )}
-
       {selectedFlow && totalSteps > 0 && (
         <>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">{selectedFlow.name}</h2>
-            <Button onClick={handleChangeFlow} className='flex flex-row items-center gap-2' variant='ghost' >
-              <Replace width={18}/> Changer de Flow
+            <Button onClick={handleChangeFlow} className='flex flex-row items-center gap-2' variant='secondary' >
+              <Replace width={18} /> Changer de Flow
             </Button>
           </div>
           <DynamicFormStep selectedFlow={selectedFlow} />
-          <StepNavigator totalSteps={totalSteps} />
+          <StepNavigator totalSteps={totalSteps}/>
         </>
       )}
-
       {selectedFlow && totalSteps === 0 && (
         <div className="flex items-center justify-center h-64">
           <p className="text-gray-500 dark:text-gray-400">

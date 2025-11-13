@@ -94,8 +94,6 @@ export default function Dashboard() {
     if (storedUser) {
       try {
         const parsed = JSON.parse(storedUser);
-        console.log("Parsed user from localStorage:", parsed);
-
         user = {
           lastName: parsed.lastName,
           firstName: parsed.firstName,

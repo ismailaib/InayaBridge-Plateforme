@@ -293,15 +293,6 @@ export function WeekView({
     const timeChanged = oldHour !== newHour;
 
     if (dateChanged || timeChanged) {
-      console.log("📅 Appointment dropped on new date/time:");
-      console.log({
-        appointmentId: appointment.id,
-        oldDate: format(oldDate, "yyyy-MM-dd"),
-        oldTime: appointment.startTime,
-        newDate: format(newDate, "yyyy-MM-dd"),
-        newTime: `${newHour.toString().padStart(2, "0")}:00`,
-      });
-
       // Calculate new start and end times
       const startTime = parseTime(appointment.startTime);
       const endTime = parseTime(appointment.endTime);
@@ -341,10 +332,8 @@ export function WeekView({
       // Call API
       try {
         await updateAppointment(appointment.id, payload);
-        console.log("✅ Appointment updated successfully");
       } catch (error) {
         console.error("❌ Failed to update appointment:", error);
-        // Revert on failure
         onAppointmentUpdated(appointment);
       }
     }

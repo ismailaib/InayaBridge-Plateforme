@@ -212,7 +212,6 @@ export async function createDefaultFlow() {
 
   try {
     const res = await createFlowTemplate(payload);
-    console.log("Default template created:", res.data);
   } catch (err) {
     console.error("Failed to create default template", err);
   }

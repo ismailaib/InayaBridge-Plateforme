@@ -11,7 +11,6 @@ import {
   cancelAppointment,
   confirmPatientAppointment,
   markPatientArrived,
-  startConsultation,
 } from "./helpers/appointmentActions"
 import { CalendarAppointment } from "./helpers/types"
 
@@ -165,7 +164,7 @@ export const AppointmentDetails = ({
             onEdit={handleEdit}
             onPatientArrived={createActionHandler("markingArrived", markPatientArrived)}
             onPatientConfirmed={createActionHandler("confirming", confirmPatientAppointment)}
-            onStartConsultation={createActionHandler("starting", startConsultation)}
+            onUpdate={handleUpdate}
           />
         </div>
       </DialogContent>

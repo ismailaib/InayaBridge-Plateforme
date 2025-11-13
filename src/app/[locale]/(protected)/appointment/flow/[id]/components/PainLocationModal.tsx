@@ -55,8 +55,8 @@ export default function PainLocationModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost">
-          <PersonStanding className="h-5 w-5" />
+        <Button variant="secondary">
+          <PersonStanding />
         </Button>
       </DialogTrigger>
 

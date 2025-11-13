@@ -1,8 +1,9 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/Button"
-import { CircleOff, Trash2, GitBranchPlus, MapPinCheckInside, CalendarCheck, CirclePlay } from "lucide-react"
+import { CircleOff, Trash2, GitBranchPlus, MapPinCheckInside, CalendarCheck, CirclePlay, ExternalLink } from "lucide-react"
+import { updateAppointment } from "@/api/appointments"
+import { showToast } from "../../../dashboard/hooks/utils"
 
 export const ActionButtons = ({
   appointment,
@@ -12,12 +13,39 @@ export const ActionButtons = ({
   onEdit,
   onPatientArrived,
   onPatientConfirmed,
+  onUpdate,
 }: any) => {
-  const router = useRouter()
 
-  const handleStartConsultation = () => {
+  const isInProgress = appointment.status === "IN_PROGRESS"
+
+  const handleStartConsultation = async () => {
     if (!appointment?.id) return
-    router.push(`/appointment/flow/${appointment.id}`)
+
+    try {
+      let updatedAppointment = appointment
+      if (!isInProgress) {
+        const { data: updated } = await updateAppointment(appointment.id, { status: "IN_PROGRESS" })
+        updatedAppointment = updated
+        if (onUpdate) onUpdate(updated)
+        showToast('success', 'Succès', 'Rendez-vous démarré avec succès.');
+      }
+      window.open(`/appointment/flow/${appointment.id}`, "_blank")
+    } catch (error) {
+      console.error("Failed to start consultation:", error)
+      showToast('error', 'Erreur', 'Erreur lors du démarrage du rendez-vous.');
+    }
+  }
+
+  if (appointment.status === "COMPLETED") {
+    return (
+      <Button
+        variant="primary"
+        onClick={() => window.open(`/flow/${appointment.id}/details`, "_blank")}
+        className="text-sm flex flex-row items-center gap-2 w-full"
+      >
+        <ExternalLink width={18} /> Voir les détails du rendez-vous
+      </Button>
+    )
   }
 
   return (
@@ -30,30 +58,35 @@ export const ActionButtons = ({
         <Button
           variant="destructive"
           onClick={onCancel}
-          disabled={isLoading.cancelling}
+          disabled={isLoading.cancelling || isInProgress}
           className="text-sm flex flex-row items-center gap-2"
         >
           <CircleOff width={18} />
         </Button>
       )}
 
-      <Button variant="secondary" onClick={onEdit} className="text-sm flex flex-row items-center gap-2">
+      <Button 
+        variant="secondary" 
+        onClick={onEdit} 
+        disabled={isInProgress}
+        className="text-sm flex flex-row items-center gap-2"
+      >
         <GitBranchPlus width={18} />
       </Button>
 
       <Button
         variant="secondary"
         onClick={onPatientArrived}
-        disabled={isLoading.markingArrived}
+        disabled={isLoading.markingArrived || isInProgress}
         className="text-sm flex flex-row items-center gap-2"
       >
         <MapPinCheckInside width={18} /> {isLoading.markingArrived ? "Traitement..." : "Patient Arrivé"}
       </Button>
 
       <Button
-        variant="success"
+        variant="secondary"
         onClick={onPatientConfirmed}
-        disabled={isLoading.confirming}
+        disabled={isLoading.confirming || isInProgress}
         className="text-sm flex flex-row items-center gap-2"
       >
         <CalendarCheck width={18} /> {isLoading.confirming ? "Confirmation..." : "Patient Confirmé"}
@@ -65,7 +98,7 @@ export const ActionButtons = ({
         disabled={isLoading.starting}
         className="text-sm flex flex-row items-center gap-2"
       >
-        <CirclePlay width={18} /> {isLoading.starting ? "Démarrage..." : "Début Consultation"}
+         {(isInProgress ? <ExternalLink width={18} /> : <CirclePlay width={18} />)}  {isLoading.starting ? "Démarrage..." : (isInProgress ? "Ouvrir le flux RDV" : "Début Consultation")}
       </Button>
     </div>
   )
