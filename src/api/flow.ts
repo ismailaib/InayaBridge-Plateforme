@@ -26,9 +26,12 @@ export interface FlowInstanceDto {
   id: string;
   templateId: string;
   appointmentId: string;
+  schema: string;
   data: string;
   createdAt?: string;
   startTime?: string;
+  endTime?: string;
+  patientId?: string;
 }
 
 // =========================
@@ -86,7 +89,7 @@ export const getFlowInstanceByAppointment = (appointmentId: string) => {
 
 export const updateFlowInstance = (
   instanceId: string,
-  data: { data?: string; startTime?: string },
+  data: { data?: string; startTime?: string , endTime?: string},
 ) => {
   return api.patch<FlowInstanceDto>(`/flows/instance/${instanceId}`, data);
 };

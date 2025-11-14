@@ -11,9 +11,10 @@ interface FormFieldProps {
   field: Field;
   value: any;
   onChange: (name: string, value: any) => void;
+  isCompleted?: boolean;
 }
 
-export default function FormField({ field, value, onChange }: FormFieldProps) {
+export default function FormField({ field, value, onChange, isCompleted }: FormFieldProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const newValue = field.type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value;
     onChange(field.name, newValue);
@@ -59,7 +60,7 @@ export default function FormField({ field, value, onChange }: FormFieldProps) {
             onChange={handleChange}
             min={field.min}
             max={field.max}
-            disabled={field.disabled}
+            disabled={field.disabled || isCompleted}
           />
         </div>
       );
@@ -73,7 +74,7 @@ export default function FormField({ field, value, onChange }: FormFieldProps) {
             value={value ? new Date(value) : undefined}
             onChange={handleDateChange}
             showTimePicker
-            disabled={field.disabled}
+            disabled={field.disabled || isCompleted}
           />
         </div>
       );
@@ -83,7 +84,7 @@ export default function FormField({ field, value, onChange }: FormFieldProps) {
           <Label htmlFor={field.name} className="mb-1 text-sm font-medium">
             {field.label}
           </Label>
-          <Select value={value} onValueChange={handleSelectChange} disabled={field.disabled}>
+          <Select value={value} onValueChange={handleSelectChange} disabled={field.disabled || isCompleted}>
             <SelectTrigger>
               <SelectValue placeholder="Select..." />
             </SelectTrigger>
@@ -108,7 +109,7 @@ export default function FormField({ field, value, onChange }: FormFieldProps) {
             placeholder={field.placeholder}
             value={value}
             onChange={handleChange}
-            disabled={field.disabled}
+            disabled={field.disabled || isCompleted}
           />
         </div>
       );
@@ -119,7 +120,7 @@ export default function FormField({ field, value, onChange }: FormFieldProps) {
             id={field.name}
             checked={value}
             onCheckedChange={handleCheckboxChange}
-            disabled={field.disabled}
+            disabled={field.disabled || isCompleted}
           />
           <Label htmlFor={field.name} className="text-sm font-medium">
             {field.label}
@@ -130,7 +131,7 @@ export default function FormField({ field, value, onChange }: FormFieldProps) {
       return (
         <div className="flex flex-col">
           <Label className="mb-1 text-sm font-medium">{field.label}</Label>
-          <RadioGroup value={value} onValueChange={handleRadioChange} disabled={field.disabled}>
+          <RadioGroup value={value} onValueChange={handleRadioChange} disabled={field.disabled || isCompleted}>
             {field.options?.map((option: string) => (
               <div key={option} className="flex items-center space-x-2">
                 <RadioGroupItem value={option} id={`${field.name}-${option}`} />

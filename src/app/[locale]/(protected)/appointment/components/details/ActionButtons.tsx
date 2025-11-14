@@ -1,9 +1,36 @@
 "use client"
 
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/Button"
-import { CircleOff, Trash2, GitBranchPlus, MapPinCheckInside, CalendarCheck, CirclePlay, ExternalLink } from "lucide-react"
+import {
+  CircleOff,
+  Trash2,
+  GitBranchPlus,
+  MapPinCheckInside,
+  CalendarCheck,
+  CirclePlay,
+  ExternalLink,
+  Eye,
+} from "lucide-react"
 import { updateAppointment } from "@/api/appointments"
 import { showToast } from "../../../dashboard/hooks/utils"
+
+interface ActionButtonsProps {
+  appointment: any
+  isLoading: {
+    cancelling?: boolean
+    starting?: boolean
+    markingArrived?: boolean
+    confirming?: boolean
+  }
+  onCancel?: () => void
+  onDelete?: () => void
+  onEdit?: () => void
+  onPatientArrived?: () => void
+  onPatientConfirmed?: () => void
+  onUpdate?: (updated: any) => void
+}
 
 export const ActionButtons = ({
   appointment,
@@ -14,12 +41,18 @@ export const ActionButtons = ({
   onPatientArrived,
   onPatientConfirmed,
   onUpdate,
-}: any) => {
-
+}: ActionButtonsProps) => {
+  const [isMounted, setIsMounted] = useState(false)
+  const router = useRouter()
   const isInProgress = appointment.status === "IN_PROGRESS"
 
+  // Ensure router is only used after hydration
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
   const handleStartConsultation = async () => {
-    if (!appointment?.id) return
+    if (!appointment?.id || !isMounted) return
 
     try {
       let updatedAppointment = appointment
@@ -27,23 +60,25 @@ export const ActionButtons = ({
         const { data: updated } = await updateAppointment(appointment.id, { status: "IN_PROGRESS" })
         updatedAppointment = updated
         if (onUpdate) onUpdate(updated)
-        showToast('success', 'Succès', 'Rendez-vous démarré avec succès.');
+        showToast("success", "Succès", "Rendez-vous démarré avec succès.")
       }
-      window.open(`/appointment/flow/${appointment.id}`, "_blank")
+      router.push(`/appointment/flow/${appointment.id}`)
     } catch (error) {
       console.error("Failed to start consultation:", error)
-      showToast('error', 'Erreur', 'Erreur lors du démarrage du rendez-vous.');
+      showToast("error", "Erreur", "Erreur lors du démarrage du rendez-vous.")
     }
   }
+
+  if (!isMounted) return null // avoid SSR rendering issues
 
   if (appointment.status === "COMPLETED") {
     return (
       <Button
-        variant="primary"
-        onClick={() => window.open(`/flow/${appointment.id}/details`, "_blank")}
+        variant="success"
+        onClick={() => router.push(`/appointment/details/${appointment.id}`)}
         className="text-sm flex flex-row items-center gap-2 w-full"
       >
-        <ExternalLink width={18} /> Voir les détails du rendez-vous
+        <Eye width={18} /> Voir les détails du rendez-vous
       </Button>
     )
   }
@@ -51,7 +86,11 @@ export const ActionButtons = ({
   return (
     <div className="flex justify-between items-center overflow-x-auto space-x-2">
       {appointment.status === "CANCELLED" ? (
-        <Button variant="destructive" onClick={onDelete} className="text-sm flex flex-row items-center gap-2">
+        <Button
+          variant="destructive"
+          onClick={onDelete}
+          className="text-sm flex flex-row items-center gap-2"
+        >
           <Trash2 width={18} />
         </Button>
       ) : (
@@ -65,9 +104,9 @@ export const ActionButtons = ({
         </Button>
       )}
 
-      <Button 
-        variant="secondary" 
-        onClick={onEdit} 
+      <Button
+        variant="secondary"
+        onClick={onEdit}
         disabled={isInProgress}
         className="text-sm flex flex-row items-center gap-2"
       >
@@ -98,7 +137,8 @@ export const ActionButtons = ({
         disabled={isLoading.starting}
         className="text-sm flex flex-row items-center gap-2"
       >
-         {(isInProgress ? <ExternalLink width={18} /> : <CirclePlay width={18} />)}  {isLoading.starting ? "Démarrage..." : (isInProgress ? "Ouvrir le flux RDV" : "Début Consultation")}
+        {isInProgress ? <ExternalLink width={18} /> : <CirclePlay width={18} />}{" "}
+        {isLoading.starting ? "Démarrage..." : isInProgress ? "Ouvrir le flux RDV" : "Début Consultation"}
       </Button>
     </div>
   )

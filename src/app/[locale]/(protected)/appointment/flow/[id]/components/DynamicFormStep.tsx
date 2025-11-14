@@ -10,9 +10,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 interface DynamicFormStepProps {
   selectedFlow: any
+  isCompleted: boolean
 }
 
-export default function DynamicFormStep({ selectedFlow }: DynamicFormStepProps) {
+export default function DynamicFormStep({ selectedFlow, isCompleted }: DynamicFormStepProps) {
   const { formData, updateField, currentStepIndex } = useAppointmentFlow()
 
   const handleChange = (name: string, value: any) => {
@@ -63,6 +64,7 @@ export default function DynamicFormStep({ selectedFlow }: DynamicFormStepProps) 
                         field={field}
                         value={formData[field.name] ?? ''}
                         onChange={handleChange}
+                        isCompleted={isCompleted}
                       />
                     ))}
                   </div>
