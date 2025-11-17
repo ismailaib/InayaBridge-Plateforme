@@ -34,18 +34,6 @@ export const calculateAge = (dateOfBirth: string | undefined): number | null => 
     return age;
 };
 
-export const getStatusColor = (status: string): 'success' | 'info' | 'warning' | 'error' | 'neutral' => {
-    const colors: Record<string, 'success' | 'info' | 'warning' | 'error' | 'neutral'> = {
-        COMPLETED: 'success',
-        IN_PROGRESS: 'info',
-        PENDING: 'warning',
-        CANCELLED: 'error',
-        CONFIRMED: 'success',
-        ARRIVED: 'info',
-    };
-    return colors[status] || 'neutral';
-};
-
 export const getStatusLabel = (status: string): string => {
     const labels: Record<string, string> = {
         COMPLETED: 'Terminé',

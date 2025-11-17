@@ -39,7 +39,7 @@ export default function Statistics({ patient }: { patient: TenantPatient }) {
             <div className="w-full dark:bg-gray-950 p-4 rounded-lg">
                 <div className='flex flex-row items-center gap-2 '>
                     <Sparkles width={14}  />
-                    <h2 className="bg-gradient-to-r from-gray-400 to-gray-600 bg-clip-text text-transparent animate-gradient-x">Résumée</h2>
+                    <h2>Résumée</h2>
                 </div>
 
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">

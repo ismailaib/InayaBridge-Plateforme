@@ -21,28 +21,78 @@
       "emergencyContact": "رقم الطوارئ"
     }
   },
+  "dossiers": {
+    "patientInfo": "معلومات المريض",
+    "medicalHistory": "السجل الطبي",
+    "appointments": "المواعيد",
+    "documentsNotes": "الوثائق والملاحظات",
+    "treatments": "العلاجات",
+    "age": "العمر",
+    "gender": "الجنس",
+    "contact": "الاتصال",
+    "edit": "تعديل",
+    "print": "طباعة"
+  },
+
+  "appointments": {
+    "title": "قائمة المواعيد",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "type": "النوع",
+    "status": "الحالة",
+    "noAppointments": "لا توجد مواعيد"
+  },
+
+  "documentsNotes": {
+    "title": "الوثائق والملاحظات",
+    "noDocuments": "لا توجد وثائق متاحة"
+  },
+
+  "medicalHistory": {
+    "title": "السجل الطبي",
+    "noHistory": "لا يوجد سجل طبي"
+  },
+
+  "patientInfo": {
+    "title": "المعلومات العامة",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "cin": "رقم البطاقة",
+    "gender": "الجنس",
+    "dateOfBirth": "تاريخ الميلاد",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني",
+    "address": "العنوان",
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "تاريخ التحديث"
+  },
+
+  "treatments": {
+    "title": "العلاجات",
+    "noTreatments": "لا توجد علاجات مسجلة"
+  },
   "filter": {
-      "filter": "تصفية",
-      "searchPlaceholder": "تصفية بالاسم، اللقب، الهاتف...",
-      "dob": "تاريخ الميلاد",
-      "gender": "الجنس",
-      "select": "اختر",
-      "all": "الكل",
-      "male": "ذكر",
-      "female": "أنثى",
-      "lastVisit": "آخر زيارة",
-      "sort": "ترتيب",
-      "recent": "الأحدث",
-      "oldest": "الأقدم"
-    },
-    "table": {
-      "firstName": "الاسم",
-      "lastName": "اللقب",
-      "gender": "الجنس",
-      "dob": "تاريخ الميلاد",
-      "cin": "رقم البطاقة الوطنية",
-      "phone": "الهاتف",
-      "email": "البريد الإلكتروني",
-      "action": "إجراء"
-    }
+    "filter": "تصفية",
+    "searchPlaceholder": "تصفية بالاسم، اللقب، الهاتف...",
+    "dob": "تاريخ الميلاد",
+    "gender": "الجنس",
+    "select": "اختر",
+    "all": "الكل",
+    "male": "ذكر",
+    "female": "أنثى",
+    "lastVisit": "آخر زيارة",
+    "sort": "ترتيب",
+    "recent": "الأحدث",
+    "oldest": "الأقدم"
+  },
+  "table": {
+    "firstName": "الاسم",
+    "lastName": "اللقب",
+    "gender": "الجنس",
+    "dob": "تاريخ الميلاد",
+    "cin": "رقم البطاقة الوطنية",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني",
+    "action": "إجراء"
+  }
 }

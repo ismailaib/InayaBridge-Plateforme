@@ -21,28 +21,79 @@
       "emergencyContact": "Urgence (tel)"
     }
   },
+  "dossier": {
+    "patientInfo": "Informations du patient",
+    "medicalHistory": "Antécédents médicaux",
+    "appointments": "Rendez-vous",
+    "documentsNotes": "Documents & Notes",
+    "treatments": "Traitements",
+    "age": "Âge",
+    "gender": "Sexe",
+    "contact": "Contact",
+    "edit": "Modifier",
+    "print": "Imprimer"
+  },
+
+  "appointments": {
+    "title": "Liste des rendez-vous",
+    "date": "Date",
+    "time": "Heure",
+    "type": "Type",
+    "status": "Statut",
+    "noAppointments": "Aucun rendez-vous trouvé"
+  },
+
+  "documentsNotes": {
+    "title": "Documents et Notes",
+    "noDocuments": "Aucun document disponible"
+  },
+
+  "medicalHistory": {
+    "title": "Historique médical",
+    "noHistory": "Aucun historique disponible"
+  },
+
+  "patientInfo": {
+    "title": "Informations générales",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "cin": "CIN",
+    "gender": "Sexe",
+    "dateOfBirth": "Date de naissance",
+    "phone": "Téléphone",
+    "email": "Email",
+    "address": "Adresse",
+    "createdAt": "Créé le",
+    "updatedAt": "Mis à jour le"
+  },
+
+  "treatments": {
+    "title": "Traitements",
+    "noTreatments": "Aucun traitement enregistré"
+  },
+
   "filter": {
-      "filter": "Filtrer",
-      "searchPlaceholder": "Filtrer par Nom, Prénom, Tel...",
-      "dob": "Date de naissance",
-      "gender": "Genre",
-      "select": "Sélectionner",
-      "all": "Tous",
-      "male": "Homme",
-      "female": "Femme",
-      "lastVisit": "Dernière visite",
-      "sort": "Trier",
-      "recent": "Plus récente",
-      "oldest": "Plus ancienne"
-    },
-    "table": {
-      "firstName": "Prénom",
-      "lastName": "Nom",
-      "gender": "Genre",
-      "dob": "Date de naissance",
-      "cin": "CIN",
-      "phone": "Téléphone",
-      "email": "Email",
-      "action": "Action"
-    }
+    "filter": "Filtrer",
+    "searchPlaceholder": "Filtrer par Nom, Prénom, Tel...",
+    "dob": "Date de naissance",
+    "gender": "Genre",
+    "select": "Sélectionner",
+    "all": "Tous",
+    "male": "Homme",
+    "female": "Femme",
+    "lastVisit": "Dernière visite",
+    "sort": "Trier",
+    "recent": "Plus récente",
+    "oldest": "Plus ancienne"
+  },
+  "table": {
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "gender": "Genre",
+    "dob": "Date de naissance",
+    "cin": "CIN",
+    "phone": "Téléphone",
+    "email": "Email",
+    "action": "Action"
+  }
 }

@@ -53,97 +53,97 @@ export const appointmentFlowSchema: Step[] = [
       },
     ],
   },
-  {
-    id: "medical-background",
-    title: "Medical Background",
-    description: "Patient's medical history and background",
-    sections: [
-      {
-        title: "History",
-        fields: [
-          {
-            name: "pastDiseases",
-            label: "Past Diseases",
-            type: "textarea",
-            placeholder: "Comma-separated",
-          },
-          {
-            name: "surgeries",
-            label: "Surgeries",
-            type: "textarea",
-            placeholder: "name,date,notes; name,date,notes",
-          },
-          {
-            name: "chronicConditions",
-            label: "Chronic Conditions",
-            type: "textarea",
-            placeholder: "Comma-separated",
-          },
-          {
-            name: "hospitalizations",
-            label: "Hospitalizations",
-            type: "textarea",
-            placeholder: "reason,date,hospital; ...",
-          },
-          {
-            name: "familyHistory",
-            label: "Family History",
-            type: "textarea",
-            placeholder: "Comma-separated",
-          },
-        ],
-      },
-      {
-        title: "Social History",
-        fields: [
-          { name: "smoking", label: "Smoking", type: "checkbox" },
-          { name: "alcohol", label: "Alcohol", type: "checkbox" },
-          { name: "drugs", label: "Drugs", type: "checkbox" },
-          { name: "diet", label: "Diet", type: "text" },
-          { name: "exercise", label: "Exercise", type: "text" },
-        ],
-      },
-      {
-        title: "Medications and Allergies",
-        fields: [
-          {
-            name: "medications",
-            label: "Medications",
-            type: "textarea",
-            placeholder: "name,dosage,frequency; ...",
-          },
-          {
-            name: "allergies",
-            label: "Allergies",
-            type: "textarea",
-            placeholder: "type,allergen,reaction; ...",
-          },
-          {
-            name: "immunizationsHistory",
-            label: "Immunizations History",
-            type: "textarea",
-          },
-          { name: "travelHistory", label: "Travel History", type: "textarea" },
-          {
-            name: "mentalHealthHistory",
-            label: "Mental Health History",
-            type: "textarea",
-          },
-        ],
-      },
-      {
-        title: "Review of Systems",
-        fields: [
-          {
-            name: "reviewOfSystemsConstitutional",
-            label: "Constitutional",
-            type: "text",
-          },
-          { name: "reviewOfSystemsEyes", label: "Eyes", type: "text" },
-        ],
-      },
-    ],
-  },
+  // {
+  //   id: "medical-background",
+  //   title: "Medical Background",
+  //   description: "Patient's medical history and background",
+  //   sections: [
+  //     {
+  //       title: "History",
+  //       fields: [
+  //         {
+  //           name: "pastDiseases",
+  //           label: "Past Diseases",
+  //           type: "textarea",
+  //           placeholder: "Comma-separated",
+  //         },
+  //         {
+  //           name: "surgeries",
+  //           label: "Surgeries",
+  //           type: "textarea",
+  //           placeholder: "name,date,notes; name,date,notes",
+  //         },
+  //         {
+  //           name: "chronicConditions",
+  //           label: "Chronic Conditions",
+  //           type: "textarea",
+  //           placeholder: "Comma-separated",
+  //         },
+  //         {
+  //           name: "hospitalizations",
+  //           label: "Hospitalizations",
+  //           type: "textarea",
+  //           placeholder: "reason,date,hospital; ...",
+  //         },
+  //         {
+  //           name: "familyHistory",
+  //           label: "Family History",
+  //           type: "textarea",
+  //           placeholder: "Comma-separated",
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       title: "Social History",
+  //       fields: [
+  //         { name: "smoking", label: "Smoking", type: "checkbox" },
+  //         { name: "alcohol", label: "Alcohol", type: "checkbox" },
+  //         { name: "drugs", label: "Drugs", type: "checkbox" },
+  //         { name: "diet", label: "Diet", type: "text" },
+  //         { name: "exercise", label: "Exercise", type: "text" },
+  //       ],
+  //     },
+  //     {
+  //       title: "Medications and Allergies",
+  //       fields: [
+  //         {
+  //           name: "medications",
+  //           label: "Medications",
+  //           type: "textarea",
+  //           placeholder: "name,dosage,frequency; ...",
+  //         },
+  //         {
+  //           name: "allergies",
+  //           label: "Allergies",
+  //           type: "textarea",
+  //           placeholder: "type,allergen,reaction; ...",
+  //         },
+  //         {
+  //           name: "immunizationsHistory",
+  //           label: "Immunizations History",
+  //           type: "textarea",
+  //         },
+  //         { name: "travelHistory", label: "Travel History", type: "textarea" },
+  //         {
+  //           name: "mentalHealthHistory",
+  //           label: "Mental Health History",
+  //           type: "textarea",
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       title: "Review of Systems",
+  //       fields: [
+  //         {
+  //           name: "reviewOfSystemsConstitutional",
+  //           label: "Constitutional",
+  //           type: "text",
+  //         },
+  //         { name: "reviewOfSystemsEyes", label: "Eyes", type: "text" },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     id: "vital-signs",
     title: "Vital Signs",
@@ -292,58 +292,58 @@ export const appointmentFlowSchema: Step[] = [
       },
     ],
   },
-  {
-    id: "prescriptions",
-    title: "Prescriptions",
-    description: "Prescribed medications",
-    sections: [
-      {
-        title: "Prescription",
-        fields: [
-          { name: "medicationName", label: "Medication Name", type: "text" },
-          {
-            name: "route",
-            label: "Route",
-            type: "select",
-            options: ["Oral", "IV", "IM", "Topical", "Sublingual"],
-          },
-          { name: "dosage", label: "Dosage", type: "number" },
-          {
-            name: "dosageUnit",
-            label: "Dosage Unit",
-            type: "select",
-            options: ["mg", "ml", "g"],
-          },
-          {
-            name: "frequency",
-            label: "Frequency",
-            type: "select",
-            options: ["Once daily", "Twice daily", "Every 8h"],
-          },
-          { name: "duration", label: "Duration", type: "number" },
-          {
-            name: "durationUnit",
-            label: "Duration Unit",
-            type: "select",
-            options: ["Days", "Weeks", "Months"],
-          },
-          {
-            name: "foodRelation",
-            label: "Food Relation",
-            type: "select",
-            options: ["Before", "After", "With food"],
-          },
-          { name: "instructions", label: "Instructions", type: "textarea" },
-          { name: "refills", label: "Refills", type: "number" },
-          {
-            name: "genericAllowed",
-            label: "Generic Allowed",
-            type: "checkbox",
-          },
-        ],
-      },
-    ],
-  },
+  // {
+  //   id: "prescriptions",
+  //   title: "Prescriptions",
+  //   description: "Prescribed medications",
+  //   sections: [
+  //     {
+  //       title: "Prescription",
+  //       fields: [
+  //         { name: "medicationName", label: "Medication Name", type: "text" },
+  //         {
+  //           name: "route",
+  //           label: "Route",
+  //           type: "select",
+  //           options: ["Oral", "IV", "IM", "Topical", "Sublingual"],
+  //         },
+  //         { name: "dosage", label: "Dosage", type: "number" },
+  //         {
+  //           name: "dosageUnit",
+  //           label: "Dosage Unit",
+  //           type: "select",
+  //           options: ["mg", "ml", "g"],
+  //         },
+  //         {
+  //           name: "frequency",
+  //           label: "Frequency",
+  //           type: "select",
+  //           options: ["Once daily", "Twice daily", "Every 8h"],
+  //         },
+  //         { name: "duration", label: "Duration", type: "number" },
+  //         {
+  //           name: "durationUnit",
+  //           label: "Duration Unit",
+  //           type: "select",
+  //           options: ["Days", "Weeks", "Months"],
+  //         },
+  //         {
+  //           name: "foodRelation",
+  //           label: "Food Relation",
+  //           type: "select",
+  //           options: ["Before", "After", "With food"],
+  //         },
+  //         { name: "instructions", label: "Instructions", type: "textarea" },
+  //         { name: "refills", label: "Refills", type: "number" },
+  //         {
+  //           name: "genericAllowed",
+  //           label: "Generic Allowed",
+  //           type: "checkbox",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     id: "analyses",
     title: "Analyses (Lab Tests)",
@@ -421,149 +421,5 @@ export const appointmentFlowSchema: Step[] = [
         ],
       },
     ],
-  },
-  {
-    id: "resume",
-    title: "Résumé (Summary)",
-    description: "Summary and recommendations",
-    sections: [
-      {
-        title: "Summary",
-        fields: [
-          {
-            name: "autoSummary",
-            label: "Auto Summary",
-            type: "textarea",
-            disabled: true,
-          },
-          { name: "doctorNotes", label: "Doctor Notes", type: "textarea" },
-          {
-            name: "recommendations",
-            label: "Recommendations",
-            type: "textarea",
-          },
-          {
-            name: "followUpAdvice",
-            label: "Follow-up Advice",
-            type: "textarea",
-          },
-          {
-            name: "attachments",
-            label: "Attachments",
-            type: "textarea",
-            placeholder: "File paths or descriptions",
-          },
-          {
-            name: "generalComments",
-            label: "General Comments",
-            type: "textarea",
-          },
-          {
-            name: "followUpRequired",
-            label: "Follow-up Required",
-            type: "checkbox",
-          },
-          { name: "followUpDate", label: "Follow-up Date", type: "date" },
-          {
-            name: "referrals",
-            label: "Referrals",
-            type: "textarea",
-            placeholder: "specialist,reason,date; ...",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "billing",
-    title: "Billing",
-    description: "Billing and payment details",
-    sections: [
-      {
-        title: "Billing Info",
-        fields: [
-          {
-            name: "baseConsultationPrice",
-            label: "Base Consultation Price",
-            type: "number",
-          },
-          {
-            name: "additionalServicesTotal",
-            label: "Additional Services Total",
-            type: "number",
-          },
-          { name: "discount", label: "Discount", type: "number" },
-          { name: "tax", label: "Tax", type: "number" },
-          {
-            name: "finalAmount",
-            label: "Final Amount",
-            type: "number",
-            disabled: true,
-          },
-          {
-            name: "paymentMethod",
-            label: "Payment Method",
-            type: "select",
-            options: ["Cash", "Card", "Transfer", "Insurance"],
-          },
-          { name: "isPaid", label: "Is Paid", type: "checkbox" },
-          { name: "invoiceNumber", label: "Invoice Number", type: "text" },
-          {
-            name: "insuranceProvider",
-            label: "Insurance Provider",
-            type: "text",
-          },
-          {
-            name: "insurancePolicyNumber",
-            label: "Policy Number",
-            type: "text",
-          },
-          {
-            name: "insuranceCoverageAmount",
-            label: "Coverage Amount",
-            type: "number",
-          },
-          { name: "paymentDate", label: "Payment Date", type: "date" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "printing-closure",
-    title: "Printing & Clôture",
-    description: "Finalize and print documents",
-    sections: [
-      {
-        title: "Printing Options",
-        fields: [
-          {
-            name: "printPrescription",
-            label: "Print Prescription",
-            type: "checkbox",
-          },
-          { name: "printSummary", label: "Print Summary", type: "checkbox" },
-          { name: "printInvoice", label: "Print Invoice", type: "checkbox" },
-          {
-            name: "completedAt",
-            label: "Completed At",
-            type: "text",
-            disabled: true,
-          },
-          { name: "locked", label: "Locked", type: "checkbox" },
-          {
-            name: "status",
-            label: "Status",
-            type: "select",
-            options: ["COMPLETED", "CANCELLED", "IN_PROGRESS"],
-          },
-          { name: "signatureDoctor", label: "Doctor Signature", type: "text" },
-          {
-            name: "signaturePatient",
-            label: "Patient Signature",
-            type: "text",
-          },
-        ],
-      },
-    ],
-  },
+  }
 ];

@@ -12,64 +12,115 @@ import {
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { cx } from "@/lib/utils";
 import {
+  RiHome2Line,
   RiMapPinLine,
   RiMastercardLine,
-  RiPhoneLine,
   RiVideoLine,
-  RiVisaFill,
+  RiVisaFill
 } from "@remixicon/react";
+import React from "react";
+import type { DateRange } from "react-day-picker";
 
-import Table from "./Table";
+import AppointmentsTable from "./AppointmentsTable";
+
+export interface FilterState {
+  dateRange: DateRange | undefined;
+  consultationType: string;
+  status: string;
+  paymentStatus: string;
+}
 
 export default function Filter() {
   const t = useTranslations("appointments.history.filters");
 
-  const countries = [
+  const [filters, setFilters] = React.useState<FilterState>({
+    dateRange: {
+      from: new Date(new Date().setDate(new Date().getDate() - 10)),
+      to: new Date(),
+    },
+    consultationType: "all",
+    status: "all",
+    paymentStatus: "all",
+  });
+
+  const consultationTypes = [
     { value: "all", label: t("allTypes"), icon: null },
-    { value: "video", label: t("video"), icon: RiVideoLine },
-    { value: "phone", label: t("phone"), icon: RiPhoneLine },
-    { value: "physical", label: t("inPerson"), icon: RiMapPinLine },
+    { value: "VIDEO", label: t("video"), icon: RiVideoLine },
+    { value: "IN_PERSON", label: t("inPerson"), icon: RiHome2Line },
+    { value: "LOCAL", label: "Cabinet", icon: RiMapPinLine },
   ];
 
-  const status = [
-    { value: "all", label: t("all"), disabled: false },
+  const statuses = [
+    { value: "all", label: t("all"), disabled: false, color: "" },
     {
-      value: "completed",
+      value: "COMPLETED",
       label: t("completed"),
       color: "bg-blue-600 dark:bg-blue-500",
+      disabled: false,
     },
     {
-      value: "processing",
+      value: "CONFIRMED",
       label: t("confirmed"),
-      color: "bg-gray-400 dark:bg-orange-600",
+      color: "bg-green-500 dark:bg-green-600",
+      disabled: false,
     },
     {
-      value: "failed",
+      value: "CANCELLED",
       label: t("canceled"),
       color: "bg-red-500 dark:bg-red-500",
+      disabled: false,
     },
     {
-      value: "refund-requested",
+      value: "PENDING",
       label: t("absent"),
-      color: "bg-violet-500 dark:bg-violet-500",
+      color: "bg-orange-500 dark:bg-orange-500",
+      disabled: false,
+    },
+    {
+      value: "IN_PROGRESS",
+      label: "En cours",
+      color: "bg-purple-500 dark:bg-purple-500",
+      disabled: false,
+    },
+    {
+      value: "ARRIVED",
+      label: "Arrivé",
+      color: "bg-teal-500 dark:bg-teal-500",
+      disabled: false,
     },
   ];
 
-  const payment = [
+  const paymentStatuses = [
     { value: "all", label: t("all"), disabled: false },
     {
-      value: "payed",
+      value: "paid",
       label: t("paid"),
       disabled: false,
       icon: RiVisaFill,
     },
     {
-      value: "not_payed",
+      value: "not_paid",
       label: t("notPaid"),
       disabled: false,
       icon: RiMastercardLine,
     },
   ];
+
+  const handleDateChange = (range: DateRange | undefined) => {
+    setFilters(prev => ({ ...prev, dateRange: range }));
+  };
+
+  const handleConsultationTypeChange = (value: string) => {
+    setFilters(prev => ({ ...prev, consultationType: value }));
+  };
+
+  const handleStatusChange = (value: string) => {
+    setFilters(prev => ({ ...prev, status: value }));
+  };
+
+  const handlePaymentStatusChange = (value: string) => {
+    setFilters(prev => ({ ...prev, paymentStatus: value }));
+  };
 
   return (
     <div className="relative">
@@ -82,29 +133,30 @@ export default function Filter() {
             </Label>
             <DateRangePicker
               id="date_1"
-              defaultValue={{
-                from: new Date(new Date().setDate(new Date().getDate() - 10)),
-                to: new Date(),
-              }}
+              defaultValue={filters.dateRange}
+              onChange={handleDateChange}
               className="mt-2"
             />
           </div>
 
           {/* Type */}
           <div className="w-full">
-            <Label htmlFor="country_1" className="font-medium">
+            <Label htmlFor="consultation_type" className="font-medium">
               {t("type")}
             </Label>
-            <Select defaultValue="all">
+            <Select
+              defaultValue={filters.consultationType}
+              onValueChange={handleConsultationTypeChange}
+            >
               <SelectTrigger
-                id="country_1"
-                name="country_1"
+                id="consultation_type"
+                name="consultation_type"
                 className="mt-2 sm:w-full"
               >
                 <SelectValue placeholder={t("select")} />
               </SelectTrigger>
               <SelectContent>
-                {countries.map((item) => (
+                {consultationTypes.map((item) => (
                   <SelectItem key={item.value} value={item.value}>
                     {item.label}
                   </SelectItem>
@@ -118,7 +170,10 @@ export default function Filter() {
             <Label htmlFor="status_1" className="font-medium">
               {t("status")}
             </Label>
-            <Select defaultValue="all">
+            <Select
+              defaultValue={filters.status}
+              onValueChange={handleStatusChange}
+            >
               <SelectTrigger
                 id="status_1"
                 name="status_1"
@@ -127,16 +182,22 @@ export default function Filter() {
                 <SelectValue placeholder={t("select")} />
               </SelectTrigger>
               <SelectContent>
-                {status.map((item) => (
-                  <SelectItem key={item.value} value={item.value}>
+                {statuses.map((item) => (
+                  <SelectItem
+                    key={item.value}
+                    value={item.value}
+                    disabled={item.disabled}
+                  >
                     <div className="flex items-center gap-x-2.5">
-                      <span
-                        className={cx(
-                          item.color,
-                          "inline-block size-2 shrink-0 rounded-full",
-                        )}
-                        aria-hidden={true}
-                      />
+                      {item.color && (
+                        <span
+                          className={cx(
+                            item.color,
+                            "inline-block size-2 shrink-0 rounded-full",
+                          )}
+                          aria-hidden={true}
+                        />
+                      )}
                       {item.label}
                     </div>
                   </SelectItem>
@@ -150,7 +211,10 @@ export default function Filter() {
             <Label htmlFor="payment_method" className="font-medium">
               {t("paymentStatus")}
             </Label>
-            <Select defaultValue="all">
+            <Select
+              defaultValue={filters.paymentStatus}
+              onValueChange={handlePaymentStatusChange}
+            >
               <SelectTrigger
                 id="payment_method"
                 name="payment_method"
@@ -159,7 +223,7 @@ export default function Filter() {
                 <SelectValue placeholder={t("select")} />
               </SelectTrigger>
               <SelectContent>
-                {payment.map((item) => (
+                {paymentStatuses.map((item) => (
                   <SelectItem
                     key={item.value}
                     value={item.value}
@@ -174,7 +238,7 @@ export default function Filter() {
             </Select>
           </div>
         </div>
-        <Table />
+        <AppointmentsTable filters={filters} />
       </div>
     </div>
   );

@@ -4,6 +4,11 @@ import api from "@/lib/api";
 // Types
 // =========================
 
+export interface EmergencyContact {
+  name: string;
+  phone: string;
+}
+
 export interface TenantPatient {
   id: string;
   tenantId: string;
@@ -15,6 +20,10 @@ export interface TenantPatient {
   gender: string;
   dateOfBirth?: string;
   address?: string;
+  insuranceType?: string;
+  insuranceNumber?: string;
+  bloodGroup?: string;
+  emergencyContacts?: EmergencyContact[];
   createdAt: string;
   updatedAt: string;
 }
@@ -28,6 +37,10 @@ export interface TenantPatientCreateDTO {
   email?: string;
   dateOfBirth?: string;
   address?: string;
+  insuranceType?: string;
+  insuranceNumber?: string;
+  bloodGroup?: string;
+  emergencyContacts?: EmergencyContact[];
 }
 
 export interface TenantPatientUpdateDTO {
@@ -37,7 +50,12 @@ export interface TenantPatientUpdateDTO {
   email?: string;
   dateOfBirth?: string;
   address?: string;
+  insuranceType?: string;
+  insuranceNumber?: string;
+  bloodGroup?: string;
+  emergencyContacts?: EmergencyContact[];
 }
+
 
 // =========================
 // API Helpers

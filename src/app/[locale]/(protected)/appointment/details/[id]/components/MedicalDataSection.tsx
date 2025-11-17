@@ -1,25 +1,42 @@
-// src/app/appointments/[id]/components/MedicalDataSection.tsx
 import { FlowInstanceDto } from '@/api/flow';
+import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-import { Divider } from '@/components/Divider';
-import { ArrowLeft, ArrowRight, Bot, FileText, Printer } from 'lucide-react';
+import DiagnosticsSuiteModal from '@/components/DiagnosticsSuiteModal';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs';
+import { ArrowLeft, ArrowRight, Bot, FileChartPie, FileText } from 'lucide-react';
 import { useState } from 'react';
 import { Section } from '../../../types/appointmentFlow';
 import { formatDate, formatTime } from '../utils/appointmentUtils';
+import { AIAnalyse } from './AIAnalyse';
 import { SectionDisplay } from './SectionDisplay';
-import { Button } from '@/components/Button';
+import StatisticsReports from './StatisticsReports';
 
 interface MedicalDataSectionProps {
     flowInstance: FlowInstanceDto | null;
     sections: Section[];
     parsedData: Record<string, any>;
+    timeStatus: string;
+    onDataUpdate?: () => void;
 }
+
+
 
 export const MedicalDataSection = ({
     flowInstance,
     sections,
-    parsedData
+    parsedData,
+    timeStatus,
+    onDataUpdate,
 }: MedicalDataSectionProps) => {
+    const [localParsedData, setLocalParsedData] = useState(parsedData);
+
+    const handleDataUpdate = (updatedData: Record<string, any>) => {
+        setLocalParsedData(updatedData);
+        if (onDataUpdate) {
+            onDataUpdate();
+        }
+    };
+
     if (!flowInstance) {
         return (
             <Card>
@@ -40,7 +57,7 @@ export const MedicalDataSection = ({
 
     const hasAnyData = sections.some((section: Section) =>
         section.fields.some((field: { name: string | number; }) => {
-            const value = parsedData[field.name];
+            const value = localParsedData[field.name];
             return value !== undefined && value !== null && value !== '';
         })
     );
@@ -52,53 +69,93 @@ export const MedicalDataSection = ({
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
                         Données médicales
                     </h2>
-                    {flowInstance.startTime && (
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                            Consultation {flowInstance.endTime ? 'réalisée' : 'commencée'} le{' '}
-                            {formatDate(flowInstance.startTime)} à {formatTime(flowInstance.startTime)}
-                            {flowInstance.endTime && (
-                                <> et terminée à {formatTime(flowInstance.endTime)}</>
-                            )}
-                        </p>
-                    )}
+                    <div className='flex flex-row items-center'>
+                        {flowInstance.startTime && (
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                Consultation {flowInstance.endTime ? 'réalisée' : 'commencée'} le{' '}
+                                {formatDate(flowInstance.startTime)} à {formatTime(flowInstance.startTime)}
+                                {flowInstance.endTime && (
+                                    <> et terminée à {formatTime(flowInstance.endTime)}</>
+                                )}
+                            </p>
+                        )}
+                        <span className="mx-2 text-gray-500">•</span>
+                        {timeStatus && (
+                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                {timeStatus}
+                            </p>
+                        )}
+                    </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button variant="secondary">
-                        <Bot className="w-4 h-4 mr-2" />
-                        Analyse AI
-                    </Button>
-                    <Button variant="secondary" className="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-tool-case-icon lucide-tool-case"><path d="M10 15h4" /><path d="m14.817 10.995-.971-1.45 1.034-1.232a2 2 0 0 0-2.025-3.238l-1.82.364L9.91 3.885a2 2 0 0 0-3.625.748L6.141 6.55l-1.725.426a2 2 0 0 0-.19 3.756l.657.27" /><path d="m18.822 10.995 2.26-5.38a1 1 0 0 0-.557-1.318L16.954 2.9a1 1 0 0 0-1.281.533l-.924 2.122" /><path d="M4 12.006A1 1 0 0 1 4.994 11H19a1 1 0 0 1 1 1v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" /></svg>
-                        Diagnostics Suite
-                    </Button>
+                    <DiagnosticsSuiteModal />
                 </div>
-
             </div>
-
-            {hasAnyData ? (
-                sections.length > 0 ? (
-                    <MedicalDataCarousel sections={sections} parsedData={parsedData} />
-                ) : null
-            ) : (
-                <Card>
-                    <div className="flex flex-col items-center justify-center py-12 text-center">
-                        <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4">
-                            <FileText className="w-8 h-8 text-gray-400" />
-                        </div>
-                        <p className="text-gray-500 dark:text-gray-400 text-lg font-medium mb-2">
-                            Aucune donnée médicale
-                        </p>
-                        <p className="text-gray-400 dark:text-gray-500 text-sm">
-                            Aucune information n&apos;a été enregistrée pour cette consultation.
-                        </p>
-                    </div>
-                </Card>
-            )}
+            <Tabs defaultValue="tab1">
+                <TabsList variant="solid">
+                    <TabsTrigger value="tab1" className="gap-1.5">
+                        <FileText className="w-4 h-4" />
+                        Détails du rendez-vous
+                    </TabsTrigger>
+                    <TabsTrigger value="tab2" className="gap-1.5">
+                        <FileChartPie className="w-4 h-4" />
+                        Diagnostics & Reports
+                    </TabsTrigger>
+                    <TabsTrigger value="tab3" className="gap-1.5">
+                        <Bot className="w-4 h-4" />
+                        Analyse AI
+                    </TabsTrigger>
+                </TabsList>
+                <div className="mt-4">
+                    <TabsContent value="tab1">
+                        {hasAnyData ? (
+                            sections.length > 0 ? (
+                                <MedicalDataCarousel
+                                    sections={sections}
+                                    parsedData={localParsedData}
+                                    flowInstanceId={flowInstance.id}
+                                    onDataUpdate={handleDataUpdate}
+                                />
+                            ) : null
+                        ) : (
+                            <Card>
+                                <div className="flex flex-col items-center justify-center py-12 text-center">
+                                    <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4">
+                                        <FileText className="w-8 h-8 text-gray-400" />
+                                    </div>
+                                    <p className="text-gray-500 dark:text-gray-400 text-lg font-medium mb-2">
+                                        Aucune donnée médicale
+                                    </p>
+                                    <p className="text-gray-400 dark:text-gray-500 text-sm">
+                                        Aucune information n&apos;a été enregistrée pour cette consultation.
+                                    </p>
+                                </div>
+                            </Card>
+                        )}
+                    </TabsContent>
+                    <TabsContent value="tab2">
+                        <StatisticsReports />
+                    </TabsContent>
+                    <TabsContent value="tab3">
+                        <AIAnalyse />
+                    </TabsContent>
+                </div>
+            </Tabs>
         </>
     );
 };
 
-const MedicalDataCarousel = ({ sections, parsedData }: { sections: Section[]; parsedData: Record<string, any> }) => {
+const MedicalDataCarousel = ({
+    sections,
+    parsedData,
+    flowInstanceId,
+    onDataUpdate
+}: {
+    sections: Section[];
+    parsedData: Record<string, any>;
+    flowInstanceId: string;
+    onDataUpdate: (updatedData: Record<string, any>) => void;
+}) => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const handlePrev = () => {
@@ -135,8 +192,10 @@ const MedicalDataCarousel = ({ sections, parsedData }: { sections: Section[]; pa
             <SectionDisplay
                 key={sections[currentIndex].title}
                 section={sections[currentIndex]}
-                data={parsedData}
+                allData={parsedData}
                 index={0}
+                flowInstanceId={flowInstanceId}
+                onDataUpdate={onDataUpdate}
             />
         </div>
     );

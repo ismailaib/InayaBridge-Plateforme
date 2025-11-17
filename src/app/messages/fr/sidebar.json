@@ -3,7 +3,7 @@
   "doctorPlan": "Plan Essentiel",
   "patientSpace": "Espace Patient",
   "doctor": {
-    "home": "Accueil",
+    "home": "Tableau de bord",
     "messages": "Messagerie",
     "agent": "Mon Agent",
     "appointments": "Rendez-vous",
@@ -11,8 +11,8 @@
       "all": "Tous les rendez-vous",
       "create": "Créer un rendez-vous",
       "waiting": "Salle d'attente",
-      "history": "Historique des consultations",
-      "flow": "Flow Designer"
+      "history": "Historique",
+      "flow": "Constructeur de Flux"
     },
     "patients": "Mes Patients",
     "patientsChildren": {

@@ -1,7 +1,7 @@
 'use client'
 
 import { createFlowInstance, deleteFlowInstance, FlowInstanceDto, FlowTemplateDto, getFlowInstanceByAppointment, getTemplateById, getTemplatesByDoctor, updateFlowInstance } from '@/api/flow'
-import { updateAppointment } from '@/api/appointments'
+import { Appointment, getAppointmentById, updateAppointment } from '@/api/appointments'
 import { Button } from '@/components/Button'
 import { Divider } from '@/components/Divider'
 import { AnimatePresence } from 'framer-motion'
@@ -15,6 +15,7 @@ import PatientInfoCard from './components/PatientInfoCard'
 import StepNavigator from './components/StepNavigator'
 import { AppointmentFlowProvider } from './context/AppointmentFlowContext'
 import { useAppointmentFlow } from './hooks/useAppointmentFlow'
+import DiagnosticsSuiteModal from '@/components/DiagnosticsSuiteModal'
 
 // Constants
 const AUTO_SAVE_DELAY = 1000
@@ -74,7 +75,7 @@ const useAutoSave = (
   // Detect changes
   useEffect(() => {
     if (isInitialLoad || isCompleted) return
-    
+
     const currentData = JSON.stringify(formData)
     if (currentData !== lastSavedDataRef.current) {
       setHasUnsavedChanges(true)
@@ -123,7 +124,13 @@ function AppointmentFlowContent() {
   const { id } = useParams()
   const router = useRouter()
   const { formData, setFormData, currentStepIndex, setCurrentStepIndex } = useAppointmentFlow()
-  
+  const [appointment, setAppointment] = useState<Appointment | null>(null)
+
+  useEffect(() => {
+    if (!id || Array.isArray(id)) return
+    getAppointmentById(id).then(res => setAppointment(res.data))
+  }, [id])
+
   // State
   const [flows, setFlows] = useState<FlowTemplateDto[]>([])
   const [selectedFlow, setSelectedFlow] = useState<FlowTemplateDto | null>(null)
@@ -133,10 +140,10 @@ function AppointmentFlowContent() {
   const [isPreserving, setIsPreserving] = useState(false)
   const [preservedData, setPreservedData] = useState<string | null>(null)
   const [confirmDelete, setConfirmDelete] = useState(false)
-  
+
   // Refs
   const isInitialLoadRef = useRef(true)
-  
+
   // Derived state
   const userData = getUserData()
   const doctorId = userData?.doctorProfile?.id
@@ -144,7 +151,7 @@ function AppointmentFlowContent() {
   const parsedSchema = parseFlowSchema(selectedFlow?.schema || null)
   const filteredSections = getFilteredSections(parsedSchema)
   const totalSteps = filteredSections.length
-  
+
   // Auto-save hook
   const { saveStatus, lastSavedDataRef, setHasUnsavedChanges, setSaveStatus } = useAutoSave(
     formData,
@@ -185,11 +192,11 @@ function AppointmentFlowContent() {
 
         if (inst) {
           setInstance(inst)
-          
+
           // Load template
           const templRes = await getTemplateById(inst.templateId)
           setSelectedFlow(templRes.data)
-          
+
           // Parse and set form data
           const savedData = inst.data || '{}'
           const parsedData = JSON.parse(savedData)
@@ -219,7 +226,7 @@ function AppointmentFlowContent() {
       setCurrentStepIndex(0)
       setSelectedFlow(null)
       if (instance?.id) {
-        deleteFlowInstance(instance.id).catch(() => {})
+        deleteFlowInstance(instance.id).catch(() => { })
         setInstance(null)
       }
     } else {
@@ -237,30 +244,35 @@ function AppointmentFlowContent() {
     }
 
     if (instance?.id) {
-      deleteFlowInstance(instance.id).catch(() => {})
+      deleteFlowInstance(instance.id).catch(() => { })
       updateAppointment(instance.appointmentId, { status: 'PENDING' })
       router.push('/appointment')
     }
   }, [isCompleted, confirmDelete, instance, router])
 
   const handleConfirmChange = useCallback((preserve: boolean) => {
+    console.log('[DEBUG] handleConfirmChange called, preserve =', preserve)
     setShowChangeModal(false)
     setIsPreserving(preserve)
-    
+
     if (preserve) {
+      console.log('[DEBUG] Preserving data:', formData)
       setPreservedData(JSON.stringify(formData))
     } else {
+      console.log('[DEBUG] Resetting data')
       setPreservedData(null)
       setFormData({})
     }
-    
+
     setCurrentStepIndex(0)
     setSelectedFlow(null)
-    
+
     if (instance?.id) {
-      deleteFlowInstance(instance.id).catch(() => {})
+      console.log('[DEBUG] Deleting existing instance', instance.id)
+      deleteFlowInstance(instance.id).catch(() => { })
     }
   }, [formData, instance, setFormData, setCurrentStepIndex])
+
 
   const handleSelectFlow = useCallback(async (flow: FlowTemplateDto) => {
     try {
@@ -268,7 +280,7 @@ function AppointmentFlowContent() {
       if (!schemaParsed) throw new Error('Invalid schema')
 
       const allFields = getAllFieldNames(schemaParsed)
-      
+
       // Determine data to use
       let dataToUse: Record<string, any> = {}
       if (isPreserving && preservedData) {
@@ -295,7 +307,7 @@ function AppointmentFlowContent() {
         data: dataStr,
         schema: flow.schema,
       }
-      
+
       setInstance(currentInstance)
       await updateFlowInstance(instId, { data: dataStr })
       lastSavedDataRef.current = dataStr
@@ -327,27 +339,28 @@ function AppointmentFlowContent() {
         endTime={instance?.endTime}
         instanceId={instance?.id}
         isCompleted={isCompleted}
-        patientId={instance?.patientId}
+        patientId={appointment?.patientProfileId}
       />
-      
+
       <Divider />
-      
+
       {!selectedFlow && !isCompleted && (
         <FlowSelector flows={flows} onSelectFlow={handleSelectFlow} />
       )}
-      
+
       {selectedFlow && totalSteps > 0 && (
         <>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">{selectedFlow.name}</h2>
             <div className="flex flex-row items-center gap-2">
+              <DiagnosticsSuiteModal />
               <Button
                 onClick={handleChangeFlow}
                 className="flex flex-row items-center gap-2"
                 variant="secondary"
                 disabled={isCompleted}
               >
-                <Replace width={18} /> Changer de Flow
+                <Replace width={18} />
               </Button>
               <Button
                 onClick={handleDeleteFlow}
@@ -356,16 +369,16 @@ function AppointmentFlowContent() {
                 disabled={isCompleted}
               >
                 <RouteOff width={18} />
-                {confirmDelete ? "Êtes-vous sûr ?" : "Annuler le rendez-vous"}
+                {confirmDelete ? "Êtes-vous sûr ?" : ""}
               </Button>
             </div>
           </div>
-          
+
           <DynamicFormStep selectedFlow={selectedFlow} isCompleted={isCompleted} />
           <StepNavigator totalSteps={totalSteps} instanceId={instance?.id} isCompleted={isCompleted} />
         </>
       )}
-      
+
       {selectedFlow && totalSteps === 0 && (
         <div className="flex items-center justify-center h-64">
           <p className="text-gray-500 dark:text-gray-400">
@@ -373,7 +386,7 @@ function AppointmentFlowContent() {
           </p>
         </div>
       )}
-      
+
       <AnimatePresence>
         {showChangeModal && (
           <FlowSwipeModal

@@ -21,6 +21,56 @@
       "emergencyContact": "Emergency Contact (phone)"
     }
   },
+  "dossiers": {
+    "patientInfo": "Patient Information",
+    "medicalHistory": "Medical History",
+    "appointments": "Appointments",
+    "documentsNotes": "Documents & Notes",
+    "treatments": "Treatments",
+    "age": "Age",
+    "gender": "Gender",
+    "contact": "Contact",
+    "edit": "Edit",
+    "print": "Print"
+  },
+
+  "appointments": {
+    "title": "Appointments List",
+    "date": "Date",
+    "time": "Time",
+    "type": "Type",
+    "status": "Status",
+    "noAppointments": "No appointments found"
+  },
+
+  "documentsNotes": {
+    "title": "Documents & Notes",
+    "noDocuments": "No documents available"
+  },
+
+  "medicalHistory": {
+    "title": "Medical History",
+    "noHistory": "No medical history available"
+  },
+
+  "patientInfo": {
+    "title": "General Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "cin": "CIN",
+    "gender": "Gender",
+    "dateOfBirth": "Date of Birth",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At"
+  },
+
+  "treatments": {
+    "title": "Treatments",
+    "noTreatments": "No treatments recorded"
+  },
   "filter": {
     "filter": "Filter",
     "searchPlaceholder": "Filter by Last Name, First Name, Phone...",

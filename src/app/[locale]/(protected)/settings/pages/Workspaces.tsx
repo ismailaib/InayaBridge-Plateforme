@@ -84,17 +84,29 @@ export default function Workspaces() {
 
     setUploading(true);
 
+    // Always show selected file immediately
+    const tempLogoUrl = URL.createObjectURL(file);
+    setLogoUrl(tempLogoUrl);
+
     try {
       const response = await uploadTenantLogo(tenant.id, file);
       const newLogoUrl = response.data.logoUrl;
-      setLogoUrl(newLogoUrl);
+
       setTenant({ ...tenant, logoUrl: newLogoUrl });
+
+      showToast(
+        'success',
+        t('logoImage.successTitle') || 'Upload Success',
+        t('logoImage.successDescription') || 'Logo updated successfully'
+      );
     } catch (err) {
+      // Show error but do NOT remove the logo
       showToast('error', t('logoupload.errorTitle'), t('logoupload.errorDescription'));
     } finally {
       setUploading(false);
     }
   };
+
 
   /* ---------------- Reset & Save Tenant ---------------- */
   const handleReset = () => {
@@ -302,64 +314,64 @@ export default function Workspaces() {
             </Button>
           </div>
         </div>
-                  {/* Preferences Section */}
+        {/* Preferences Section */}
+        <div>
+          {/* Feature Toggles */}
+          <Divider className="my-6" />
           <div>
-            {/* Feature Toggles */}
-            <Divider className="my-6" />
-            <div>
-              <Label className="font-medium">{p('preferences.features.title') || 'Enabled Features'}</Label>
-              
-              {/* First 4 features in 2x2 grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                {features.slice(0, 4).map((feature) => (
-                  <Card key={feature.key} className="flex space-x-3 rtl:space-x-reverse items-center">
-                    <Switch
-                      id={feature.key}
-                      checked={preferences?.[feature.key] || false}
-                      onCheckedChange={(v) => setPreferences({ ...preferences, [feature.key]: v })}
-                    />
-                    <div className="flex-1">
-                      <Label htmlFor={feature.key} className="text-sm font-medium cursor-pointer">
-                        {feature.label}
-                      </Label>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {feature.description}
-                      </p>
-                    </div>
-                  </Card>
-                ))}
+            <Label className="font-medium">{p('preferences.features.title') || 'Enabled Features'}</Label>
+
+            {/* First 4 features in 2x2 grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              {features.slice(0, 4).map((feature) => (
+                <Card key={feature.key} className="flex space-x-3 rtl:space-x-reverse items-center">
+                  <Switch
+                    id={feature.key}
+                    checked={preferences?.[feature.key] || false}
+                    onCheckedChange={(v) => setPreferences({ ...preferences, [feature.key]: v })}
+                  />
+                  <div className="flex-1">
+                    <Label htmlFor={feature.key} className="text-sm font-medium cursor-pointer">
+                      {feature.label}
+                    </Label>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {feature.description}
+                    </p>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            <Card className="mt-4 flex space-x-3 rtl:space-x-reverse items-center">
+              <Switch
+                id={features[4].key}
+                checked={preferences?.[features[4].key] || false}
+                onCheckedChange={(v) => setPreferences({ ...preferences, [features[4].key]: v })}
+              />
+              <div className="flex-1">
+                <Label htmlFor={features[4].key} className="text-sm font-medium cursor-pointer">
+                  {features[4].label}
+                </Label>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  {features[4].description}
+                </p>
               </div>
-
-              <Card className="mt-4 flex space-x-3 rtl:space-x-reverse items-center">
-                <Switch
-                  id={features[4].key}
-                  checked={preferences?.[features[4].key] || false}
-                  onCheckedChange={(v) => setPreferences({ ...preferences, [features[4].key]: v })}
-                />
-                <div className="flex-1">
-                  <Label htmlFor={features[4].key} className="text-sm font-medium cursor-pointer">
-                    {features[4].label}
-                  </Label>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {features[4].description}
-                  </p>
-                </div>
-              </Card>
-            </div>
-
-            {/* Save Preferences Button */}
-            <div className="flex justify-end mt-8">
-              <Button
-                onClick={handleSavePreferences}
-                variant="primary"
-                disabled={savingPrefs}
-                className="px-6 flex items-center gap-2"
-              >
-                <Save width={18} />
-                {savingPrefs ? 'Saving...' : 'Save Preferences'}
-              </Button>
-            </div>
+            </Card>
           </div>
+
+          {/* Save Preferences Button */}
+          <div className="flex justify-end mt-8">
+            <Button
+              onClick={handleSavePreferences}
+              variant="primary"
+              disabled={savingPrefs}
+              className="px-6 flex items-center gap-2"
+            >
+              <Save width={18} />
+              {savingPrefs ? 'Saving...' : 'Save Preferences'}
+            </Button>
+          </div>
+        </div>
       </Card>
     </div>
   );

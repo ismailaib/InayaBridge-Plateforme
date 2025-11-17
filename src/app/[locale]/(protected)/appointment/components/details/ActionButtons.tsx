@@ -12,6 +12,7 @@ import {
   CirclePlay,
   ExternalLink,
   Eye,
+  Speech,
 } from "lucide-react"
 import { updateAppointment } from "@/api/appointments"
 import { showToast } from "../../../dashboard/hooks/utils"
@@ -110,7 +111,7 @@ export const ActionButtons = ({
         disabled={isInProgress}
         className="text-sm flex flex-row items-center gap-2"
       >
-        <GitBranchPlus width={18} />
+        <Speech width={18} />
       </Button>
 
       <Button

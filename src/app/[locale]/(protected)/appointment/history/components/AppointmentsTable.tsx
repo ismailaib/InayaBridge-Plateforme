@@ -1,3 +1,6 @@
+import { Appointment, getAllAppointments } from "@/api/appointments";
+import { getEmployees } from "@/api/employees";
+import { getServiceById } from "@/api/services";
 import {
   Table,
   TableBody,
@@ -9,7 +12,7 @@ import {
 } from "@/components/Table";
 import { useTranslations } from "@/lib/i18n/useTranslations";
 import { cx } from "@/lib/utils";
-import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
+import { RiArrowLeftSLine, RiArrowRightSLine, RiEyeLine } from "@remixicon/react";
 import {
   RowData,
   flexRender,
@@ -17,56 +20,9 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
+import { useRouter } from "next/navigation";
 import React from "react";
-
-const appointments = [
-  {
-    patient: "Youssef El Amrani",
-    status: "confirmé",
-    date: "2025-05-28",
-    time: "10:00",
-    duration: "30 min",
-    type: "Consultation",
-    lastUpdated: "2025-05-25 14:30",
-  },
-  {
-    patient: "Fatima Zahra",
-    status: "en attente",
-    date: "2025-05-28",
-    time: "11:00",
-    duration: "45 min",
-    type: "Suivi",
-    lastUpdated: "2025-05-25 13:45",
-  },
-  {
-    patient: "Hassan Yassine",
-    status: "annulé",
-    date: "2025-05-27",
-    time: "09:30",
-    duration: "20 min",
-    type: "Urgence",
-    lastUpdated: "2025-05-25 10:15",
-  },
-  {
-    patient: "Nadia Kabbaj",
-    status: "confirmé",
-    date: "2025-05-29",
-    time: "15:00",
-    duration: "30 min",
-    type: "Consultation",
-    lastUpdated: "2025-05-25 16:00",
-  },
-  {
-    patient: "Mohamed Idrissi",
-    status: "confirmé",
-    date: "2025-05-30",
-    time: "08:45",
-    duration: "25 min",
-    type: "Suivi",
-    lastUpdated: "2025-05-25 12:00",
-  },
-];
+import { DateRange } from "react-day-picker";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -149,64 +105,192 @@ const MobileButton = ({
   );
 };
 
-export default function Example() {
-  const pageSize = 8;
+const getStatusLabel = (status: string) => {
+  const statusMap: Record<string, string> = {
+    PENDING: "en attente",
+    CONFIRMED: "confirmé",
+    CANCELLED: "annulé",
+    COMPLETED: "terminé",
+    IN_PROGRESS: "en cours",
+    ARRIVED: "arrivé",
+  };
+  return statusMap[status] || status;
+};
 
+const getConsultationTypeLabel = (type: string) => {
+  const typeMap: Record<string, string> = {
+    LOCAL: "Cabinet",
+    IN_PERSON: "Domicile",
+    VIDEO: "Vidéo",
+  };
+  return typeMap[type] || type;
+};
+
+const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("fr-FR");
+};
+
+interface AppointmentsTableProps {
+  filters?: {
+    dateRange: DateRange | undefined;
+    consultationType: string;
+    status: string;
+    paymentStatus: string;
+  };
+}
+
+interface EnrichedAppointment extends Appointment {
+  doctorName?: string;
+  serviceName?: string;
+}
+
+export default function AppointmentsTable({ filters }: AppointmentsTableProps) {
+  const pageSize = 8;
+  const router = useRouter();
   const t = useTranslations("appointments.history.table");
+
+  const [appointments, setAppointments] = React.useState<EnrichedAppointment[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        setLoading(true);
+        const { data } = await getAllAppointments();
+
+        // Apply filters
+        let filtered = data;
+
+        if (filters) {
+          if (filters.dateRange?.from && filters.dateRange?.to) {
+            filtered = filtered.filter((apt: { date: string | number | Date; }) => {
+              const aptDate = new Date(apt.date);
+              const fromDate = new Date(filters.dateRange!.from!);
+              const toDate = new Date(filters.dateRange!.to!);
+
+              fromDate.setHours(0, 0, 0, 0);
+              toDate.setHours(23, 59, 59, 999);
+
+              return aptDate >= fromDate && aptDate <= toDate;
+            });
+          }
+
+          if (filters.consultationType !== "all") {
+            filtered = filtered.filter((apt: { consultationType: string; }) => apt.consultationType === filters.consultationType);
+          }
+
+          if (filters.status !== "all") {
+            filtered = filtered.filter((apt: { status: string; }) => apt.status === filters.status);
+          }
+        }
+
+        const enrichedAppointments = await Promise.all(
+          filtered.map(async (apt) => {
+            const enriched: EnrichedAppointment = { ...apt };
+
+            // Fetch doctor name
+            if (apt.doctorProfileId) {
+              try {
+                const stored = localStorage.getItem("user");
+                const parsed = stored ? JSON.parse(stored) : null;
+                const tenantId = parsed?.doctorProfile?.tenantId;
+                const { data: employees } = await getEmployees(tenantId);
+                const doctor = employees.find(emp => emp.doctorId === apt.doctorProfileId);
+                if (doctor && doctor.firstName && doctor.lastName) {
+                  enriched.doctorName = `Dr. ${doctor.firstName} ${doctor.lastName}`;
+                }
+              } catch (err) {
+                console.error("Error fetching doctor:", err);
+              }
+            }
+
+            // Fetch service name
+            if (apt.serviceId) {
+              try {
+                const { data: service } = await getServiceById(apt.serviceId);
+                enriched.serviceName = service.name;
+              } catch (err) {
+                console.error("Error fetching service:", err);
+              }
+            }
+
+            return enriched;
+          })
+        );
+
+        setAppointments(enrichedAppointments);
+      } catch (err) {
+        setError("Erreur lors du chargement des rendez-vous");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAppointments();
+  }, [filters]);
 
   const appointmentsColumns = [
     {
       header: t("patient"),
-      accessorKey: "patient",
+      accessorKey: "patientFullName",
       meta: { align: "text-left" },
+    },
+    {
+      header: "Médecin",
+      accessorKey: "doctorName",
+      meta: { align: "text-left" },
+      cell: ({ row }: any) => row.original.doctorName || "—",
+    },
+    {
+      header: "Service",
+      accessorKey: "serviceName",
+      meta: { align: "text-left" },
+      cell: ({ row }: any) => row.original.serviceName || "—",
     },
     {
       header: t("status"),
       accessorKey: "status",
       meta: { align: "text-left" },
+      cell: ({ row }: any) => getStatusLabel(row.original.status),
     },
     {
       header: t("date"),
       accessorKey: "date",
       meta: { align: "text-left" },
+      cell: ({ row }: any) => formatDate(row.original.date),
     },
     {
       header: t("time"),
-      accessorKey: "time",
-      meta: { align: "text-right" },
-    },
-    {
-      header: t("duration"),
-      accessorKey: "duration",
+      accessorKey: "startTime",
       meta: { align: "text-right" },
     },
     {
       header: t("type"),
-      accessorKey: "type",
+      accessorKey: "consultationType",
       meta: { align: "text-left" },
+      cell: ({ row }: any) => getConsultationTypeLabel(row.original.consultationType),
     },
     {
-      header: t("lastUpdated"),
-      accessorKey: "lastUpdated",
-      meta: { align: "text-right" },
+      header: "Actions",
+      accessorKey: "actions",
+      meta: { align: "text-center" },
+      cell: ({ row }: any) => (
+        <button
+          onClick={() => router.push(`/appointment/details/${row.original.id}`)}
+          className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950/50 transition-colors"
+        >
+          <RiEyeLine className="size-4" />
+          Consulter
+        </button>
+      ),
     },
   ];
 
-  const data = React.useMemo(
-    // multiply dummy data to better demonstrate pagination over several pages
-    () => [
-      ...appointments,
-      ...appointments,
-      ...appointments,
-      ...appointments,
-      ...appointments,
-      ...appointments,
-      ...appointments,
-    ],
-    [],
-  );
   const table = useReactTable({
-    data: data,
+    data: appointments,
     columns: appointmentsColumns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -220,6 +304,30 @@ export default function Example() {
 
   const paginationCount = table.getPageCount();
   const actualPage = table.getState().pagination.pageIndex + 1;
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <p className="text-gray-500 dark:text-gray-400">Chargement des rendez-vous...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+
+  if (appointments.length === 0) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <p className="text-gray-500 dark:text-gray-400">Aucun rendez-vous trouvé</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -403,11 +511,10 @@ export default function Example() {
           </TextButton>
         </div>
         <p className="text-sm tabular-nums text-gray-500 dark:text-gray-500 sm:hidden">
-          Page of{" "}
-          <span className="font-medium text-gray-900 dark:text-gray-50">{`${
-            table.getState().pagination.pageIndex + 1
-          }`}</span>{" "}
-          of
+          Page{" "}
+          <span className="font-medium text-gray-900 dark:text-gray-50">{`${table.getState().pagination.pageIndex + 1
+            }`}</span>{" "}
+          sur
           <span className="font-medium text-gray-900 dark:text-gray-50">
             {" "}
             {`${table.getPageCount()}`}

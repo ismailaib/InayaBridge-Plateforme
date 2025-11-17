@@ -23,7 +23,6 @@ export default function DynamicFormStep({ selectedFlow, isCompleted }: DynamicFo
   const parsedSchema = selectedFlow?.schema ? JSON.parse(selectedFlow.schema) : null
   const allSections = parsedSchema?.sections || []
   
-  // Filter out "Start Node" sections
   const schemaSteps = allSections.filter((section: any) => 
     section.title !== "Start Node" && section.id !== "1"
   )

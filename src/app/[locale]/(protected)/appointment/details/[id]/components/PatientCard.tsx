@@ -15,7 +15,7 @@ export const PatientCard = ({ patient }: PatientCardProps) => {
     const patientBirthDate = getValidDate(patient.dateOfBirth)
 
     return (
-        <Card>
+        <div>
             <div>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 mb-2">
@@ -55,6 +55,6 @@ export const PatientCard = ({ patient }: PatientCardProps) => {
                     </table>
                 </div>
             </div>
-        </Card>
+        </div>
     );
 };

@@ -11,11 +11,12 @@ import { FlowTemplateDto } from "@/api/flow"
 
 interface FlowSelectorProps {
   flows: FlowTemplateDto[]
-  onSelectFlow: (flow: FlowTemplateDto) => void
+  onSelectFlow: (flow: FlowTemplateDto) => Promise<void>
 }
 
 export default function FlowSelector({ flows, onSelectFlow }: FlowSelectorProps) {
   const [search, setSearch] = useState("")
+  const [isSelecting, setIsSelecting] = useState(false)
 
   const latestFlows = useMemo(() => {
     const latestMap = new Map<string, FlowTemplateDto>()
@@ -33,6 +34,21 @@ export default function FlowSelector({ flows, onSelectFlow }: FlowSelectorProps)
       flow.name.toLowerCase().includes(search.toLowerCase())
     )
   }, [latestFlows, search])
+
+  const handleSelectFlow = async (flow: FlowTemplateDto) => {
+    if (isSelecting) {
+      console.log("[DEBUG] Already creating instance, ignoring click")
+      return
+    }
+    setIsSelecting(true)
+    try {
+      await onSelectFlow(flow)
+    } catch (err) {
+      console.error("Error selecting flow:", err)
+    } finally {
+      setIsSelecting(false)
+    }
+  }
 
   return (
     <div className="mt-2">
@@ -63,8 +79,8 @@ export default function FlowSelector({ flows, onSelectFlow }: FlowSelectorProps)
                   transition={{ delay: index * 0.05 }}
                 >
                   <Card
-                    onClick={() => onSelectFlow(flow)}
-                    className="p-0 cursor-pointer hover:shadow-lg transition border border-gray-200 dark:border-gray-800 overflow-hidden"
+                    onClick={() => handleSelectFlow(flow)}
+                    className={`p-0 cursor-pointer hover:shadow-lg transition border border-gray-200 dark:border-gray-800 overflow-hidden ${isSelecting ? "opacity-50 pointer-events-none" : ""}`}
                   >
                     <div className="w-full h-36 bg-gray-100 dark:bg-gray-900 flex items-center justify-center">
                       <FlowPreview schema={JSON.parse(flow.schema)} />

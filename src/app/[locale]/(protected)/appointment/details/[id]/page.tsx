@@ -1,4 +1,3 @@
-// src/app/appointments/[id]/page.tsx
 'use client';
 
 import { motion } from 'framer-motion';
@@ -8,13 +7,13 @@ import { PatientCard } from './components/PatientCard';
 import { AppointmentInfoCard } from './components/AppointmentInfoCard';
 import { MedicalDataSection } from './components/MedicalDataSection';
 import { LoadingState } from './components/LoadingState';
-import { ErrorState } from './components/ErrorState'; // Keep this import
-import { Section } from '../../types/appointmentFlow'; // Corrected import path
+import { ErrorState } from './components/ErrorState';
+import { Section } from '../../types/appointmentFlow'
+import { Card } from '@/components/Card';
 
 export default function AppointmentDetailsPage() {
     const { loading, error, appointment, flowInstance, patient, router } = useAppointmentData();
 
-    // Action handlers
     const handlePrint = () => {
         window.print();
     };
@@ -46,6 +45,27 @@ export default function AppointmentDetailsPage() {
         (section: Section) => section.title !== 'Start Node'
     ) || [];
 
+    console.log(appointment.startTime, appointment.endTime, flowInstance?.startTime, flowInstance?.endTime)
+
+    let timeStatus = '';
+    if (appointment.startTime && flowInstance?.startTime) {
+        const actualStart = new Date(flowInstance.startTime);
+        const scheduledTimeParts = appointment.startTime.split(':');
+        const scheduledStart = new Date(actualStart);
+        scheduledStart.setHours(parseInt(scheduledTimeParts[0]), parseInt(scheduledTimeParts[1]), 0, 0);
+        const diffMs = actualStart.getTime() - scheduledStart.getTime();
+        const absDiffMs = Math.abs(diffMs);
+        const minutes = Math.floor(absDiffMs / 60000);
+        const seconds = Math.floor((absDiffMs % 60000) / 1000);
+        if (diffMs < 0) {
+            timeStatus = `Done earlier by ${minutes} min and ${seconds} sec`;
+        } else if (diffMs > 0) {
+            timeStatus = `Done late by ${minutes} min and ${seconds} sec`;
+        } else {
+            timeStatus = 'On time';
+        }
+    }
+
     return (
         <div className="p-4 md:p-8 print:p-8">
             <AppointmentHeader
@@ -55,24 +75,25 @@ export default function AppointmentDetailsPage() {
                 onExport={handleExport}
                 onShare={handleShare}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onDeleted={handleDelete}
             />
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <Card className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
                 {patient && (
                     <div className="lg:col-span-1">
                         <PatientCard patient={patient} />
                     </div>
                 )}
-                <div className={patient ? 'lg:col-span-2' : 'lg:col-span-3'}>
+                <div className={patient ? 'lg:col-span-2 pl-4 border-l border-1 border-gray-400 dark:border-gray-800' : 'lg:col-span-3'}>
                     <AppointmentInfoCard appointment={appointment} />
                 </div>
-            </div>
+            </Card>
 
             <MedicalDataSection
                 flowInstance={flowInstance}
                 sections={sections}
                 parsedData={parsedData}
+                timeStatus={timeStatus}
             />
         </div>
     );
