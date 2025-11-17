@@ -9,6 +9,7 @@ import { Cake, CheckCircle, DatabaseZap, Fingerprint, FolderArchive, LoaderCircl
 import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { getPatientById, TenantPatient } from '@/api/patients'
+import { useRouter } from 'next/navigation'
 
 interface PatientProps {
   saveStatus?: 'saved' | 'pending' | null
@@ -25,6 +26,8 @@ export default function PatientInfoCard({ saveStatus, startTime, endTime, instan
   const [effectiveStartTime, setEffectiveStartTime] = useState<string | undefined>(startTime)
   const [totalDuration, setTotalDuration] = useState<string>('')
   const [patient, setPatient] = useState<TenantPatient | null>(null)
+  
+  const router = useRouter()
 
   useEffect(() => {
     if (!patientId) return
@@ -111,7 +114,7 @@ export default function PatientInfoCard({ saveStatus, startTime, endTime, instan
             </h2>
             <div className="flex flex-row gap-4 mt-2">
               <Badge variant='neutral' className="text-sm flex flex-row gap-2 items-center">
-                <Cake size={14} /> {patient.dateOfBirth ? dayjs().diff(patient.dateOfBirth, 'year') : '-'} ans
+                <Cake size={14} /> {patient.dateOfBirth ? dayjs().diff(patient.dateOfBirth, 'year') : 'N/A'} ans
               </Badge>
               <Badge variant='neutral' className="text-sm flex flex-row gap-2 items-center">
                 <Fingerprint size={14} /> {patient.cin}
@@ -130,7 +133,7 @@ export default function PatientInfoCard({ saveStatus, startTime, endTime, instan
           </div>
 
           <div className="flex flex-col gap-2 items-end">
-            <Button variant='primary' className='flex flex-row items-center gap-2' disabled={isCompleted}>
+            <Button variant='primary' className='flex flex-row items-center gap-2' onClick={() => {router.push(`/mes-patients/root/${patientId}`)}}>
               <FolderArchive />Dossier médical
             </Button>
           </div>

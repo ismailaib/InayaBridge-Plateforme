@@ -7,32 +7,76 @@ import FormField from './FormField'
 import SectionTitle from './SectionTitle'
 import Steps from './Steps'
 import { motion, AnimatePresence } from 'framer-motion'
+import { STATIC_STEPS } from './staticSteps'
 
 interface DynamicFormStepProps {
   selectedFlow: any
   isCompleted: boolean
+  patientId: string
 }
 
-export default function DynamicFormStep({ selectedFlow, isCompleted }: DynamicFormStepProps) {
+export default function DynamicFormStep({ selectedFlow, isCompleted, patientId }: DynamicFormStepProps) {
   const { formData, updateField, currentStepIndex } = useAppointmentFlow()
 
+  console.log('[DEBUG] formData:', formData)
+  
   const handleChange = (name: string, value: any) => {
     updateField(name, value)
   }
 
   const parsedSchema = selectedFlow?.schema ? JSON.parse(selectedFlow.schema) : null
   const allSections = parsedSchema?.sections || []
-  
-  const schemaSteps = allSections.filter((section: any) => 
+
+  const schemaSteps = allSections.filter((section: any) =>
     section.title !== "Start Node" && section.id !== "1"
   )
 
-  const currentStep = schemaSteps[currentStepIndex]
+  const isStaticStep = currentStepIndex >= schemaSteps.length
+  const staticStepIndex = currentStepIndex - schemaSteps.length
+  const staticStep = isStaticStep ? STATIC_STEPS[staticStepIndex] : null
 
-  if (!currentStep) {
+  const currentStep = !isStaticStep ? schemaSteps[currentStepIndex] : null
+
+  if (!currentStep && !staticStep) {
     return (
       <div className="flex items-center justify-center h-full text-gray-500">
         Aucun schéma de flow trouvé.
+      </div>
+    )
+  }
+
+  // Render static step
+  if (staticStep) {
+    const StaticComponent = staticStep.component
+
+    return (
+      <div className="relative flex flex-row gap-4 mt-4 mb-24">
+        <div className="w-96 overflow-y-auto">
+          <Steps selectedFlow={selectedFlow} />
+        </div>
+        <div className="flex-1">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`static-${staticStep.id}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="w-full">
+                <div>
+                  {patientId ? (
+                    <StaticComponent patientId={patientId} />
+                  ) : (
+                    <div className="text-center text-gray-500 py-12">
+                      
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
     )
   }

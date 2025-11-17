@@ -21,8 +21,11 @@ import {
 
 import React, { useEffect, useState, useMemo } from "react";
 import { TenantPatient, getPatientsByTenant } from "@/api/patients";
-import Edit from "./Edit";
+import Edit from "./Edit"; 
 import Delete from "./Delete";
+import { FolderSearch } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/Button";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -93,7 +96,7 @@ export default function PatientsTable({ refreshKey, filters }: TableProps) {
   const [patients, setPatients] = useState<TenantPatient[]>([]);
   const [loading, setLoading] = useState(true);
   const [tenantId, setTenantId] = useState<string | null>(null);
-
+  const router = useRouter(); // Initialize useRouter
   // Load tenantId from localStorage
   useEffect(() => {
     const stored = localStorage.getItem("user");
@@ -218,6 +221,9 @@ export default function PatientsTable({ refreshKey, filters }: TableProps) {
         <div className="flex gap-3">
           <Edit patient={row.original} onSuccess={handleRefresh} />
           <Delete patientId={row.original.id} onSuccess={handleRefresh} />
+          <Button variant="primary" onClick={() => { router.push(`/mes-patients/root/${row.original.id}`)}} >
+            <FolderSearch width={18} />
+          </Button>
         </div>
       ),
       meta: { align: "text-left" },

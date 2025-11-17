@@ -9,6 +9,7 @@ import { Bell, HeartHandshake, ListChecks } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { getnotifications } from "../../../api/Notifications";
+import LoadingState from "@/components/custom/LoadingState";
 
 const WelcomeNotificationCard = ({ notification }: { notification: any }) => {
   return (
@@ -164,7 +165,7 @@ const Notifications = () => {
                 <div className="mt-4">
                   <TabsContent value="tab1">
                     {loading ? (
-                      <p className="text-sm text-gray-500">Chargement...</p>
+                      <p className="text-sm text-gray-500"><LoadingState /></p>
                     ) : notifications.filter((n) => !n.read).length ? (
                       <ul className="space-y-2">
                         {notifications
@@ -180,7 +181,7 @@ const Notifications = () => {
 
                   <TabsContent value="tab2">
                     {loading ? (
-                      <p className="text-sm text-gray-500">Chargement...</p>
+                      <p className="text-sm text-gray-500"><LoadingState /></p>
                     ) : notifications.length ? (
                       <ul className="space-y-2">
                         {notifications.map(renderNotification)}

@@ -32,6 +32,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { showToast } from '../../../dashboard/hooks/utils'
 import DeleteEmployeeModal from './DeleteEmployeeModal'
 import EditEmployeeModal from './EditEmployeeModal'
+import LoadingState from '@/components/custom/LoadingState'
 
 type Employee = {
   id: string
@@ -276,7 +277,7 @@ export default function TableEmployees({
             {loading ? (
               <TableRow>
                 <TableCell colSpan={8} className="text-center py-4 text-gray-500">
-                  Chargement...
+                  <LoadingState />
                 </TableCell>
               </TableRow>
             ) : filtered.length === 0 ? (

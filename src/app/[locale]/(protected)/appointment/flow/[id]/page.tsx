@@ -16,6 +16,8 @@ import StepNavigator from './components/StepNavigator'
 import { AppointmentFlowProvider } from './context/AppointmentFlowContext'
 import { useAppointmentFlow } from './hooks/useAppointmentFlow'
 import DiagnosticsSuiteModal from '@/components/DiagnosticsSuiteModal'
+import LoadingState from '@/components/custom/LoadingState'
+import { STATIC_STEPS } from './components/staticSteps'
 
 // Constants
 const AUTO_SAVE_DELAY = 1000
@@ -150,7 +152,9 @@ function AppointmentFlowContent() {
   const isCompleted = instance?.endTime != null
   const parsedSchema = parseFlowSchema(selectedFlow?.schema || null)
   const filteredSections = getFilteredSections(parsedSchema)
-  const totalSteps = filteredSections.length
+  
+  // UPDATED: Include static steps in total count
+  const totalSteps = filteredSections.length + STATIC_STEPS.length
 
   // Auto-save hook
   const { saveStatus, lastSavedDataRef, setHasUnsavedChanges, setSaveStatus } = useAutoSave(
@@ -321,12 +325,7 @@ function AppointmentFlowContent() {
   // Render loading state
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4" />
-          <p className="text-gray-500 dark:text-gray-400">Chargement des flows...</p>
-        </div>
-      </div>
+      <LoadingState />
     )
   }
 
@@ -374,7 +373,7 @@ function AppointmentFlowContent() {
             </div>
           </div>
 
-          <DynamicFormStep selectedFlow={selectedFlow} isCompleted={isCompleted} />
+          <DynamicFormStep selectedFlow={selectedFlow} isCompleted={isCompleted} patientId={appointment?.patientProfileId ?? ''} />
           <StepNavigator totalSteps={totalSteps} instanceId={instance?.id} isCompleted={isCompleted} />
         </>
       )}

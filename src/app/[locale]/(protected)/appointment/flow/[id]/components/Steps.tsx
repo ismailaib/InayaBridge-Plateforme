@@ -4,7 +4,8 @@ import { RiCheckLine } from '@remixicon/react'
 import { cx } from '@/lib/utils'
 import { useAppointmentFlow } from '../hooks/useAppointmentFlow'
 import { Card } from '@/components/Card'
-import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from 'react'
+import { Divider } from '@/components/Divider'
+import { STATIC_STEPS } from './staticSteps'
 
 interface StepsProps {
   selectedFlow: any
@@ -15,86 +16,72 @@ export default function Steps({ selectedFlow }: StepsProps) {
 
   const parsedSchema = selectedFlow?.schema ? JSON.parse(selectedFlow.schema) : null
   const allSections = parsedSchema?.sections || []
-  
-  // Filter out "Start Node" sections
-  const schemaSteps = allSections.filter((section: any) => 
-    section.title !== "Start Node" && section.id !== "1"
+
+  const schemaSteps = allSections.filter(
+    (section: any) => section.title !== 'Start Node' && section.id !== '1'
   )
 
-  const steps = schemaSteps.map((section: any, index: number) => {
-    let type: 'done' | 'in progress' | 'open'
-    if (index < currentStepIndex) type = 'done'
-    else if (index === currentStepIndex) type = 'in progress'
-    else type = 'open'
-
-    return {
-      id: index + 1,
-      type,
-      title: section.title || `Step ${index + 1}`,
-      description: section.description || '',
-      activityTime: '',
-    }
-  })
+  const getStatus = (index: number) =>
+    index < currentStepIndex ? 'done' : index === currentStepIndex ? 'in progress' : 'open'
 
   return (
-    <Card className="sm:mx-auto sm:max-w-lg overflow-hidden h-fit">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-medium text-gray-900 dark:text-gray-50">Flow Progress</h3>
-        <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">
-          {steps.filter((s: { type: string }) => s.type === 'done').length} / {steps.length - 1} 
-        </span>
-      </div>
-      <ul role="list" className="mt-6 space-y-6 pb-4">
-        {steps.map((step: { id: Key | null | undefined; type: string; title: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; activityTime: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; description: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined }, stepIndex: number) => (
-          <li
-            key={step.id}
-            className={cx(
-              "relative flex gap-x-3 cursor-pointer transition-all duration-200 rounded-lg p-2 -mx-2",
-              step.type === 'in progress' && "bg-blue-50 dark:bg-blue-900/20",
-              "hover:bg-gray-50 dark:hover:bg-gray-800/50"
-            )}
-            onClick={() => setCurrentStepIndex(stepIndex)}
-          >
-            <div
+    <div className="space-y-6 sm:mx-auto sm:max-w-lg overflow-hidden h-fit">
+      {/* Dynamic Steps */}
+      <div className="flex flex-col gap-2">
+        {schemaSteps.map((step: any, index: number) => {
+          const status = getStatus(index)
+          return (
+            <Card
+              key={step.id}
               className={cx(
-                stepIndex === steps.length - 1 ? 'h-6' : '-bottom-6',
-                'absolute left-2 top-0 flex w-6 justify-center ',
+                'p-4 border-l-4 transition-all cursor-pointer rounded-lg',
+                status === 'in progress' && 'border-blue-500 bg-blue-50 dark:bg-blue-900/20',
+                status === 'open' && 'border-gray-200 dark:border-gray-800'
               )}
+              onClick={() => setCurrentStepIndex(index)}
             >
-              <span className="w-px bg-gray-200 dark:bg-gray-950" aria-hidden={true} />
-            </div>
-
-            <div className="flex items-start space-x-2.5">
-              <div className="relative flex size-6 flex-none items-center justify-center bg-white transition dark:bg-gray-950 rounded-full">
-                {step.type === 'done' ? (
-                  <RiCheckLine className="size-5 text-blue-500 dark:text-blue-500" aria-hidden={true} />
-                ) : step.type === 'in progress' ? (
-                  <div
-                    className="size-2.5 bg-blue-500 ring-4 ring-white transition dark:bg-blue-500 dark:ring-gray-950 rounded-full"
-                    aria-hidden={true}
-                  />
-                ) : (
-                  <div
-                    className="size-3 rounded-full border border-gray-200 bg-white ring-4 ring-white transition dark:border-gray-800 dark:bg-gray-950 dark:ring-gray-950"
-                    aria-hidden={true}
-                  />
-                )}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">{step.title}</h4>
+                  {step.description && <p className="text-xs text-gray-500 dark:text-gray-400">{step.description}</p>}
+                </div>
+                {status === 'done' && <RiCheckLine className="h-5 w-5 text-green-500" />}
+                {status === 'in progress' && <span className="h-2 w-2 bg-blue-500 rounded-full" />}
               </div>
+            </Card>
+          )
+        })}
+      </div>
 
-              <div>
-                <p className="mt-0.5 text-sm font-medium text-gray-900 dark:text-gray-50">
-                  {step.title}{' '}
-                  {step.activityTime && (
-                    <span className="font-normal text-gray-400 dark:text-gray-600">
-                      &#8729; {step.activityTime}
-                    </span>
-                  )}
-                </p>
+      <Divider className="my-4" />
+
+      {/* Static Steps */}
+      <div className="flex flex-col gap-2">
+        {STATIC_STEPS.map((step, index) => {
+          const stepIndex = schemaSteps.length + index
+          const status = getStatus(stepIndex)
+          return (
+            <Card
+              key={step.id}
+              className={cx(
+                'p-4 border-l-4 transition-all cursor-pointer rounded-lg',
+                status === 'in progress' && 'border-blue-500 bg-blue-50 dark:bg-blue-900/20',
+                status === 'open' && 'border-gray-200 dark:border-gray-800'
+              )}
+              onClick={() => setCurrentStepIndex(stepIndex)}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">{step.title}</h4>
+                  {step.description && <p className="text-xs text-gray-500 dark:text-gray-400">{step.description}</p>}
+                </div>
+                {status === 'done' && <RiCheckLine className="h-5 w-5 text-green-500" />}
+                {status === 'in progress' && <span className="h-2 w-2 bg-blue-500 rounded-full" />}
               </div>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </Card>
+            </Card>
+          )
+        })}
+      </div>
+    </div>
   )
 }

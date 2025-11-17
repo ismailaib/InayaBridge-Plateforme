@@ -370,40 +370,40 @@ export const appointmentFlowSchema: Step[] = [
       },
     ],
   },
-  {
-    id: "vaccinations",
-    title: "Vaccinations",
-    description: "Vaccination records",
-    sections: [
-      {
-        title: "Vaccine",
-        fields: [
-          { name: "vaccineName", label: "Vaccine Name", type: "text" },
-          {
-            name: "dateAdministered",
-            label: "Date Administered",
-            type: "date",
-          },
-          { name: "nextDoseDate", label: "Next Dose Date", type: "date" },
-          { name: "batchNumber", label: "Batch Number", type: "text" },
-          {
-            name: "site",
-            label: "Site",
-            type: "text",
-            placeholder: "e.g., left arm",
-          },
-          {
-            name: "reactionObserved",
-            label: "Reaction Observed",
-            type: "textarea",
-          },
-          { name: "notes", label: "Notes", type: "textarea" },
-          { name: "manufacturer", label: "Manufacturer", type: "text" },
-          { name: "doseNumber", label: "Dose Number", type: "number" },
-        ],
-      },
-    ],
-  },
+  // {
+  //   id: "vaccinations",
+  //   title: "Vaccinations",
+  //   description: "Vaccination records",
+  //   sections: [
+  //     {
+  //       title: "Vaccine",
+  //       fields: [
+  //         { name: "vaccineName", label: "Vaccine Name", type: "text" },
+  //         {
+  //           name: "dateAdministered",
+  //           label: "Date Administered",
+  //           type: "date",
+  //         },
+  //         { name: "nextDoseDate", label: "Next Dose Date", type: "date" },
+  //         { name: "batchNumber", label: "Batch Number", type: "text" },
+  //         {
+  //           name: "site",
+  //           label: "Site",
+  //           type: "text",
+  //           placeholder: "e.g., left arm",
+  //         },
+  //         {
+  //           name: "reactionObserved",
+  //           label: "Reaction Observed",
+  //           type: "textarea",
+  //         },
+  //         { name: "notes", label: "Notes", type: "textarea" },
+  //         { name: "manufacturer", label: "Manufacturer", type: "text" },
+  //         { name: "doseNumber", label: "Dose Number", type: "number" },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     id: "services-provided",
     title: "Services Provided",

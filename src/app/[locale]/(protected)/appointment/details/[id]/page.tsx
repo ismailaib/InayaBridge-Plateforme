@@ -6,10 +6,10 @@ import { AppointmentHeader } from './components/AppointmentHeader';
 import { PatientCard } from './components/PatientCard';
 import { AppointmentInfoCard } from './components/AppointmentInfoCard';
 import { MedicalDataSection } from './components/MedicalDataSection';
-import { LoadingState } from './components/LoadingState';
 import { ErrorState } from './components/ErrorState';
 import { Section } from '../../types/appointmentFlow'
 import { Card } from '@/components/Card';
+import LoadingState from '@/components/custom/LoadingState';
 
 export default function AppointmentDetailsPage() {
     const { loading, error, appointment, flowInstance, patient, router } = useAppointmentData();

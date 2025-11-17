@@ -19,56 +19,8 @@ import Reporting from "./components/Reporting";
 import SalleAttente from "./components/SalleAttente";
 import Statistics from "./components/Statistics";
 import Banner from "./components/onboarding/Banner";
+import LoadingState from "@/components/custom/LoadingState";
 
-// Greeting Loader Component
-function GreetingLoader() {
-  const greetings = ["Hello", "Hola", "Bonjour", "سلام"];
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % greetings.length);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [greetings.length]);
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-gray-950">
-      <div className="text-center">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="text-5xl font-bold text-gray-900 dark:text-gray-50"
-          >
-            {greetings[currentIndex]}
-          </motion.div>
-        </AnimatePresence>
-        <motion.div
-          className="mt-6 flex justify-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          {greetings.map((_, index) => (
-            <div
-              key={index}
-              className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                index === currentIndex
-                  ? "bg-blue-500 w-8"
-                  : "bg-gray-300 dark:bg-gray-700"
-              }`}
-            />
-          ))}
-        </motion.div>
-      </div>
-    </div>
-  );
-}
 
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
@@ -129,7 +81,7 @@ export default function Dashboard() {
   });
 
   if (isLoading) {
-    return <GreetingLoader />;
+    return <LoadingState />;
   }
 
   return (

@@ -35,6 +35,7 @@ import {
   FlowActions,
   FlowState,
 } from "./utils/flowActions";
+import LoadingState from "@/components/custom/LoadingState";
 
 const nodeTypes = { custom: CustomNode };
 export const ApercuContext = React.createContext<boolean>(true);
@@ -158,7 +159,7 @@ export default function FlowEditor() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <p className="text-lg font-semibold">Chargement...</p>
+            <p className="text-lg font-semibold"><LoadingState /></p>
           </motion.div>
         )}
       </AnimatePresence>

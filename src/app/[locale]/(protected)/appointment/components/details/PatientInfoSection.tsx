@@ -1,14 +1,18 @@
 "use client"
 
 import { format } from "date-fns"
-import { CreditCard, Phone, Mail, MapPin, User, AlertCircle } from "lucide-react"
+import { CreditCard, Phone, Mail, MapPin, User, AlertCircle, FolderOpenDot } from "lucide-react"
 import { cx } from "@/lib/utils"
 import { CopyableRow } from "../CopyableRow"
 import { getGenderLabel, getValidDate } from "../helpers/details"
+import { Button } from "@/components/Button"
+import { useRouter } from "next/navigation"
 
 export const PatientInfoSection = ({ patientData, loading }: any) => {
-  if (loading) return <p className="text-sm text-gray-500">Chargement...</p>
+  const router = useRouter()
 
+  if (loading) return <p className="text-sm text-gray-500"></p>
+  
   if (!patientData)
     return (
       <div className="flex items-center gap-2">
@@ -26,6 +30,10 @@ export const PatientInfoSection = ({ patientData, loading }: any) => {
         <div className="flex items-center gap-2 mb-2">
           <User className="h-4 w-4 text-gray-500 dark:text-gray-400" />
           <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-50">{patientFullName}</h4>
+          <Button variant="ghost" onClick={() => {router.push(`/mes-patients/root/${patientData.id}`)}} className="ml-2 p-0">
+            <FolderOpenDot width={18} />
+          </Button>
+          
         </div>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
           <span

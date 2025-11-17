@@ -24,6 +24,7 @@ import {
   TableRow,
 } from "@/components/Table"
 import { getAvailabilitySlotsByDoctor } from "@/api/disponibility"
+import LoadingState from "@/components/custom/LoadingState"
 
 interface AvailabilitySlot {
   dayOfWeek: string
@@ -89,7 +90,7 @@ export const DoctorAvailabilityDialog = ({ doctorId }: DoctorAvailabilityDialogP
 
           <div className="mt-4 overflow-x-auto">
             {loading ? (
-              <p className="text-center text-gray-500">Chargement...</p>
+              <p className="text-center text-gray-500"><LoadingState /></p>
             ) : error ? (
               <p className="text-center text-red-500">{error}</p>
             ) : availabilityData.length === 0 ? (
