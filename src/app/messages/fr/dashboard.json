@@ -344,7 +344,7 @@
       "pending": "Cas médicaux pour lesquels un diagnostic est encore en cours d'évaluation.",
       "validated": "Cas médicaux ayant reçu un diagnostic confirmé."
     },
-    "advancedStats": "Statistiques avancées",
+    "advancedStats": "Statistiques Des Services",
     "summary": {
       "title": "Résumé d'activité médicale",
       "tooltip": "Un résumé hebdomadaire des principales activités.",

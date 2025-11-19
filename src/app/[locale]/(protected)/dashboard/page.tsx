@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/Select";
 import useTranslations from "@/lib/i18n/useTranslations";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { useEffect, useState } from "react";
 
@@ -20,42 +20,37 @@ import SalleAttente from "./components/SalleAttente";
 import Statistics from "./components/Statistics";
 import Banner from "./components/onboarding/Banner";
 import LoadingState from "@/components/custom/LoadingState";
-
+import DoctorRevenueChart from "./components/DoctorRevenueChart";
 
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
+  const [tenantId, setTenantId] = useState<string | null>(null);
+  const [doctorId, setDoctorId] = useState<string | null>(null);
+  const [user , setUser] = useState<any>(null);
+
   const t = useTranslations("common");
   const d = useTranslations("signup");
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
 
   // --- Load user from localStorage ---
-  let user: {
-    lastName?: string;
-    firstName?: string;
-    role?: string;
-    doctorProfile?: { specialty?: string };
-  } = {};
-
-  if (typeof window !== "undefined") {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const parsed = JSON.parse(storedUser);
-        user = {
-          lastName: parsed.lastName,
-          firstName: parsed.firstName,
-          role: parsed.role,
-          doctorProfile: parsed.doctorProfile,
-        };
-      } catch (err) {
-        console.error("Failed to parse user from localStorage:", err);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          setTenantId(parsedUser?.doctorProfile?.tenantId ?? null);
+          setDoctorId(parsedUser?.doctorProfile?.id ?? null);
+          setUser(parsedUser);
+        } catch (err) {
+          console.error("Failed to parse user from localStorage:", err);
+        }
       }
+      setIsLoading(false);
     }
+  }, []);
+
+  if (isLoading) {
+    return <LoadingState />;
   }
 
   // --- Month & Year Selects ---
@@ -80,10 +75,6 @@ export default function Dashboard() {
     return { label: year, value: year };
   });
 
-  if (isLoading) {
-    return <LoadingState />;
-  }
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -96,17 +87,8 @@ export default function Dashboard() {
         <div className="sm:flex sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-              {d("doctor.title")} {user.lastName} {user.firstName}
+              {d("doctor.title")} {user.firstName + " " + user.lastName}
             </h2>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              {user.doctorProfile?.specialty ?? "Médecin"} •{" "}
-              {new Date().toLocaleDateString("fr-FR", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
           </div>
 
           <div className="mt-4 flex flex-col gap-2 sm:mt-0 sm:flex-row sm:items-end">
@@ -154,19 +136,20 @@ export default function Dashboard() {
       {/* Main Content */}
       <main className="space-y-8">
         <motion.div initial="hidden" animate="visible" custom={1}>
-          <Kpis />
+          {/* Pass tenantId and doctorId to Kpis */}
+          <Kpis tenantId={tenantId ?? ""} doctorId={doctorId ?? ""} user={user}/>
         </motion.div>
 
         <motion.div initial="hidden" animate="visible" custom={2}>
-          <Statistics />
+          <Statistics tenantId={tenantId ?? ""} doctorId={doctorId ?? ""} /> 
         </motion.div>
 
         <motion.div initial="hidden" animate="visible" custom={3}>
-          <Reporting />
+          <Reporting tenantId={tenantId ?? ""} doctorId={doctorId ?? ""} />
         </motion.div>
 
         <motion.div initial="hidden" animate="visible" custom={4}>
-          <SalleAttente />
+          <DoctorRevenueChart doctorId={doctorId ?? ""} month={11} year={2025}/>
         </motion.div>
       </main>
     </motion.div>

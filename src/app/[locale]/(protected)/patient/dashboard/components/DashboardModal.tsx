@@ -30,7 +30,7 @@ import React, { useState } from "react";
 const moduleList = [
   { key: "showDiagnostics", label: "Diagnostics" },
   { key: "showFollowUps", label: "Consultations de suivi" },
-  { key: "showAdvancedStats", label: "Statistiques avancées" },
+  { key: "showAdvancedStats", label: "Statistiques Des Services" },
   { key: "showEvolutionCharts", label: "Graphiques d’évolution" },
   { key: "showPatientAlerts", label: "Alertes patients" },
   { key: "showVideoCalls", label: "Consultations vidéo" },
