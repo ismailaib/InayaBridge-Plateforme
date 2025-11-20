@@ -51,17 +51,36 @@ export const chartColors = {
     fill: "fill-fuchsia-500",
     text: "text-fuchsia-500",
   },
+  red: {
+    bg: "bg-red-500",
+    stroke: "stroke-red-500",
+    fill: "fill-red-500",
+    text: "text-red-500",
+  },
+  sky: {
+    bg: "bg-sky-400",
+    stroke: "stroke-sky-400",
+    fill: "fill-sky-400",
+    text: "text-sky-400",
+  },
+  money: {
+    bg: "bg-emerald-400",
+    stroke: "stroke-emerald-400",
+    fill: "fill-emerald-400",
+    text: "text-emerald-400",
+  },
 } as const satisfies {
   [color: string]: {
     [key in ColorUtility]: string;
   };
 };
 
+// Update the AvailableChartColors type automatically
 export type AvailableChartColorsKeys = keyof typeof chartColors;
-
 export const AvailableChartColors: AvailableChartColorsKeys[] = Object.keys(
   chartColors,
 ) as Array<AvailableChartColorsKeys>;
+
 
 export const constructCategoryColors = (
   categories: string[],

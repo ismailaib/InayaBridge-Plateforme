@@ -21,7 +21,7 @@
     },
     "video": "Consultations Vidéo",
     "videoChildren": {
-      "start": "Lancer une consultation",
+      "start": "Liste des consultations",
       "history": "Historique des appels",
       "settings": "Paramètres caméra & micro",
       "feedback": "Feedback visio"

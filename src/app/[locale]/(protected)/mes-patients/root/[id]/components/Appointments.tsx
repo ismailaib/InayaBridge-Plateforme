@@ -169,7 +169,7 @@ export default function Appointments({ patientId }: AppointmentsProps) {
         </TableHead>
 
         <TableBody>
-          {paginated.map((apt) => (
+          {[...paginated].reverse().map((apt) => (
             <TableRow key={apt.id}>
               <TableCell>{apt.date}</TableCell>
               <TableCell>{apt.startTime}</TableCell>

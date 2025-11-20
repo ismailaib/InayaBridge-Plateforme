@@ -1,8 +1,8 @@
-import { Upload, Camera, MoveRight, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Divider } from '@/components/Divider';
 import { Label } from '@/components/Label';
+import { Camera, CheckCircle, MoveRight, Upload } from 'lucide-react';
 import CameraConnection from './CameraConnection';
 import HeartFailureForm from './HeartFailureForm';
 
@@ -17,9 +17,10 @@ interface InputSelectionStepProps {
   cameraStatus: string;
   formData: Record<string, string>;
   onFormChange: (field: string, value: string) => void;
+  patientId?: string;
 }
 
-export default function InputSelectionStep({ selectedTool, inputType, onInputTypeSelect, onBack, onNext, file, onFileSelect, cameraStatus, formData, onFormChange }: InputSelectionStepProps) {
+export default function InputSelectionStep({ patientId, selectedTool, inputType, onInputTypeSelect, onBack, onNext, file, onFileSelect, cameraStatus, formData, onFormChange }: InputSelectionStepProps) {
   const isImageTool = selectedTool === 'derm' || selectedTool === 'oph';
   const isHeartFailure = selectedTool === 'hf';
   const isFileTool = ['ms', 'cxr', 'bta'].includes(selectedTool);
@@ -29,6 +30,10 @@ export default function InputSelectionStep({ selectedTool, inputType, onInputTyp
     const required = ['age', 'sex', 'chestPain', 'restingBP', 'cholesterol', 'fastingBS', 'restingECG', 'maxHR', 'exerciseAngina', 'oldpeak', 'stSlope'];
     return required.every(field => formData[field] !== '' && formData[field] !== null && formData[field] !== undefined);
   };
+
+  const pId = (patientId as any)?.patientId ?? patientId;
+
+  console.log('patientId patientId :', pId);
 
   return (
     <>
@@ -67,7 +72,7 @@ export default function InputSelectionStep({ selectedTool, inputType, onInputTyp
 
         <div className="flex gap-2 justify-between border-t border-gray-200 p-6 dark:border-gray-900">
           <Button variant="secondary" onClick={onBack}>Back</Button>
-          <Button 
+          <Button
             className='w-full flex flex-row items-center gap-2'
             onClick={onNext}
             disabled={isHeartFailure ? !isFormValid() : (!inputType || (inputType === 'upload' && !file))}
@@ -79,7 +84,7 @@ export default function InputSelectionStep({ selectedTool, inputType, onInputTyp
 
       <div className="flex-1 space-y-6 p-6 md:px-6 md:pb-20 md:pt-6">
         {isHeartFailure ? (
-          <HeartFailureForm formData={formData} onChange={onFormChange} />
+          <HeartFailureForm patientId={pId || ''} />
         ) : (
           <div>
             <Label className="font-medium text-base">Input Method</Label>
@@ -89,9 +94,8 @@ export default function InputSelectionStep({ selectedTool, inputType, onInputTyp
 
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
               <Card
-                className={`cursor-pointer p-6 dark:bg-gray-950 hover:dark:bg-gray-900 transition-all duration-300 ${
-                  inputType === 'upload' ? 'ring-2 ring-blue-500 dark:bg-gray-900 dark:border-gray-800' : ''
-                }`}
+                className={`cursor-pointer p-6 dark:bg-gray-950 hover:dark:bg-gray-900 transition-all duration-300 ${inputType === 'upload' ? 'ring-2 ring-blue-500 dark:bg-gray-900 dark:border-gray-800' : ''
+                  }`}
                 onClick={() => onInputTypeSelect('upload')}
               >
                 <div className="flex flex-col items-center text-center gap-3">
@@ -109,9 +113,8 @@ export default function InputSelectionStep({ selectedTool, inputType, onInputTyp
 
               {isImageTool && (
                 <Card
-                  className={`cursor-pointer p-6 dark:bg-gray-950 hover:dark:bg-gray-900 transition-all duration-300 ${
-                    inputType === 'camera' ? 'ring-2 ring-blue-500 dark:bg-gray-900 dark:border-gray-800' : ''
-                  }`}
+                  className={`cursor-pointer p-6 dark:bg-gray-950 hover:dark:bg-gray-900 transition-all duration-300 ${inputType === 'camera' ? 'ring-2 ring-blue-500 dark:bg-gray-900 dark:border-gray-800' : ''
+                    }`}
                   onClick={() => onInputTypeSelect('camera')}
                 >
                   <div className="flex flex-col items-center text-center gap-3">
@@ -143,9 +146,9 @@ export default function InputSelectionStep({ selectedTool, inputType, onInputTyp
                         {isFileTool ? 'PNG, JPG, JPEG, or NIfTI (.nii.gz) - max 50MB' : 'PNG, JPG, JPEG (max 10MB)'}
                       </p>
                     </div>
-                    <input 
-                      type="file" 
-                      className="hidden" 
+                    <input
+                      type="file"
+                      className="hidden"
                       accept={isFileTool ? 'image/*,.nii.gz' : 'image/*'}
                       onChange={(e) => onFileSelect(e.target.files?.[0] || null)}
                     />

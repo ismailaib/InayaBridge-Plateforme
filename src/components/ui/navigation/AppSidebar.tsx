@@ -107,10 +107,8 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       root: "consultations-video",
       active: false,
       children: [
-        { name: t("doctor.videoChildren.start"), root: "/visioconference/321" },
-        { name: t("doctor.videoChildren.history"), root: "#" },
-        { name: t("doctor.videoChildren.settings"), root: "#" },
-        { name: t("doctor.videoChildren.feedback"), root: "#" },
+        { name: t("doctor.videoChildren.start"), root: "/visioconference" },
+        { name: t("doctor.videoChildren.history"), root: "/visioconference/history" },
       ],
     },
     {

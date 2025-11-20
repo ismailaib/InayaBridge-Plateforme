@@ -87,8 +87,8 @@ export const MedicalDataSection = ({
                         )}
                     </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <DiagnosticsSuiteModal />
+                <div className="flex items-center gap-2"> 
+                    <DiagnosticsSuiteModal patientId={flowInstance.patientId || ''} />
                 </div>
             </div>
             <Tabs defaultValue="tab1">

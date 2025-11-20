@@ -21,7 +21,7 @@
     },
     "video": "Video Consultations",
     "videoChildren": {
-      "start": "Start Consultation",
+      "start": "Consultation List",
       "history": "Call History",
       "settings": "Camera & Micro Settings",
       "feedback": "Video Feedback"

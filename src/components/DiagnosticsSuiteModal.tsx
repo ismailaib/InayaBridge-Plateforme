@@ -15,7 +15,7 @@ import InputSelectionStep from './tools/InputSelectionStep';
 import ProcessingStep from './tools/ProcessingStep';
 import { X } from 'lucide-react';
 
-export default function DiagnosticsSuiteModal() {
+export default function DiagnosticsSuiteModal({ patientId }: { patientId?: string }) {
   const [step, setStep] = useState(1);
   const [selectedTool, setSelectedTool] = useState('');
   const [inputType, setInputType] = useState('');
@@ -123,6 +123,7 @@ export default function DiagnosticsSuiteModal() {
               cameraStatus={cameraStatus}
               formData={formData}
               onFormChange={handleFormChange}
+              patientId={patientId}
             />
           )}
 

@@ -5,7 +5,7 @@ import { Card } from "@/components/Card";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/Dialog";
-import { Folder as FolderIcon, Edit, Trash2, FileText } from "lucide-react";
+import { Folder as FolderIcon, Edit, Trash2, FileText, FolderPlus } from "lucide-react";
 import {
     createFolder,
     updateFolder,
@@ -83,7 +83,10 @@ export default function FoldersSection({
                 </h2>
                 <Dialog open={folderDialogOpen} onOpenChange={setFolderDialogOpen}>
                     <DialogTrigger asChild>
-                        <Button onClick={() => setEditingFolder({ title: "" })}>New Folder</Button>
+                        <Button onClick={() => setEditingFolder({ title: "" })}>
+                            <FolderPlus className="h-4 w-4 mr-2" />
+                            New Folder
+                        </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-md">
                         <DialogHeader>

@@ -5,7 +5,7 @@ import { Appointment, getAppointmentById, updateAppointment } from '@/api/appoin
 import { Button } from '@/components/Button'
 import { Divider } from '@/components/Divider'
 import { AnimatePresence } from 'framer-motion'
-import { Replace, RouteOff } from 'lucide-react'
+import { MonitorDot, Replace, RouteOff } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import DynamicFormStep from './components/DynamicFormStep'
@@ -152,7 +152,7 @@ function AppointmentFlowContent() {
   const isCompleted = instance?.endTime != null
   const parsedSchema = parseFlowSchema(selectedFlow?.schema || null)
   const filteredSections = getFilteredSections(parsedSchema)
-  
+
   // UPDATED: Include static steps in total count
   const totalSteps = filteredSections.length + STATIC_STEPS.length
 
@@ -352,7 +352,18 @@ function AppointmentFlowContent() {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">{selectedFlow.name}</h2>
             <div className="flex flex-row items-center gap-2">
-              <DiagnosticsSuiteModal />
+              <DiagnosticsSuiteModal patientId={appointment?.patientProfileId || ''} />
+              {appointment?.consultationType === "VIDEO" && (
+                <Button
+                  onClick={() => appointment?.id && window.open(`/visioconference/session/${appointment.id}`, '_blank')}
+                  className="flex flex-row items-center gap-2"
+                  variant="secondary"
+                  disabled={isCompleted}
+                >
+                  <MonitorDot width={18} />
+                </Button>
+              )}
+
               <Button
                 onClick={handleChangeFlow}
                 className="flex flex-row items-center gap-2"
