@@ -1,29 +1,7 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
-import { RiSearchLine } from '@remixicon/react'
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
-import { cx } from '@/lib/utils'
-import { Checkbox } from '@/components/Checkbox'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFoot,
-  TableHead,
-  TableHeaderCell,
-  TableRoot,
-  TableRow,
-} from '@/components/Table'
 import { Card } from '@/components/Card'
 import { Input } from '@/components/Input'
-import { DateRangePicker } from '@/components/DatePicker'
 import { Label } from '@/components/Label'
 import {
   Select,
@@ -32,7 +10,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/Select'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRoot,
+  TableRow
+} from '@/components/Table'
+import { cx } from '@/lib/utils'
+import { RiSearchLine } from '@remixicon/react'
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
 import { Fullscreen } from 'lucide-react'
+import { useMemo, useState } from 'react'
 import DeleteDepartementModal from './DeleteDepartementModal'
 import EditDepartementModal from './EditDepartementModal'
 
@@ -91,7 +88,7 @@ export default function TableDepartements({
         header: 'Description',
         meta: { align: 'text-left' },
         cell: (info) => (
-          <span className="truncate text-gray-600 dark:text-gray-400">
+          <span className="block max-w-sm whitespace-normal text-gray-600 dark:text-gray-400">
             {info.getValue() || '—'}
           </span>
         ),

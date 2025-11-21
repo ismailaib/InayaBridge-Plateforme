@@ -166,16 +166,16 @@ export default function AddServiceModal({ onCreated }: { onCreated: () => void }
               </div>
             </div>
 
-            <div>
+            <div >
               <Label htmlFor="departmentId">Département associé</Label>
               <Select
                 value={form.departmentId}
                 onValueChange={(v) => setForm({ ...form, departmentId: v })}
               >
-                <SelectTrigger id="departmentId" className="mt-2">
+                <SelectTrigger id="departmentId" className="mt-2"  >
                   <SelectValue placeholder="Sélectionner un département" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-60 overflow-y-auto">
                   {departments.map((dep) => (
                     <SelectItem key={dep.id} value={dep.id}>
                       {dep.name}

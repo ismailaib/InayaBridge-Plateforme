@@ -107,7 +107,7 @@ export default function PatientDossier() {
           <TabsTrigger value="Allergies"><MilkOff className="mr-2" width={18} /> Allergies</TabsTrigger>
           <TabsTrigger value="vaccine"><Syringe className="mr-2" width={18} /> Vaccine</TabsTrigger>
           <TabsTrigger value="appointments"><FolderGit className="mr-2" width={18} /> Appointments</TabsTrigger>
-          <TabsTrigger value="documentsNotes"><FolderTree className="mr-2" width={18} /> Documents & Notes</TabsTrigger>
+          <TabsTrigger value="documentsNotes"><FolderTree className="mr-2" width={18} /> Documents & Fichiers</TabsTrigger>
           <TabsTrigger value="treatments"><PillBottle className="mr-2" width={18} /> Treatments</TabsTrigger>
         </TabsList>
 

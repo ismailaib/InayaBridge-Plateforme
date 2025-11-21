@@ -69,6 +69,18 @@ export interface ServiceDepartmentStatsDto {
   summaryParagraph: string;
 }
 
+export interface UrgentStatsDto {
+  urgent: number;
+  nonUrgent: number;
+}
+
+export interface DoctorAppointmentsDto {
+  doctorProfileId: string;
+  doctorName: string;
+  appointmentCount: number;
+}
+
+
 // =========================
 // API Helpers
 // =========================
@@ -137,5 +149,23 @@ export function getDiseaseStats(arg0: string, tenantId: string) {
 export const getMonthlyRevenue = async (doctorId: string, month: number, year: number) => {
   return api.get<MonthlyRevenueDto>(`/dashboard/doctor/${doctorId}/monthly-revenue`, {
     params: { month, year },
+  });
+};
+
+/**
+ * Get urgent vs non-urgent appointment statistics
+ */
+export const getUrgentStats = async (tenantId: string) => {
+  return api.get<UrgentStatsDto>("/dashboard/doctor/urgent-stats", {
+    params: { tenantId },
+  });
+};
+
+/**
+ * Get appointment count statistics per doctor
+ */
+export const getDoctorAppointmentsStats = async (tenantId: string) => {
+  return api.get<DoctorAppointmentsDto[]>("/dashboard/doctor/doctor-appointments-stats", {
+    params: { tenantId },
   });
 };

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/Card";
 import { Tooltip } from "@/components/Tooltip";
+import { DonutChart } from "@/components/DonutChart";
 import useTranslations from "@/lib/i18n/useTranslations";
 import { BookmarkX, CheckCheck, Info, Pin } from "lucide-react";
 import * as dashboardApi from "@/api/dashboard";
@@ -16,7 +17,25 @@ type KpiKey =
   | "videoConsultations"
   | "csatScore";
 
-export default function DoctorKPIBlock({ tenantId, doctorId, user }: { tenantId: string; doctorId?: string, user?: any }) {
+interface UrgentStatsData {
+  name: string;
+  amount: number;
+}
+
+interface DoctorAppointmentsData {
+  name: string;
+  amount: number;
+}
+
+export default function DoctorKPIBlock({ 
+  tenantId, 
+  doctorId, 
+  user 
+}: { 
+  tenantId: string; 
+  doctorId?: string; 
+  user?: any 
+}) {
   const t = useTranslations("dashboard.kpis");
 
   const [kpiValues, setKpiValues] = useState<Record<KpiKey, string>>({
@@ -28,9 +47,11 @@ export default function DoctorKPIBlock({ tenantId, doctorId, user }: { tenantId:
     csatScore: "0 / 5",
   });
 
-  const [alerts, setAlerts] = useState<{
-    message: string; date: string; closed: boolean 
-}[]>([]);
+  const [urgentStatsData, setUrgentStatsData] = useState<UrgentStatsData[]>([]);
+  const [doctorAppointmentsData, setDoctorAppointmentsData] = useState<DoctorAppointmentsData[]>([]);
+  const [isLoadingUrgent, setIsLoadingUrgent] = useState(true);
+  const [isLoadingDoctors, setIsLoadingDoctors] = useState(true);
+
   useEffect(() => {
     const fetchKpis = async () => {
       try {
@@ -49,26 +70,52 @@ export default function DoctorKPIBlock({ tenantId, doctorId, user }: { tenantId:
       }
     };
 
-    const fetchAlerts = async () => {
+    const fetchUrgentStats = async () => {
+      setIsLoadingUrgent(true);
       try {
-        const res = await getnotifications(user.id);
-        setAlerts(
-          res.data.map((alert: any) => ({
-            date: new Date(alert.createdAt).toLocaleString(),
-            closed: alert.read ?? false,
-            message: alert.message,
+        const res = await dashboardApi.getUrgentStats(tenantId);
+        const data = res.data;
+        setUrgentStatsData([
+          {
+            name: "Urgent",
+            amount: data.urgent || 0,
+          },
+          {
+            name: "Non Urgent",
+            amount: data.nonUrgent || 0,
+          },
+        ]);
+      } catch (err) {
+        console.error("Error fetching urgent stats:", err);
+        setUrgentStatsData([]);
+      } finally {
+        setIsLoadingUrgent(false);
+      }
+    };
+
+    const fetchDoctorAppointments = async () => {
+      setIsLoadingDoctors(true);
+      try {
+        const res = await dashboardApi.getDoctorAppointmentsStats(tenantId);
+        const data = res.data;
+        setDoctorAppointmentsData(
+          data.map((doctor: any) => ({
+            name: doctor.doctorName,
+            amount: doctor.appointmentCount,
           }))
         );
       } catch (err) {
-        console.error("Error fetching alerts:", err);
-        setAlerts([]);
+        console.error("Error fetching doctor appointments:", err);
+        setDoctorAppointmentsData([]);
+      } finally {
+        setIsLoadingDoctors(false);
       }
     };
 
     fetchKpis();
-    fetchAlerts();
+    fetchUrgentStats();
+    fetchDoctorAppointments();
   }, [tenantId, doctorId, user]);
-
 
   const KPI_COLUMNS: KpiKey[][] = [
     ["todayAppointments", "waitingPatients", "finishedConsultations"],
@@ -89,7 +136,9 @@ export default function DoctorKPIBlock({ tenantId, doctorId, user }: { tenantId:
       {/* KPI Card */}
       <Card className="h-full lg:col-span-4">
         <div className="flex items-center justify-between">
-          <p className="font-semibold text-gray-900 dark:text-gray-50">{t("cardsSection.title")}</p>
+          <p className="font-semibold text-gray-900 dark:text-gray-50">
+            {t("cardsSection.title")}
+          </p>
           <Tooltip content={t("cardsSection.tooltip")} showArrow={false}>
             <span className="text-sm text-gray-500 dark:text-gray-400">
               <Info width={18} />
@@ -102,9 +151,13 @@ export default function DoctorKPIBlock({ tenantId, doctorId, user }: { tenantId:
               {column.map((kpi) => (
                 <Tooltip key={kpi.key} content={kpi.tooltip} showArrow={false}>
                   <div className="flex flex-col justify-start">
-                    <dt className="text-start text-sm text-gray-500 dark:text-gray-500">{kpi.title}</dt>
+                    <dt className="text-start text-sm text-gray-500 dark:text-gray-500">
+                      {kpi.title}
+                    </dt>
                     <div className="flex items-center gap-4">
-                      <dd className="mt-1 text-start text-2xl font-semibold text-gray-900 dark:text-gray-50">{kpi.value}</dd>
+                      <dd className="mt-1 text-start text-2xl font-semibold text-gray-900 dark:text-gray-50">
+                        {kpi.value}
+                      </dd>
                       <div className="flex flex-row items-center gap-0.5">
                         <div className="w-1.5 h-6 bg-blue-500 dark:bg-blue-800 rounded-lg"></div>
                         <div className="w-1.5 h-6 bg-blue-500 dark:bg-blue-800 rounded-lg"></div>
@@ -120,51 +173,77 @@ export default function DoctorKPIBlock({ tenantId, doctorId, user }: { tenantId:
         </dl>
       </Card>
 
-      {/* Alerts Card */}
+      {/* Statistics Charts Card */}
       <Card className="h-full lg:col-span-4">
-        <div className="flex items-center justify-between">
-          <p className="font-semibold text-gray-900 dark:text-gray-50">{t("alerts.title")}</p>
-          <Tooltip content={t("alerts.tooltip")} showArrow={false}>
+        <div className="flex items-center justify-between mb-6">
+          <p className="font-semibold text-gray-900 dark:text-gray-50">
+            Statistiques des Rendez-vous
+          </p>
+          <Tooltip content="Vue d'ensemble des rendez-vous urgents et par médecin" showArrow={false}>
             <span className="text-sm text-gray-500 dark:text-gray-400">
               <Info width={18} />
             </span>
           </Tooltip>
         </div>
-        <ol className="mt-4 divide-y divide-gray-200 dark:divide-gray-800/20">
-          {alerts.length > 0 ? (
-            alerts.map(({ date, closed }, index) => (
-              <li
-                key={`${date}-${index}`}
-                className="flex cursor-pointer items-center justify-between px-2 py-2 transition-all duration-300 hover:bg-gray-50 hover:dark:bg-gray-800"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                    {alerts[index].message}
-                    <p className="text-sm tabular-nums text-gray-600 dark:text-gray-400">
-                      {date}
-                    </p>
-                  </span>
-                </div>
-                {closed ? (
-                  <Tooltip content={t("alerts.actions.closed")} showArrow={false}>
-                    <CheckCheck width={18} className="cursor-pointer text-blue-500" />
-                  </Tooltip>
-                ) : (
-                  <div className="items-top flex justify-end gap-2">
-                    <Tooltip content={t("alerts.actions.close")} showArrow={false}>
-                      <BookmarkX width={18} className="cursor-pointer text-red-500" />
-                    </Tooltip>
-                    <Tooltip content={t("alerts.actions.pin")} showArrow={false}>
-                      <Pin width={18} className="cursor-pointer text-blue-500" />
-                    </Tooltip>
-                  </div>
-                )}
-              </li>
-            ))
-          ) : (
-            <li className="px-2 py-2 text-gray-500 dark:text-gray-400 text-sm">Aucune alerte</li>
-          )}
-        </ol>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Urgent Stats Chart */}
+          <div className="flex flex-col items-center justify-center">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              Rendez-vous Urgents
+            </p>
+            {isLoadingUrgent ? (
+              <div className="flex items-center justify-center h-48">
+                <p className="text-sm text-gray-500">Chargement...</p>
+              </div>
+            ) : urgentStatsData.length > 0 && urgentStatsData.some(d => d.amount > 0) ? (
+              <DonutChart
+                data={urgentStatsData}
+                variant="donut"
+                category="name"
+                value="amount"
+                valueFormatter={(number: number) =>
+                  `${Intl.NumberFormat("fr-FR").format(number).toString()}`
+                }
+                colors={["red", "blue"]}
+              />
+            ) : (
+              <div className="flex items-center justify-center h-48">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Aucune donnée disponible
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Doctor Appointments Chart */}
+          <div className="flex flex-col items-center justify-center">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              Rendez-vous par Médecin
+            </p>
+            {isLoadingDoctors ? (
+              <div className="flex items-center justify-center h-48">
+                <p className="text-sm text-gray-500">Chargement...</p>
+              </div>
+            ) : doctorAppointmentsData.length > 0 ? (
+              <DonutChart
+                data={doctorAppointmentsData}
+                variant="pie"
+                category="name"
+                value="amount"
+                valueFormatter={(number: number) =>
+                  `${Intl.NumberFormat("fr-FR").format(number).toString()}`
+                }
+              />
+            ) : (
+              <div className="flex items-center justify-center h-48">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Aucune donnée disponible
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
       </Card>
     </div>
   );

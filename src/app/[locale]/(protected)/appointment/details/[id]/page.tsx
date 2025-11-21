@@ -30,12 +30,6 @@ export default function AppointmentDetailsPage() {
         router.push(`/appointments/${appointment?.id}/edit`);
     };
 
-    const handleDelete = () => {
-        if (confirm('Êtes-vous sûr de vouloir supprimer ce rendez-vous ?')) {
-            alert('Fonctionnalité de suppression en cours de développement');
-        }
-    };
-
     if (loading) return <LoadingState />;
     if (error || !appointment) return <ErrorState error={error || 'Rendez-vous non trouvé'} onBack={() => router.back()} />;
 
@@ -75,7 +69,6 @@ export default function AppointmentDetailsPage() {
                 onExport={handleExport}
                 onShare={handleShare}
                 onEdit={handleEdit}
-                onDeleted={handleDelete}
             />
 
             <Card className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
