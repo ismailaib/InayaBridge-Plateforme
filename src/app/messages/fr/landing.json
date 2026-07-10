@@ -1,0 +1,35 @@
+{
+    "hero": {
+      "badge": "Découvrez notre assistant qui accompagne les médecins au quotidien.",
+      "titleLine1": "La santé accessible.",
+      "titleLine2": "Pour tous, partout.",
+      "description": "Une plateforme gratuite de téléconsultation pensée pour lever les barrières géographiques et rendre les soins accessibles à chacun.",
+      "primaryCta": "Découvrir la plateforme",
+      "videoCta": "Voir la démo",
+      "imageAlt": "Interface de la plateforme de téléconsultation",
+      "stats": {
+        "users": {
+          "value": "100K+",
+          "label": "Utilisateurs"
+        },
+        "support": {
+          "value": "24/7",
+          "label": "Support"
+        },
+        "satisfaction": {
+          "value": "98%",
+          "label": "Satisfaction"
+        }
+      },
+      "floating": {
+        "confirmed": {
+          "title": "Consultation confirmée",
+          "subtitle": "À l'instant"
+        },
+        "fast": {
+          "title": "Rapide & efficace",
+          "subtitle": "Moins de 1 min d'attente"
+        }
+      }
+    }
+  }

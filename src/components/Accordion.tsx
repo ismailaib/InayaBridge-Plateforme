@@ -1,14 +1,13 @@
 // Tremor Accordion [v0.0.1]
+import { cx } from "@/lib/utils";
+import * as AccordionPrimitives from "@radix-ui/react-accordion";
+import { RiAddLine } from "@remixicon/react";
 
-import * as AccordionPrimitives from "@radix-ui/react-accordion"
-import { RiAddLine } from "@remixicon/react"
-import React from "react"
+import React from "react";
 
-import { cx } from "@/lib/utils"
+const Accordion = AccordionPrimitives.Root;
 
-const Accordion = AccordionPrimitives.Root
-
-Accordion.displayName = "AccordionItem"
+Accordion.displayName = "AccordionItem";
 
 const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitives.Trigger>,
@@ -45,9 +44,9 @@ const AccordionTrigger = React.forwardRef<
       />
     </AccordionPrimitives.Trigger>
   </AccordionPrimitives.Header>
-))
+));
 
-AccordionTrigger.displayName = "AccordionTrigger"
+AccordionTrigger.displayName = "AccordionTrigger";
 
 const AccordionContent = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitives.Content>,
@@ -72,9 +71,9 @@ const AccordionContent = React.forwardRef<
       {children}
     </div>
   </AccordionPrimitives.Content>
-))
+));
 
-AccordionContent.displayName = "AccordionContent"
+AccordionContent.displayName = "AccordionContent";
 
 const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitives.Item>,
@@ -92,8 +91,8 @@ const AccordionItem = React.forwardRef<
     tremor-id="tremor-raw"
     {...props}
   />
-))
+));
 
-AccordionItem.displayName = "AccordionItem"
+AccordionItem.displayName = "AccordionItem";
 
-export { Accordion, AccordionContent, AccordionItem, AccordionTrigger }
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger };

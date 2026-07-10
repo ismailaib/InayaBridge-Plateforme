@@ -1,10 +1,9 @@
 // Tremor Switch [v0.0.1]
+import { cx, focusRing } from "@/lib/utils";
+import * as SwitchPrimitives from "@radix-ui/react-switch";
+import { VariantProps, tv } from "tailwind-variants";
 
-import * as SwitchPrimitives from "@radix-ui/react-switch"
-import React from "react"
-import { tv, VariantProps } from "tailwind-variants"
-
-import { cx, focusRing } from "@/lib/utils"
+import React from "react";
 
 const switchVariants = tv({
   slots: {
@@ -15,7 +14,7 @@ const switchVariants = tv({
       // ring color
       "ring-black/5 dark:ring-gray-800",
       // checked
-      "data-[state=checked]:bg-[#00b38f] data-[state=checked]:dark:bg-[#00b38f]",
+      "data-[state=checked]:bg-[#3b82f6] data-[state=checked]:dark:bg-[#3b82f6]",
       // disabled
       "data-[disabled]:cursor-default",
       // disabled checked
@@ -23,7 +22,7 @@ const switchVariants = tv({
       "data-[disabled]:data-[state=checked]:ring-gray-300",
       // disabled checked dark
       "data-[disabled]:data-[state=checked]:dark:ring-gray-900",
-      "data-[disabled]:data-[state=checked]:dark:bg-[#003c30]",
+      "data-[disabled]:data-[state=checked]:dark:bg-[#3b82f6]",
       // disabled unchecked
       "data-[disabled]:data-[state=unchecked]:ring-gray-300",
       "data-[disabled]:data-[state=unchecked]:bg-gray-100",
@@ -33,13 +32,13 @@ const switchVariants = tv({
       focusRing,
     ],
     thumb: [
-      // base
       "pointer-events-none relative inline-block transform appearance-none rounded-full border-none shadow-lg outline-none transition-all duration-150 ease-in-out focus:border-none focus:outline-none focus:outline-transparent",
-      // background color
       "bg-white dark:bg-gray-50",
-      // disabled
       "group-data-[disabled]:shadow-none",
       "group-data-[disabled]:bg-gray-50 group-data-[disabled]:dark:bg-gray-500",
+      // Handle LTR and RTL directions
+      "data-[state=checked]:ltr:translate-x-4 data-[state=unchecked]:ltr:translate-x-0",
+      "data-[state=checked]:rtl:-translate-x-4 data-[state=unchecked]:rtl:translate-x-0",
     ],
   },
   variants: {
@@ -59,7 +58,7 @@ const switchVariants = tv({
   defaultVariants: {
     size: "default",
   },
-})
+});
 
 interface SwitchProps
   extends Omit<
@@ -72,7 +71,7 @@ const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
   SwitchProps
 >(({ className, size, ...props }: SwitchProps, forwardedRef) => {
-  const { root, thumb } = switchVariants({ size })
+  const { root, thumb } = switchVariants({ size });
   return (
     <SwitchPrimitives.Root
       ref={forwardedRef}
@@ -82,9 +81,9 @@ const Switch = React.forwardRef<
     >
       <SwitchPrimitives.Thumb className={cx(thumb())} />
     </SwitchPrimitives.Root>
-  )
-})
+  );
+});
 
-Switch.displayName = "Switch"
+Switch.displayName = "Switch";
 
-export { Switch }
+export { Switch };

@@ -1,54 +1,29 @@
-const benefits = [
-  {
-    title: "Offrir un accès aux soins",
-    description:
-      "Chaque don permet à plus de patients d’accéder gratuitement à un médecin, sans frais cachés ni abonnement.",
-  },
-  {
-    title: "Soutenir un projet libre",
-    description:
-      "InayaBridge est 100% gratuit et développé par une équipe passionnée. Vos dons financent le développement et l'hébergement.",
-  },
-  {
-    title: "Préserver l’indépendance",
-    description:
-      "Pas de publicité. Pas de vente de données. Vos dons nous permettent de rester libres et centrés sur l’humain.",
-  },
-  {
-    title: "Équiper les médecins",
-    description:
-      "Nous aidons les médecins à suivre et accompagner leurs patients avec des outils simples et efficaces.",
-  },
-  {
-    title: "Investir dans l’avenir",
-    description:
-      "Chaque fonctionnalité, chaque amélioration, chaque mise à jour… est propulsée par le soutien de la communauté.",
-  },
-  {
-    title: "Impact réel, concret",
-    description:
-      "Votre don peut faire la différence pour une famille dans une zone rurale ou un patient isolé.",
-  },
-  {
-    title: "Transparence totale",
-    description:
-      "Tous les financements sont traçables et utilisés pour le projet uniquement. Zéro bullshit.",
-  },
-  {
-    title: "Participer à un mouvement",
-    description:
-      "Ce n’est pas juste un projet. C’est un pont vers une nouvelle façon de penser la santé. Rejoignez-le.",
-  },
-]
+"use client";
+
+import { useTranslations } from "@/lib/i18n/useTranslations";
 
 export default function Benefits() {
+  const t = useTranslations("benefits");
+
+  // Access each benefit individually by index
+  const benefits = [
+    { title: t("items.0.title"), description: t("items.0.description") },
+    { title: t("items.1.title"), description: t("items.1.description") },
+    { title: t("items.2.title"), description: t("items.2.description") },
+    { title: t("items.3.title"), description: t("items.3.description") },
+    { title: t("items.4.title"), description: t("items.4.description") },
+    { title: t("items.5.title"), description: t("items.5.description") },
+    { title: t("items.6.title"), description: t("items.6.description") },
+    { title: t("items.7.title"), description: t("items.7.description") },
+  ];
+
   return (
     <section aria-labelledby="benefits-title" className="mx-auto mt-44">
       <h2
         id="benefits-title"
         className="inline-block bg-gradient-to-t from-gray-900 to-gray-800 bg-clip-text py-2 text-4xl font-bold tracking-tighter text-transparent md:text-5xl dark:from-gray-50 dark:to-gray-300"
       >
-        On l’a lancé. Vous pouvez l’amplifier.{" "}
+        {t("title")}
       </h2>
       <dl className="mt-8 grid grid-cols-4 gap-x-10 gap-y-8 sm:mt-12 sm:gap-y-10">
         {benefits.map((benefit, index) => (
@@ -63,5 +38,5 @@ export default function Benefits() {
         ))}
       </dl>
     </section>
-  )
+  );
 }

@@ -1,10 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -25,9 +21,7 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
     "target": "ES2017"
   },
@@ -35,9 +29,13 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+    ".next/types/**/*.ts",
+    "src/app/(protected)/ai/components/Avatar.jsx",
+    "src/app/(protected)/ai/components/Environement.jsx",
+    "src/app/(protected)/ai/components/Experience.jsx",
+    "src/app/(protected)/ai/components/UI.jsx",
+    "src/app/[locale]/(landing)/changelog/tsx.mdx",
+    "src/app/[locale]/(landing)/changelog/page.tsx"
+, "src/app/[locale]/(protected)/appointment/flow-edit"  ],
+  "exclude": ["node_modules"]
 }

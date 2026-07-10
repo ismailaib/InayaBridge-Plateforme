@@ -1,0 +1,67 @@
+{
+  "header": {
+    "title": "Messaging",
+    "searchPlaceholder": "Search for a patient...",
+    "tabs": {
+      "chats": "Chats",
+      "appointments": "Appointments"
+    }
+  },
+  "list": {
+    "addPatient": "Add new patient"
+  },
+  "appointments": {
+    "emptyTitle": "No appointments today",
+    "emptyDescription": "Click to schedule a new appointment",
+    "new": "New appointment"
+  },
+  "recording": {
+    "status": "Recording...",
+    "stop": "Stop"
+  },
+  "messages": {
+    "assistantGreeting": "Hello! How can I help you today?",
+    "voiceLabel": "Voice message",
+    "assistantVoiceReply": "I've received your voice message. Could you please clarify your question?",
+    "attachmentSent": "File sent: {filename}",
+    "assistantAttachmentReply": "I've received your {type}. I'll review it."
+  },
+  "attachments": {
+    "image": "Photo",
+    "document": "Document",
+    "pdf": "PDF",
+    "labels": {
+      "image": "image",
+      "document": "document",
+      "pdf": "PDF document"
+    }
+  },
+  "input": {
+    "placeholder": "Type a message..."
+  },
+  "statuses": {
+    "online": "Online"
+  },
+  "lastSeen": {
+    "online": "Online",
+    "fiveMinutes": "5 minutes ago",
+    "twoHours": "2 hours ago",
+    "yesterday": "Yesterday"
+  },
+  "chat": {
+    "page": {
+      "placeholder": "Ask your medical question here or describe the patient's problem...",
+      "loading": {
+        "sock": "Looking for the server's socks...",
+        "tires": "Pumping up the environment's tires...",
+        "camera": "Adjusting the camera, selfie incoming!",
+        "almost": "Almost ready... Maximum suspense!"
+      }
+    },
+    "ui": {
+      "empty": "No messages yet.",
+      "thinking": "Thinking…"
+    }
+  }
+
+}

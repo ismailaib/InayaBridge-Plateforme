@@ -1,0 +1,186 @@
+{
+  "roleSelection": {
+    "title": "Let's get to know you! Are you more of a...",
+    "doctor": {
+      "label": "Doctor",
+      "description": "Manage your patients, write prescriptions, and connect with care networks."
+    },
+    "patient": {
+      "label": "Patient",
+      "description": "Access personalized care, manage your appointments, and communicate with doctors."
+    },
+    "back": "Back",
+    "continue": "Let's go",
+    "conditions": "By signing up, you agree to our",
+    "and": "and our"
+  },
+  "doctor": {
+    "logoAlt": "InayaBridge logo",
+    "title": "Welcome, Doctor",
+    "subtitle": {
+      "specialisation": "Great! Now choose your speciality to complete your profile.",
+      "form": "You're about to join our medical community."
+    },
+    "additionalFields": {
+      "dateOfBirth": "Date of birth"
+    },
+    "aside": {
+      "aria": "Product showcase",
+      "title": "The smart solution for healthcare professionals",
+      "description": "Manage appointments, patients, and medical records with ease.",
+      "imageAlt": "Telemedicine dashboard illustration",
+      "logoAlt": "Partner logo {id}"
+    },
+    "specialisation": {
+      "options": [
+        {
+          "id": "general_practitioner",
+          "label": "General practitioner"
+        },
+        {
+          "id": "cardiologist",
+          "label": "Cardiologist"
+        },
+        {
+          "id": "dermatologist",
+          "label": "Dermatologist"
+        },
+        {
+          "id": "pediatrician",
+          "label": "Pediatrician"
+        },
+        {
+          "id": "radiologist",
+          "label": "Radiologist"
+        },
+        {
+          "id": "neurologist",
+          "label": "Neurologist"
+        },
+        {
+          "id": "gynecologist",
+          "label": "Gynecologist"
+        },
+        {
+          "id": "dentist",
+          "label": "Dentist"
+        },
+        {
+          "id": "oncologist",
+          "label": "Oncologist"
+        },
+        {
+          "id": "other",
+          "label": "Other speciality"
+        }
+      ],
+      "otherFieldLabel": "Speciality",
+      "otherPlaceholder": "e.g. Sports medicine",
+      "back": "Back",
+      "continue": "Continue"
+    }
+  },
+  "patient": {
+    "logoAlt": "InayaBridge logo",
+    "title": "Welcome, Patient",
+    "subtitle": "Thanks for joining our platform. Please complete the information below to continue.",
+    "additionalFields": {
+      "cinLabel": "National ID number (CIN)",
+      "cinPlaceholder": "e.g. C123456",
+      "dateOfBirth": "Date of birth"
+    },
+    "aside": {
+      "aria": "Illustration",
+      "title": "Care at your fingertips",
+      "description": "Book appointments, consult your doctors, and access your medical history effortlessly.",
+      "imageAlt": "Telehealth illustration",
+      "logoAlt": "Partner logo {id}"
+    }
+  },
+  "shared": {
+    "validation": {
+      "firstName": "First name must be at least 2 characters",
+      "lastName": "Last name must be at least 2 characters",
+      "email": "Please enter a valid email address",
+      "phone": "The phone number must be a valid Moroccan number (+212XXXXXXXXX)",
+      "address": "The address must be at least 5 characters",
+      "password": "Password must be at least 8 characters",
+      "confirmPassword": "Passwords do not match",
+      "gender": "Please select your gender",
+      "cin": "CIN must follow a valid format (e.g. AB123456)"
+    },
+    "backendErrors": {
+      "phoneNumber": "Invalid phone number, it must start with +212",
+      "email": "This email address already exists",
+      "cin": "This CIN already exists",
+      "firstName": "Invalid first name",
+      "lastName": "Invalid last name",
+      "password": "Password is too weak",
+      "dateOfBirth": "Invalid date of birth"
+    },
+    "apiErrors": {
+      "emailExists": "This email address is already in use",
+      "phoneExists": "This phone number is already in use",
+      "cinExists": "This CIN is already registered",
+      "invalidPhone": "Invalid phone number",
+      "validationFailed": "Please check your information",
+      "default": "Something went wrong. Please try again."
+    },
+    "toast": {
+      "validationTitle": "Validation error",
+      "registrationErrorTitle": "Sign-up error"
+    },
+    "fields": {
+      "firstName": {
+        "label": "First name",
+        "placeholder": "Enter your first name"
+      },
+      "lastName": {
+        "label": "Last name",
+        "placeholder": "Enter your last name"
+      },
+      "email": {
+        "label": "Email address",
+        "placeholder": "name@example.com"
+      },
+      "phone": {
+        "label": "Phone number",
+        "placeholder": "e.g. +212612345678"
+      },
+      "address": {
+        "label": "Full address",
+        "placeholder": "Enter your full address"
+      },
+      "gender": {
+        "label": "Gender",
+        "placeholder": "Select",
+        "options": {
+          "male": "Male",
+          "female": "Female"
+        }
+      },
+      "cin": {
+        "label": "CIN (National identity card)",
+        "placeholder": "e.g. AB123456",
+        "helper": "Format: 1-2 letters followed by 6 digits"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "At least 8 characters"
+      },
+      "confirmPassword": {
+        "label": "Confirm password",
+        "placeholder": "Repeat the password"
+      }
+    },
+    "terms": {
+      "intro": "By signing up, you agree to our",
+      "and": "and our"
+    },
+    "buttons": {
+      "back": "Back",
+      "submit": "Create my workspace",
+      "submitLoading": "Creating..."
+    }
+  }
+}

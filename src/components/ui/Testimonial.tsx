@@ -1,5 +1,6 @@
-import Image from "next/image"
-import Balancer from "react-wrap-balancer"
+import Balancer from "react-wrap-balancer";
+
+import Image from "next/image";
 
 export default function Testimonial() {
   return (
@@ -16,7 +17,7 @@ export default function Testimonial() {
         </blockquote>
         <figcaption className="mt-10 flex items-center justify-center gap-x-5">
           <Image
-            className="h-11 w-11 rounded-full object-cover shadow-lg shadow-[#00b38f]/50 ring-2 ring-white dark:ring-gray-700"
+            className="h-11 w-11 rounded-full object-cover shadow-lg shadow-[#3b82f6]/50 ring-2 ring-white dark:ring-gray-700"
             width={200}
             height={200}
             src="/images/testimonial.webp"
@@ -33,5 +34,5 @@ export default function Testimonial() {
         </figcaption>
       </figure>
     </section>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import ThemedImage from "./ThemedImage"
+import ThemedImage from "./ThemedImage";
 
 export default function HeroImage() {
   return (
@@ -13,10 +13,10 @@ export default function HeroImage() {
             alt="A preview of the Database web app"
             width={2400}
             height={2000}
-            className="rounded-xl shadow-2xl dark:shadow-[#009e7f]/10"
+            className="rounded-xl shadow-2xl dark:shadow-[#3b82f6]/10"
           />
         </div>
       </div>
     </section>
-  )
+  );
 }

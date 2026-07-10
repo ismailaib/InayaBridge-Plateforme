@@ -1,0 +1,251 @@
+import { RiAddLine, RiArrowDownSLine } from '@remixicon/react';
+import React from 'react';
+
+import { cx, focusRing } from '@/lib/utils';
+
+import { Service } from '@/api/services';
+import { Button } from '@/components/Button';
+import { Checkbox } from '@/components/Checkbox';
+import { Label } from '@/components/Label';
+import {
+  Popover,
+  PopoverClose,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/Popover';
+
+interface DataTableFilterProps {
+  column: any;
+  title?: string;
+  options?: {
+    label: string;
+    value: string;
+  }[];
+  formatter?: (value: any) => string;
+}
+
+const ColumnFiltersLabel = ({
+  columnFilterLabels,
+  className,
+}: {
+  columnFilterLabels: string[] | undefined;
+  className?: string;
+}) => {
+  if (!columnFilterLabels) return null;
+
+  if (columnFilterLabels.length < 3) {
+    return (
+      <span className={cx('truncate', className)}>
+        {columnFilterLabels.map((name, index) => (
+          <span
+            key={name}
+            className={cx('font-semibold text-blue-600 dark:text-blue-400')}
+          >
+            {name}
+            {index < columnFilterLabels.length - 1 && ', '}
+          </span>
+        ))}
+      </span>
+    );
+  }
+
+  return (
+    <>
+      <span
+        className={cx(
+          'font-semibold text-blue-600 dark:text-blue-400',
+          className,
+        )}
+      >
+        {columnFilterLabels[0]} and {columnFilterLabels.length - 1} more
+      </span>
+    </>
+  );
+};
+
+export function DataTableFilter({
+  column,
+  title,
+  options,
+  formatter = (value) => value.toString(),
+}: DataTableFilterProps) {
+  const columnFilters = column?.getFilterValue() as string[] | undefined;
+
+  const [selectedValues, setSelectedValues] = React.useState<string[]>(
+    columnFilters || [],
+  );
+
+  const columnFilterLabels = React.useMemo(() => {
+    if (!selectedValues || selectedValues.length === 0) return undefined;
+    return selectedValues.map(formatter);
+  }, [selectedValues, formatter]);
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className={cx(
+            'flex w-full items-center gap-x-1.5 whitespace-nowrap rounded-md border border-gray-300 px-2 py-1.5 font-medium text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 hover:dark:bg-gray-900 sm:w-fit sm:text-xs',
+            selectedValues.length > 0 ? '' : 'border-dashed',
+            focusRing,
+          )}
+        >
+          <span
+            aria-hidden="true"
+            onClick={(e) => {
+              if (selectedValues.length > 0) {
+                e.stopPropagation();
+                column?.setFilterValue([]);
+                setSelectedValues([]);
+              }
+            }}
+          >
+            <RiAddLine
+              className={cx(
+                '-ml-px size-5 shrink-0 transition sm:size-4',
+                selectedValues.length > 0 && 'rotate-45 hover:text-red-500',
+              )}
+              aria-hidden="true"
+            />
+          </span>
+          {columnFilterLabels && columnFilterLabels.length > 0 ? (
+            <span>{title}</span>
+          ) : (
+            <span className="w-full text-left sm:w-fit">{title}</span>
+          )}
+          {columnFilterLabels && columnFilterLabels.length > 0 && (
+            <span
+              className="h-4 w-px bg-gray-300 dark:bg-gray-700"
+              aria-hidden="true"
+            />
+          )}
+          <ColumnFiltersLabel
+            columnFilterLabels={columnFilterLabels}
+            className="w-full text-left sm:w-fit"
+          />
+          <RiArrowDownSLine
+            className="size-5 shrink-0 text-gray-500 sm:size-4"
+            aria-hidden="true"
+          />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        align="start"
+        sideOffset={7}
+        className="min-w-[calc(var(--radix-popover-trigger-width))] max-w-[calc(var(--radix-popover-trigger-width))] sm:min-w-56 sm:max-w-56"
+        onInteractOutside={() => {
+          if (columnFilters?.length === 0) {
+            column?.setFilterValue([]);
+            setSelectedValues([]);
+          }
+        }}
+      >
+        <form
+          className="overflow-visible"
+          onSubmit={(e) => {
+            e.preventDefault();
+            column?.setFilterValue(selectedValues);
+          }}
+        >
+          <div className="space-y-2">
+            <div>
+              <Label className="text-base font-medium sm:text-sm">
+                Filter by {title}
+              </Label>
+              <div className="mt-2 space-y-2 overflow-y-auto overflow-x-visible py-0.5 pl-1 sm:max-h-36">
+                {options?.map((option) => (
+                  <div key={option.value} className="flex items-center gap-2">
+                    <Checkbox
+                      id={option.value}
+                      checked={selectedValues.includes(option.value)}
+                      onCheckedChange={(checked) => {
+                        setSelectedValues((prev) => {
+                          if (checked) {
+                            return [...prev, option.value];
+                          } else {
+                            return prev.filter(
+                              (value) => value !== option.value,
+                            );
+                          }
+                        });
+                      }}
+                    />
+                    <Label
+                      htmlFor={option.value}
+                      className="text-base sm:text-sm"
+                    >
+                      {option.label}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <PopoverClose className="w-full" asChild>
+              <Button type="submit" className="w-full sm:py-1">
+                Apply
+              </Button>
+            </PopoverClose>
+            {columnFilterLabels && columnFilterLabels.length > 0 && (
+              <Button
+                variant="secondary"
+                className="w-full sm:py-1"
+                type="button"
+                onClick={() => {
+                  column?.setFilterValue([]);
+                  setSelectedValues([]);
+                }}
+              >
+                Reset
+              </Button>
+            )}
+          </div>
+        </form>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+const DepartementServiceFilter = ({
+  services,
+  selectedServices,
+  onServicesChange,
+}: {
+  services: Service[];
+  selectedServices: string[];
+  onServicesChange: (value: string[]) => void;
+}) => {
+
+  const departmentColumn = {
+    getFilterValue: () => selectedServices,
+    setFilterValue: (value: string[]) => {
+      onServicesChange(value);
+    },
+  };
+
+  return (
+    <>
+      <div className="relative">
+        <div >
+          <div >
+            <DataTableFilter
+              column={departmentColumn}
+              title="Services"
+              options={services.map((service: Service) => ({
+                label: service.name,
+                value: service.id,
+              }))}
+              formatter={(value) => {
+                const match = services.find((s) => s.id === value);
+                return match ? match.name : value;
+              }}
+            />
+
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default DepartementServiceFilter;

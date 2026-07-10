@@ -1,0 +1,27 @@
+{
+    "title": "Questions Fréquemment Posées",
+    "contact": "Vous ne trouvez pas la réponse à votre question ? N’hésitez pas à contacter notre",
+    "link": "service client",
+    "items": [
+      {
+        "q": "Est-ce que la plateforme est gratuite pour les patients ?",
+        "a": "Oui, InayaBridge est et restera entièrement gratuite pour les patients. Aucune carte bancaire, aucun abonnement, aucun engagement."
+      },
+      {
+        "q": "Les médecins doivent-ils payer pour utiliser la plateforme ?",
+        "a": "Non, toutes les fonctionnalités sont gratuites dans la version actuelle (V1). Dans les futures versions, des outils avancés (statistiques, exports, API) seront proposés via des offres payantes."
+      },
+      {
+        "q": "Comment les consultations en ligne sont-elles sécurisées ?",
+        "a": "Les consultations utilisent un protocole de chiffrement de bout en bout. Vos appels ne sont ni enregistrés, ni partagés. Notre priorité : la confidentialité médicale."
+      },
+      {
+        "q": "Peut-on accéder à la plateforme sur mobile ?",
+        "a": "Oui, InayaBridge fonctionne depuis n'importe quel navigateur moderne, sur ordinateur, tablette ou smartphone. Aucun téléchargement requis."
+      },
+      {
+        "q": "Comment rejoindre la plateforme en tant que médecin ?",
+        "a": "Il suffit de créer un compte professionnel. Vous pouvez commencer à consulter dès validation de votre profil. C’est simple, rapide, et sans frais cachés."
+      }
+    ]
+  }

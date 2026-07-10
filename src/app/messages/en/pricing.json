@@ -1,0 +1,114 @@
+{
+  "badge": "Pricing",
+  "title": "Plans that grow with your practice",
+  "description": "Free features for everyone, and advanced tools for professionals who aim higher. Our plans are designed to meet your needs while preserving the core of our mission: providing healthcare to all using InayaBridge.",
+  "billing": {
+    "monthly": "Monthly",
+    "annually": "Annual (20% discount)"
+  },
+  "perUser": "per user",
+  "plans": {
+    "essentiel": {
+      "name": "Essential",
+      "price": "0 Dh",
+      "description": "Access to all basic features, free forever.",
+      "capacity": ["Unlimited consultations", "Unlimited cloud storage"],
+      "features": [
+        "Appointment management",
+        "Video consultations",
+        "Complete medical record"
+      ],
+      "isStarter": true,
+      "isRecommended": false,
+      "buttonText": "Start for free",
+      "buttonLink": "/signup?plan=essentiel"
+    },
+    "plus": {
+      "name": "Plus",
+      "price": { "monthly": "140 Dh", "annually": "1290 Dh" },
+      "description": "Advanced tools to optimize your practice, available from version 2.",
+      "capacity": [
+        "Patient statistics",
+        "PDF export",
+        "Support within 24 hours"
+      ],
+      "features": [
+        "Consultation analysis",
+        "Automatic reminders",
+        "Early access to new features"
+      ],
+      "isStarter": false,
+      "isRecommended": false,
+      "buttonText": "Pre-registration version 2",
+      "buttonLink": "/signup?plan=plus"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": { "monthly": "290 Dh", "annually": "2490 Dh" },
+      "description": "Designed for professionals and clinics seeking comprehensive and integrated management.",
+      "capacity": [
+        "Multiple profiles",
+        "Premium support",
+        "API access (version 2.1)"
+      ],
+      "features": [
+        "Advanced statistics",
+        "Patient data export",
+        "API integrations"
+      ],
+      "isStarter": false,
+      "isRecommended": true,
+      "buttonText": "Pre-registration version 2",
+      "buttonLink": "/signup?plan=pro"
+    }
+  },
+  "sections": {
+    "base": "Basic features (current version)",
+    "advanced": "Advanced features (version 2)",
+    "support": "Support and community",
+    "popular": "Most popular",
+    "compareTitle": "Plan comparison",
+    "compareSubtitle": "Price per user monthly"
+  },
+  "features": {
+    "consultations_video_illimitees": {
+      "label": "Unlimited video consultations",
+      "tooltip": "Includes appointment booking and online calls via browser."
+    },
+    "gestion_patients_dossiers": {
+      "label": "Patient and record management",
+      "tooltip": "Adding diagnoses, prescriptions, and complete tracking."
+    },
+    "messagerie_securisee": {
+      "label": "Secure messaging",
+      "tooltip": "Direct exchange with patients via internal chat."
+    },
+    "statistiques_rapports_patients": {
+      "label": "Patient statistics and reports",
+      "tooltip": "Consultation analysis, health indicators, and summary history."
+    },
+    "exports_dossiers_pdf": {
+      "label": "Record export (PDF)",
+      "tooltip": "Generating printable and archivable medical files."
+    },
+    "rappels_automatiques": {
+      "label": "Automatic reminders",
+      "tooltip": "Notifications automatically sent to patients."
+    },
+    "acces_api_integrations": {
+      "label": "API access and integrations",
+      "tooltip": "Connecting InayaBridge to other medical tools or ERP systems (coming soon)."
+    },
+    "support_par_mail": {
+      "label": "Email support",
+      "tooltip": "Response time depends on your plan.",
+      "48h": "Within 48 hours",
+      "24h": "Within 24 hours",
+      "Prioritaire": "Immediate priority"
+    },
+    "mise_en_avant_professionnelle": {
+      "label": "Professional promotion",
+      "tooltip": "Pro badge and listing on the InayaBridge platform (optional)."
+    }
+  }
+}

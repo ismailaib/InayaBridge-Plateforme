@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/Button"
-import { cx, focusRing } from "@/lib/utils"
-import { ChevronsUpDown } from "lucide-react"
+import { Button } from "@/components/Button";
+import { cx, focusRing } from "@/lib/utils";
+import { ChevronsUpDown } from "lucide-react";
 
-import { DropdownUserProfile } from "./DropdownUserProfile"
+import { DropdownUserProfile } from "./DropdownUserProfile";
 
 export function UserProfile() {
   return (
@@ -22,9 +22,33 @@ export function UserProfile() {
             className="flex size-8 shrink-0 items-center justify-center rounded-full border border-gray-300 bg-white text-xs text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
             aria-hidden="true"
           >
-            IA
+            {typeof window !== "undefined"
+              ? (() => {
+                  const user = localStorage.getItem("user");
+                  try {
+                    return user ? JSON.parse(user).initials || "IA" : "IA";
+                  } catch {
+                    return "IA";
+                  }
+                })()
+              : "IA"}
           </span>
-          <span>Ismail Ait Bouhmad</span>
+          <span>
+            {typeof window !== "undefined"
+              ? (() => {
+                  const user = localStorage.getItem("user");
+                  try {
+                    return user
+                      ? [JSON.parse(user).firstName, JSON.parse(user).lastName]
+                          .filter(Boolean)
+                          .join(" ") || ""
+                      : "";
+                  } catch {
+                    return "";
+                  }
+                })()
+              : ""}
+          </span>
         </span>
         <ChevronsUpDown
           className="size-4 shrink-0 text-gray-500 group-hover:text-gray-700 group-hover:dark:text-gray-400"
@@ -32,5 +56,5 @@ export function UserProfile() {
         />
       </Button>
     </DropdownUserProfile>
-  )
+  );
 }

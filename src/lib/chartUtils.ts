@@ -1,6 +1,6 @@
 // Tremor chartColors [v0.1.0]
 
-export type ColorUtility = "bg" | "stroke" | "fill" | "text"
+export type ColorUtility = "bg" | "stroke" | "fill" | "text";
 
 export const chartColors = {
   blue: {
@@ -8,12 +8,6 @@ export const chartColors = {
     stroke: "stroke-blue-500",
     fill: "fill-blue-500",
     text: "text-blue-500",
-  },
-  emerald: {
-    bg: "bg-emerald-500",
-    stroke: "stroke-emerald-500",
-    fill: "fill-emerald-500",
-    text: "text-emerald-500",
   },
   violet: {
     bg: "bg-violet-500",
@@ -57,28 +51,47 @@ export const chartColors = {
     fill: "fill-fuchsia-500",
     text: "text-fuchsia-500",
   },
+  red: {
+    bg: "bg-red-500",
+    stroke: "stroke-red-500",
+    fill: "fill-red-500",
+    text: "text-red-500",
+  },
+  sky: {
+    bg: "bg-sky-400",
+    stroke: "stroke-sky-400",
+    fill: "fill-sky-400",
+    text: "text-sky-400",
+  },
+  money: {
+    bg: "bg-emerald-400",
+    stroke: "stroke-emerald-400",
+    fill: "fill-emerald-400",
+    text: "text-emerald-400",
+  },
 } as const satisfies {
   [color: string]: {
-    [key in ColorUtility]: string
-  }
-}
+    [key in ColorUtility]: string;
+  };
+};
 
-export type AvailableChartColorsKeys = keyof typeof chartColors
-
+// Update the AvailableChartColors type automatically
+export type AvailableChartColorsKeys = keyof typeof chartColors;
 export const AvailableChartColors: AvailableChartColorsKeys[] = Object.keys(
   chartColors,
-) as Array<AvailableChartColorsKeys>
+) as Array<AvailableChartColorsKeys>;
+
 
 export const constructCategoryColors = (
   categories: string[],
   colors: AvailableChartColorsKeys[],
 ): Map<string, AvailableChartColorsKeys> => {
-  const categoryColors = new Map<string, AvailableChartColorsKeys>()
+  const categoryColors = new Map<string, AvailableChartColorsKeys>();
   categories.forEach((category, index) => {
-    categoryColors.set(category, colors[index % colors.length])
-  })
-  return categoryColors
-}
+    categoryColors.set(category, colors[index % colors.length]);
+  });
+  return categoryColors;
+};
 
 export const getColorClassName = (
   color: AvailableChartColorsKeys,
@@ -89,9 +102,9 @@ export const getColorClassName = (
     stroke: "stroke-gray-500",
     fill: "fill-gray-500",
     text: "text-gray-500",
-  }
-  return chartColors[color]?.[type] ?? fallbackColor[type]
-}
+  };
+  return chartColors[color]?.[type] ?? fallbackColor[type];
+};
 
 // Tremor getYAxisDomain [v0.0.0]
 
@@ -100,10 +113,10 @@ export const getYAxisDomain = (
   minValue: number | undefined,
   maxValue: number | undefined,
 ) => {
-  const minDomain = autoMinValue ? "auto" : minValue ?? 0
-  const maxDomain = maxValue ?? "auto"
-  return [minDomain, maxDomain]
-}
+  const minDomain = autoMinValue ? "auto" : (minValue ?? 0);
+  const maxDomain = maxValue ?? "auto";
+  return [minDomain, maxDomain];
+};
 
 // Tremor hasOnlyOneValueForKey [v0.1.0]
 
@@ -111,16 +124,16 @@ export function hasOnlyOneValueForKey(
   array: any[],
   keyToCheck: string,
 ): boolean {
-  const val: any[] = []
+  const val: any[] = [];
 
   for (const obj of array) {
     if (Object.prototype.hasOwnProperty.call(obj, keyToCheck)) {
-      val.push(obj[keyToCheck])
+      val.push(obj[keyToCheck]);
       if (val.length > 1) {
-        return false
+        return false;
       }
     }
   }
 
-  return true
+  return true;
 }

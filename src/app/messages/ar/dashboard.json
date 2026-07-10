@@ -1,0 +1,390 @@
+{
+  "dashboardSettings": {
+    "title": "إعدادات لوحة التحكم",
+    "description": "قم بتخصيص أقسام واجهتك من خلال تفعيل الوحدات التي ترغب في عرضها.",
+    "modules": "الوحدات المتاحة",
+    "preferences": "التفضيلات الشخصية",
+    "specialty": "التخصص",
+    "specialtyNote": "هذا الحقل يمكن تعديله فقط من قبل المسؤول.",
+    "specialties": {
+      "general": "طبيب عام",
+      "cardio": "طبيب قلب",
+      "pediatre": "طبيب أطفال",
+      "dentist": "طبيب أسنان"
+    },
+    "language": "اللغة",
+    "notifications": "الإشعارات",
+    "compactMode": "الوضع المضغوط",
+    "modulesList": {
+      "showDiagnostics": "التشخيصات",
+      "showFollowUps": "الاستشارات المتابعة",
+      "showAdvancedStats": "الإحصائيات المتقدمة",
+      "showEvolutionCharts": "مخططات التطور",
+      "showPatientAlerts": "تنبيهات المرضى",
+      "showVideoCalls": "الاستشارات عبر الفيديو",
+      "showVitalsMonitoring": "مراقبة المؤشرات الحيوية",
+      "showAppointments": "جدول المواعيد",
+      "showLabResults": "نتائج المختبر",
+      "showPrescriptions": "الوصفات الطبية"
+    }
+  },
+  "onboarding": {
+    "title": "أكمل تسجيلك",
+    "description": "للوصول الكامل إلى لوحة التحكم، يرجى إكمال الخطوات التالية.",
+    "step": "الخطوة",
+    "completedStep": "✓ تم إكمال الخطوة",
+    "steps": {
+      "tenantProfile": {
+        "title": "إعداد مؤسستك",
+        "description": "أنشئ أو انضم إلى مؤسسة."
+      },
+      "profileVerification": {
+        "title": "تحقق من بريدك الإلكتروني",
+        "description": "لضمان أمان حسابك، يُرجى تأكيد عنوان بريدك الإلكتروني."
+      },
+      "invitationsSchedule": {
+        "title": "دعوة زملائك",
+        "description": "أضف أطباء أو موظفين آخرين."
+      },
+      "accountActivation": {
+        "title": "تفعيل حسابك",
+        "description": "بمجرد الانتهاء، قم بتفعيل حسابك للوصول إلى لوحة التحكم."
+      }
+    },
+    "allDone": {
+      "title": "تهانينا! تم إكمال جميع الخطوات.",
+      "subtitle": "يمكنك الآن الوصول الكامل إلى لوحة التحكم الخاصة بك."
+    },
+    "return": {
+      "title": "الإعداد شبه مكتمل",
+      "description": "عد إلى لوحة التحكم لإكمال الخطوات المتبقية وإنهاء إنشاء مساحة العمل الخاصة بك.",
+      "button": "العودة إلى لوحة التحكم"
+    }
+  },
+  "tenantForm": {
+    "title": "إعداد المؤسسة",
+    "description": "تجمع المؤسسة المعلومات المهنية والأعضاء العاملين فيها.",
+    "name": "اسم المؤسسة",
+    "namePlaceholder": "مثال: عيادة المركز",
+    "descriptionLabel": "الوصف",
+    "descriptionPlaceholder": "مثال: مركز طبي متعدد التخصصات",
+    "type": "نوع المؤسسة",
+    "submit": "حفظ المؤسسة",
+    "submitting": "جارٍ الحفظ...",
+    "privacySettings": {
+      "title": "جعل المؤسسة خاصة",
+      "description": "لن يتمكن المرضى من العثور على هذه المؤسسة في القائمة العامة."
+    }
+  },
+  "verification": {
+    "title": "تأكيد البريد الإلكتروني",
+    "description": "لضمان أمان حسابك، يُرجى تأكيد عنوان بريدك الإلكتروني بإدخال الرمز الذي أرسلناه إليك.",
+    "openDialog": "تأكيد البريد الإلكتروني",
+    "codeLabel": "رمز التحقق",
+    "codePlaceholder": "أدخل الرمز المرسل إلى بريدك الإلكتروني",
+    "verifyButton": "تأكيد",
+    "verifying": "جاري التأكيد...",
+    "sendingCode": "جاري إرسال رمز التحقق...",
+    "loading": "جاري التحضير...",
+    "resendButton": "إعادة إرسال الرمز",
+    "resending": "جاري الإرسال...",
+    "resendIn": "يمكن إعادة الإرسال خلال",
+    "successTitle": "تم تأكيد البريد الإلكتروني!",
+    "successMessage": "تم تأكيد بريدك الإلكتروني بنجاح.",
+    "errorUserEmailMissing": "تعذر العثور على البريد الإلكتروني للمستخدم. يُرجى تسجيل الدخول مرة أخرى.",
+    "errorUserDataMissing": "تعذر العثور على بيانات المستخدم. يُرجى تسجيل الدخول مرة أخرى.",
+    "errorSendFailed": "فشل إرسال رمز التحقق. يُرجى المحاولة مرة أخرى.",
+    "errorResendFailed": "فشل في إعادة إرسال رمز التحقق. يُرجى المحاولة مرة أخرى.",
+    "errorInvalidCode": "رمز التحقق غير صالح. يُرجى المحاولة مرة أخرى.",
+    "errorTooManyRequests": "تم إرسال رمز تحقق مؤخرًا. يُرجى الانتظار قليلًا قبل المحاولة مجددًا.",
+    "dialogTitle": "تحقق من بريدك الإلكتروني",
+    "dialogDescription": "لقد أرسلنا رمز تحقق إلى بريدك الإلكتروني. أدخله أدناه لإتمام العملية."
+  },
+  "pricing": {
+    "openDialog": "اختر خطة الاشتراك",
+    "title": "اختر خطتك",
+    "description": "قارن بين عروضنا واختر ما يناسب احتياجاتك.",
+    "perMonth": "/شهريًا",
+    "perYear": "/سنوياً",
+    "capacityTitle": "قدرات",
+    "featuresTitle": "الميزات",
+    "recommended": "موصى به",
+    "selectPlan": "اختر هذه الخطة",
+    "confirmPlan": "تأكيد الخطة",
+    "saving": "جارٍ التأكيد...",
+    "successTitle": "تم اختيار الخطة بنجاح!",
+    "successMessage": "لقد اخترت الخطة بنجاح.",
+    "plans": [
+      {
+        "id": "essential",
+        "name": "الأساسي",
+        "price": {
+          "monthly": "0 درهم",
+          "annually": "0 درهم"
+        },
+        "description": "وصول كامل إلى الوظائف الأساسية. مثالي للممارسين المبتدئين.",
+        "capacity": ["استشارات غير محدودة", "مراسلة", "ملفات المرضى"],
+        "features": ["إدارة المواعيد", "استشارات بالفيديو", "سجل طبي كامل"],
+        "isStarter": true,
+        "isRecommended": false,
+        "buttonText": "ابدأ مجانًا",
+        "buttonLink": "#"
+      },
+      {
+        "id": "plus",
+        "name": "بلَس",
+        "price": {
+          "monthly": "140 درهم",
+          "annually": "1290 درهم"
+        },
+        "description": "أدوات متقدمة لتحسين ممارستك اعتبارًا من الإصدار 2.",
+        "capacity": ["إحصاءات المرضى", "تصدير PDF", "دعم أولوية"],
+        "features": [
+          "تحليل الاستشارات",
+          "إدارة التذكيرات الآلية",
+          "وصول مبكر إلى التحديثات"
+        ],
+        "isStarter": false,
+        "isRecommended": false,
+        "buttonText": "تسجيل مسبق للإصدار 2",
+        "buttonLink": "#"
+      },
+      {
+        "id": "pro",
+        "name": "برو",
+        "price": {
+          "monthly": "290 درهم",
+          "annually": "2490 درهم"
+        },
+        "description": "للمهنيين أو العيادات التي ترغب في مركزية كل شيء.",
+        "capacity": [
+          "حسابات متعددة",
+          "دعم مميز",
+          "وصول إلى واجهة API (الإصدار 2.1)"
+        ],
+        "features": [
+          "إحصاءات متقدمة",
+          "تصدير بيانات المرضى",
+          "واجهة API وتكاملات"
+        ],
+        "isStarter": false,
+        "isRecommended": true,
+        "buttonText": "تسجيل مسبق للإصدار 2",
+        "buttonLink": "#"
+      }
+    ]
+  },
+  "kpis": {
+    "cardsSection": {
+      "title": "إحصاءات الأسبوع",
+      "tooltip": "تعرض هذه الإحصاءات أبرز مؤشرات الأسبوع."
+    },
+    "cards": {
+      "todayAppointments": {
+        "title": "مواعيد اليوم",
+        "tooltip": "إجمالي عدد المواعيد المجدولة لليوم."
+      },
+      "waitingPatients": {
+        "title": "مرضى في انتظار",
+        "tooltip": "المرضى الموجودون في قاعة الانتظار أو الذين لم تتم خدمتهم بعد."
+      },
+      "finishedConsultations": {
+        "title": "استشارات مكتملة (٧ أيام)",
+        "tooltip": "عدد الاستشارات المكتملة خلال الأيام السبعة الماضية."
+      },
+      "newPatients": {
+        "title": "مرضى جدد (شهريًا)",
+        "tooltip": "عدد المرضى الذين تم تسجيلهم خلال الشهر الحالي."
+      },
+      "videoConsultations": {
+        "title": "استشارات عبر الفيديو",
+        "tooltip": "إجمالي عدد الاستشارات المنجزة عن بعد."
+      },
+      "csatScore": {
+        "title": "رضا المرضى (CSAT)",
+        "tooltip": "متوسط مؤشر رضا المرضى."
+      }
+    },
+    "alerts": {
+      "title": "أهم التنبيهات",
+      "tooltip": "رسائل عاجلة تتطلب تدخلاً فوريًا.",
+      "items": {
+        "isUrgent": "رسالة عاجلة"
+      },
+      "actions": {
+        "close": "إغلاق التنبيه",
+        "pin": "تثبيت التنبيه",
+        "closed": "تم إغلاق التنبيه"
+      }
+    }
+  },
+  "doctorAnalytics": {
+    "overview": {
+      "title": "نظرة عامة",
+      "tooltip": "إحصائيات النشاط العام.",
+      "followUpPlanned": "الاستشارات المتابعة المجدولة",
+      "pendingDiagnostics": "التشخيصات قيد التقييم"
+    },
+    "items": {
+      "followUp": "استشارات المتابعة",
+      "closed": "الاستشارات المغلقة",
+      "pending": "التشخيصات المعلقة",
+      "validated": "التشخيصات المؤكدة"
+    },
+    "tooltips": {
+      "followUp": "عدد الاستشارات المخطط لها لضمان المتابعة الطبية للمرضى الحاليين.",
+      "closed": "الاستشارات التي اكتملت وتم تحديدها كمغلقة.",
+      "pending": "الحالات الطبية التي لا يزال التشخيص قيد التقييم.",
+      "validated": "الحالات الطبية ذات التشخيص المؤكد."
+    },
+    "advancedStats": "إحصائيات متقدمة",
+    "summary": {
+      "title": "ملخص النشاط الطبي",
+      "tooltip": "ملخص أسبوعي لأهم الأنشطة.",
+      "text": "هذا الأسبوع، سجل الممارسون ما مجموعه {total} استشارة، بما في ذلك {pending} تشخيصًا معلقًا و {validated} مؤكدًا. تم جدولة متوسط {followups} من المتابعات، مما يضمن استمرارية الرعاية."
+    },
+    "diseases": {
+      "title": "الأمراض الأكثر شيوعًا",
+      "tooltip": "تصنيف الأمراض حسب عدد الاستشارات الأسبوعية."
+    }
+  },
+  "statistics": {
+    "overview": {
+      "title": "لمحة عامة",
+      "tooltip": "إحصاءات شاملة لنشاطك.",
+      "followUpsSummary": "تم جدولة {count} استشارة متابعة",
+      "pendingDiagnosticsSummary": "{count} تشخيصات قيد المراجعة"
+    },
+    "metrics": [
+      {
+        "key": "followUps",
+        "name": "استشارات المتابعة",
+        "tooltip": "استشارات مخصصة لمتابعة المرضى الحاليين.",
+        "iconColor": "text-indigo-500 dark:text-indigo-500"
+      },
+      {
+        "key": "closedConsultations",
+        "name": "استشارات منتهية",
+        "tooltip": "استشارات أُنجزت وتم تسجيلها كمكتملة.",
+        "iconColor": "text-emerald-500 dark:text-emerald-500"
+      },
+      {
+        "key": "pendingDiagnostics",
+        "name": "تشخيصات قيد الانتظار",
+        "tooltip": "حالات ما زال التقييم فيها جارياً.",
+        "iconColor": "text-indigo-500 dark:text-indigo-500"
+      },
+      {
+        "key": "validatedDiagnostics",
+        "name": "تشخيصات معتمدة",
+        "tooltip": "حالات تم تأكيد التشخيص فيها.",
+        "iconColor": "text-emerald-500 dark:text-emerald-500"
+      }
+    ],
+    "dividerLabel": "إحصاءات متقدمة",
+    "sections": {
+      "activity": {
+        "title": "ملخص النشاط الطبي",
+        "tooltip": "موجز أسبوعي لأبرز الأنشطة.",
+        "description": "هذا الأسبوع سجّل الأطباء مجموع {total} استشارات، بينها {ongoingDiagnostics} تشخيصات قيد المتابعة و{validatedDiagnostics} تشخيصات ناجحة. تم جدولة {plannedFollowUps} مواعيد متابعة لضمان استمرار الرعاية."
+      },
+      "diseases": {
+        "title": "أكثر الأمراض شيوعًا",
+        "tooltip": "تصنيف الأمراض بحسب عدد الاستشارات الأسبوعية."
+      }
+    },
+    "diseases": [
+      {
+        "key": "hypertension",
+        "label": "ارتفاع ضغط الدم",
+        "consultations": 14
+      },
+      {
+        "key": "diabetes",
+        "label": "داء السكري من النوع الثاني",
+        "consultations": 11
+      },
+      {
+        "key": "respiratory",
+        "label": "التهابات الجهاز التنفسي",
+        "consultations": 9
+      },
+      {
+        "key": "allergies",
+        "label": "حساسيات موسمية",
+        "consultations": 7
+      },
+      {
+        "key": "chronicPain",
+        "label": "آلام مزمنة",
+        "consultations": 6
+      }
+    ]
+  },
+  "dashboardStats": {
+    "title": "إحصائيات الأداء",
+    "subtitle": "متابعة المواعيد، الاستشارات، وأوقات الرعاية.",
+    "appointments": {
+      "respectTitle": "الالتزام بالمواعيد",
+      "tooltip": "نسبة حضور المرضى لمواعيدهم المجدولة خلال الشهر.",
+      "rate": "نسبة حضور المرضى هذا الشهر",
+      "honored": "مواعيد محضورة",
+      "missed": "مواعيد فائتة"
+    },
+    "consultation": {
+      "timeTitle": "متوسط وقت الاستشارة",
+      "tooltip": "المدة المتوسطة للاستشارات خلال آخر 30 يومًا.",
+      "average": "متوسط آخر 30 يومًا",
+      "under20": "استشارات أقل من 20 دقيقة",
+      "over20": "استشارات أكثر من 20 دقيقة"
+    },
+    "evolution": {
+      "title": "تطور الاستشارات",
+      "tooltip": "متابعة يومية لعدد المواعيد المحجوزة والتشخيصات المنجزة."
+    },
+    "categories": {
+      "1": "المواعيد",
+      "2": "التشخيصات"
+    }
+  },
+  "patientTracking": {
+    "title": "المرضى قيد المتابعة",
+    "description": "متابعة فورية للملفات النشطة",
+    "statuses": {
+      "consultation": "قيد الاستشارة",
+      "waitingRoom": "قاعة الانتظار",
+      "videoCall": "مواعيد عبر الفيديو"
+    },
+    "motifs": {
+      "postOp": "متابعة بعد الجراحة",
+      "vertigo": "دوار",
+      "pregnancy": "متابعة الحمل",
+      "bloodTest": "تحليل دم",
+      "anxiety": "قلق",
+      "scanner": "نتائج الأشعة",
+      "diabetes": "متابعة السكري"
+    },
+    "locations": {
+      "mainOffice": "العيادة الرئيسية",
+      "roomA": "غرفة أ",
+      "roomB": "غرفة ب",
+      "teleconsultation": "استشارة عن بعد - {{time}}"
+    },
+    "remarks": {
+      "inProgress": "الاستشارة جارية",
+      "arrived": "وصل المريض",
+      "waiting": "بانتظار",
+      "scheduled": "مجدول",
+      "toConfirm": "بانتظار التأكيد"
+    },
+    "labels": {
+      "descriptionPlaceholder": "وصف .....",
+      "consultations": "الاستشارات ({{current}}/{{total}})"
+    },
+    "updated": "تم التحديث {{time}}",
+    "scheduled": "مجدول عند {{time}}",
+    "updatedTimes": {
+      "minutesAgo": "منذ {{count}} دقيقة"
+    }
+  }
+}

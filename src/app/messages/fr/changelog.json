@@ -1,0 +1,36 @@
+{
+    "title": "Nouvelles",
+    "subtitle": "Restez informé des dernières nouveautés et améliorations que nous avons apportées à InayaBridge.",
+    "v1_0_0": {
+      "date": "Apr 10, 2024",
+      "title": "Lancement de InayaBridge — Version 1.0.0",
+      "intro": "Nous sommes fiers d'annoncer la première version publique d'InayaBridge : une plateforme de téléconsultation gratuite et sécurisée, pensée pour faciliter l'accès aux soins en ligne pour tous.",
+      "featuresTitle": "Fonctionnalités incluses dans cette version :",
+      "features": [
+        {
+          "label": "Consultations vidéo illimitées",
+          "desc": "Grâce à notre système de visio intégré, médecins et patients peuvent échanger librement, sans limite."
+        },
+        {
+          "label": "Gestion des patients et dossiers",
+          "desc": "Un historique médical structuré, accessible et modifiable en toute sécurité."
+        },
+        {
+          "label": "Messagerie sécurisée",
+          "desc": "Un chat interne pour poser des questions, envoyer des documents ou assurer le suivi."
+        },
+        {
+          "label": "Statistiques et rapports patients",
+          "desc": "Analysez vos consultations et suivez vos activités (accessible dès la V1 à tous les médecins)."
+        },
+        {
+          "label": "Exports de dossiers (PDF)",
+          "desc": "Générez et téléchargez les synthèses de consultations et ordonnances en un clic."
+        }
+      ],
+      "conclusion": "Ces fonctionnalités sont incluses pour tous les utilisateurs dans le plan Essentiel (gratuit), ainsi que dans les offres Plus et Pro à venir dans la version 2.",
+      "moreInfo": "Pour plus d'informations, consultez la",
+      "documentation": "documentation",
+      "orContact": "ou contactez notre équipe."
+    }
+  }

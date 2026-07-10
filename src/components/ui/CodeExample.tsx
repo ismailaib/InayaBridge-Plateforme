@@ -1,12 +1,13 @@
-import Code from "@/components/Code"
+import Code from "@/components/Code";
 import {
   RiLinksLine,
   RiPlugLine,
   RiShieldKeyholeLine,
   RiStackLine,
-} from "@remixicon/react"
-import { Badge } from "../Badge"
-import CodeExampleTabs from "./CodeExampleTabs"
+} from "@remixicon/react";
+
+import { Badge } from "../Badge";
+import CodeExampleTabs from "./CodeExampleTabs";
 
 const code = `POST /api/appointment
 Content-Type: application/json
@@ -19,7 +20,7 @@ Content-Type: application/json
   "reason": "Suivi général",
   "notes": "Patient présente des symptômes légers depuis 3 jours"
 }
-`
+`;
 
 const code2 = `async function startVideoConsultation(patientId, doctorId) {
   try {
@@ -46,7 +47,7 @@ const code2 = `async function startVideoConsultation(patientId, doctorId) {
     alert("Impossible de démarrer la consultation vidéo.");
   }
 }
-`
+`;
 
 const features = [
   {
@@ -73,11 +74,12 @@ const features = [
       "Toutes vos données sont stockées et traitées conformément au RGPD avec une sécurité de niveau clinique.",
     icon: RiShieldKeyholeLine,
   },
-]
+];
 
 export default function CodeExample() {
   const title = "Un outil gratuit, né d’un besoin réel";
-  const description = "InayaBridge a été créé pour répondre à une injustice simple : trop de personnes n’ont pas accès aux soins médicaux de qualité. Dans les zones rurales, pour les personnes âgées ou à mobilité réduite, se déplacer jusqu'à un médecin est parfois un obstacle. C’est pourquoi nous avons conçu une plateforme entièrement gratuite, sans publicité, financée par la communauté et ouverte à tous. La santé ne devrait jamais être un privilège.";
+  const description =
+    "InayaBridge a été créé pour répondre à une injustice simple : trop de personnes n’ont pas accès aux soins médicaux de qualité. Dans les zones rurales, pour les personnes âgées ou à mobilité réduite, se déplacer jusqu'à un médecin est parfois un obstacle. C’est pourquoi nous avons conçu une plateforme entièrement gratuite, sans publicité, financée par la communauté et ouverte à tous. La santé ne devrait jamais être un privilège.";
   return (
     <section
       aria-labelledby="code-example-title"
@@ -110,10 +112,10 @@ export default function CodeExample() {
             key={item.name}
             className="col-span-full sm:col-span-2 lg:col-span-1"
           >
-            <div className="w-fit rounded-lg p-2 ring-1 ring-black/5 dark:shadow-[#009e7f]/30 dark:ring-white/5">
+            <div className="w-fit rounded-lg p-2 ring-1 ring-black/5 dark:shadow-[#3b82f6]/30 dark:ring-white/5">
               <item.icon
                 aria-hidden="true"
-                className="size-6 text-[#009e7f] dark:text-[#33ccad]"
+                className="size-6 text-[#3b82f6] dark:text-[#3b82f6]"
               />
             </div>
             <dt className="mt-6 font-semibold text-gray-900 dark:text-gray-50">
@@ -126,5 +128,5 @@ export default function CodeExample() {
         ))}
       </dl>
     </section>
-  )
+  );
 }

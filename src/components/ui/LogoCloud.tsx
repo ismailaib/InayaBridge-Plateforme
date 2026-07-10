@@ -1,14 +1,16 @@
-import { RiArrowRightUpLine } from "@remixicon/react"
+"use client";
 
-import { cx } from "@/lib/utils"
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { cx } from "@/lib/utils";
+import { RiArrowRightUpLine } from "@remixicon/react";
 
 const data = [
   {
     name: "Dr. Zineb",
     initials: "SE",
     email: "s.zineb@inayabridge.com",
-    textColor: "text-emerald-800 dark:text-emerald-500",
-    bgColor: "bg-emerald-100 dark:bg-emerald-500/20",
+    textColor: "text-blue-800 dark:text-blue-500",
+    bgColor: "bg-blue-100 dark:bg-blue-500/20",
     href: "#",
   },
   {
@@ -23,8 +25,8 @@ const data = [
     name: "Dr. Ismail Ait Bouhmad",
     initials: "IA",
     email: "m.ismail@inayabridge.com",
-    textColor: "text-emerald-800 dark:text-emerald-500",
-    bgColor: "bg-emerald-100 dark:bg-emerald-500/20",
+    textColor: "text-blue-800 dark:text-blue-500",
+    bgColor: "bg-blue-100 dark:bg-blue-500/20",
     href: "#",
   },
   {
@@ -67,28 +69,27 @@ const data = [
     bgColor: "bg-orange-100 dark:bg-orange-500/20",
     href: "#",
   },
-]
+];
 
 export default function LogoCloud() {
+  const t = useTranslations("joinus");
   return (
     <section
       id="logo cloud"
       aria-label="Company logos"
-      className="mt-24 flex animate-slide-up-fade flex-col items-center justify-center gap-y-6 pt-24 text-center sm:mt-32"
+      className="mt-24 flex animate-slide-up-fade flex-col items-center justify-center gap-y-6 pt-6 text-center sm:mt-12"
       style={{ animationDuration: "1500ms" }}
     >
       <p className="text-lg font-medium tracking-tighter text-gray-800 dark:text-gray-200">
-        Des professionnels de santé nous rejoignent déjà
+        {t("title")}
       </p>
       <p className="mt-0 text-sm text-gray-600 dark:text-gray-400">
-        InayaBridge accueille déjà plusieurs médecins généralistes, spécialistes
-        et bénévoles qui souhaitent offrir un accès aux soins plus simple et
-        plus humain.
+        {t("description")}
       </p>
       <div className="mt-4 grid grid-cols-2 gap-10 gap-y-4 text-gray-900 md:grid-cols-4 md:gap-x-20 dark:text-gray-200">
         {data.map((member) => (
           <div key={member.name} className="group">
-            <div className="flex items-start space-x-4">
+            <div className="flex items-center space-x-4 gap-2">
               <span
                 className={cx(
                   member.bgColor,
@@ -121,5 +122,5 @@ export default function LogoCloud() {
         ))}
       </div>
     </section>
-  )
+  );
 }

@@ -1,9 +1,8 @@
 // Tremor SelectNative [v1.0.0]
+import { cx, focusInput, hasErrorInput } from "@/lib/utils";
+import { type VariantProps, tv } from "tailwind-variants";
 
-import React from "react"
-import { tv, type VariantProps } from "tailwind-variants"
-
-import { cx, focusInput, hasErrorInput } from "@/lib/utils"
+import React from "react";
 
 const selectNativeStyles = tv({
   base: [
@@ -33,7 +32,7 @@ const selectNativeStyles = tv({
       true: hasErrorInput,
     },
   },
-})
+});
 
 interface SelectNativeProps
   extends React.InputHTMLAttributes<HTMLSelectElement>,
@@ -48,10 +47,10 @@ const SelectNative = React.forwardRef<HTMLSelectElement, SelectNativeProps>(
         tremor-id="tremor-raw"
         {...props}
       />
-    )
+    );
   },
-)
+);
 
-SelectNative.displayName = "SelectNative"
+SelectNative.displayName = "SelectNative";
 
-export { SelectNative, selectNativeStyles, type SelectNativeProps }
+export { SelectNative, selectNativeStyles, type SelectNativeProps };

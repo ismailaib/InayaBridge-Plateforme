@@ -1,0 +1,121 @@
+"use client";
+
+import { DateRangePicker } from "@/components/DatePicker";
+import { Input } from "@/components/Input";
+import { Label } from "@/components/Label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/Select";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import Table from "./Table";
+import React, { useState } from "react";
+
+export default function Example({ refreshKey }: { refreshKey: number }) {
+  const t = useTranslations("patients.filter");
+
+  const [search, setSearch] = useState("");
+  const [dobRange, setDobRange] = useState<{ from: Date; to: Date }>({
+    from: new Date(new Date().setFullYear(new Date().getFullYear() - 50)),
+    to: new Date(new Date().setFullYear(new Date().getFullYear())),
+  });
+  const [gender, setGender] = useState<"all" | "male" | "female">("all");
+  const [sort, setSort] = useState<"asc" | "desc">("desc");
+
+  return (
+    <div className="relative">
+      <div className="rounded-lg border border-gray-200 bg-white pb-20 dark:border-gray-800 dark:bg-gray-950 h-full">
+        <div className="grid grid-cols-1 gap-4 border-b border-gray-200 p-6 dark:border-gray-800 sm:grid-cols-2 md:grid-cols-4">
+          {/* 🔍 Filtrer */}
+          <div className="w-full">
+            <Label htmlFor="search_filter" className="font-medium">
+              {t("filter")}
+            </Label>
+            <Input
+              placeholder={t("searchPlaceholder")}
+              className="mt-2"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          <div className="w-full">
+            <Label htmlFor="dob_filter" className="font-medium">
+              {t("dob")}
+            </Label>
+            <DateRangePicker
+              id="dob_filter"
+              value={dobRange}
+              onChange={setDobRange}
+              className="mt-2"
+            />
+          </div>
+
+          <div className="w-full">
+            <Label htmlFor="gender_filter" className="font-medium">
+              {t("gender")}
+            </Label>
+            <Select
+              value={gender}
+              onValueChange={(value) =>
+                setGender(value as "all" | "male" | "female")
+              }
+            >
+              <SelectTrigger
+                id="gender_filter"
+                name="gender_filter"
+                className="mt-2 sm:w-full"
+              >
+                <SelectValue placeholder={t("select")} />
+              </SelectTrigger>
+              <SelectContent>
+                {[
+                  { value: "all", label: t("all") },
+                  { value: "male", label: t("male") },
+                  { value: "female", label: t("female") },
+                ].map((item) => (
+                  <SelectItem key={item.value} value={item.value}>
+                    {item.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="w-full">
+            <Label htmlFor="sort_filter" className="font-medium">
+              {t("lastVisit")}
+            </Label>
+            <Select value={sort} onValueChange={(value) => setSort(value as "asc" | "desc")}>
+              <SelectTrigger
+                id="sort_filter"
+                name="sort_filter"
+                className="mt-2 sm:w-full"
+              >
+                <SelectValue placeholder={t("sort")} />
+              </SelectTrigger>
+              <SelectContent>
+                {[
+                  { value: "desc", label: t("recent") },
+                  { value: "asc", label: t("oldest") },
+                ].map((item) => (
+                  <SelectItem key={item.value} value={item.value}>
+                    {item.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <Table
+          refreshKey={refreshKey}
+          filters={{ search, dobRange, gender, sort }}
+        />
+      </div>
+    </div>
+  );
+}

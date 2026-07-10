@@ -1,0 +1,66 @@
+{
+  "header": {
+    "title": "المراسلة",
+    "searchPlaceholder": "البحث عن مريض...",
+    "tabs": {
+      "chats": "الدردشات",
+      "appointments": "المواعيد"
+    }
+  },
+  "list": {
+    "addPatient": "إضافة مريض جديد"
+  },
+  "appointments": {
+    "emptyTitle": "لا توجد مواعيد اليوم",
+    "emptyDescription": "انقر لجدولة موعد جديد",
+    "new": "موعد جديد"
+  },
+  "recording": {
+    "status": "جاري التسجيل...",
+    "stop": "إيقاف"
+  },
+  "messages": {
+    "assistantGreeting": "مرحبا! كيف يمكنني مساعدتك اليوم؟",
+    "voiceLabel": "رسالة صوتية",
+    "assistantVoiceReply": "لقد تلقيت رسالتك الصوتية. هل يمكنك توضيح سؤالك؟",
+    "attachmentSent": "تم إرسال الملف: {filename}",
+    "assistantAttachmentReply": "لقد تلقيت {type} الخاص بك. سأراجعه."
+  },
+  "attachments": {
+    "image": "صورة",
+    "document": "وثيقة",
+    "pdf": "PDF",
+    "labels": {
+      "image": "صورة",
+      "document": "وثيقة",
+      "pdf": "وثيقة PDF"
+    }
+  },
+  "input": {
+    "placeholder": "اكتب رسالة..."
+  },
+  "statuses": {
+    "online": "عبر الإنترنت"
+  },
+  "lastSeen": {
+    "online": "عبر الإنترنت",
+    "fiveMinutes": "منذ 5 دقائق",
+    "twoHours": "منذ ساعتين",
+    "yesterday": "أمس"
+  },
+  "chat": {
+    "page": {
+      "placeholder": "اكتب سؤالك الطبي هنا أو صف مشكلة المريض...",
+      "loading": {
+        "sock": "نبحث عن جوارب الخادم...",
+        "tires": "ننـفخ إطارات البيئة...",
+        "camera": "نضبط الكاميرا، انتبه للصورة الذاتية!",
+        "almost": "جاهزون تقريباً... ترقبوا المفاجأة!"
+      }
+    },
+    "ui": {
+      "empty": "لا توجد رسائل حتى الآن.",
+      "thinking": "أفكر…"
+    }
+  }
+}

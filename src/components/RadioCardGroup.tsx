@@ -1,9 +1,8 @@
 // Tremor Radio Card [v1.0.0]
+import { cx, focusInput, focusRing } from "@/lib/utils";
+import * as RadioGroupPrimitives from "@radix-ui/react-radio-group";
 
-import React from "react"
-import * as RadioGroupPrimitives from "@radix-ui/react-radio-group"
-
-import { cx, focusInput, focusRing } from "@/lib/utils"
+import React from "react";
 
 const RadioCardGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitives.Root>,
@@ -16,10 +15,10 @@ const RadioCardGroup = React.forwardRef<
       tremor-id="tremor-raw"
       {...props}
     />
-  )
-})
+  );
+});
 
-RadioCardGroup.displayName = "RadioCardGroup"
+RadioCardGroup.displayName = "RadioCardGroup";
 
 const RadioCardItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitives.Item>,
@@ -35,8 +34,8 @@ const RadioCardItem = React.forwardRef<
         "bg-white dark:bg-gray-950",
         // border color
         "border-gray-300 dark:border-gray-800",
-        "data-[state=checked]:border-[#00B38F]",
-        "dark:data-[state=checked]:border-[#00B38F]",
+        "data-[state=checked]:border-[#3b82f6]",
+        "dark:data-[state=checked]:border-[#3b82f6]",
         // disabled
         "data-disabled:border-gray-100 dark:data-disabled:border-gray-800",
         "data-disabled:bg-gray-50 data-disabled:shadow-none dark:data-disabled:bg-gray-900",
@@ -47,10 +46,10 @@ const RadioCardItem = React.forwardRef<
     >
       {children}
     </RadioGroupPrimitives.Item>
-  )
-})
+  );
+});
 
-RadioCardItem.displayName = "RadioCardItem"
+RadioCardItem.displayName = "RadioCardItem";
 
 const RadioCardIndicator = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitives.Indicator>,
@@ -66,7 +65,7 @@ const RadioCardIndicator = React.forwardRef<
         // background color
         "bg-white dark:bg-gray-950",
         // checked
-        "group-data-[state=checked]:border-0 group-data-[state=checked]:border-transparent group-data-[state=checked]:bg-[#00B38F]",
+        "group-data-[state=checked]:border-0 group-data-[state=checked]:border-transparent group-data-[state=checked]:bg-[#3b82f6]",
         // disabled
         "group-data-disabled:border-gray-300 group-data-disabled:bg-gray-100 group-data-disabled:text-gray-400",
         "dark:group-data-disabled:border-gray-700 dark:group-data-disabled:bg-gray-800",
@@ -92,9 +91,9 @@ const RadioCardIndicator = React.forwardRef<
         />
       </RadioGroupPrimitives.Indicator>
     </div>
-  )
-})
+  );
+});
 
-RadioCardIndicator.displayName = "RadioCardIndicator"
+RadioCardIndicator.displayName = "RadioCardIndicator";
 
-export { RadioCardGroup, RadioCardIndicator, RadioCardItem }
+export { RadioCardGroup, RadioCardIndicator, RadioCardItem };

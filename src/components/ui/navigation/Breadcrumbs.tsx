@@ -1,28 +1,32 @@
-"use client"
+"use client";
 
-import { ChevronRight } from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Fragment } from "react"
+import { ChevronRight } from "lucide-react";
+
+import { Fragment } from "react";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const LOCALES = ["ar", "en", "fr"]; // add your supported locales here
 
 export function Breadcrumbs() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const segments = pathname
     .split("/")
-    .filter((segment) => segment.length > 0)
+    .filter((segment) => segment.length > 0 && !LOCALES.includes(segment));
 
   const breadcrumbItems = segments.map((segment, index) => {
-    const href = "/" + segments.slice(0, index + 1).join("/")
+    const href = "/" + segments.slice(0, index + 1).join("/");
     const label = decodeURIComponent(segment)
       .replace(/-/g, " ")
-      .replace(/\b\w/g, (char) => char.toUpperCase())
+      .replace(/\b\w/g, (char) => char.toUpperCase());
 
     return {
       href,
       label,
-    }
-  })
+    };
+  });
 
   return (
     <nav aria-label="Breadcrumb" className="ml-2">
@@ -50,7 +54,9 @@ export function Breadcrumbs() {
                     ? "text-gray-900 dark:text-gray-50"
                     : "text-gray-500 hover:text-gray-700 dark:text-gray-400 hover:dark:text-gray-300"
                 }`}
-                aria-current={idx === breadcrumbItems.length - 1 ? "page" : undefined}
+                aria-current={
+                  idx === breadcrumbItems.length - 1 ? "page" : undefined
+                }
               >
                 {item.label}
               </Link>
@@ -59,5 +65,5 @@ export function Breadcrumbs() {
         ))}
       </ol>
     </nav>
-  )
+  );
 }

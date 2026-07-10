@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   DropdownMenu,
@@ -13,111 +13,130 @@ import {
   DropdownMenuSubMenuContent,
   DropdownMenuSubMenuTrigger,
   DropdownMenuTrigger,
-} from "@/components/DropdownMenu"
-import { ArrowUpRight, Monitor, Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
-import Link from "next/link"
-import * as React from "react"
+} from "@/components/DropdownMenu";
+import { useAuth } from "@/lib/auth-context";
+import { useTranslations } from "@/lib/i18n/useTranslations";
+import { ArrowUpRight, Bolt, LogOut, Monitor, Moon, Sun } from "lucide-react";
+
+import * as React from "react";
+
+import { useTheme } from "next-themes";
+import Link from "next/link";
 
 export type DropdownUserProfileProps = {
-  children: React.ReactNode
-  align?: "center" | "start" | "end"
-}
+  children: React.ReactNode;
+  align?: "center" | "start" | "end";
+};
 
 export function DropdownUserProfile({
   children,
   align = "start",
 }: DropdownUserProfileProps) {
-  const [mounted, setMounted] = React.useState(false)
-  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false);
+  const { theme, setTheme } = useTheme();
+  const { logout } = useAuth();
+  const t = useTranslations("common");
+
   React.useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
+
+  const [localUser, setLocalUser] = React.useState<{ email: string } | null>(
+    null,
+  );
+
+  React.useEffect(() => {
+    setMounted(true);
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        setLocalUser(JSON.parse(storedUser));
+      } catch {
+        setLocalUser(null);
+      }
+    }
+  }, []);
 
   if (!mounted) {
-    return null
+    return null;
   }
+
+  const userEmail = localUser?.email || "ismailaitbouhmad@gmail.com";
+
   return (
-    <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-        <DropdownMenuContent
-          align={align}
-          className="sm:!min-w-[calc(var(--radix-dropdown-menu-trigger-width))]"
-        >
-          <DropdownMenuLabel>ismailaitbouhmad@gmail.com</DropdownMenuLabel>
-          <DropdownMenuGroup>
-            <DropdownMenuSubMenu>
-              <DropdownMenuSubMenuTrigger>Theme</DropdownMenuSubMenuTrigger>
-              <DropdownMenuSubMenuContent>
-                <DropdownMenuRadioGroup
-                  value={theme}
-                  onValueChange={(value) => {
-                    setTheme(value)
-                  }}
-                >
-                  <DropdownMenuRadioItem
-                    aria-label="Switch to Light Mode"
-                    value="light"
-                    iconType="check"
-                  >
-                    <Sun className="size-4 shrink-0" aria-hidden="true" />
-                    Light
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem
-                    aria-label="Switch to Dark Mode"
-                    value="dark"
-                    iconType="check"
-                  >
-                    <Moon className="size-4 shrink-0" aria-hidden="true" />
-                    Dark
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem
-                    aria-label="Switch to System Mode"
-                    value="system"
-                    iconType="check"
-                  >
-                    <Monitor className="size-4 shrink-0" aria-hidden="true" />
-                    System
-                  </DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-              </DropdownMenuSubMenuContent>
-            </DropdownMenuSubMenu>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              Changelog
-              <ArrowUpRight
-                className="mb-1 ml-1 size-3 shrink-0 text-gray-500 dark:text-gray-500"
-                aria-hidden="true"
-              />
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Documentation
-              <ArrowUpRight
-                className="mb-1 ml-1 size-3 shrink-0 text-gray-500"
-                aria-hidden="true"
-              />
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Join the community
-              <ArrowUpRight
-                className="mb-1 ml-1 size-3 shrink-0 text-gray-500"
-                aria-hidden="true"
-              />
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Link href="/" className="w-full">
-                Sign out
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </>
-  )
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+      <DropdownMenuContent
+        align={align}
+        className="sm:!min-w-[calc(var(--radix-dropdown-menu-trigger-width))]"
+      >
+        <DropdownMenuLabel>{userEmail}</DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuSubMenu>
+            <DropdownMenuSubMenuTrigger>
+              {t("profile.theme")}
+            </DropdownMenuSubMenuTrigger>
+            <DropdownMenuSubMenuContent>
+              <DropdownMenuRadioGroup
+                value={theme}
+                onValueChange={(value) => {
+                  setTheme(value);
+                }}
+              >
+                <DropdownMenuRadioItem value="light" iconType="check">
+                  <Sun className="size-4 shrink-0" aria-hidden="true" />
+                  {t("profile.light")}
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="dark" iconType="check">
+                  <Moon className="size-4 shrink-0" aria-hidden="true" />
+                  {t("profile.dark")}
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="system" iconType="check">
+                  <Monitor className="size-4 shrink-0" aria-hidden="true" />
+                  {t("profile.system")}
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuSubMenuContent>
+          </DropdownMenuSubMenu>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuGroup>
+          <DropdownMenuItem className="[html[lang=ar]_&]:flex-row-reverse">
+            {t("profile.changelog")}
+            <ArrowUpRight className="mb-1 ml-1 size-3 shrink-0 text-gray-500 dark:text-gray-500" />
+          </DropdownMenuItem>
+          <DropdownMenuItem className="[html[lang=ar]_&]:flex-row-reverse">
+            {t("profile.docs")}
+            <ArrowUpRight className="mb-1 ml-1 size-3 shrink-0 text-gray-500" />
+          </DropdownMenuItem>
+          <DropdownMenuItem className="[html[lang=ar]_&]:flex-row-reverse">
+            {t("profile.community")}
+            <ArrowUpRight className="mb-1 ml-1 size-3 shrink-0 text-gray-500" />
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <Link href="/settings" className="w-full text-left flex flex-row items-center gap-2 [html[lang=ar]_&]:flex-row-reverse">
+              <Bolt width={14} />{t("profile.settings")}
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <button
+              onClick={() => {
+                logout();
+              }}
+              className="w-full text-left flex flex-row items-center gap-2 [html[lang=ar]_&]:flex-row-reverse"
+            >
+              <LogOut width={14} />{t("profile.logout")}
+            </button>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }

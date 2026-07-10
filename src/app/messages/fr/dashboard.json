@@ -1,0 +1,398 @@
+{
+  "dashboardSettings": {
+    "title": "Paramètres du tableau de bord",
+    "description": "Personnalisez les sections de votre interface en activant les modules que vous souhaitez visualiser.",
+    "modules": "Modules disponibles",
+    "preferences": "Préférences personnelles",
+    "specialty": "Spécialité",
+    "specialtyNote": "Ce champ est modifiable uniquement par un administrateur.",
+    "specialties": {
+      "general": "Médecin généraliste",
+      "cardio": "Cardiologue",
+      "pediatre": "Pédiatre",
+      "dentist": "Dentiste"
+    },
+    "language": "Langue",
+    "notifications": "Notifications",
+    "compactMode": "Mode compact",
+    "modulesList": {
+      "showDiagnostics": "Diagnostics",
+      "showFollowUps": "Consultations de suivi",
+      "showAdvancedStats": "Statistiques avancées",
+      "showEvolutionCharts": "Graphiques d’évolution",
+      "showPatientAlerts": "Alertes patients",
+      "showVideoCalls": "Consultations vidéo",
+      "showVitalsMonitoring": "Suivi des signes vitaux",
+      "showAppointments": "Planning des rendez-vous",
+      "showLabResults": "Résultats de laboratoire",
+      "showPrescriptions": "Ordonnances"
+    }
+  },
+  "onboarding": {
+    "title": "Finalisez votre inscription",
+    "description": "Pour accéder pleinement au tableau de bord, veuillez compléter les étapes suivantes.",
+    "step": "Étape",
+    "completedStep": "✓ Étape terminée",
+    "steps": {
+      "tenantProfile": {
+        "title": "Configurer votre établissement",
+        "description": "Créez ou rejoignez un établissement."
+      },
+      "profileVerification": {
+        "title": "Vérifier votre email",
+        "description": "Assurez la sécurité de votre compte en vérifiant votre adresse email."
+      },
+      "invitationsSchedule": {
+        "title": "Inviter vos collègues",
+        "description": "Ajoutez d'autres médecins ou collaborateurs."
+      },
+      "accountActivation": {
+        "title": "Activer votre compte",
+        "description": "Une fois terminé, activez votre compte pour accéder au tableau de bord."
+      }
+    },
+    "allDone": {
+      "title": "Félicitations ! Toutes les étapes sont terminées.",
+      "subtitle": "Vous pouvez maintenant accéder pleinement à votre tableau de bord."
+    },
+    "return": {
+      "title": "Configuration presque terminée",
+      "description": "Revenez au tableau de bord pour terminer les étapes restantes et finaliser la création de votre espace de travail.",
+      "button": "Revenir au tableau de bord"
+    }
+  },
+  "tenantForm": {
+    "title": "Configurer votre établissement",
+    "description": "Un établissement regroupe les informations professionnelles et les membres qui y travaillent.",
+    "name": "Nom de l'établissement",
+    "namePlaceholder": "Ex : Clinique du Centre",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Ex : Centre médical pluridisciplinaire",
+    "type": "Type d'établissement",
+    "submit": "Enregistrer l'établissement",
+    "submitting": "Enregistrement...",
+    "privacySettings": {
+      "title": "Rendre l'établissement privé",
+      "description": "Les patients ne pourront pas trouver cet établissement dans la liste publique."
+    }
+  },
+  "verification": {
+    "title": "Vérification de l'email",
+    "description": "Pour assurer la sécurité de votre compte, veuillez vérifier votre adresse email en entrant le code que nous vous avons envoyé.",
+    "openDialog": "Vérifier votre email",
+    "codeLabel": "Code de vérification",
+    "codePlaceholder": "Entrez le code reçu par email",
+    "verifyButton": "Vérifier",
+    "verifying": "Vérification...",
+    "sendingCode": "Envoi du code de vérification...",
+    "loading": "Préparation de la vérification...",
+    "resendButton": "Renvoyer le code",
+    "resending": "Renvoi...",
+    "resendIn": "Renvoyer dans",
+    "successTitle": "Succès !",
+    "successMessage": "Votre email a été vérifié avec succès.",
+    "errorUserEmailMissing": "Adresse email introuvable. Veuillez vous reconnecter.",
+    "errorUserDataMissing": "Données utilisateur introuvables. Veuillez vous reconnecter.",
+    "errorSendFailed": "Échec de l’envoi du code. Veuillez réessayer.",
+    "errorResendFailed": "Échec du renvoi du code. Veuillez réessayer.",
+    "errorInvalidCode": "Code de vérification invalide. Veuillez réessayer.",
+    "errorTooManyRequests": "Un email de vérification a déjà été envoyé récemment. Veuillez patienter avant de réessayer.",
+    "dialogTitle": "Vérifiez votre email",
+    "dialogDescription": "Nous avons envoyé un code de vérification à votre adresse email. Entrez-le ci-dessous pour continuer."
+  },
+  "pricing": {
+    "openDialog": "Choisir un plan d'abonnement",
+    "title": "Choisissez votre plan",
+    "description": "Comparez nos offres et sélectionnez celle qui correspond à vos besoins.",
+    "perMonth": "/mois",
+    "perYear": "/an",
+    "capacityTitle": "Capacités",
+    "featuresTitle": "Fonctionnalités",
+    "recommended": "Recommandé",
+    "selectPlan": "Sélectionner ce plan",
+    "confirmPlan": "Confirmer le plan",
+    "saving": "Confirmation...",
+    "successTitle": "Succès !",
+    "successMessage": "Votre plan a été sélectionné avec succès.",
+    "plans": [
+      {
+        "id": "essential",
+        "name": "Essentiel",
+        "price": {
+          "monthly": "0 Dh",
+          "annually": "0 Dh"
+        },
+        "description": "Accédez à toutes les fonctionnalités de base. Idéal pour les professionnels débutants.",
+        "capacity": [
+          "Consultations illimitées",
+          "Messagerie",
+          "Dossiers patients"
+        ],
+        "features": [
+          "Gestion de RDV",
+          "Consultations vidéo",
+          "Historique médical complet"
+        ],
+        "isStarter": true,
+        "isRecommended": false,
+        "buttonText": "Commencer gratuitement",
+        "buttonLink": "#"
+      },
+      {
+        "id": "plus",
+        "name": "Plus",
+        "price": {
+          "monthly": "140 Dh",
+          "annually": "1290 Dh"
+        },
+        "description": "Des outils avancés pour optimiser votre pratique dès la version 2.",
+        "capacity": [
+          "Statistiques patients",
+          "Export PDF",
+          "Support prioritaire"
+        ],
+        "features": [
+          "Analyse de consultations",
+          "Gestion des rappels automatiques",
+          "Accès anticipé aux nouveautés"
+        ],
+        "isStarter": false,
+        "isRecommended": false,
+        "buttonText": "Pré-inscription V2",
+        "buttonLink": "#"
+      },
+      {
+        "id": "pro",
+        "name": "Pro",
+        "price": {
+          "monthly": "290 Dh",
+          "annually": "2490 Dh"
+        },
+        "description": "Pour les professionnels ou cliniques qui veulent tout centraliser.",
+        "capacity": ["Multi-profils", "Support premium", "Accès API (v2.1)"],
+        "features": [
+          "Statistiques poussées",
+          "Export de données patients",
+          "Accès API & intégrations"
+        ],
+        "isStarter": false,
+        "isRecommended": true,
+        "buttonText": "Pré-inscription V2",
+        "buttonLink": "#"
+      }
+    ]
+  },
+  "kpis": {
+    "cardsSection": {
+      "title": "Statistiques de la semaine",
+      "tooltip": "Ces statistiques représentent les données clés de la semaine."
+    },
+    "cards": {
+      "todayAppointments": {
+        "title": "Rendez-vous aujourd'hui",
+        "tooltip": "Nombre total de rendez-vous programmés pour aujourd'hui."
+      },
+      "waitingPatients": {
+        "title": "Patients en attente",
+        "tooltip": "Patients actuellement en salle d'attente ou non encore pris en charge."
+      },
+      "finishedConsultations": {
+        "title": "Consultations terminées (7j)",
+        "tooltip": "Total des consultations terminées durant les 7 derniers jours."
+      },
+      "newPatients": {
+        "title": "Nouveaux patients (mois)",
+        "tooltip": "Nombre de nouveaux patients enregistrés ce mois-ci."
+      },
+      "videoConsultations": {
+        "title": "Consultations vidéo effectuées",
+        "tooltip": "Nombre total de consultations réalisées en visioconférence."
+      },
+      "csatScore": {
+        "title": "Satisfaction patient (CSAT)",
+        "tooltip": "Score moyen de satisfaction des patients (Customer Satisfaction Score)."
+      }
+    },
+    "alerts": {
+      "title": "Alertes principales",
+      "tooltip": "Messages isUrgents nécessitant une attention immédiate.",
+      "items": {
+        "isUrgent": "Message isUrgent"
+      },
+      "actions": {
+        "close": "Clôturer l'alerte",
+        "pin": "Épingler l'alerte",
+        "closed": "Alerte clôturée"
+      }
+    }
+  },
+  "statistics": {
+    "overview": {
+      "title": "Vue d'ensemble",
+      "tooltip": "Statistiques globales de vos activités.",
+      "followUpsSummary": "{count} consultations de suivi programmées",
+      "pendingDiagnosticsSummary": "{count} diagnostics en attente d'évaluation"
+    },
+    "metrics": [
+      {
+        "key": "followUps",
+        "name": "Consultations de suivi",
+        "tooltip": "Consultations prévues pour assurer le suivi médical des patients existants.",
+        "iconColor": "text-indigo-500 dark:text-indigo-500"
+      },
+      {
+        "key": "closedConsultations",
+        "name": "Consultations clôturées",
+        "tooltip": "Consultations terminées et enregistrées comme complètes.",
+        "iconColor": "text-emerald-500 dark:text-emerald-500"
+      },
+      {
+        "key": "pendingDiagnostics",
+        "name": "Diagnostics en attente",
+        "tooltip": "Cas médicaux pour lesquels un diagnostic est encore en cours d'évaluation.",
+        "iconColor": "text-indigo-500 dark:text-indigo-500"
+      },
+      {
+        "key": "validatedDiagnostics",
+        "name": "Diagnostics validés",
+        "tooltip": "Cas médicaux ayant reçu un diagnostic confirmé.",
+        "iconColor": "text-emerald-500 dark:text-emerald-500"
+      }
+    ],
+    "dividerLabel": "Statistiques avancées",
+    "sections": {
+      "activity": {
+        "title": "Résumé d'activité médicale",
+        "tooltip": "Un résumé hebdomadaire des principales activités.",
+        "description": "Cette semaine, les praticiens ont enregistré un total de {total} consultations, incluant {ongoingDiagnostics} diagnostics en cours et {validatedDiagnostics} validés. Une moyenne de {plannedFollowUps} suivis a été planifiée, assurant un bon rythme de prise en charge continue."
+      },
+      "diseases": {
+        "title": "Maladies les plus fréquentes",
+        "tooltip": "Classement des maladies selon le nombre de consultations hebdomadaires."
+      }
+    },
+    "diseases": [
+      {
+        "key": "hypertension",
+        "label": "Hypertension",
+        "consultations": 14
+      },
+      {
+        "key": "diabetes",
+        "label": "Diabète de type 2",
+        "consultations": 11
+      },
+      {
+        "key": "respiratory",
+        "label": "Infections respiratoires",
+        "consultations": 9
+      },
+      {
+        "key": "allergies",
+        "label": "Allergies saisonnières",
+        "consultations": 7
+      },
+      {
+        "key": "chronicPain",
+        "label": "Douleurs chroniques",
+        "consultations": 6
+      }
+    ]
+  },
+  "dashboardStats": {
+    "title": "Statistiques de performance",
+    "subtitle": "Suivi des rendez-vous, consultations et temps de prise en charge.",
+    "appointments": {
+      "respectTitle": "Respect des rendez-vous",
+      "tooltip": "Taux de présence des patients à leurs rendez-vous prévus durant le mois.",
+      "rate": "Taux de présence des patients ce mois",
+      "honored": "Rendez-vous honorés",
+      "missed": "Rendez-vous manqués"
+    },
+    "consultation": {
+      "timeTitle": "Temps moyen de consultation",
+      "tooltip": "Durée moyenne observée des consultations sur les 30 derniers jours.",
+      "average": "Moyenne sur les 30 derniers jours",
+      "under20": "Consultations < 20 min",
+      "over20": "Consultations > 20 min"
+    },
+    "evolution": {
+      "title": "Évolution des consultations",
+      "tooltip": "Suivi quotidien du nombre de rendez-vous pris et de diagnostics réalisés."
+    },
+    "categories": {
+      "1": "Rendez-vous",
+      "2": "Diagnostics"
+    }
+  },
+  "doctorAnalytics": {
+    "overview": {
+      "title": "Vue d'ensemble",
+      "tooltip": "Statistiques globales des activités.",
+      "followUpPlanned": "consultations de suivi programmées",
+      "pendingDiagnostics": "diagnostics en attente d’évaluation"
+    },
+    "items": {
+      "followUp": "Consultations de suivi",
+      "closed": "Consultations clôturées",
+      "pending": "Diagnostics en attente",
+      "validated": "Diagnostics validés"
+    },
+    "tooltips": {
+      "followUp": "Nombre de consultations prévues pour assurer le suivi médical des patients existants.",
+      "closed": "Consultations terminées et enregistrées comme complètes.",
+      "pending": "Cas médicaux pour lesquels un diagnostic est encore en cours d'évaluation.",
+      "validated": "Cas médicaux ayant reçu un diagnostic confirmé."
+    },
+    "advancedStats": "Statistiques Des Services",
+    "summary": {
+      "title": "Résumé d'activité médicale",
+      "tooltip": "Un résumé hebdomadaire des principales activités.",
+      "text": "Cette semaine, les praticiens ont enregistré un total de {total} consultations, incluant {pending} diagnostics en cours et {validated} validés. Une moyenne de {followups} suivis a été planifiée, assurant un bon rythme de prise en charge continue."
+    },
+    "diseases": {
+      "title": "Maladies les plus fréquentes",
+      "tooltip": "Classement des maladies selon le nombre de consultations hebdomadaires."
+    }
+  },
+  "patientTracking": {
+    "title": "Patients en cours de gestion",
+    "description": "Suivi en temps réel des dossiers actifs",
+    "statuses": {
+      "consultation": "En consultation",
+      "waitingRoom": "Salle d’attente",
+      "videoCall": "Rendez-vous visioconférence"
+    },
+    "motifs": {
+      "postOp": "Suivi post-opératoire",
+      "vertigo": "Vertiges",
+      "pregnancy": "Suivi de grossesse",
+      "bloodTest": "Bilan sanguin",
+      "anxiety": "Anxiété",
+      "scanner": "Résultats scanner",
+      "diabetes": "Contrôle diabète"
+    },
+    "locations": {
+      "mainOffice": "Cabinet principal",
+      "roomA": "Salle A",
+      "roomB": "Salle B",
+      "teleconsultation": "Téléconsultation - {{time}}"
+    },
+    "remarks": {
+      "inProgress": "Consultation en cours",
+      "arrived": "Patient arrivé",
+      "waiting": "En attente",
+      "scheduled": "Prévu",
+      "toConfirm": "À confirmer"
+    },
+    "labels": {
+      "descriptionPlaceholder": "Description .....",
+      "consultations": "Consultations ({{current}}/{{total}})"
+    },
+    "updated": "Mis à jour {{time}}",
+    "scheduled": "Prévu à {{time}}",
+    "updatedTimes": {
+      "minutesAgo": "il y a {{count}} min"
+    }
+  }
+}

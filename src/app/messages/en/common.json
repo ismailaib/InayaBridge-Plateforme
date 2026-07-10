@@ -1,0 +1,81 @@
+{
+  "conditions": "By logging in, you agree to our Terms of Use and our Privacy Policy.",
+  "conditionsContent": {
+    "title": "General Terms of Use",
+    "description": "Please read our terms carefully before using the platform.",
+    "clause1Description": "By accessing our platform, you agree to comply with these terms of use. These terms are intended to ensure responsible, secure, and ethical use of our service.",
+    "clause2Title": "Fair Use",
+    "clause2Description": "Any attempt at fraud, unauthorized access, or misuse of features is strictly prohibited and will result in immediate account suspension.",
+    "clause3Title": "Responsibility",
+    "clause3Description": "Healthcare professionals are solely responsible for the information and advice they provide on the platform.",
+    "clause4Title": "Data Protection",
+    "clause4Description": "Your personal information is processed in accordance with our privacy policy. No medical data is shared without your explicit consent.",
+    "signature": "By continuing, you accept all the terms above. These conditions may be updated at any time, with notification."
+  },
+  "errors": {
+    "session": {
+      "title": "Session Expired",
+      "description": "Your session has expired. Please log in again to continue."
+    },
+    "generic": {
+      "title": "Something Went Wrong",
+      "description": "An unexpected error occurred. Please try again later."
+    }
+  },
+  "policy": {
+    "link": "privacy policy",
+    "title": "Privacy Policy",
+    "description": "We are committed to protecting your personal data.",
+    "intro": "Your privacy is our priority. This policy explains how we collect, use, and protect your personal data.",
+    "collected": {
+      "title": "Collected Data:",
+      "text": "We only collect the data necessary to use our services: name, surname, email, date of birth, and medical information if applicable."
+    },
+    "usage": {
+      "title": "Use of Data:",
+      "text": "The data is used to personalize your experience, allow you to access your account, and improve our services."
+    },
+    "storage": {
+      "title": "Secure Storage:",
+      "text": "Your information is securely stored, with encryption protocols and restricted access."
+    },
+    "sharing": {
+      "title": "Sharing:",
+      "text": "No data will be sold or shared with third parties without your explicit consent, except when legally required."
+    },
+    "rights": "You have the right to view, modify, or delete your data at any time. For any questions, contact us at privacy@inayabridge.com.",
+    "close": "Close",
+    "confirm": "I understand"
+  },
+  "close": "Close",
+  "greetingDoc": "Welcome Dr.",
+  "greetingPatient": "Welcome",
+  "404Title": "Page Not Found",
+  "404Description": "Sorry, the page you are looking for does not exist.",
+  "goHome": "Go to Home Page",
+  "months": {
+    "1": "January",
+    "2": "February",
+    "3": "March",
+    "4": "April",
+    "5": "May",
+    "6": "June",
+    "7": "July",
+    "8": "August",
+    "9": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December"
+  },
+  "profile": {
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "changelog": "Changelog",
+    "docs": "Documentation",
+    "community": "Join the community",
+    "settings": "Settings",
+    "logout": "Log out"
+  }
+}

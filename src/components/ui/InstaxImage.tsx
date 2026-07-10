@@ -1,6 +1,8 @@
-"use client"
-import { cx } from "@/lib/utils"
-import Image from "next/image"
+"use client";
+
+import { cx } from "@/lib/utils";
+
+import Image from "next/image";
 
 export function InstaxImage({
   className,
@@ -10,17 +12,17 @@ export function InstaxImage({
   alt,
   caption,
 }: {
-  className?: string
-  src: string
-  width: number
-  height: number
-  alt: string
-  caption: string
+  className?: string;
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  caption: string;
 }) {
   return (
     <figure
       className={cx(
-        "h-fit overflow-hidden rounded-lg bg-white shadow-xl shadow-black/10 ring-1 ring-black/5 transition hover:-translate-y-0.5 hover:shadow-black/20 dark:bg-gray-900 dark:shadow-[#00b38f]/5 dark:ring-white/20 dark:hover:shadow-[#003c30]/20",
+        "h-fit overflow-hidden rounded-lg bg-white shadow-xl shadow-black/10 ring-1 ring-black/5 transition hover:-translate-y-0.5 hover:shadow-black/20 dark:bg-gray-900 dark:shadow-[#3b82f6]/5 dark:ring-white/20 dark:hover:shadow-[#3b82f6]/20",
         className,
       )}
     >
@@ -38,5 +40,5 @@ export function InstaxImage({
         <figcaption className="text-center">{caption}</figcaption>
       </div>
     </figure>
-  )
+  );
 }

@@ -1,0 +1,67 @@
+{
+  "header": {
+    "title": "Messagerie",
+    "searchPlaceholder": "Rechercher un patient...",
+    "tabs": {
+      "chats": "Discussions",
+      "appointments": "Rendez-vous"
+    }
+  },
+  "list": {
+    "addPatient": "Ajouter un nouveau patient"
+  },
+  "appointments": {
+    "emptyTitle": "Aucun rendez-vous aujourd'hui",
+    "emptyDescription": "Cliquez pour planifier un nouveau rendez-vous",
+    "new": "Nouveau rendez-vous"
+  },
+  "recording": {
+    "status": "Enregistrement...",
+    "stop": "ArrÃªter"
+  },
+  "messages": {
+    "assistantGreeting": "Bonjour ! Comment puis-je vous aider aujourd'hui ?",
+    "voiceLabel": "Message vocal",
+    "assistantVoiceReply": "J'ai bien reÃ§u votre message vocal. Pouvez-vous prÃ©ciser davantage votre question ?",
+    "attachmentSent": "Fichier envoyÃ© : {filename}",
+    "assistantAttachmentReply": "J'ai bien reÃ§u votre {type}. Je vais l'examiner."
+  },
+  "attachments": {
+    "image": "Photo",
+    "document": "Document",
+    "pdf": "PDF",
+    "labels": {
+      "image": "image",
+      "document": "document",
+      "pdf": "document PDF"
+    }
+  },
+  "input": {
+    "placeholder": "Ã‰crivez un message..."
+  },
+  "statuses": {
+    "online": "En ligne"
+  },
+  "lastSeen": {
+    "online": "En ligne",
+    "fiveMinutes": "il y a 5 min",
+    "twoHours": "il y a 2 h",
+    "yesterday": "hier"
+  },
+  "chat": {
+    "page": {
+      "placeholder": "Posez votre question médicale ici ou décrivez le problème du patient...",
+      "loading": {
+        "sock": "On cherche les chaussettes du serveur...",
+        "tires": "On gonfle les pneus de l'environnement...",
+        "camera": "On ajuste la caméra, attention au selfie !",
+        "almost": "C'est presque prêt... Suspense maximal !"
+      }
+    },
+    "ui": {
+      "empty": "Aucun message pour le moment.",
+      "thinking": "Je réfléchis…"
+    }
+  }
+
+}

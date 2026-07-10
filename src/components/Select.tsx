@@ -1,24 +1,23 @@
 // Tremor Select [v1.0.0]
-
-import React from "react"
-import * as SelectPrimitives from "@radix-ui/react-select"
+import { cx, focusInput, hasErrorInput } from "@/lib/utils";
+import * as SelectPrimitives from "@radix-ui/react-select";
 import {
   RiArrowDownSLine,
   RiArrowUpSLine,
   RiCheckLine,
   RiExpandUpDownLine,
-} from "@remixicon/react"
+} from "@remixicon/react";
 
-import { cx, focusInput, hasErrorInput } from "@/lib/utils"
+import React from "react";
 
-const Select = SelectPrimitives.Root
-Select.displayName = "Select"
+const Select = SelectPrimitives.Root;
+Select.displayName = "Select";
 
-const SelectGroup = SelectPrimitives.Group
-SelectGroup.displayName = "SelectGroup"
+const SelectGroup = SelectPrimitives.Group;
+SelectGroup.displayName = "SelectGroup";
 
-const SelectValue = SelectPrimitives.Value
-SelectValue.displayName = "SelectValue"
+const SelectValue = SelectPrimitives.Value;
+SelectValue.displayName = "SelectValue";
 
 const selectTriggerStyles = [
   cx(
@@ -41,12 +40,12 @@ const selectTriggerStyles = [
     // invalid (optional)
     // "dark:aria-invalid:ring-red-400/20 aria-invalid:ring-2 aria-invalid:ring-red-200 aria-invalid:border-red-500 invalid:ring-2 invalid:ring-red-200 invalid:border-red-500"
   ),
-]
+];
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitives.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitives.Trigger> & {
-    hasError?: boolean
+    hasError?: boolean;
   }
 >(({ className, hasError, children, ...props }, forwardedRef) => {
   return (
@@ -74,10 +73,10 @@ const SelectTrigger = React.forwardRef<
         />
       </SelectPrimitives.Icon>
     </SelectPrimitives.Trigger>
-  )
-})
+  );
+});
 
-SelectTrigger.displayName = "SelectTrigger"
+SelectTrigger.displayName = "SelectTrigger";
 
 const SelectScrollUpButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitives.ScrollUpButton>,
@@ -93,8 +92,8 @@ const SelectScrollUpButton = React.forwardRef<
   >
     <RiArrowUpSLine className="size-3 shrink-0" aria-hidden="true" />
   </SelectPrimitives.ScrollUpButton>
-))
-SelectScrollUpButton.displayName = SelectPrimitives.ScrollUpButton.displayName
+));
+SelectScrollUpButton.displayName = SelectPrimitives.ScrollUpButton.displayName;
 
 const SelectScrollDownButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitives.ScrollDownButton>,
@@ -110,9 +109,9 @@ const SelectScrollDownButton = React.forwardRef<
   >
     <RiArrowDownSLine className="size-3 shrink-0" aria-hidden="true" />
   </SelectPrimitives.ScrollDownButton>
-))
+));
 SelectScrollDownButton.displayName =
-  SelectPrimitives.ScrollDownButton.displayName
+  SelectPrimitives.ScrollDownButton.displayName;
 
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitives.Content>,
@@ -162,7 +161,7 @@ const SelectContent = React.forwardRef<
           className={cx(
             "p-1",
             position === "popper" &&
-            "h-[var(--radix-select-trigger-height)] w-full min-w-[calc(var(--radix-select-trigger-width))]",
+              "h-[var(--radix-select-trigger-height)] w-full min-w-[calc(var(--radix-select-trigger-width))]",
           )}
         >
           {children}
@@ -171,9 +170,9 @@ const SelectContent = React.forwardRef<
       </SelectPrimitives.Content>
     </SelectPrimitives.Portal>
   ),
-)
+);
 
-SelectContent.displayName = "SelectContent"
+SelectContent.displayName = "SelectContent";
 
 const SelectGroupLabel = React.forwardRef<
   React.ElementRef<typeof SelectPrimitives.Label>,
@@ -190,9 +189,9 @@ const SelectGroupLabel = React.forwardRef<
     )}
     {...props}
   />
-))
+));
 
-SelectGroupLabel.displayName = "SelectGroupLabel"
+SelectGroupLabel.displayName = "SelectGroupLabel";
 
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitives.Item>,
@@ -202,32 +201,32 @@ const SelectItem = React.forwardRef<
     <SelectPrimitives.Item
       ref={forwardedRef}
       className={cx(
-      // base
-      "grid cursor-pointer grid-cols-[1fr_20px] gap-x-2 rounded-sm px-3 py-2 outline-hidden transition-colors data-[state=checked]:font-semibold sm:text-sm",
-      // text color
-      "text-gray-900 dark:text-gray-50",
-      // disabled
-      "data-disabled:pointer-events-none data-disabled:text-gray-400 data-disabled:hover:bg-none dark:data-disabled:text-gray-600",
-      // hover
-      "hover:bg-gray-100 dark:hover:bg-gray-900",
-      className,
+        // base
+        "grid cursor-pointer grid-cols-[1fr_20px] gap-x-2 rounded-sm px-3 py-2 outline-hidden transition-colors data-[state=checked]:font-semibold sm:text-sm",
+        // text color
+        "text-gray-900 dark:text-gray-50",
+        // disabled
+        "data-disabled:pointer-events-none data-disabled:text-gray-400 data-disabled:hover:bg-none dark:data-disabled:text-gray-600",
+        // hover
+        "hover:bg-gray-100 dark:hover:bg-gray-900",
+        className,
       )}
       {...props}
     >
       <SelectPrimitives.ItemText className="flex-1 truncate">
-      {children}
+        {children}
       </SelectPrimitives.ItemText>
       <SelectPrimitives.ItemIndicator>
-      <RiCheckLine
-        className="size-5 shrink-0 text-gray-800 dark:text-gray-200"
-        aria-hidden="true"
-      />
+        <RiCheckLine
+          className="size-5 shrink-0 text-gray-800 dark:text-gray-200"
+          aria-hidden="true"
+        />
       </SelectPrimitives.ItemIndicator>
     </SelectPrimitives.Item>
-  )
-})
+  );
+});
 
-SelectItem.displayName = "SelectItem"
+SelectItem.displayName = "SelectItem";
 
 const SelectSeparator = React.forwardRef<
   React.ElementRef<typeof SelectPrimitives.Separator>,
@@ -244,9 +243,9 @@ const SelectSeparator = React.forwardRef<
     )}
     {...props}
   />
-))
+));
 
-SelectSeparator.displayName = "SelectSeparator"
+SelectSeparator.displayName = "SelectSeparator";
 
 export {
   Select,
@@ -257,4 +256,4 @@ export {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-}
+};

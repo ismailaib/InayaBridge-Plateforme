@@ -1,0 +1,114 @@
+{
+  "badge": "Tarifs",
+  "title": "Des offres qui évoluent avec votre pratique",
+  "description": "Fonctionnalités gratuites pour tous, et outils avancés pour les professionnels qui visent plus haut. Nos plans sont conçus pour répondre à vos besoins tout en préservant l'essence de notre mission : fournir des soins de santé à tous via InayaBridge.",
+  "billing": {
+    "monthly": "Mensuel",
+    "annually": "Annuel (-20%)"
+  },
+  "perUser": "par utilisateur",
+  "plans": {
+    "essentiel": {
+      "name": "Essentiel",
+      "price": "0 Dh",
+      "description": "Accès à toutes les fonctionnalités de base, gratuit pour toujours.",
+      "capacity": ["Consultations illimitées", "Stockage cloud illimité"],
+      "features": [
+        "Gestion des rendez-vous",
+        "Consultations vidéo",
+        "Dossier médical complet"
+      ],
+      "isStarter": true,
+      "isRecommended": false,
+      "buttonText": "Commencer gratuitement",
+      "buttonLink": "/signup?plan=essentiel"
+    },
+    "plus": {
+      "name": "Plus",
+      "price": { "monthly": "140 Dh", "annually": "1290 Dh" },
+      "description": "Outils avancés pour optimiser votre pratique, disponibles dès la version 2.",
+      "capacity": [
+        "Statistiques patients",
+        "Export PDF",
+        "Support en 24 heures"
+      ],
+      "features": [
+        "Analyse des consultations",
+        "Rappels automatiques",
+        "Accès anticipé aux nouvelles fonctionnalités"
+      ],
+      "isStarter": false,
+      "isRecommended": false,
+      "buttonText": "Pré-inscription version 2",
+      "buttonLink": "/signup?plan=plus"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": { "monthly": "290 Dh", "annually": "2490 Dh" },
+      "description": "Conçu pour les professionnels et cliniques qui souhaitent une gestion complète et intégrée.",
+      "capacity": [
+        "Profils multiples",
+        "Support premium",
+        "Accès API (version 2.1)"
+      ],
+      "features": [
+        "Statistiques avancées",
+        "Export des données patients",
+        "Intégrations via API"
+      ],
+      "isStarter": false,
+      "isRecommended": true,
+      "buttonText": "Pré-inscription version 2",
+      "buttonLink": "/signup?plan=pro"
+    }
+  },
+  "sections": {
+    "base": "Fonctionnalités de base (version actuelle)",
+    "advanced": "Fonctionnalités avancées (version 2)",
+    "support": "Support et communauté",
+    "popular": "Le plus populaire",
+    "compareTitle": "Comparaison des plans",
+    "compareSubtitle": "Prix mensuel par utilisateur"
+  },
+  "features": {
+    "consultations_video_illimitees": {
+      "label": "Consultations vidéo illimitées",
+      "tooltip": "Inclut la prise de rendez-vous et les appels en ligne via navigateur."
+    },
+    "gestion_patients_dossiers": {
+      "label": "Gestion des patients et dossiers",
+      "tooltip": "Ajout de diagnostics, ordonnances, et suivi complet."
+    },
+    "messagerie_securisee": {
+      "label": "Messagerie sécurisée",
+      "tooltip": "Échange direct avec les patients via chat interne."
+    },
+    "statistiques_rapports_patients": {
+      "label": "Statistiques et rapports patients",
+      "tooltip": "Analyse des consultations, indicateurs de santé, et historique synthétique."
+    },
+    "exports_dossiers_pdf": {
+      "label": "Export des dossiers (PDF)",
+      "tooltip": "Génération de fiches médicales imprimables et archivées."
+    },
+    "rappels_automatiques": {
+      "label": "Rappels automatiques",
+      "tooltip": "Notifications envoyées automatiquement aux patients."
+    },
+    "acces_api_integrations": {
+      "label": "Accès API et intégrations",
+      "tooltip": "Connexion d'InayaBridge à d'autres outils médicaux ou ERP (bientôt)."
+    },
+    "support_par_mail": {
+      "label": "Support par e-mail",
+      "tooltip": "Temps de réponse en fonction de votre plan.",
+      "48h": "Dans les 48 heures",
+      "24h": "Dans les 24 heures",
+      "Prioritaire": "Priorité immédiate"
+    },
+    "mise_en_avant_professionnelle": {
+      "label": "Mise en avant professionnelle",
+      "tooltip": "Badge Pro et mention sur la plateforme InayaBridge (optionnel)."
+    }
+  }
+}

@@ -1,7 +1,14 @@
 // Tremor Spark Chart [v1.0.0]
-"use client"
+"use client";
 
-import React from "react"
+import {
+  AvailableChartColors,
+  type AvailableChartColorsKeys,
+  constructCategoryColors,
+  getColorClassName,
+  getYAxisDomain,
+} from "@/lib/chartUtils";
+import { cx } from "@/lib/utils";
 import {
   Area,
   Bar,
@@ -12,31 +19,26 @@ import {
   ResponsiveContainer,
   XAxis,
   YAxis,
-} from "recharts"
-import type { AxisDomain } from "recharts/types/util/types"
+} from "recharts";
+import type { AxisDomain } from "recharts/types/util/types";
 
-import {
-  AvailableChartColors,
-  constructCategoryColors,
-  getColorClassName,
-  getYAxisDomain,
-  type AvailableChartColorsKeys,
-} from "@/lib/chartUtils"
-import { cx } from "@/lib/utils"
+import React from "react";
+
+// Tremor Spark Chart [v1.0.0]
 
 //#region SparkAreaChart
 
 interface SparkAreaChartProps extends React.HTMLAttributes<HTMLDivElement> {
-  data: Record<string, any>[]
-  categories: string[]
-  index: string
-  colors?: AvailableChartColorsKeys[]
-  autoMinValue?: boolean
-  minValue?: number
-  maxValue?: number
-  connectNulls?: boolean
-  type?: "default" | "stacked" | "percent"
-  fill?: "gradient" | "solid" | "none"
+  data: Record<string, any>[];
+  categories: string[];
+  index: string;
+  colors?: AvailableChartColorsKeys[];
+  autoMinValue?: boolean;
+  minValue?: number;
+  maxValue?: number;
+  connectNulls?: boolean;
+  type?: "default" | "stacked" | "percent";
+  fill?: "gradient" | "solid" | "none";
 }
 
 const SparkAreaChart = React.forwardRef<HTMLDivElement, SparkAreaChartProps>(
@@ -54,30 +56,30 @@ const SparkAreaChart = React.forwardRef<HTMLDivElement, SparkAreaChartProps>(
       className,
       fill = "gradient",
       ...other
-    } = props
+    } = props;
 
-    const categoryColors = constructCategoryColors(categories, colors)
-    const yAxisDomain = getYAxisDomain(autoMinValue, minValue, maxValue)
-    const stacked = type === "stacked" || type === "percent"
-    const areaId = React.useId()
+    const categoryColors = constructCategoryColors(categories, colors);
+    const yAxisDomain = getYAxisDomain(autoMinValue, minValue, maxValue);
+    const stacked = type === "stacked" || type === "percent";
+    const areaId = React.useId();
 
     const getFillContent = (fillType: SparkAreaChartProps["fill"]) => {
       switch (fillType) {
         case "none":
-          return <stop stopColor="currentColor" stopOpacity={0} />
+          return <stop stopColor="currentColor" stopOpacity={0} />;
         case "gradient":
           return (
             <>
               <stop offset="5%" stopColor="currentColor" stopOpacity={0.4} />
               <stop offset="95%" stopColor="currentColor" stopOpacity={0} />
             </>
-          )
+          );
         case "solid":
-          return <stop stopColor="currentColor" stopOpacity={0.3} />
+          return <stop stopColor="currentColor" stopOpacity={0.3} />;
         default:
-          return <stop stopColor="currentColor" stopOpacity={0.3} />
+          return <stop stopColor="currentColor" stopOpacity={0.3} />;
       }
-    }
+    };
 
     return (
       <div
@@ -101,7 +103,7 @@ const SparkAreaChart = React.forwardRef<HTMLDivElement, SparkAreaChartProps>(
             <YAxis hide={true} domain={yAxisDomain as AxisDomain} />
 
             {categories.map((category) => {
-              const categoryId = `${areaId}-${category.replace(/[^a-zA-Z0-9]/g, "")}`
+              const categoryId = `${areaId}-${category.replace(/[^a-zA-Z0-9]/g, "")}`;
               return (
                 <React.Fragment key={category}>
                   <defs>
@@ -148,28 +150,28 @@ const SparkAreaChart = React.forwardRef<HTMLDivElement, SparkAreaChartProps>(
                     fill={`url(#${categoryId})`}
                   />
                 </React.Fragment>
-              )
+              );
             })}
           </RechartsAreaChart>
         </ResponsiveContainer>
       </div>
-    )
+    );
   },
-)
+);
 
-SparkAreaChart.displayName = "SparkAreaChart"
+SparkAreaChart.displayName = "SparkAreaChart";
 
 //#region SparkLineChart
 
 interface SparkLineChartProps extends React.HTMLAttributes<HTMLDivElement> {
-  data: Record<string, any>[]
-  categories: string[]
-  index: string
-  colors?: AvailableChartColorsKeys[]
-  autoMinValue?: boolean
-  minValue?: number
-  maxValue?: number
-  connectNulls?: boolean
+  data: Record<string, any>[];
+  categories: string[];
+  index: string;
+  colors?: AvailableChartColorsKeys[];
+  autoMinValue?: boolean;
+  minValue?: number;
+  maxValue?: number;
+  connectNulls?: boolean;
 }
 
 const SparkLineChart = React.forwardRef<HTMLDivElement, SparkLineChartProps>(
@@ -185,10 +187,10 @@ const SparkLineChart = React.forwardRef<HTMLDivElement, SparkLineChartProps>(
       connectNulls = false,
       className,
       ...other
-    } = props
+    } = props;
 
-    const categoryColors = constructCategoryColors(categories, colors)
-    const yAxisDomain = getYAxisDomain(autoMinValue, minValue, maxValue)
+    const categoryColors = constructCategoryColors(categories, colors);
+    const yAxisDomain = getYAxisDomain(autoMinValue, minValue, maxValue);
 
     return (
       <div
@@ -234,24 +236,24 @@ const SparkLineChart = React.forwardRef<HTMLDivElement, SparkLineChartProps>(
           </RechartsLineChart>
         </ResponsiveContainer>
       </div>
-    )
+    );
   },
-)
+);
 
-SparkLineChart.displayName = "SparkLineChart"
+SparkLineChart.displayName = "SparkLineChart";
 
 //#region SparkBarChart
 
 interface BarChartProps extends React.HTMLAttributes<HTMLDivElement> {
-  data: Record<string, any>[]
-  index: string
-  categories: string[]
-  colors?: AvailableChartColorsKeys[]
-  autoMinValue?: boolean
-  minValue?: number
-  maxValue?: number
-  barCategoryGap?: string | number
-  type?: "default" | "stacked" | "percent"
+  data: Record<string, any>[];
+  index: string;
+  categories: string[];
+  colors?: AvailableChartColorsKeys[];
+  autoMinValue?: boolean;
+  minValue?: number;
+  maxValue?: number;
+  barCategoryGap?: string | number;
+  type?: "default" | "stacked" | "percent";
 }
 
 const SparkBarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
@@ -268,12 +270,12 @@ const SparkBarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       type = "default",
       className,
       ...other
-    } = props
+    } = props;
 
-    const categoryColors = constructCategoryColors(categories, colors)
+    const categoryColors = constructCategoryColors(categories, colors);
 
-    const yAxisDomain = getYAxisDomain(autoMinValue, minValue, maxValue)
-    const stacked = type === "stacked" || type === "percent"
+    const yAxisDomain = getYAxisDomain(autoMinValue, minValue, maxValue);
+    const stacked = type === "stacked" || type === "percent";
 
     return (
       <div
@@ -317,10 +319,10 @@ const SparkBarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
           </RechartsBarChart>
         </ResponsiveContainer>
       </div>
-    )
+    );
   },
-)
+);
 
-SparkBarChart.displayName = "SparkBarChart"
+SparkBarChart.displayName = "SparkBarChart";
 
-export { SparkAreaChart, SparkLineChart, SparkBarChart }
+export { SparkAreaChart, SparkLineChart, SparkBarChart };

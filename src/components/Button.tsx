@@ -1,11 +1,10 @@
 // Tremor Button [v0.2.0]
+import { cx, focusRing } from "@/lib/utils";
+import { Slot } from "@radix-ui/react-slot";
+import { RiLoader2Fill } from "@remixicon/react";
+import { type VariantProps, tv } from "tailwind-variants";
 
-import { Slot } from "@radix-ui/react-slot"
-import { RiLoader2Fill } from "@remixicon/react"
-import React from "react"
-import { tv, type VariantProps } from "tailwind-variants"
-
-import { cx, focusRing } from "@/lib/utils"
+import React from "react";
 
 const buttonVariants = tv({
   base: [
@@ -21,20 +20,24 @@ const buttonVariants = tv({
       primary: [
         "border-transparent",
         "text-white dark:text-white",
-        "bg-[#00B38F] dark:bg-[#00B38F]",
-        "hover:bg-[#009e7f] dark:hover:bg-[#007e68]",
-        "disabled:bg-[#009e7f6c] disabled:text-[#00b38fb6]",
-        "disabled:dark:bg-[#007e6866] disabled:dark:text-[#00b38fb3]",
+        "bg-[#3b82f6] dark:bg-[#3b82f6]",
+        "hover:bg-[#3b82f6] dark:hover:bg-[#3b82f6]",
+        "disabled:bg-[#3b82f66c] disabled:text-[#3b82f6b6]",
+        "disabled:dark:bg-[#3b82f666] disabled:dark:text-[#3b82f6b3]",
       ],
-      
-      
-      
-      
-      
-      
-      
-      
-      
+      success: [
+        // border
+        "border-green-300 dark:border-[#1F7D53]",
+        // text color
+        "text-green-900 dark:text-green-50",
+        // background color
+        "bg-white dark:bg-[#1F7D53]",
+        //hover color
+        "hover:bg-green-50 dark:hover:bg-[#1F7D53]",
+        // disabled
+        "disabled:text-green-400",
+        "disabled:dark:text-green-600",
+      ],
       secondary: [
         // border
         "border-gray-300 dark:border-gray-800",
@@ -94,14 +97,14 @@ const buttonVariants = tv({
   defaultVariants: {
     variant: "primary",
   },
-})
+});
 
 interface ButtonProps
   extends React.ComponentPropsWithoutRef<"button">,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean
-  isLoading?: boolean
-  loadingText?: string
+  VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+  isLoading?: boolean;
+  loadingText?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -118,7 +121,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }: ButtonProps,
     forwardedRef,
   ) => {
-    const Component = asChild ? Slot : "button"
+    const Component = asChild ? Slot : "button";
     return (
       <Component
         ref={forwardedRef}
@@ -142,10 +145,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           children
         )}
       </Component>
-    )
+    );
   },
-)
+);
 
-Button.displayName = "Button"
+Button.displayName = "Button";
 
-export { Button, buttonVariants, type ButtonProps }
+export { Button, buttonVariants, type ButtonProps };

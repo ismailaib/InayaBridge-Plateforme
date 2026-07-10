@@ -1,0 +1,282 @@
+{
+  "settings": {
+    "title": "Paramètres",
+    "description": "Gérez vos informations personnelles, vos préférences d’espace de travail et vos notifications.",
+    "Account": {
+      "title": "Détails du compte",
+      "description": "Gérez vos informations personnelles et vos identifiants de connexion.",
+      "proffession": "Informations professionnelles"
+    },
+    "tabs": {
+      "account": "Détails du compte",
+      "workspaces": "Espace de travail",
+      "billing": "Facturation",
+      "disponibility": "Disponibilité",
+      "preferences": "Préférences"
+    },
+    "personalInfo": {
+      "title": "Informations personnelles",
+      "description": "Mettez à jour vos informations personnelles et vos coordonnées.",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "cin": "Numéro de CIN",
+      "phone": "Numéro de téléphone",
+      "address": "Adresse",
+      "gender": "Sexe",
+      "speciality": "Spécialité",
+      "firstNamePlaceholder": "Entrez votre prénom",
+      "lastNamePlaceholder": "Entrez votre nom",
+      "cinPlaceholder": "Entrez votre numéro de CIN",
+      "phonePlaceholder": "Entrez votre numéro de téléphone",
+      "addressPlaceholder": "Entrez votre adresse",
+      "genderPlaceholder": "Sélectionnez le sexe",
+      "male": "Homme",
+      "female": "Femme",
+      "other": "Autre",
+      "button": "Mettre à jour les informations personnelles",
+      "resetbutton": "Réinitialiser les modifications",
+      "successTitle": "Informations mises à jour avec succès",
+      "successDescription": "Vos informations personnelles ont été mises à jour avec succès.",
+      "errorTitle": "Échec de la mise à jour",
+      "errorDescription": "Une erreur s’est produite lors de la mise à jour de vos informations. Veuillez réessayer."
+    },
+    "profileImage": {
+      "title": "Photo de profil",
+      "description": "Téléchargez une photo de profil pour personnaliser votre compte.",
+      "button": "Télécharger une image",
+      "successTitle": "Photo téléchargée avec succès",
+      "successDescription": "Votre photo de profil a été mise à jour avec succès.",
+      "errorTitle": "Échec du téléchargement",
+      "errorDescription": "Une erreur s’est produite lors du téléchargement de votre image. Veuillez réessayer."
+    },
+    "emailSection": {
+      "title": "Adresse e-mail",
+      "description": "Mettez à jour l’adresse e-mail associée à cet espace de travail.",
+      "label": "Mettre à jour l’adresse e-mail",
+      "placeholder": "john@entreprise.com",
+      "button": "Mettre à jour l’e-mail"
+    },
+    "passwordSection": {
+      "title": "Mot de passe",
+      "description": "Modifiez votre mot de passe en toute sécurité.",
+      "currentLabel": "Mot de passe actuel",
+      "newLabel": "Nouveau mot de passe",
+      "placeholder": "Mot de passe",
+      "button": "Mettre à jour le mot de passe",
+      "successTitle": "Mot de passe modifié avec succès",
+      "successDescription": "Votre mot de passe a été mis à jour avec succès.",
+      "errorTitle": "Échec du changement de mot de passe",
+      "errorDescription": "Une erreur s’est produite lors du changement du mot de passe. Veuillez réessayer."
+    },
+    "cases": {
+      "error": "Une erreur inattendue s’est produite.",
+      "success": "Action effectuée avec succès.",
+      "firstnameempty": "Le prénom ne peut pas être vide.",
+      "lastnameempty": "Le nom ne peut pas être vide.",
+      "namelenght": "Le nom doit contenir entre 3 et 50 caractères.",
+      "nameletter": "Le nom ne doit contenir que des lettres.",
+      "emailvalid": "L’adresse e-mail doit être valide.",
+      "emailempty": "L’adresse e-mail ne peut pas être vide.",
+      "phonevalid": "Le numéro de téléphone doit être au format +212 suivi de 9 chiffres.",
+      "phoneempty": "Le numéro de téléphone ne peut pas être vide.",
+      "addresslenght": "L’adresse doit contenir entre 0 et 120 caractères.",
+      "genderempty": "Le sexe doit être sélectionné.",
+      "specialtlenght": "La spécialité doit contenir entre 1 et 80 caractères.",
+      "licenseNumberlenght": "Le numéro de licence doit contenir entre 3 et 50 caractères.",
+      "passwordmatch": "Les mots de passe doivent correspondre.",
+      "passwordlenght": "Le mot de passe doit contenir au moins 8 caractères.",
+      "currentpasswordempty": "Le mot de passe actuel ne peut pas être vide.",
+      "newpasswordempty": "Le nouveau mot de passe ne peut pas être vide.",
+      "strongpassword": "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.",
+      "imageinvalide": "Veuillez télécharger une image JPG ou PNG valide de moins de 10 Mo.",
+      "imagebig": "L’image doit être inférieure à 10 Mo."
+    }
+  },
+  "disponibility": {
+    "title": "Disponibilité",
+    "description": "Définissez vos disponibilités hebdomadaires.",
+    "loading": "Chargement des disponibilités...",
+    "update": "METTRE À JOUR",
+    "saving": "Enregistrement...",
+    "applyToAll": "Appliquer à tous les jours",
+    "timeslot": "Plage horaire",
+    "errorLoad": "Échec du chargement des disponibilités",
+    "errorSave": "Échec de la mise à jour du planning",
+    "errorAtLeastOneSlot": "Au moins une plage horaire est requise",
+    "successApplied": "Planning appliqué à tous les jours",
+    "successUpdated": "{count} jour(s) mis à jour",
+    "successTitle": "Modifications Enregistrée(s)",
+    "noChanges": "Aucun changement à enregistrer",
+    "availability": "Disponibilité",
+    "from": "De",
+    "to": "À",
+    "actions": "Actions",
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi",
+    "sunday": "Dimanche",
+    "unsavedChanges": "modification(s) non enregistrée(s)",
+    "errorTitle": "Action Impossible",
+    "errorMaxSlots": "Vous pouvez ajouter jusqu’à {{count}} créneaux horaires par jour."
+  },
+  "workspace": {
+    "title": "Configuration de l’Espace de Travail",
+    "description": "Gérez les informations de votre clinique ou espace de travail ainsi que les paramètres d’abonnement.",
+    "tenantName": "Nom de l’Espace",
+    "tenantDescription": "Description",
+    "tenantOwner": "Email du Propriétaire",
+    "privacy": "Confidentialité",
+    "subscriptionPlan": "Plan d’Abonnement",
+    "selectPlan": "Sélectionnez un plan",
+    "save": "Enregistrer les modifications",
+    "saving": "Enregistrement...",
+    "private": "Privé",
+    "public": "Public",
+    "savebutton": "Enregistrer",
+    "resetbutton": "Réinitialiser",
+    "plans": {
+      "essential": "Essentiel",
+      "plus": "Plus",
+      "pro": "Pro"
+    },
+    "logoImage": {
+      "title": "Logo de l’Espace de Travail",
+      "description": "Téléchargez le logo de votre espace pour personnaliser l’identité de votre organisation.",
+      "button": "Téléverser le Logo",
+      "uploading": "Téléversement...",
+      "successTitle": "Logo Téléversé avec Succès",
+      "successDescription": "Le logo de votre espace a été mis à jour avec succès.",
+      "errorTitle": "Échec du Téléversement",
+      "errorDescription": "Une erreur est survenue lors du téléversement du logo. Veuillez réessayer."
+    },
+    "tenant": {
+      "successTitle": "Espace de Travail Mis à Jour",
+      "successDescription": "Les informations de votre espace ont été enregistrées avec succès.",
+      "errorTitle": "Échec de la Mise à Jour",
+      "errorDescription": "Une erreur est survenue lors de l’enregistrement. Veuillez réessayer."
+    },
+    "invalidefile": {
+      "errorTitle": "Type de Fichier Non Valide",
+      "errorDescription": "Seuls les formats JPG et PNG sont pris en charge."
+    },
+    "fileTooLarge": {
+      "errorTitle": "Fichier Trop Volumineux",
+      "errorDescription": "Le fichier téléversé dépasse la limite de 10 Mo."
+    },
+    "logoupload": {
+      "errorTitle": "Échec du Téléversement du Logo",
+      "errorDescription": "Une erreur est survenue lors du téléversement de votre logo. Veuillez réessayer."
+    }
+  },
+
+  "preferences": {
+    "title": "Préférences Utilisateur",
+    "description": "Personnalisez votre expérience, vos notifications et les modules visibles sur le tableau de bord.",
+
+    "language": {
+      "title": "Langue",
+      "description": "Sélectionnez la langue de l’interface."
+    },
+
+    "theme": {
+      "title": "Thème",
+      "description": "Choisissez votre mode d’affichage préféré.",
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Par défaut du système"
+    },
+
+    "timezone": {
+      "title": "Fuseau horaire",
+      "description": "Définissez votre fuseau horaire local."
+    },
+
+    "notifications": {
+      "title": "Notifications",
+      "description": "Gérez la façon dont vous recevez les alertes et les mises à jour."
+    },
+
+    "privacy": {
+      "title": "Confidentialité",
+      "description": "Contrôlez qui peut voir votre profil et votre statut en ligne.",
+      "publicProfile": "Profil public",
+      "onlineStatus": "Afficher le statut en ligne"
+    },
+
+    "modules": {
+      "title": "Modules du tableau de bord",
+      "description": "Choisissez les modules affichés sur votre tableau de bord.",
+      "appointments": "Rendez-vous",
+      "patients": "Patients",
+      "billing": "Facturation",
+      "reports": "Rapports",
+      "chat": "Messagerie",
+      "analytics": "Analytique",
+      "notifications": "Notifications",
+      "teleconsultation": "Téléconsultation",
+      "dashboard": "Tableau de bord principal"
+    },
+
+    "save": {
+      "label": "Enregistrer les préférences",
+      "saving": "Enregistrement...",
+      "successTitle": "Préférences enregistrées",
+      "successDescription": "Vos préférences ont été mises à jour avec succès.",
+      "errorTitle": "Échec de l’enregistrement",
+      "errorDescription": "Une erreur s’est produite lors de l’enregistrement des préférences."
+    },
+
+    "features": {
+      "title": "Préférences",
+      "enableTeleconsultation": {
+        "label": "Téléconsultation",
+        "description": "Activez les consultations vidéo et les rendez-vous à distance avec les patients"
+      },
+      "enableLabIntegration": {
+        "label": "Intégration de laboratoire",
+        "description": "Connectez-vous aux systèmes de laboratoire pour les demandes et les résultats d’analyses"
+      },
+      "enableBilling": {
+        "label": "Facturation",
+        "description": "Gérez les factures, les paiements et les transactions financières"
+      },
+      "enforce2FA": {
+        "label": "Authentification à deux facteurs",
+        "description": "Exigez une authentification à deux facteurs pour renforcer la sécurité"
+      },
+      "enableAuditLogs": {
+        "label": "Journaux d’audit",
+        "description": "Suivez et enregistrez toutes les activités du système pour assurer la conformité"
+      }
+    }
+  },
+
+  "billing": {
+    "title": "Facturation et abonnement",
+    "description": "Gérez votre plan, vos factures et vos méthodes de paiement.",
+    "currentPlan": {
+      "title": "Plan actuel",
+      "description": "Vous êtes actuellement abonné au plan Plus."
+    },
+    "billingPeriod": "Période de facturation",
+    "nextPayment": "Prochain paiement",
+    "upgradeButton": "Mettre à niveau le plan",
+    "paymentMethod": {
+      "title": "Méthode de paiement",
+      "description": "Votre méthode de paiement enregistrée pour les renouvellements automatiques."
+    },
+    "updateButton": "Mettre à jour la carte",
+    "invoices": {
+      "title": "Factures",
+      "description": "Téléchargez vos factures précédentes.",
+      "date": "Date",
+      "amount": "Montant",
+      "status": "Statut",
+      "actions": "Actions",
+      "download": "Télécharger"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+    "badge": "Open, Fast & Secure",
+    "title": "Conçue pour la rapidité, pensée pour la santé",
+    "description": "La plateforme InayaBridge est construite avec une architecture moderne et légère, pensée pour offrir des consultations fluides, même avec des connexions limitées. Nos choix techniques garantissent des performances stables, une sécurité renforcée, et une expérience utilisateur fiable — pour les médecins comme pour les patients.",
+    "stats": {
+      "connectionTime": {
+        "name": "Temps moyen de connexion",
+        "value": "< 3 sec"
+      },
+      "encryptedData": {
+        "name": "Données chiffrées côté client & serveur",
+        "value": "100%"
+      },
+      "concurrentUsers": {
+        "name": "Utilisateurs simultanés supportés",
+        "value": "+10 000"
+      }
+    }
+  }

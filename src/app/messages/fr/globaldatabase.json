@@ -1,0 +1,19 @@
+{
+    "badge": "Conçu pour tout le monde",
+    "titleLine1": "Pour tous,",
+    "titleLine2": "partout.",
+    "features": {
+      "step1": {
+        "title": "1. Créez votre compte",
+        "description": "Inscrivez-vous gratuitement en quelques secondes, que vous soyez patient ou médecin."
+      },
+      "step2": {
+        "title": "2. Prenez rendez-vous",
+        "description": "En tant que patient, choisissez un créneau et expliquez votre besoin ; en tant que médecin, définissez vos disponibilités pour faciliter les consultations."
+      },
+      "step3": {
+        "title": "3. Consultez en ligne",
+        "description": "Rencontrez votre médecin en visioconférence, échangez vos documents, restez suivi."
+      }
+    }
+  }

@@ -1,0 +1,37 @@
+{
+    "description": "A free telemedicine platform designed to break down geographical barriers and make healthcare accessible to everyone.",
+    "sections": {
+      "product": "Product",
+      "resources": "Resources",
+      "company": "Company",
+      "legal": "Legal"
+    },
+    "navigation": {
+      "product": {
+        "enterprise": "Enterprise",
+        "pricing": "Pricing",
+        "changelog": "Changelog"
+      },
+      "resources": {
+        "faqs": "FAQs",
+        "docs": "Docs",
+        "api": "API",
+        "blog": "Blog",
+        "support": "Support"
+      },
+      "company": {
+        "about": "About",
+        "careers": "Careers",
+        "contact": "Contact",
+        "status": "Status"
+      },
+      "legal": {
+        "imprint": "Imprint",
+        "privacy": "Privacy",
+        "terms": "Terms",
+        "dpa": "DPA"
+      }
+    },
+    "status": "All systems operational",
+    "copyright": "© {year} InayaBridge, Inc. All rights reserved."
+  }
